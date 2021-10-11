@@ -24,7 +24,6 @@ class NftlabsSdk(object):
 		if not self.client.isConnected():
 			raise Exception("Failed to connect to the web3 provider")
 
-
 	"""
 	Returns an instance of the currency module
 	"""
@@ -36,5 +35,8 @@ class NftlabsSdk(object):
 		self.__currency_module = module
 		return self.__currency_module
 
+	"""
+	Internal function used to return the current web3 provider used by downstream modules
+	"""
 	def __get_client(self) -> web3.Web3:
 		return self.client
