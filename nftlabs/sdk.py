@@ -9,6 +9,9 @@ class NftlabsSdk(object):
 	client: web3.Web3
 	options: SdkOptions
 
+	private_key: str
+
+
 	__currency_module: Optional[CurrencyModule]
 
 	"""

@@ -1,1 +1,1 @@
-from .currency import CurrencyModule
+from .currency import *

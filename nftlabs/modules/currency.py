@@ -2,10 +2,10 @@ from typing import Callable
 
 import web3
 
-from nftlabs.abi.coin import Coin
-from nftlabs.modules.base import BaseModule
-from nftlabs.modules.currency_types import Currency
-from nftlabs.abi.erc20 import ERC20
+from ..abi.coin import Coin
+from .base import BaseModule
+from .currency_types import Currency
+from ..abi.erc20 import ERC20
 
 
 class CurrencyModule(BaseModule):
@@ -34,3 +34,9 @@ class CurrencyModule(BaseModule):
         decimals = erc20_client.decimals.call()
 
         return Currency(name, symbol, decimals)
+
+    def balance_of(self, address: str) -> int:
+        return self.__abi_module.balance_of.call(address)
+
+    # def balance(self):
+    #     return self.__abi_module.balance_of.call(self.get_client().)
