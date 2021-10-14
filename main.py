@@ -21,5 +21,7 @@ print(nft_module.total_supply())
 # minted_nft = nft_module.mint(arg=MintArg(name="Test 123", description="Some description"))
 # print(minted_nft)
 
-for nft in nft_module.get_all():
-    print(nft)
+# for nft in nft_module.get_all():
+#     print(nft)
+
+print(nft_module.get_owned("0x26ec212ba1854F1a0c287e5B8E3e5463122EFb47"))

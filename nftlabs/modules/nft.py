@@ -103,3 +103,18 @@ class NftModule(BaseModule):
     def get_all(self) -> List[NftType]:
         max_id = self.__abi_module.next_token_id.call()
         return [self.get(i) for i in range(max_id)]
+
+    """
+    Defaults to fetching the NFTs owned by the current signer (as indicated by the private key)
+    if the address parameter is not supplied
+    """
+    def get_owned(self, address: str = "") -> List[NftType]:
+        if address == "":
+            address = self.get_signer_address()
+
+        balance = self.__abi_module.balance_of.call(address)
+        owned_tokens = [self.__token_of_owner_by_index(address, i) for i in range(balance)]
+        return [self.get(i) for i in owned_tokens]
+
+    def __token_of_owner_by_index(self, address: str, token_id: int) -> int:
+        return self.__abi_module.token_of_owner_by_index.call(address, token_id)
