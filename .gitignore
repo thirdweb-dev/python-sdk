@@ -4,3 +4,9 @@
 **/__pycache__
 
 .idea
+
+# wheel build artifacts
+build/
+dist
+
+nftlabs_sdk.egg-info/

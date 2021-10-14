@@ -1,5 +1,5 @@
-import web3.providers
 from eth_account.account import LocalAccount, Account
+from web3 import Web3, HTTPProvider
 
 from typing import Optional
 
@@ -9,8 +9,9 @@ from .storage import IpfsStorage
 
 from zero_ex.contract_wrappers import TxParams
 
+
 class NftlabsSdk(object):
-	client: web3.Web3
+	client: Web3
 	options: SdkOptions
 
 	__private_key: str
@@ -40,7 +41,7 @@ class NftlabsSdk(object):
 			options.ipfs_gateway_url if options.ipfs_gateway_url
 			else "https://cloudflare-ipfs.com/ipfs/")
 
-		self.client = web3.Web3(web3.HTTPProvider(url))
+		self.client = Web3(HTTPProvider(url))
 		if not self.client.isConnected():
 			raise Exception("Failed to connect to the web3 provider")
 
@@ -95,7 +96,7 @@ class NftlabsSdk(object):
 	"""
 	Internal function used to return the current web3 provider used by downstream modules
 	"""
-	def __get_client(self) -> web3.Web3:
+	def __get_client(self) -> Web3:
 		return self.client
 
 	def __get_storage(self) -> IpfsStorage:
