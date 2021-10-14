@@ -1,10 +1,14 @@
-import dataclasses
+from dataclasses import dataclass
+from typing import Optional
+
+from dataclasses_json import dataclass_json
 
 
-@dataclasses.dataclass
+@dataclass_json
+@dataclass
 class NFT:
-    id: int
     name: str
     description: str
-    image_uri: str
-    properties: dict
+    image: str
+    properties: Optional[str] = None
+    id: Optional[int] = None

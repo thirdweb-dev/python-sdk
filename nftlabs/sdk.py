@@ -67,6 +67,8 @@ class NftlabsSdk(object):
 			self.__get_private_key,
 			self.__get_transact_ops
 		)
+		module.get_account = self.__get_account
+		module.get_options = self.__get_options
 		self.__currency_module = module
 		return self.__currency_module
 
@@ -86,6 +88,7 @@ class NftlabsSdk(object):
 			self.__get_transact_ops
 		)
 		module.get_account = self.__get_account
+		module.get_options = self.__get_options
 		self.__nft_module = module
 		return self.__nft_module
 
@@ -112,3 +115,6 @@ class NftlabsSdk(object):
 
 	def __get_account(self) -> Optional[LocalAccount]:
 		return self.__current_account
+
+	def __get_options(self) -> Optional[SdkOptions]:
+		return self.options

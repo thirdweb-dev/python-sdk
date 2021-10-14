@@ -1,14 +1,14 @@
-from typing import Callable, Optional
+from typing import Callable, Optional, cast, TypedDict
 from eth_account.account import LocalAccount, Account
+from web3.types import TxReceipt
 
 from ..storage import IpfsStorage
+from ..options import SdkOptions
 
 from web3 import Web3
-from web3.eth import wait_for_transaction_receipt
-
-from eth_account.account import sign_transaction_dict
 
 from zero_ex.contract_wrappers import TxParams
+
 
 class BaseModule:
     get_client: Callable[[], Web3]
@@ -18,6 +18,7 @@ class BaseModule:
     get_transact_opts: Callable[[], TxParams]
 
     get_account: Optional[Callable[[], LocalAccount]]
+    get_options: Optional[Callable[[], SdkOptions]]
 
     def __init__(
             self,
@@ -33,17 +34,16 @@ class BaseModule:
         self.get_private_key = get_private_key
         self.get_transact_opts = get_transact_opts
         self.get_account = None
+        self.get_options = None
 
-    def execute_tx(self, tx):
+    def execute_tx(self, tx) -> TxReceipt:
         client = self.get_client()
-        nonce = client.eth.get_transaction_count(self.get_signer_address()) + 1
+        nonce = client.eth.get_transaction_count(self.get_signer_address())
         tx['nonce'] = nonce
         del tx['from']
         signed_tx = self.__sign_tx(tx)
         tx_hash = client.eth.send_raw_transaction(signed_tx.rawTransaction)
-        print('tx_hash', tx_hash.hex())
-        receipt = client.eth.wait_for_transaction_receipt(tx_hash, timeout=20)
-        return receipt
+        return cast(TxReceipt, client.eth.wait_for_transaction_receipt(tx_hash, timeout=self.get_options().tx_timeout_in_seconds))
 
     def __sign_tx(self, tx):
         signed_tx = self.get_account().sign_transaction(tx)

@@ -17,5 +17,6 @@ sdk.set_private_key(os.getenv("PKEY"))
 nft_module = sdk.get_nft_module("0xbDfF8fb43688fB4D2184DF8029A7238ac1413A24")
 print(nft_module.total_supply())
 
-nft_module.mint(name="Test")
+# minted_nft = nft_module.mint(name="Test")
+print(nft_module.get(26))
 

@@ -8,3 +8,4 @@ class SdkOptions:
     max_gas_price_in_gwei: int = 100
     gas_speed: str = "fastest"
     private_key: str = ""
+    tx_timeout_in_seconds: int = 30
