@@ -1,4 +1,3 @@
-from .modules.nft import *
 from .modules import *
 
 from .options import *

@@ -1,5 +1,5 @@
-from typing import Callable, Optional, cast, TypedDict
-from eth_account.account import LocalAccount, Account
+from typing import Callable, Optional, cast
+from eth_account.account import LocalAccount
 from web3.types import TxReceipt
 
 from ..storage import IpfsStorage
@@ -43,7 +43,10 @@ class BaseModule:
         del tx['from']
         signed_tx = self.__sign_tx(tx)
         tx_hash = client.eth.send_raw_transaction(signed_tx.rawTransaction)
-        return cast(TxReceipt, client.eth.wait_for_transaction_receipt(tx_hash, timeout=self.get_options().tx_timeout_in_seconds))
+        return cast(
+            TxReceipt,
+            client.eth.wait_for_transaction_receipt(tx_hash, timeout=self.get_options().tx_timeout_in_seconds)
+        )
 
     def __sign_tx(self, tx):
         signed_tx = self.get_account().sign_transaction(tx)

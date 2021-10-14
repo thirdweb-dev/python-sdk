@@ -1,4 +1,5 @@
 import copy
+from collections import namedtuple
 
 import web3
 import json
@@ -6,11 +7,12 @@ import json
 from web3.types import TxReceipt
 
 from . import BaseModule
-from typing import Callable, Dict
+from typing import Callable, Dict, NamedTuple
 from ..abi.nft import NFT
 from ..storage.ipfs_storage import IpfsStorage
 
 from ..types import NFT as NftType
+from .nft_types import MintArg
 
 from zero_ex.contract_wrappers import TxParams
 
@@ -36,28 +38,25 @@ class NftModule(BaseModule):
         self.address = address 
         self.__abi_module = NFT(self.get_client(), address)
 
-    def mint(self, name: str = "", description: str = "", image_uri: str = "", properties: Dict = None):
-        return self.mint_to(self.get_signer_address(), name, description, image_uri, properties)
+    def mint(self, arg: MintArg):
+        return self.mint_to(self.get_signer_address(), arg)
 
     def mint_to(
             self,
             to_address: str,
-            name: str = "",
-            description: str = "",
-            image_uri: str = "",
-            properties: Dict = None
+            arg: MintArg,
     ):
         final_properties: Dict
-        if properties is None:
+        if arg.properties is None:
             final_properties = {}
         else:
-            final_properties = copy.copy(properties)
+            final_properties = copy.copy(arg.properties)
         storage = self.get_storage()
 
         meta = {
-            'name': name,
-            'description': description,
-            'image': image_uri,
+            'name': arg.name,
+            'description': arg.description,
+            'image': arg.image_uri,
             'properties': final_properties
         }
 
@@ -87,3 +86,17 @@ class NftModule(BaseModule):
         if uri == "":
             raise Exception("Could not find NFT metadata, are you sure it exists?")
         return uri
+
+    def mint_batch(self):
+        pass
+
+    def burn(self, token_id: int):
+        pass
+
+    def transfer_from(self, from_address: str, to_address: str, token_id: int):
+        pass
+
+    def set_royalty_bps(self, amount: int):
+        tx = self.__abi_module.set_royalty_bps.build_transaction(amount, self.get_transact_opts())
+        self.execute_tx(tx)
+
