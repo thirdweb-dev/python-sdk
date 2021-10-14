@@ -7,7 +7,7 @@ import json
 from web3.types import TxReceipt
 
 from . import BaseModule
-from typing import Callable, Dict, NamedTuple
+from typing import Callable, Dict, NamedTuple, List
 from ..abi.nft import NFT
 from ..storage.ipfs_storage import IpfsStorage
 
@@ -100,3 +100,6 @@ class NftModule(BaseModule):
         tx = self.__abi_module.set_royalty_bps.build_transaction(amount, self.get_transact_opts())
         self.execute_tx(tx)
 
+    def get_all(self) -> List[NftType]:
+        max_id = self.__abi_module.next_token_id.call()
+        return [self.get(i) for i in range(max_id)]

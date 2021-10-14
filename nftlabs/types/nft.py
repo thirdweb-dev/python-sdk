@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 
 from dataclasses_json import dataclass_json
 
@@ -10,6 +10,6 @@ class NFT:
     name: str
     description: str
     image: str
-    properties: Optional[dict] = None
+    properties: Optional[Union[str, dict]] = None
     id: Optional[int] = None
     uri: Optional[str] = None
