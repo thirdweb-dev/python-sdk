@@ -10,5 +10,6 @@ class NFT:
     name: str
     description: str
     image: str
-    properties: Optional[str] = None
+    properties: Optional[dict] = None
     id: Optional[int] = None
+    uri: Optional[str] = None

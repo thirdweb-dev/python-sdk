@@ -1,3 +1,5 @@
+import copy
+
 import web3
 import json
 
@@ -35,19 +37,33 @@ class NftModule(BaseModule):
         self.__abi_module = NFT(self.get_client(), address)
 
     def mint(self, name: str = "", description: str = "", image_uri: str = "", properties: Dict = None):
+        return self.mint_to(self.get_signer_address(), name, description, image_uri, properties)
+
+    def mint_to(
+            self,
+            to_address: str,
+            name: str = "",
+            description: str = "",
+            image_uri: str = "",
+            properties: Dict = None
+    ):
+        final_properties: Dict
+        if properties is None:
+            final_properties = {}
+        else:
+            final_properties = copy.copy(properties)
         storage = self.get_storage()
 
         meta = {
             'name': name,
             'description': description,
             'image': image_uri,
-            'properties': json.dumps(properties) if properties else ""
+            'properties': final_properties
         }
 
         uri = storage.upload(json.dumps(meta), self.address, self.get_signer_address())
-        tx = self.__abi_module.mint_nft.build_transaction(self.get_signer_address(), uri, self.get_transact_opts())
+        tx = self.__abi_module.mint_nft.build_transaction(to_address, uri, self.get_transact_opts())
         receipt = self.execute_tx(tx)
-
         result = self.__abi_module.get_minted_event(tx_hash=receipt.transactionHash.hex())
         token_id = result[0]['args']['tokenId']
         return self.get(token_id)
@@ -63,10 +79,11 @@ class NftModule(BaseModule):
         meta = self.get_storage().get(uri)
         meta_obj: NftType = NftType.from_json(meta)
         meta_obj.id = nft_id
+        meta_obj.uri = uri
         return meta_obj
 
-    def __get_metadata_uri(self, id: int):
-        uri = self.__abi_module.token_uri.call(id)
+    def __get_metadata_uri(self, nft_id: int):
+        uri = self.__abi_module.token_uri.call(nft_id)
         if uri == "":
             raise Exception("Could not find NFT metadata, are you sure it exists?")
         return uri
