@@ -103,6 +103,8 @@ class NftlabsSdk(object):
 		return self.storage
 
 	def __get_signer_address(self) -> str:
+		if self.signer_address == "":
+			raise Exception("Trying to execute transaction but there's no private key set")
 		return self.signer_address
 
 	def __get_private_key(self) -> str:

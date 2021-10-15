@@ -30,12 +30,7 @@ class NftModule(BaseModule):
             get_transact_opts: Callable[[], TxParams]
     ):
         super().__init__(get_client, get_storage, get_signer_address, get_private_key, get_transact_opts)
-        # contract = self.get_client().eth.contract(
-        #     address=address
-        # )
-        # print(contract.)
-
-        self.address = address 
+        self.address = address
         self.__abi_module = NFT(self.get_client(), address)
 
     def mint(self, arg: MintArg):
@@ -87,8 +82,23 @@ class NftModule(BaseModule):
             raise Exception("Could not find NFT metadata, are you sure it exists?")
         return uri
 
-    def mint_batch(self):
-        pass
+    def mint_batch(self, args: List[MintArg]):
+        return self.mint_batch_to(self.get_signer_address(), args)
+
+    def mint_batch_to(self, to_address: str, args: List[MintArg]):
+        uris = [self.get_storage().upload(json.dumps({
+            'name': arg.name,
+            'description': arg.description,
+            'image': arg.image_uri,
+            'properties': arg.properties if arg.properties is not None else {}
+        }), self.address, self.get_signer_address()) for arg in args]
+
+        tx = self.__abi_module.mint_nft_batch.build_transaction(to_address, uris, self.get_transact_opts())
+
+        receipt = self.execute_tx(tx)
+        result = self.__abi_module.get_minted_batch_event(tx_hash=receipt.transactionHash.hex())
+        token_ids = result[0]['args']['tokenIds']
+        return [self.get(i) for i in token_ids]
 
     def burn(self, token_id: int):
         tx = self.__abi_module.burn.build_transaction(
