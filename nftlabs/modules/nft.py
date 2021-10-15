@@ -139,3 +139,12 @@ class NftModule(BaseModule):
 
     def __token_of_owner_by_index(self, address: str, token_id: int) -> int:
         return self.__abi_module.token_of_owner_by_index.call(address, token_id)
+
+    """
+    Returns balance of the current signers wallet
+    """
+    def balance(self) -> int:
+        return self.__abi_module.balance_of.call(self.get_signer_address())
+
+    def balance_of(self, address: str) -> int:
+        return self.__abi_module.balance_of.call(address)
