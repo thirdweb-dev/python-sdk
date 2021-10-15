@@ -1,37 +1,25 @@
 import copy
-from collections import namedtuple
 
-import web3
 import json
 
-from web3.types import TxReceipt
+from web3 import Web3
 
 from . import BaseModule
-from typing import Callable, Dict, NamedTuple, List
+from typing import Dict, List
 from ..abi.nft import NFT
-from ..storage.ipfs_storage import IpfsStorage
 
 from ..types import NFT as NftType
 from .nft_types import MintArg
 
-from zero_ex.contract_wrappers import TxParams
 
 class NftModule(BaseModule):
     address: str
     __abi_module: NFT
 
-    def __init__(
-            self,
-            address: str,
-            get_client: Callable[[], web3.Web3],
-            get_storage: Callable[[], IpfsStorage],
-            get_signer_address: Callable[[], str],
-            get_private_key: Callable[[], str],
-            get_transact_opts: Callable[[], TxParams]
-    ):
-        super().__init__(get_client, get_storage, get_signer_address, get_private_key, get_transact_opts)
+    def __init__(self, address: str, client: Web3):
+        super().__init__()
         self.address = address
-        self.__abi_module = NFT(self.get_client(), address)
+        self.__abi_module = NFT(client, address)
 
     def mint(self, arg: MintArg):
         return self.mint_to(self.get_signer_address(), arg)

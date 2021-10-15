@@ -1,33 +1,18 @@
-from typing import Callable
-
-import web3
-
 from ..abi.coin import Coin
 from .base import BaseModule
 from .currency_types import Currency
 from ..abi.erc20 import ERC20
-from ..storage.ipfs_storage import IpfsStorage
-
-from zero_ex.contract_wrappers import TxParams
+from web3 import Web3
 
 
 class CurrencyModule(BaseModule):
     address: str
     __abi_module: Coin
 
-    def __init__(
-            self,
-            address: str,
-            get_client: Callable[[], web3.Web3],
-            get_storage: Callable[[], IpfsStorage],
-            get_signer_address: Callable[[], str],
-            get_private_key: Callable[[], str],
-            get_transact_opts: Callable[[], TxParams]
-    ):
-        super().__init__(get_client,get_storage, get_signer_address, get_private_key, get_transact_opts)
-
+    def __init__(self, address: str, client: Web3):
+        super().__init__()
         self.address = address
-        self.__abi_module = Coin(self.get_client(), address)
+        self.__abi_module = Coin(client, address)
 
     def total_supply(self) -> int:
         return self.__abi_module.total_supply.call()

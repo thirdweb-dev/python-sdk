@@ -11,28 +11,21 @@ from zero_ex.contract_wrappers import TxParams
 
 
 class BaseModule:
-    get_client: Callable[[], Web3]
-    get_storage: Callable[[], IpfsStorage]
-    get_signer_address: Callable[[], str]
-    get_private_key: Callable[[], str]
-    get_transact_opts: Callable[[], TxParams]
+    get_client: Optional[Callable[[], Web3]]
+    get_storage: Optional[Callable[[], IpfsStorage]]
+    get_signer_address: Optional[Callable[[], str]]
+    get_private_key: Optional[Callable[[], str]]
+    get_transact_opts: Optional[Callable[[], TxParams]]
 
     get_account: Optional[Callable[[], LocalAccount]]
     get_options: Optional[Callable[[], SdkOptions]]
 
-    def __init__(
-            self,
-            get_client: Callable[[], Web3],
-            get_storage: Callable[[], IpfsStorage],
-            get_signer_address: Callable[[], str],
-            get_private_key: Callable[[], str],
-            get_transact_opts: Callable[[], TxParams]
-    ):
-        self.get_client = get_client
-        self.get_storage = get_storage
-        self.get_signer_address = get_signer_address
-        self.get_private_key = get_private_key
-        self.get_transact_opts = get_transact_opts
+    def __init__(self):
+        self.get_client = None
+        self.get_storage = None
+        self.get_signer_address = None
+        self.get_private_key = None
+        self.get_transact_opts = None
         self.get_account = None
         self.get_options = None
 

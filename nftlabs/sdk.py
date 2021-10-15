@@ -60,16 +60,8 @@ class NftlabsSdk(object):
 		if self.__currency_module is not None:
 			return self.__currency_module
 
-		module = CurrencyModule(
-			address,
-			self.__get_client,
-			self.__get_storage,
-			self.__get_signer_address,
-			self.__get_private_key,
-			self.__get_transact_ops
-		)
-		module.get_account = self.__get_account
-		module.get_options = self.__get_options
+		module = CurrencyModule(address, self.__get_client())
+		self.__init_module(module)
 		self.__currency_module = module
 		return self.__currency_module
 
@@ -80,16 +72,8 @@ class NftlabsSdk(object):
 		if self.__nft_module is not None:
 			return self.__nft_module
 
-		module = NftModule(
-			address,
-			self.__get_client,
-			self.__get_storage,
-			self.__get_signer_address,
-			self.__get_private_key,
-			self.__get_transact_ops
-		)
-		module.get_account = self.__get_account
-		module.get_options = self.__get_options
+		module = NftModule(address, self.__get_client())
+		self.__init_module(module)
 		self.__nft_module = module
 		return self.__nft_module
 
@@ -121,3 +105,12 @@ class NftlabsSdk(object):
 
 	def __get_options(self) -> Optional[SdkOptions]:
 		return self.options
+
+	def __init_module(self, module):
+		module.get_account = self.__get_account
+		module.get_options = self.__get_options
+		module.get_client = self.__get_client
+		module.get_storage = self.__get_storage
+		module.get_signer_address = self.__get_signer_address
+		module.get_private_key = self.__get_private_key
+		module.get_transact_opts = self.__get_transact_ops
