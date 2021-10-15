@@ -91,7 +91,12 @@ class NftModule(BaseModule):
         pass
 
     def burn(self, token_id: int):
-        pass
+        tx = self.__abi_module.burn.build_transaction(
+            token_id,
+            self.get_transact_opts()
+        )
+        self.execute_tx(tx)
+
 
     def transfer_from(self, from_address: str, to_address: str, token_id: int):
         tx = self.__abi_module.transfer_from.build_transaction(
