@@ -94,7 +94,13 @@ class NftModule(BaseModule):
         pass
 
     def transfer_from(self, from_address: str, to_address: str, token_id: int):
-        pass
+        tx = self.__abi_module.transfer_from.build_transaction(
+            from_address,
+            to_address,
+            token_id,
+            self.get_transact_opts()
+        )
+        self.execute_tx(tx)
 
     """
     Transfers NFT from the current signers wallet to another wallet
