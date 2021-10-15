@@ -21,14 +21,14 @@ class NftModule(BaseModule):
         self.address = address
         self.__abi_module = NFT(client, address)
 
-    def mint(self, arg: MintArg):
+    def mint(self, arg: MintArg) -> NftType:
         return self.mint_to(self.get_signer_address(), arg)
 
     def mint_to(
             self,
             to_address: str,
             arg: MintArg,
-    ):
+    ) -> NftType:
         final_properties: Dict
         if arg.properties is None:
             final_properties = {}
