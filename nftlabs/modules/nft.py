@@ -96,6 +96,18 @@ class NftModule(BaseModule):
     def transfer_from(self, from_address: str, to_address: str, token_id: int):
         pass
 
+    """
+    Transfers NFT from the current signers wallet to another wallet
+    """
+    def transfer(self, to_address: str, token_id: int):
+        tx = self.__abi_module.safe_transfer_from1.build_transaction(
+            self.get_signer_address(),
+            to_address,
+            token_id,
+            self.get_transact_opts()
+        )
+        self.execute_tx(tx)
+
     def set_royalty_bps(self, amount: int):
         tx = self.__abi_module.set_royalty_bps.build_transaction(amount, self.get_transact_opts())
         self.execute_tx(tx)
