@@ -8,7 +8,7 @@ from . import BaseModule
 from typing import Dict, List
 from ..abi.nft import NFT
 
-from ..types import NFT as NftType
+from ..types import NFT as NftType, Role
 from .nft_types import MintArg
 
 
@@ -95,7 +95,6 @@ class NftModule(BaseModule):
         )
         self.execute_tx(tx)
 
-
     def transfer_from(self, from_address: str, to_address: str, token_id: int):
         tx = self.__abi_module.transfer_from.build_transaction(
             from_address,
@@ -148,3 +147,26 @@ class NftModule(BaseModule):
 
     def balance_of(self, address: str) -> int:
         return self.__abi_module.balance_of.call(address)
+
+    def is_approved(self, address: str, operator: str) -> bool:
+        return self.__abi_module.is_approved_for_all.call(address, operator)
+
+    """
+    Sets approval for specified operator, defaults to grant approval
+    """
+    def set_approval(self, operator: str, approved: bool = True):
+        self.execute_tx(self.__abi_module.set_approval_for_all.call(
+            operator, approved, self.get_transact_opts()
+        ))
+
+    def grant_role(self, role: Role, address: str):
+        role_hash = role.get_hash()
+        self.execute_tx(self.__abi_module.grant_role.build_transaction(
+            role_hash, address, self.get_transact_opts()
+        ))
+
+    def revoke_role(self, role, address: str):
+        role_hash = role.get_hash()
+        self.execute_tx(self.__abi_module.revoke_role.build_transaction(
+            role_hash, address, self.get_transact_opts()
+        ))
