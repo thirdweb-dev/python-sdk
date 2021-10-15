@@ -2,19 +2,25 @@ import os
 
 import nftlabs.options
 from nftlabs import NftlabsSdk
+from pprint import pprint
 from nftlabs.modules.nft_types import MintArg
 from nftlabs.types import Role
 
 options = nftlabs.options.SdkOptions()
 sdk = NftlabsSdk(options, "https://rpc-mumbai.maticvigil.com")
+sdk.set_private_key(os.getenv("PKEY"))
 
 currency_module = sdk.get_currency_module("0xd75807e8D122A4DDF3bCCBB67fC33D8d78955726")
 
-print(currency_module.total_supply())
+pprint(currency_module.get_value(1))
+pprint(currency_module.get_value(100000000000000000))
+pprint(currency_module.get_value(1000000000000000000))
+pprint(currency_module.get_value(10000000000000000000))
 
-print(currency_module.get())
+pprint(currency_module.total_supply())
+pprint(currency_module.get())
+pprint(currency_module.get_all_role_members())
 
-sdk.set_private_key(os.getenv("PKEY"))
 
 nft_module = sdk.get_nft_module("0xbDfF8fb43688fB4D2184DF8029A7238ac1413A24")
 print(nft_module.total_supply())
@@ -34,5 +40,5 @@ print(nft_module.total_supply())
 # ])
 # print(minted_nfts)
 
-nft_module.grant_role(Role.admin, "0x26ec212ba1854F1a0c287e5B8E3e5463122EFb47")
+# nft_module.grant_role(Role.admin, "0x26ec212ba1854F1a0c287e5B8E3e5463122EFb47")
 

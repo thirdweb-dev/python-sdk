@@ -3,6 +3,7 @@ from web3 import Web3, HTTPProvider
 
 from typing import Optional
 
+from .errors import NoSignerException
 from .modules import CurrencyModule, NftModule
 from .options import SdkOptions
 from .storage import IpfsStorage
@@ -45,13 +46,16 @@ class NftlabsSdk(object):
 		if not self.client.isConnected():
 			raise Exception("Failed to connect to the web3 provider")
 
+	"""
+	Sets the Private Key used across the entire SDK. Calling this method
+	will automatically reload the private key across all instantiated
+	modules, which allows you to operate on behalf of multiple
+	wallets by calling a single method.
+	"""
 	def set_private_key(self, private_key=""):
 		self.__current_account = Account.from_key(private_key)
 		self.__private_key = "0x" + private_key.lstrip("0x")
 		self.signer_address = self.__current_account.address
-
-		# self.private_key = private_key
-		# self.signer_address = address
 
 	"""
 	Returns an instance of the currency module
@@ -88,7 +92,7 @@ class NftlabsSdk(object):
 
 	def __get_signer_address(self) -> str:
 		if self.signer_address == "":
-			raise Exception("Trying to execute transaction but there's no private key set")
+			raise NoSignerException()
 		return self.signer_address
 
 	def __get_private_key(self) -> str:
