@@ -3,6 +3,7 @@ import os
 import nftlabs.options
 from nftlabs import NftlabsSdk
 from nftlabs.modules.nft_types import MintArg
+from nftlabs.types import Role
 
 options = nftlabs.options.SdkOptions()
 sdk = NftlabsSdk(options, "https://rpc-mumbai.maticvigil.com")
@@ -24,4 +25,14 @@ print(nft_module.total_supply())
 # for nft in nft_module.get_all():
 #     print(nft)
 
-print(nft_module.get_owned("0x26ec212ba1854F1a0c287e5B8E3e5463122EFb47"))
+# nft_module.transfer("0x26ec212ba1854F1a0c287e5B8E3e5463122EFb47", 1)
+# print(nft_module.get_owned("0x26ec212ba1854F1a0c287e5B8E3e5463122EFb47"))
+
+# minted_nfts = nft_module.mint_batch(args=[
+#     MintArg(name="Test first", description="Some description batch"),
+#     MintArg(name="Test second", description="Some description batch"),
+# ])
+# print(minted_nfts)
+
+nft_module.grant_role(Role.admin, "0x26ec212ba1854F1a0c287e5B8E3e5463122EFb47")
+
