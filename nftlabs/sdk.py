@@ -4,7 +4,7 @@ from web3 import Web3, HTTPProvider
 from typing import Optional
 
 from .errors import NoSignerException
-from .modules import CurrencyModule, NftModule
+from .modules import CurrencyModule, NftModule, PackModule
 from .options import SdkOptions
 from .storage import IpfsStorage
 
@@ -23,6 +23,7 @@ class NftlabsSdk(object):
 
 	__currency_module: Optional[CurrencyModule]
 	__nft_module: Optional[NftModule]
+	__pack_module: Optional[PackModule]
 
 	"""
 	Create instance of the NftlabsSdk
@@ -32,6 +33,7 @@ class NftlabsSdk(object):
 
 		self.__currency_module = None
 		self.__nft_module = None
+		self.__pack_module = None
 		self.__current_account = None
 
 		self.options = options
@@ -80,6 +82,18 @@ class NftlabsSdk(object):
 		self.__init_module(module)
 		self.__nft_module = module
 		return self.__nft_module
+
+	"""
+	Returns an instance of the pack module
+	"""
+	def get_pack_module(self, address: str) -> PackModule:
+		if self.__pack_module is not None:
+			return self.__pack_module
+
+		module = PackModule(address, self.__get_client())
+		self.__init_module(module)
+		self.__pack_module = module
+		return self.__pack_module
 
 	"""
 	Internal function used to return the current web3 provider used by downstream modules
