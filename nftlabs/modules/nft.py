@@ -10,7 +10,7 @@ from ..abi.nft import NFT
 
 from ..types import NFT as NftType, Role
 from .nft_types import MintArg
-
+ 
 
 class NftModule(BaseModule):
     address: str
@@ -54,9 +54,6 @@ class NftModule(BaseModule):
         return self.__abi_module.total_supply.call()
 
     def get(self, nft_id: int) -> NftType:
-        return self.__get_metadata(nft_id)
-
-    def __get_metadata(self, nft_id: int) -> NftType:
         uri = self.__get_metadata_uri(nft_id)
         meta = self.get_storage().get(uri)
         meta_obj: NftType = NftType.from_json(meta)
@@ -107,6 +104,7 @@ class NftModule(BaseModule):
     """
     Transfers NFT from the current signers wallet to another wallet
     """
+    
     def transfer(self, to_address: str, token_id: int):
         tx = self.__abi_module.safe_transfer_from1.build_transaction(
             self.get_signer_address(),
@@ -138,6 +136,10 @@ class NftModule(BaseModule):
 
     def __token_of_owner_by_index(self, address: str, token_id: int) -> int:
         return self.__abi_module.token_of_owner_by_index.call(address, token_id)
+    
+    def get_creator(self, token_id: int) -> str:
+        return self.__abi_module.get_creator.call(token_id)
+
 
     """
     Returns balance of the current signers wallet
@@ -161,11 +163,13 @@ class NftModule(BaseModule):
 
     def grant_role(self, role: Role, address: str):
         role_hash = role.get_hash()
-        self.execute_tx(self.__abi_module.grant_role.build_transaction(
-            role_hash, address, self.get_transact_opts()
-        ))
+        tx = self.__abi_module.grant_role.build_transaction(
+                role_hash, address, 
+                self.get_transact_opts()
+        )
+        self.execute_tx(tx)
 
-    def revoke_role(self, role, address: str):
+    def revoke_role(self, role: Role, address: str):
         role_hash = role.get_hash()
         self.execute_tx(self.__abi_module.revoke_role.build_transaction(
             role_hash, address, self.get_transact_opts()

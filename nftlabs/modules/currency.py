@@ -6,7 +6,7 @@ from .currency_types import Currency, CurrencyValue
 from ..abi.erc20 import ERC20
 from web3 import Web3
 from typing import List, Dict
-
+ 
 
 class CurrencyModule(BaseModule):
     address: str
