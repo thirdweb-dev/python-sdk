@@ -3,6 +3,7 @@ import copy
 import json
 
 from web3 import Web3
+from zero_ex.contract_wrappers import TxParams
 
 from . import BaseModule
 from typing import Dict, List
@@ -51,7 +52,7 @@ class NftModule(BaseModule):
         return self.get(token_id)
 
     def total_supply(self) -> int:
-        return self.__abi_module.total_supply.call()
+        return self.__abi_module.total_supply.call(tx_params=TxParams(from_=self.address))
 
     def get(self, nft_id: int) -> NftType:
         return self.__get_metadata(nft_id)
