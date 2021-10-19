@@ -3,7 +3,7 @@ import os
 import nftlabs.options
 from nftlabs import NftlabsSdk
 from pprint import pprint
-from nftlabs.modules.nft_types import MintArg
+from nftlabs.types.nft import MintArg
 from nftlabs.types import Role
 
 options = nftlabs.options.SdkOptions()

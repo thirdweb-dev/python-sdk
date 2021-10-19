@@ -9,8 +9,8 @@ from . import BaseModule
 from typing import Dict, List
 from ..abi.nft import NFT
 
-from ..types import NFT as NftType, Role
-from .nft_types import MintArg
+from ..types import Role
+from ..types.nft import MintArg, NftMetadata as NftType
 
 
 class NftModule(BaseModule):

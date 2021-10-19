@@ -1,8 +1,10 @@
 from ..errors import NoSignerException
 from ..types import Role
+from ..types.pack import PackMetadata, PackNftMetadata, CreatePackArg, AssetAmountPair
+from ..types.nft import NftMetadata
+from ..types.currency import Currency, CurrencyValue
 from ..abi.pack import Pack
 from .base import BaseModule
-from .currency_types import Currency, CurrencyValue
 from ..abi.erc20 import ERC20
 from web3 import Web3
 from typing import List, Dict
@@ -16,6 +18,57 @@ class PackModule(BaseModule):
         super().__init__()
         self.address = address
         self.__abi_module = Pack(client, address)
+
+    def get(self, pack_id: int) -> PackMetadata:
+        pass
+
+    def open(self, pack_id: int) -> List[NftMetadata]:
+        pass
+
+    def get_all(self) -> List[PackMetadata]:
+        pass
+
+    def get_nfts(self, pack_id: int) -> List[PackNftMetadata]:
+        pass
+
+    def balance_of(self, address: str, token_id: int) -> int:
+        pass
+
+    def balance(self, token_id) -> int:
+        pass
+
+    def is_approved(self, address: str, operator: str) -> bool:
+        pass
+
+    def set_approval(self, operator: str, approved: bool):
+        pass
+
+    def transfer(self, to_address: str, token_id: int, amount: int):
+        pass
+
+    def create(self, arg: CreatePackArg) -> PackMetadata:
+        pass
+
+    def transfer_from(self, from_address: str, to_address: str, args: AssetAmountPair):
+        pass
+
+    def transfer_batch_from(self, from_address: str, to_address: str, args: List[AssetAmountPair]):
+        pass
+
+    def get_link_balance(self) -> CurrencyValue:
+        pass
+
+    def deposit_link(self, amount: int):
+        pass
+
+    def withdraw_link(self, to_address: str, amount: int):
+        pass
+
+    def set_royalty_bps(self, amount: int):
+        pass
+
+    def set_restricted_transfer(self, restricted: bool = False):
+        pass
 
     def grant_role(self, role: Role, address: str):
         role_hash = role.get_hash()
