@@ -171,3 +171,8 @@ class NftModule(BaseModule):
         self.execute_tx(self.__abi_module.revoke_role.build_transaction(
             role_hash, address, self.get_transact_opts()
         ))
+
+    def set_restricted_transfer(self, restricted: bool = True):
+        self.execute_tx(self.__abi_module.set_restricted_transfer.build_transaction(
+            restricted, self.get_transact_opts()
+        ))
