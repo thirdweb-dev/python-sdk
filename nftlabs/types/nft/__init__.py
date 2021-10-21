@@ -15,9 +15,9 @@ class MintArg:
 @dataclass_json
 @dataclass
 class NftMetadata:
-    name: str
-    description: str
-    image: str
+    name: Optional[str] = None
+    description: Optional[str] = None
+    image: Optional[str] = None
     properties: Optional[Union[str, dict]] = None
     id: Optional[int] = None
     uri: Optional[str] = None
