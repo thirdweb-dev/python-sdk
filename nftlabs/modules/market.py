@@ -20,29 +20,26 @@ class MarketModule(BaseModule):
         self.__abi_module = Market(client, address)
 
     #todo: return types
-    def list_item(self, arg: ListArg):
+    def list(self, arg: ListArg):
         from_address = self.get_signer_address()
         client = self.get_client()
         erc165 = ERC165(client, arg.asset_contract)
-        isERC165 = erc165.supports_interface(client, arg.asset_contract)
-        if isERC165:
-            asset = NFT(client, arg.asset_contract)
+        isERC721 = erc165.supports_interface(client, interface_id=print(bytearray.fromhex("80ac58cd")))
+        if isERC721:
+            asset = NFT(from_address, arg.asset_contract)
             approved = asset.is_approved_for_all(
                 arg.asset_contract, from_address)
             if not approved:
-                asset.approve_for_all(from_address, arg.asset_contract)
-                is_token_approved = (asset.get_approved(
-                    arg.token_id).lower() == self.address.lower())
+                asset.is_approve_for_all(from_address, arg.asset_contract)
+                is_token_approved = (asset.is_approved_for_all(arg.token_id).lower() == self.address.lower())
                 if not is_token_approved:
                     asset.set_approval_for_all(arg.asset_contract, True)
         else:
-            asset = ERC1155(client, arg.asset_contract)
-            approved = asset.is_approved_for_all(
-                arg.asset_contract, from_address)
+            asset = ERC1155(from_address, arg.asset_contract)
+            approved = asset.is_approved_for_all(arg.asset_contract, from_address)
             if not approved:
-                asset.approve_for_all(from_address, arg.asset_contract)
-                is_token_approved = (asset.get_approved(
-                    arg.token_id).lower() == self.address.lower())
+                asset.set_approval_for_all(from_address, arg.asset_contract)
+                is_token_approved = (asset.get_approved(arg.token_id).lower() == self.address.lower())
                 if not is_token_approved:
                     asset.set_approval_for_all(self.address, True)
 
@@ -59,10 +56,9 @@ class MarketModule(BaseModule):
         )
 
         receipt = self.execute_tx(tx)
-        result = self.__abi_module.get_minted_batch_event(
-            tx_hash=receipt.transactionHash.hex())
+        result = self.__abi_module.get_new_listing_event(tx_hash=receipt.transactionHash.hex())
 
-    def unlist_item(self, listing_id, quantity):
+    def unlist(self, listing_id, quantity):
         tx = self.__abi_module.unlist.build_transaction(
             listing_id,
             quantity,
@@ -78,21 +74,19 @@ class MarketModule(BaseModule):
         if listing.currency_contract is not None and listing.currency_contract != "0x0000000000000000000000000000000000000000":
             erc20 = ERC20(self.get_client(), listing.currency_contract)
             allowance = erc20.allowance(owner, spender)
-            if allowance <= total_price:
+            if allowance < total_price:
                 erc20.increase_allowance(
                     spender,
                     total_price,
                     self.get_transact_opts()
                 )
-
         tx = self.__abi_module.buy.build_transaction(
             listing_id,
             quantity,
             self.get_transact_opts()
         )
         receipt = self.execute_tx(tx)
-        result = self.__abi_module.get_minted_batch_event(
-            tx_hash=receipt.transactionHash.hex())
+        result = self.__abi_module.get_new_sale_event(tx_hash=receipt.transactionHash.hex())
 
     def set_market_fee_bps(self, amount: int):
         tx = self.__abi_module.set_market_fee_bps.build_transaction(
