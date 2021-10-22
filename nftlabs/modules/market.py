@@ -1,7 +1,7 @@
 from web3 import Web3
 from typing import List, Dict
 from . import BaseModule
-from ..types import Role, Listing as ListingType
+from ..types import Role, Listing as Listing
 from ..abi.market import Market
 from market_types import ListArg, Filter
 from ..abi.erc20 import ERC20
@@ -11,7 +11,7 @@ from ..abi.nft import NFT
 
 
 class MarketModule(BaseModule):
-    address: str
+    address: str 
     __abi_module: Market
 
     def __init__(self, client: Web3, address: str):
@@ -20,15 +20,15 @@ class MarketModule(BaseModule):
         self.__abi_module = Market(client, address)
 
     #todo: return types
-    def list(self, arg: ListArg):
+    def list(self, arg: ListArg) -> Listing:
         from_address = self.get_signer_address()
         client = self.get_client()
         erc165 = ERC165(client, arg.asset_contract)
         isERC721 = erc165.supports_interface(client, interface_id=print(bytearray.fromhex("80ac58cd")))
         if isERC721:
-            asset = NFT(from_address, arg.asset_contract)
+            asset = NFTNFT(client, arg.asset_contract)
             approved = asset.is_approved_for_all(
-                arg.asset_contract, from_address)
+                from_address, self.address)
             if not approved:
                 asset.is_approve_for_all(from_address, arg.asset_contract)
                 is_token_approved = (asset.is_approved_for_all(arg.token_id).lower() == self.address.lower())
@@ -36,7 +36,8 @@ class MarketModule(BaseModule):
                     asset.set_approval_for_all(arg.asset_contract, True)
         else:
             asset = ERC1155(from_address, arg.asset_contract)
-            approved = asset.is_approved_for_all(arg.asset_contract, from_address)
+            approved = asset.is_approved_for_all(from_address, self.address)
+
             if not approved:
                 asset.set_approval_for_all(from_address, arg.asset_contract)
                 is_token_approved = (asset.get_approved(arg.token_id).lower() == self.address.lower())
@@ -97,7 +98,7 @@ class MarketModule(BaseModule):
     def get(self, listing_id) -> List:
         self.__abi_module.get_listing.call(listing_id)
 
-    def get_all(self, search_filter: Filter = None) -> List[ListingType]:
+    def get_all(self, search_filter: Filter = None) -> List[Listing]:
         if search_filter is None:
             self.__abi_module.get_all_listings.call()
         elif search_filter.asset_contract is not None:

@@ -20,11 +20,12 @@ class CurrencyModule(BaseModule):
     def total_supply(self) -> int:
         return self.__abi_module.total_supply.call()
 
-    """
-    Gets the currency name, symbol, and decimals
-    """
+  
 
     def get(self) -> Currency:
+        """
+        Gets the currency name, symbol, and decimals
+        """
         return self.__get_currency_metadata(self.address)
 
     def balance_of(self, address: str) -> int:
