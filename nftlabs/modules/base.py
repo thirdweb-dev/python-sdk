@@ -13,25 +13,25 @@ from zero_ex.contract_wrappers import TxParams
 class BaseModule:
     get_client: Optional[Callable[[], Web3]]
     get_storage: Optional[Callable[[], IpfsStorage]]
-    get_signer_address: Optional[Callable[[], str]]
-    get_private_key: Optional[Callable[[], str]]
-    get_transact_opts: Optional[Callable[[], TxParams]]
+    __get_signer_address: Optional[Callable[[], str]]
+    __get_private_key: Optional[Callable[[], str]]
+    __get_transact_opts: Optional[Callable[[], TxParams]]
 
-    get_account: Optional[Callable[[], LocalAccount]]
+    __get_account: Optional[Callable[[], LocalAccount]]
     get_options: Optional[Callable[[], SdkOptions]]
 
     def __init__(self):
         self.get_client = None
         self.get_storage = None
-        self.get_signer_address = None
-        self.get_private_key = None
-        self.get_transact_opts = None
-        self.get_account = None
+        self.__get_signer_address = None
+        self.__get_private_key = None
+        self.__get_transact_opts = None
+        self.__get_account = None
         self.get_options = None
 
     def execute_tx(self, tx) -> TxReceipt:
         client = self.get_client()
-        nonce = client.eth.get_transaction_count(self.get_signer_address())
+        nonce = client.eth.get_transaction_count(self.__get_signer_address())
         tx['nonce'] = nonce
         del tx['from']
         signed_tx = self.__sign_tx(tx)
@@ -42,7 +42,7 @@ class BaseModule:
         )
 
     def __sign_tx(self, tx):
-        signed_tx = self.get_account().sign_transaction(tx)
+        signed_tx = self.__get_account().sign_transaction(tx)
         return signed_tx
 
 

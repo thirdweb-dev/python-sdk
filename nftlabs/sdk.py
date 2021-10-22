@@ -139,10 +139,10 @@ class NftlabsSdk(object):
 		return self.options
 
 	def __init_module(self, module):
-		module.get_account = self.__get_account
+		module.__get_account = self.__get_account
 		module.get_options = self.__get_options
 		module.get_client = self.__get_client
 		module.get_storage = self.__get_storage
-		module.get_signer_address = self.__get_signer_address
-		module.get_private_key = self.__get_private_key
-		module.get_transact_opts = self.__get_transact_ops
+		module.__get_signer_address = self.__get_signer_address
+		module.__get_private_key = self.__get_private_key
+		module.__get_transact_opts = self.__get_transact_ops

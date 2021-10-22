@@ -23,7 +23,7 @@ class NftModule(BaseModule):
         self.__abi_module = NFT(client, address)
 
     def mint(self, arg: MintArg) -> NftType:
-        return self.mint_to(self.get_signer_address(), arg)
+        return self.mint_to(self.__get_signer_address(), arg)
 
     def mint_to(
             self,
@@ -44,8 +44,8 @@ class NftModule(BaseModule):
             'properties': final_properties
         }
 
-        uri = storage.upload(json.dumps(meta), self.address, self.get_signer_address())
-        tx = self.__abi_module.mint_nft.build_transaction(to_address, uri, self.get_transact_opts())
+        uri = storage.upload(json.dumps(meta), self.address, self.__get_signer_address())
+        tx = self.__abi_module.mint_nft.build_transaction(to_address, uri, self.__get_transact_opts())
         receipt = self.execute_tx(tx)
         result = self.__abi_module.get_minted_event(tx_hash=receipt.transactionHash.hex())
         token_id = result[0]['args']['tokenId']
@@ -72,7 +72,7 @@ class NftModule(BaseModule):
         return uri
 
     def mint_batch(self, args: List[MintArg]):
-        return self.mint_batch_to(self.get_signer_address(), args)
+        return self.mint_batch_to(self.__get_signer_address(), args)
 
     def mint_batch_to(self, to_address: str, args: List[MintArg]):
         uris = [self.get_storage().upload(json.dumps({
@@ -80,9 +80,9 @@ class NftModule(BaseModule):
             'description': arg.description,
             'image': arg.image_uri,
             'properties': arg.properties if arg.properties is not None else {}
-        }), self.address, self.get_signer_address()) for arg in args]
+        }), self.address, self.__get_signer_address()) for arg in args]
 
-        tx = self.__abi_module.mint_nft_batch.build_transaction(to_address, uris, self.get_transact_opts())
+        tx = self.__abi_module.mint_nft_batch.build_transaction(to_address, uris, self.__get_transact_opts())
 
         receipt = self.execute_tx(tx)
         result = self.__abi_module.get_minted_batch_event(tx_hash=receipt.transactionHash.hex())
@@ -92,7 +92,7 @@ class NftModule(BaseModule):
     def burn(self, token_id: int):
         tx = self.__abi_module.burn.build_transaction(
             token_id,
-            self.get_transact_opts()
+            self.__get_transact_opts()
         )
         self.execute_tx(tx)
 
@@ -101,7 +101,7 @@ class NftModule(BaseModule):
             from_address,
             to_address,
             token_id,
-            self.get_transact_opts()
+            self.__get_transact_opts()
         )
         self.execute_tx(tx)
 
@@ -110,15 +110,15 @@ class NftModule(BaseModule):
     """
     def transfer(self, to_address: str, token_id: int):
         tx = self.__abi_module.safe_transfer_from1.build_transaction(
-            self.get_signer_address(),
+            self.__get_signer_address(),
             to_address,
             token_id,
-            self.get_transact_opts()
+            self.__get_transact_opts()
         )
         self.execute_tx(tx)
 
     def set_royalty_bps(self, amount: int):
-        tx = self.__abi_module.set_royalty_bps.build_transaction(amount, self.get_transact_opts())
+        tx = self.__abi_module.set_royalty_bps.build_transaction(amount, self.__get_transact_opts())
         self.execute_tx(tx)
 
     def get_all(self) -> List[NftType]:
@@ -131,7 +131,7 @@ class NftModule(BaseModule):
     """
     def get_owned(self, address: str = "") -> List[NftType]:
         if address == "":
-            address = self.get_signer_address()
+            address = self.__get_signer_address()
 
         balance = self.__abi_module.balance_of.call(address)
         owned_tokens = [self.__token_of_owner_by_index(address, i) for i in range(balance)]
@@ -144,7 +144,7 @@ class NftModule(BaseModule):
     Returns balance of the current signers wallet
     """
     def balance(self) -> int:
-        return self.__abi_module.balance_of.call(self.get_signer_address())
+        return self.__abi_module.balance_of.call(self.__get_signer_address())
 
     def balance_of(self, address: str) -> int:
         return self.__abi_module.balance_of.call(address)
@@ -157,22 +157,22 @@ class NftModule(BaseModule):
     """
     def set_approval(self, operator: str, approved: bool = True):
         self.execute_tx(self.__abi_module.set_approval_for_all.call(
-            operator, approved, self.get_transact_opts()
+            operator, approved, self.__get_transact_opts()
         ))
 
     def grant_role(self, role: Role, address: str):
         role_hash = role.get_hash()
         self.execute_tx(self.__abi_module.grant_role.build_transaction(
-            role_hash, address, self.get_transact_opts()
+            role_hash, address, self.__get_transact_opts()
         ))
 
     def revoke_role(self, role, address: str):
         role_hash = role.get_hash()
         self.execute_tx(self.__abi_module.revoke_role.build_transaction(
-            role_hash, address, self.get_transact_opts()
+            role_hash, address, self.__get_transact_opts()
         ))
 
     def set_restricted_transfer(self, restricted: bool = True):
         self.execute_tx(self.__abi_module.set_restricted_transfer.build_transaction(
-            restricted, self.get_transact_opts()
+            restricted, self.__get_transact_opts()
         ))
