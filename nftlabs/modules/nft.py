@@ -5,7 +5,7 @@ import json
 from web3 import Web3
 from zero_ex.contract_wrappers import TxParams
 
-from . import BaseModule
+from .base import _BaseModule
 from typing import Dict, List
 from ..abi.nft import NFT
 
@@ -13,7 +13,7 @@ from ..types import Role
 from ..types.nft import MintArg, NftMetadata as NftType
 
 
-class NftModule(BaseModule):
+class NftModule(_BaseModule):
     address: str
     __abi_module: NFT
 

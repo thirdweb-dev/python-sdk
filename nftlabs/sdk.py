@@ -16,7 +16,7 @@ class NftlabsSdk(object):
 	options: SdkOptions
 
 	__private_key: str
-	signer_address: str
+	signer_address: str = ""
 	__current_account: Optional[LocalAccount]
 
 	storage: IpfsStorage
@@ -29,7 +29,7 @@ class NftlabsSdk(object):
 	"""
 	Create instance of the NftlabsSdk
 	"""
-	def __init__(self, options: SdkOptions, url: str, private_key=""):
+	def __init__(self, options: SdkOptions, url: str):
 		print("Created Nftlabs SDK!")
 
 		self.__currency_module = None
@@ -39,8 +39,8 @@ class NftlabsSdk(object):
 		self.__current_account = None
 
 		self.options = options
-		if private_key != "":
-			self.set_private_key(private_key)
+		if self.options.private_key != "":
+			self.set_private_key(self.options.private_key)
 
 		self.storage = IpfsStorage(
 			options.ipfs_gateway_url if options.ipfs_gateway_url
@@ -139,10 +139,10 @@ class NftlabsSdk(object):
 		return self.options
 
 	def __init_module(self, module):
-		module.__get_account = self.__get_account
+		module.get_account = self.__get_account
 		module.get_options = self.__get_options
 		module.get_client = self.__get_client
 		module.get_storage = self.__get_storage
-		module.__get_signer_address = self.__get_signer_address
-		module.__get_private_key = self.__get_private_key
-		module.__get_transact_opts = self.__get_transact_ops
+		module.get_signer_address = self.__get_signer_address
+		module.get_private_key = self.__get_private_key
+		module.get_transact_opts = self.__get_transact_ops

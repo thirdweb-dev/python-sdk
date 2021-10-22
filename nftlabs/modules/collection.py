@@ -2,17 +2,18 @@ from typing import List, Dict
 
 from zero_ex.contract_wrappers import TxParams
 
-from .base import BaseModule
+from .base import _BaseModule
+from ..types.metadata import Metadata
 from ..types.nft import NftMetadata
 from ..errors import NoSignerException
 from ..types.role import Role
 from ..abi.nft_collection import NFTCollection
 from web3 import Web3
 
-from ..types.collection import CollectionMetadata
+from ..types.collection import CollectionMetadata, CreateCollectionArg
 
 
-class CollectionModule(BaseModule):
+class CollectionModule(_BaseModule):
     address: str
     __abi_module: NFTCollection
 
@@ -47,7 +48,7 @@ class CollectionModule(BaseModule):
     '''
     def balance(self, token_id: int) -> int:
         return self.__abi_module.balance_of.call(
-            self.__get_signer_address(),
+            self.get_signer_address(),
             token_id,
             TxParams(from_=self.address)
         )
@@ -61,22 +62,33 @@ class CollectionModule(BaseModule):
 
     def set_approval(self, operator: str, approved: bool = True):
         self.execute_tx(self.__abi_module.set_approval_for_all.build_transaction(
-            operator, approved, self.__get_transact_opts()
+            operator, approved, self.get_transact_opts()
         ))
 
     def transfer(self, to_address: str, token_id: int, amount: int):
         self.execute_tx(self.__abi_module.safe_transfer_from.build_transaction(
-            self.__get_signer_address(), to_address, token_id, amount, "", self.__get_transact_opts()
+            self.get_signer_address(), to_address, token_id, amount, "", self.get_transact_opts()
         ))
 
-    def create(self, metadata) -> CollectionMetadata:
-        pass
+    def create(self, metadata: Metadata) -> CollectionMetadata:
+        return self.create_batch([metadata])[0]
 
-    def create_batch(self, metas) -> List[CollectionMetadata]:
-        pass
+    def create_batch(self, metas: List[Metadata]) -> List[CollectionMetadata]:
+        meta_with_supply = [CreateCollectionArg(metadata=m, supply=0) for m in metas]
+        return self.create_and_mint_batch(meta_with_supply)
 
-    def create_and_mint(self, meta_with_supply) -> List[CollectionMetadata]:
-        pass
+    def create_and_mint(self, meta_with_supply: CreateCollectionArg) -> CollectionMetadata:
+        return self.create_and_mint_batch([meta_with_supply])[0]
+
+    def create_and_mint_batch(self, meta_with_supply: List[CreateCollectionArg]) -> List[CollectionMetadata]:
+        uris = [self.get_storage().upload(meta.to_json(), self.address, self.get_signer_address()) for meta in meta_with_supply]
+        supplies = [a.supply for a in meta_with_supply]
+        receipt = self.execute_tx(self.__abi_module.create_native_tokens.build_transaction(
+            self.get_signer_address(), uris, supplies, "", self.get_transact_opts()
+        ))
+        result = self.__abi_module.get_native_tokens_event(tx_hash=receipt.transactionHash.hex())
+        token_ids = result[0]['args']['tokenIds']
+        return [self.get(i) for i in token_ids]
 
     def create_with_erc20(self, token_contract: str, token_amount: int, metadata):
         pass
@@ -116,31 +128,31 @@ class CollectionModule(BaseModule):
 
     def set_royalty_bps(self, amount: int):
         self.execute_tx(self.__abi_module.set_royalty_bps.build_transaction(
-            amount, self.__get_transact_opts()
+            amount, self.get_transact_opts()
         ))
 
     def grant_role(self, role: Role, address: str):
         role_hash = role.get_hash()
         self.execute_tx(self.__abi_module.grant_role.build_transaction(
-            role_hash, address, self.__get_transact_opts()
+            role_hash, address, self.get_transact_opts()
         ))
 
     def revoke_role(self, role: Role, address: str):
         role_hash = role.get_hash()
 
         try:
-            signer_address = self.__get_signer_address()
+            signer_address = self.get_signer_address()
             if signer_address.lower() != address.lower():
                 pass
             self.execute_tx(self.__abi_module.renounce_role.build_transaction(
-                role_hash, address, self.__get_transact_opts()
+                role_hash, address, self.get_transact_opts()
             ))
             return
         except NoSignerException:
             pass
 
         self.execute_tx(self.__abi_module.revoke_role.build_transaction(
-            role_hash, address, self.__get_transact_opts()
+            role_hash, address, self.get_transact_opts()
         ))
 
     def get_role_members(self, role: Role) -> List[str]:

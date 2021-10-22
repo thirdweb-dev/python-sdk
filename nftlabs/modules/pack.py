@@ -4,13 +4,13 @@ from ..types.pack import PackMetadata, PackNftMetadata, CreatePackArg, AssetAmou
 from ..types.nft import NftMetadata
 from ..types.currency import Currency, CurrencyValue
 from ..abi.pack import Pack
-from .base import BaseModule
+from .base import _BaseModule
 from ..abi.erc20 import ERC20
 from web3 import Web3
 from typing import List, Dict
 
 
-class PackModule(BaseModule):
+class PackModule(_BaseModule):
     address: str
     __abi_module: Pack
 
@@ -41,19 +41,19 @@ class PackModule(BaseModule):
         return self.__abi_module.balance_of.call(address, token_id)
 
     def balance(self, token_id: int) -> int:
-        return self.__abi_module.balance_of.call(self.__get_signer_address(), token_id)
+        return self.__abi_module.balance_of.call(self.get_signer_address(), token_id)
 
     def is_approved(self, address: str, operator: str) -> bool:
         return self.__abi_module.is_approved_for_all.call(address, operator)
 
     def set_approval(self, operator: str, approved: bool):
         return self.execute_tx(self.__abi_module.set_approval_for_all.build_transaction(
-            operator, approved, self.__get_transact_opts()
+            operator, approved, self.get_transact_opts()
         ))
 
     def transfer(self, to_address: str, token_id: int, amount: int):
         return self.execute_tx(self.__abi_module.safe_transfer_from.build_transaction(
-            self.__get_signer_address(), to_address, token_id, amount, "", self.__get_transact_opts(),
+            self.get_signer_address(), to_address, token_id, amount, "", self.get_transact_opts(),
         ))
 
     def create(self, arg: CreatePackArg) -> PackMetadata:
@@ -61,13 +61,13 @@ class PackModule(BaseModule):
 
     def transfer_from(self, from_address: str, to_address: str, args: AssetAmountPair):
         return self.execute_tx(self.__abi_module.safe_transfer_from.build_transaction(
-            from_address, to_address, args.token_id, args.amount, "", self.__get_transact_opts(),
+            from_address, to_address, args.token_id, args.amount, "", self.get_transact_opts(),
         ))
 
     def transfer_batch_from(self, from_address: str, to_address: str, args: List[AssetAmountPair]):
         ids, amounts = [i.token_id for i in args], [i.amount for i in args]
         return self.execute_tx(self.__abi_module.safe_batch_transfer_from.build_transaction(
-            from_address, to_address, ids, amounts, "", self.__get_transact_opts(),
+            from_address, to_address, ids, amounts, "", self.get_transact_opts(),
         ))
 
     def get_link_balance(self) -> CurrencyValue:
@@ -81,36 +81,36 @@ class PackModule(BaseModule):
 
     def set_royalty_bps(self, amount: int):
         return self.execute_tx(self.__abi_module.set_royalty_bps.build_transaction(
-            amount, self.__get_transact_opts()
+            amount, self.get_transact_opts()
         ))
 
     def set_restricted_transfer(self, restricted: bool = True):
         return self.execute_tx(self.__abi_module.set_restricted_transfer.build_transaction(
-            restricted, self.__get_transact_opts()
+            restricted, self.get_transact_opts()
         ))
 
     def grant_role(self, role: Role, address: str):
         role_hash = role.get_hash()
         self.execute_tx(self.__abi_module.grant_role.build_transaction(
-            role_hash, address, self.__get_transact_opts()
+            role_hash, address, self.get_transact_opts()
         ))
 
     def revoke_role(self, role: Role, address: str):
         role_hash = role.get_hash()
 
         try:
-            signer_address = self.__get_signer_address()
+            signer_address = self.get_signer_address()
             if signer_address.lower() != address.lower():
                 pass
             self.execute_tx(self.__abi_module.renounce_role.build_transaction(
-                role_hash, address, self.__get_transact_opts()
+                role_hash, address, self.get_transact_opts()
             ))
             return
         except NoSignerException:
             pass
 
         self.execute_tx(self.__abi_module.revoke_role.build_transaction(
-            role_hash, address, self.__get_transact_opts()
+            role_hash, address, self.get_transact_opts()
         ))
 
     def get_role_members(self, role: Role) -> List[str]:

@@ -1,14 +1,14 @@
 from ..errors import NoSignerException
 from ..types import Role
 from ..abi.coin import Coin
-from .base import BaseModule
+from .base import _BaseModule
 from ..types.currency import Currency, CurrencyValue
 from ..abi.erc20 import ERC20
 from web3 import Web3
 from typing import List, Dict
 
 
-class CurrencyModule(BaseModule):
+class CurrencyModule(_BaseModule):
     address: str
     __abi_module: Coin
 
@@ -31,66 +31,66 @@ class CurrencyModule(BaseModule):
         return self.__abi_module.balance_of.call(address)
 
     def balance(self):
-        return self.__abi_module.balance_of.call(self.__get_signer_address())
+        return self.__abi_module.balance_of.call(self.get_signer_address())
 
     def allowance(self, spender: str) -> int:
-        return self.__abi_module.allowance.call(self.__get_signer_address(), spender)
+        return self.__abi_module.allowance.call(self.get_signer_address(), spender)
 
     def allowance_of(self, owner: str, spender: str) -> int:
         return self.__abi_module.allowance.call(owner, spender)
 
     def set_allowance(self, spender: str, amount: int):
         return self.execute_tx(self.__abi_module.approve.build_transaction(
-            spender, amount, self.__get_transact_opts()
+            spender, amount, self.get_transact_opts()
         ))
 
     def mint_to(self, to: str, amount: int):
         return self.execute_tx(self.__abi_module.mint.build_transaction(
-            to, amount, self.__get_transact_opts()
+            to, amount, self.get_transact_opts()
         ))
 
     def mint(self, amount: int):
         return self.execute_tx(self.__abi_module.mint.build_transaction(
-            self.__get_signer_address(), amount, self.__get_transact_opts()
+            self.get_signer_address(), amount, self.get_transact_opts()
         ))
 
     def burn(self, amount: int):
         return self.execute_tx(self.__abi_module.burn.build_transaction(
-            amount, self.__get_transact_opts()
+            amount, self.get_transact_opts()
         ))
 
     def burn_from(self, from_address: str, amount: int):
         return self.execute_tx(self.__abi_module.burn_from.build_transaction(
-            from_address, amount, self.__get_transact_opts()
+            from_address, amount, self.get_transact_opts()
         ))
 
     def transfer_from(self, from_address: str, to_address: str, amount: int):
         return self.execute_tx(self.__abi_module.transfer_from.build_transaction(
-            from_address, to_address, amount, self.__get_transact_opts()
+            from_address, to_address, amount, self.get_transact_opts()
         ))
 
     def grant_role(self, role: Role, address: str):
         role_hash = role.get_hash()
         self.execute_tx(self.__abi_module.grant_role.build_transaction(
-            role_hash, address, self.__get_transact_opts()
+            role_hash, address, self.get_transact_opts()
         ))
 
     def revoke_role(self, role: Role, address: str):
         role_hash = role.get_hash()
 
         try:
-            signer_address = self.__get_signer_address()
+            signer_address = self.get_signer_address()
             if signer_address.lower() != address.lower():
                 pass
             self.execute_tx(self.__abi_module.renounce_role.build_transaction(
-                role_hash, address, self.__get_transact_opts()
+                role_hash, address, self.get_transact_opts()
             ))
             return
         except NoSignerException:
             pass
 
         self.execute_tx(self.__abi_module.revoke_role.build_transaction(
-            role_hash, address, self.__get_transact_opts()
+            role_hash, address, self.get_transact_opts()
         ))
 
     def get_role_members(self, role: Role) -> List[str]:
