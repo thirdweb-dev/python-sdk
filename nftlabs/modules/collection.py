@@ -90,11 +90,17 @@ class CollectionModule(_BaseModule):
         token_ids = result[0]['args']['tokenIds']
         return [self.get(i) for i in token_ids]
 
-    def create_with_erc20(self, token_contract: str, token_amount: int, metadata):
-        pass
+    def create_with_erc20(self, token_contract: str, token_amount: int, metadata: CreateCollectionArg):
+        uri = self.get_storage().upload(metadata.metadata, self.address, self.get_signer_address())
+        self.execute_tx(self.__abi_module.wrap_erc20.build_transaction(
+            token_contract, token_amount, metadata.supply, uri, self.get_transact_opts()
+        ))
 
     def create_with_erc721(self, token_contract: str, token_id: int, metadata):
-        pass
+        uri = self.get_storage().upload(metadata.metadata, self.address, self.get_signer_address())
+        self.execute_tx(self.__abi_module.wrap_erc721.build_transaction(
+            token_contract, token_id, uri, self.get_transact_opts()
+        ))
 
     def mint(self, args):
         pass
