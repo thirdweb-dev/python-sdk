@@ -10,12 +10,12 @@ from dataclasses_json import dataclass_json
 class Listing:
     id: str
     seller: str
-    tokenContract: str
-    tokenId: str
-    tokenMetadata: NFTMetadata
+    token_contract: str
+    token_id: str
+    token_metadata: Optional[NFTMetadata] = None
     quantity: int
-    currencyContract: str
-    currencyMetadata: CurrencyValue | null
+    currency_contract: str
+    currency_metadata: CurrencyValue | null
     price: int
-    saleStart: str
-    saleEnd: str
+    sale_start: str
+    sale_end: str
