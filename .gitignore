@@ -10,6 +10,5 @@ build/
 dist
 
 nftlabs_sdk.egg-info/
-nftlabs/modules/collection.py
 nftlabs/.DS_Store
 nftlabs/modules/docs/*
