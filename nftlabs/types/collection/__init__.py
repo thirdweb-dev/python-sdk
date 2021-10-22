@@ -22,3 +22,10 @@ class CreateCollectionArg:
     metadata: Optional[Metadata] = None
     supply: Optional[int] = None
 
+
+@dataclass_json
+@dataclass
+class MintCollectionArg:
+    token_id: Optional[int] = None
+    amount: Optional[int] = None
+

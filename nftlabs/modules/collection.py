@@ -10,7 +10,7 @@ from ..types.role import Role
 from ..abi.nft_collection import NFTCollection
 from web3 import Web3
 
-from ..types.collection import CollectionMetadata, CreateCollectionArg
+from ..types.collection import CollectionMetadata, CreateCollectionArg, MintCollectionArg
 
 
 class CollectionModule(_BaseModule):
@@ -90,10 +90,10 @@ class CollectionModule(_BaseModule):
         token_ids = result[0]['args']['tokenIds']
         return [self.get(i) for i in token_ids]
 
-    def create_with_erc20(self, token_contract: str, token_amount: int, metadata: CreateCollectionArg):
-        uri = self.get_storage().upload(metadata.metadata, self.address, self.get_signer_address())
+    def create_with_erc20(self, token_contract: str, token_amount: int, arg: CreateCollectionArg):
+        uri = self.get_storage().upload(arg.metadata, self.address, self.get_signer_address())
         self.execute_tx(self.__abi_module.wrap_erc20.build_transaction(
-            token_contract, token_amount, metadata.supply, uri, self.get_transact_opts()
+            token_contract, token_amount, arg.supply, uri, self.get_transact_opts()
         ))
 
     def create_with_erc721(self, token_contract: str, token_id: int, metadata):
@@ -102,35 +102,49 @@ class CollectionModule(_BaseModule):
             token_contract, token_id, uri, self.get_transact_opts()
         ))
 
-    def mint(self, args):
-        pass
+    def mint(self, args: MintCollectionArg):
+        self.mint_to(self.get_signer_address(), args)
 
-    def mint_to(self, to_address: str, args):
-        pass
+    def mint_to(self, to_address: str, arg: MintCollectionArg):
+        self.execute_tx(self.__abi_module.mint.build_transaction(
+            to_address, arg.token_id, arg.amount, "", self.get_transact_opts()
+        ))
 
-    def mint_batch(self, args):
-        pass
+    def mint_batch(self, args: List[MintCollectionArg]):
+        self.mint_batch_to(self.get_signer_address(), args)
 
-    def mint_batch_to(self, to_address, args):
-        pass
+    def mint_batch_to(self, to_address, args: List[MintCollectionArg]):
+        ids = [a.id for a in args]
+        amounts = [a.amount for a in args]
+        self.execute_tx(self.__abi_module.mint_batch.build_transaction(
+            to_address, ids, amounts, self.get_transact_opts()
+        ))
 
-    def burn(self, args):
-        pass
+    def burn(self, args: MintCollectionArg):
+        self.burn_from(self.get_signer_address(), args)
 
-    def burn_batch(self, args):
-        pass
+    def burn_batch(self, args: List[MintCollectionArg]):
+        self.burn_batch_from(self.get_signer_address(), args)
 
-    def burn_from(self, account: str, args):
-        pass
+    def burn_from(self, account: str, args: MintCollectionArg):
+        self.execute_tx(self.__abi_module.burn.build_transaction(
+            account, args.token_id, args.amount, self.get_transact_opts()
+        ))
 
-    def burn_batch_from(self, account: str, args):
-        pass
+    def burn_batch_from(self, account: str, args: List[MintCollectionArg]):
+        self.execute_tx(self.__abi_module.burn_batch.build_transaction(
+            account, [i.id for i in args], [i.amount for i in args], self.get_transact_opts()
+        ))
 
-    def transfer_from(self, from_address: str, to_address: str, args):
-        pass
+    def transfer_from(self, from_address: str, to_address: str, args: MintCollectionArg):
+        self.execute_tx(self.__abi_module.safe_transfer_from.build_transaction(
+            from_address, to_address, args.token_id, args.amount, "", self.get_transact_opts()
+        ))
 
     def transfer_batch_from(self, from_address: str, to_address: str, args):
-        pass
+        self.execute_tx(self.__abi_module.safe_batch_transfer_from.build_transaction(
+            from_address, to_address, args.token_id, args.amount, "", self.get_transact_opts()
+        ))
 
     def set_royalty_bps(self, amount: int):
         self.execute_tx(self.__abi_module.set_royalty_bps.build_transaction(
