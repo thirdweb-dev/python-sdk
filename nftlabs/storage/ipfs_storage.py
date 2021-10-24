@@ -37,3 +37,7 @@ class IpfsStorage:
 
         response = result.json()
         return response['IpfsUri']
+    
+    def Upload_metadata(self, metadata: str, contract_address: str, signer_address: str) -> str:
+        if type(metadata) == str:
+            return self.upload(metadata, contract_address, signer_address)

@@ -1,3 +1,4 @@
+"""Interact with the market module of the app."""
 from web3 import Web3
 from typing import List, Dict
 from . import BaseModule
@@ -11,36 +12,52 @@ from ..abi.nft import NFT
 
 
 class MarketModule(BaseModule):
-    address: str 
+    """
+    Market Methods
+    """
+    address: str
+    """
+    Address of the market contract.
+    """
     __abi_module: Market
 
     def __init__(self, client: Web3, address: str):
+        """
+        Initialize the Market Module.
+        """
+
         super().__init__()
         self.address = address
         self.__abi_module = Market(client, address)
 
     #todo: return types
     def list(self, arg: ListArg) -> Listing:
+        """
+        List an asset for sale.
+        """
         from_address = self.get_signer_address()
         client = self.get_client()
         erc165 = ERC165(client, arg.asset_contract)
-        isERC721 = erc165.supports_interface(client, interface_id=print(bytearray.fromhex("80ac58cd")))
+        isERC721 = erc165.supports_interface(
+            client, interface_id=bytearray.fromhex("80ac58cd"))
         if isERC721:
-            asset = NFTNFT(client, arg.asset_contract)
+            asset = NFT(client, arg.asset_contract)
             approved = asset.is_approved_for_all(
                 from_address, self.address)
             if not approved:
                 asset.is_approve_for_all(from_address, arg.asset_contract)
-                is_token_approved = (asset.is_approved_for_all(arg.token_id).lower() == self.address.lower())
+                is_token_approved = (asset.is_approved_for_all(
+                    arg.token_id).lower() == self.address.lower())
                 if not is_token_approved:
                     asset.set_approval_for_all(arg.asset_contract, True)
         else:
-            asset = ERC1155(from_address, arg.asset_contract)
+            asset = ERC1155(client, arg.asset_contract)
             approved = asset.is_approved_for_all(from_address, self.address)
 
             if not approved:
                 asset.set_approval_for_all(from_address, arg.asset_contract)
-                is_token_approved = (asset.get_approved(arg.token_id).lower() == self.address.lower())
+                is_token_approved = (asset.get_approved(
+                    arg.token_id).lower() == self.address.lower())
                 if not is_token_approved:
                     asset.set_approval_for_all(self.address, True)
 
@@ -57,9 +74,13 @@ class MarketModule(BaseModule):
         )
 
         receipt = self.execute_tx(tx)
-        result = self.__abi_module.get_new_listing_event(tx_hash=receipt.transactionHash.hex())
+        result = self.__abi_module.get_new_listing_event(
+            tx_hash=receipt.transactionHash.hex())
 
     def unlist(self, listing_id, quantity):
+        """ 
+        Unlist an asset for sale.
+        """
         tx = self.__abi_module.unlist.build_transaction(
             listing_id,
             quantity,
@@ -67,7 +88,16 @@ class MarketModule(BaseModule):
         )
         self.execute_tx(tx)
 
+    def unlist_all(self, listing_id: int):
+        """ 
+        Unlist an asset for sale.
+        """
+        self.unlist(listing_id, self.get(listing_id).quantity)
+
     def buy(self, listing_id: int, quantity: int):
+        """
+        Buy a listing.
+        """
         listing = get(listing_id)
         owner = self.get_signer_address()
         spender = self.address
@@ -87,18 +117,47 @@ class MarketModule(BaseModule):
             self.get_transact_opts()
         )
         receipt = self.execute_tx(tx)
-        result = self.__abi_module.get_new_sale_event(tx_hash=receipt.transactionHash.hex())
+        result = self.__abi_module.get_new_sale_event(
+            tx_hash=receipt.transactionHash.hex())
 
     def set_market_fee_bps(self, amount: int):
+        """ 
+        Set the market fee in basis points.
+        """
         tx = self.__abi_module.set_market_fee_bps.build_transaction(
             amount,
             self.get_transact_opts())
         self.execute_tx(tx)
 
     def get(self, listing_id) -> List:
+        """
+        Get a listing.
+        """
         self.__abi_module.get_listing.call(listing_id)
 
+    def get_all_listings(self, search_filter: Filter = None) -> List[Listing]:
+        """ 
+        Returns all the listings.
+        """
+        self.get_all(search_filter)
+
+    def set_module_metadata(metadata: str):
+        """
+        Sets the metadata for the module
+        """
+        uri = self.get_storage().Upload_metadata(
+            metadata, self.address, self.get_signer_address())
+
+    def get_listing(self, listing_id: int) -> Listing:
+        """
+        Get a listing.
+        """
+        self.get(listing_id)
+
     def get_all(self, search_filter: Filter = None) -> List[Listing]:
+        """ 
+        Returns all the listings.
+        """
         if search_filter is None:
             self.__abi_module.get_all_listings.call()
         elif search_filter.asset_contract is not None:
@@ -119,4 +178,7 @@ class MarketModule(BaseModule):
             self.__abi_module.get_all_listings.call()
 
     def total_supply(self) -> int:
+        """
+        Returns the total supply of the market.
+        """
         self.__abi_module.total_listings.call()
