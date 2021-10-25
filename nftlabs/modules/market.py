@@ -32,7 +32,7 @@ class MarketModule(BaseModule):
         self.__abi_module = Market(client, address)
 
     #todo: return types
-    def list(self, arg: ListArg) -> Listing:
+    def list(self, arg: ListArg):
         """
         List an asset for sale.
         """
@@ -147,7 +147,7 @@ class MarketModule(BaseModule):
         """
         Sets the metadata for the module
         """
-        uri = self.get_storage().Upload_metadata(
+        uri = self.get_storage().upload_metadata(
             metadata, self.address, self.get_signer_address())
 
     def get_listing(self, listing_id: int) -> Listing:

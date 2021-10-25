@@ -271,7 +271,7 @@ class NftModule(_BaseModule):
         """
         Sets the metadata for the module
         """
-        uri = self.get_storage().Upload_metadata(
+        uri = self.get_storage().upload_metadata(
             metadata, self.address, self.get_signer_address())
 
     def set_restricted_transfer(self, restricted: bool = False):

@@ -163,7 +163,7 @@ class CurrencyModule(BaseModule):
         """
         Sets the metadata for the module
         """
-        uri = self.get_storage().Upload_metadata(
+        uri = self.get_storage().upload_metadata(
             metadata, self.address, self.get_signer_address())
 
     def get_value(self, value: int) -> Currency:
