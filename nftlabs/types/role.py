@@ -7,6 +7,7 @@ class Role(enum.Enum):
     minter = "MINTER_ROLE"
     transfer = "TRANSFER_ROLE"
     pauser = "PAUSER_ROLE"
+    lister = "LISTER_ROLE"
 
     def get_hash(self) -> bytes:
         if self.name == "admin":

@@ -10,3 +10,7 @@ build/
 dist
 
 nftlabs_sdk.egg-info/
+nftlabs/.DS_Store
+nftlabs/modules/docs/*
+nftlabs/modules/.DS_Store
+.DS_Store

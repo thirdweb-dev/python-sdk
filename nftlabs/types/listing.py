@@ -1,0 +1,21 @@
+from dataclasses import dataclass
+from typing import Optional, Union
+from ..nft import NftMetadata
+from ..currency import CurrencyValue
+from dataclasses_json import dataclass_json
+import datetime
+
+@dataclass_json
+@dataclass
+class Listing:
+    id: str
+    seller: str
+    token_contract: str
+    token_id: str
+    token_metadata: Optional[NFTMetadata] = None
+    quantity: int
+    currency_contract: str
+    currency_metadata: CurrencyValue | null
+    price: int
+    sale_start: datetime.datetime
+    sale_end: datetime.datetime
