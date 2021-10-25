@@ -2,9 +2,10 @@
 from web3 import Web3
 from typing import List, Dict
 from . import BaseModule
-from ..types import Role, Listing as Listing
+from ..types import Role
 from ..abi.market import Market
 from ..types.market import ListArg, Filter
+from ..types.listing import Listing
 from ..abi.erc20 import ERC20
 from ..abi.erc165 import ERC165
 from ..abi.erc1155 import ERC1155
@@ -74,8 +75,9 @@ class MarketModule(BaseModule):
         )
 
         receipt = self.execute_tx(tx)
-        result = self.__abi_module.get_new_listing_event(
-            tx_hash=receipt.transactionHash.hex())
+        result = self.__abi_module.get_new_listing_event(tx_hash=receipt.transactionHash.hex())
+        # listing_id = result[0]['args']['token_id']
+        # return self.get(listing_id)
 
     def unlist(self, listing_id, quantity):
         """ 
@@ -177,7 +179,7 @@ class MarketModule(BaseModule):
         else:
             return self.__abi_module.get_all_listings.call()
 
-    def total_supply(self) -> int:
+    def total_listings(self) -> int:
         """
         Returns the total supply of the market.
         """
