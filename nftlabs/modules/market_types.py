@@ -1,4 +1,4 @@
-"""Types for the Merket Module."""
+"""Types for the Market Module."""
 
 from dataclasses import dataclass
 from typing import Optional
