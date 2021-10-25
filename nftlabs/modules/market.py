@@ -133,13 +133,13 @@ class MarketModule(BaseModule):
         """
         Get a listing.
         """
-        self.__abi_module.get_listing.call(listing_id)
+        return self.__abi_module.get_listing.call(listing_id)
 
     def get_all_listings(self, search_filter: Filter = None) -> List[Listing]:
         """ 
         Returns all the listings.
         """
-        self.get_all(search_filter)
+        return self.get_all(search_filter)
 
     def set_module_metadata(metadata: str):
         """
@@ -152,30 +152,30 @@ class MarketModule(BaseModule):
         """
         Get a listing.
         """
-        self.get(listing_id)
+        return self.get(listing_id)
 
     def get_all(self, search_filter: Filter = None) -> List[Listing]:
         """ 
         Returns all the listings.
         """
         if search_filter is None:
-            self.__abi_module.get_all_listings.call()
+            return self.__abi_module.get_all_listings.call()
         elif search_filter.asset_contract is not None:
             if search_filter.token_id is not None:
-                self.__abi_module.get_listings_by_asset.call(
+                return self.__abi_module.get_listings_by_asset.call(
                     filer.asset_contract,
                     filer.token_id
                 )
             else:
-                self.__abi_module.get_listings_by_asset_contract.call(
+                return self.__abi_module.get_listings_by_asset_contract.call(
                     filer.asset_contract
                 )
         elif search_filter.seller is not None:
-            self.__abi_module.get_listings_by_seller.call(
+            return self.__abi_module.get_listings_by_seller.call(
                 filer.seller
             )
         else:
-            self.__abi_module.get_all_listings.call()
+            return self.__abi_module.get_all_listings.call()
 
     def total_supply(self) -> int:
         """
