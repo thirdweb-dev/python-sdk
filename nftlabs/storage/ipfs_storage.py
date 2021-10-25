@@ -25,6 +25,9 @@ class IpfsStorage:
     Upload data to IPFS, data parameter
     """
     def upload(self, data, contract_address: str, signer_address: str) -> str:
+        if isinstance(data, str) and data.startswith("ipfs://"):
+            return data
+
         form = {
             'file': (None, data)
         }

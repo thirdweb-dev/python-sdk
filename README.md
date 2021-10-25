@@ -22,11 +22,9 @@ like this:
 
 ```python
 import os
-import nftlabs.options
-from nftlabs import NftlabsSdk
+from nftlabs import NftlabsSdk, SdkOptions
 
-options = nftlabs.options.SdkOptions()
-sdk = NftlabsSdk(options, "https://rpc-mumbai.maticvigil.com") # polygon testnet as an example
+sdk = NftlabsSdk(SdkOptions(), "https://rpc-mumbai.maticvigil.com") # polygon testnet as an example
 
 # Assumes your private key is assigned to the `PKEY` environment variable
 sdk.set_private_key(os.getenv("PKEY"))

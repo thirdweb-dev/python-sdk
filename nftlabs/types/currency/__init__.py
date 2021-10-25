@@ -10,6 +10,7 @@ class Currency:
     symbol: str
     decimals: int
 
+
 @dataclasses.dataclass
 class CurrencyValue(Currency):
     """ 
@@ -17,4 +18,3 @@ class CurrencyValue(Currency):
     """
     value: str
     display_value: str
-

@@ -4,7 +4,7 @@ from typing import List, Dict
 from . import BaseModule
 from ..types import Role, Listing as Listing
 from ..abi.market import Market
-from market_types import ListArg, Filter
+from ..types.market import ListArg, Filter
 from ..abi.erc20 import ERC20
 from ..abi.erc165 import ERC165
 from ..abi.erc1155 import ERC1155

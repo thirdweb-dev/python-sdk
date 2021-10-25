@@ -4,7 +4,7 @@ from web3 import Web3, HTTPProvider
 from typing import Optional
 
 from .errors import NoSignerException
-from .modules import CurrencyModule, NftModule
+from .modules import CurrencyModule, NftModule, PackModule, CollectionModule
 from .options import SdkOptions
 from .storage import IpfsStorage
 
@@ -16,27 +16,31 @@ class NftlabsSdk(object):
 	options: SdkOptions
 
 	__private_key: str
-	signer_address: str
+	signer_address: str = ""
 	__current_account: Optional[LocalAccount]
 
 	storage: IpfsStorage
 
 	__currency_module: Optional[CurrencyModule]
 	__nft_module: Optional[NftModule]
+	__pack_module: Optional[PackModule]
+	__collection_module: Optional[CollectionModule]
 
 	"""
 	Create instance of the NftlabsSdk
 	"""
-	def __init__(self, options: SdkOptions, url: str, private_key=""):
+	def __init__(self, options: SdkOptions, url: str):
 		print("Created Nftlabs SDK!")
 
 		self.__currency_module = None
 		self.__nft_module = None
+		self.__pack_module = None
+		self.__collection_module = None
 		self.__current_account = None
 
 		self.options = options
-		if private_key != "":
-			self.set_private_key(private_key)
+		if self.options.private_key != "":
+			self.set_private_key(self.options.private_key)
 
 		self.storage = IpfsStorage(
 			options.ipfs_gateway_url if options.ipfs_gateway_url
@@ -80,6 +84,30 @@ class NftlabsSdk(object):
 		self.__init_module(module)
 		self.__nft_module = module
 		return self.__nft_module
+
+	"""
+	Returns an instance of the pack module
+	"""
+	def get_pack_module(self, address: str) -> PackModule:
+		if self.__pack_module is not None:
+			return self.__pack_module
+
+		module = PackModule(address, self.__get_client())
+		self.__init_module(module)
+		self.__pack_module = module
+		return self.__pack_module
+
+	"""
+	Returns an instance of the collection module
+	"""
+	def get_collection_module(self, address: str) -> CollectionModule:
+		if self.__collection_module is not None:
+			return self.__collection_module
+
+		module = CollectionModule(address, self.__get_client())
+		self.__init_module(module)
+		self.__collection_module = module
+		return self.__collection_module
 
 	"""
 	Internal function used to return the current web3 provider used by downstream modules
