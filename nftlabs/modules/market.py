@@ -4,13 +4,13 @@ from typing import List, Dict
 from . import BaseModule
 from ..types import Role
 from ..abi.market import Market
-from ..types.market import ListArg, Filter
+from ..types.market import ListArg, Filter, MarketListing
 from ..types.listing import Listing
 from ..abi.erc20 import ERC20
 from ..abi.erc165 import ERC165
 from ..abi.erc1155 import ERC1155
 from ..abi.nft import NFT
-
+nulladdress = "0x0000000000000000000000000000000000000000"
 
 class MarketModule(BaseModule):
     """
@@ -21,8 +21,7 @@ class MarketModule(BaseModule):
     Address of the market contract.
     """
     __abi_module: Market
-
-    def __init__(self, client: Web3, address: str):
+    def __init__(self, address: str, client: Web3, ):
         """
         Initialize the Market Module.
         """
@@ -31,7 +30,6 @@ class MarketModule(BaseModule):
         self.address = address
         self.__abi_module = Market(client, address)
 
-    #todo: return types
     def list(self, arg: ListArg):
         """
         List an asset for sale.
@@ -39,30 +37,23 @@ class MarketModule(BaseModule):
         from_address = self.get_signer_address()
         client = self.get_client()
         erc165 = ERC165(client, arg.asset_contract)
-        isERC721 = erc165.supports_interface(
-            client, interface_id=bytearray.fromhex("80ac58cd"))
+        isERC721 = erc165.supports_interface.call( bytearray.fromhex("80ac58cd"))
         if isERC721:
             asset = NFT(client, arg.asset_contract)
-            approved = asset.is_approved_for_all(
-                from_address, self.address)
+            approved = asset.is_approved_for_all.call(  from_address, self.address)
             if not approved:
-                asset.is_approve_for_all(from_address, arg.asset_contract)
-                is_token_approved = (asset.is_approved_for_all(
-                    arg.token_id).lower() == self.address.lower())
+                is_token_approved = asset.get_approved.call(arg.token_id).lower() == self.address.lower()
                 if not is_token_approved:
-                    asset.set_approval_for_all(arg.asset_contract, True)
+                    self.execute_tx(asset.set_approval_for_all.build_transaction(self.address, True, self.get_transact_opts()))
+       
         else:
             asset = ERC1155(client, arg.asset_contract)
-            approved = asset.is_approved_for_all(from_address, self.address)
+            approved = asset.is_approved_for_all.call(from_address, self.address)
 
             if not approved:
-                asset.set_approval_for_all(from_address, arg.asset_contract)
-                is_token_approved = (asset.get_approved(
-                    arg.token_id).lower() == self.address.lower())
-                if not is_token_approved:
-                    asset.set_approval_for_all(self.address, True)
+                asset.set_approval_for_all.call(self.address, True)
 
-        tx = self.__abi_module.list.build_transaction(
+        tx = self.__abi_module._list.build_transaction(
             arg.asset_contract,
             arg.token_id,
             arg.currency_contract,
@@ -100,19 +91,20 @@ class MarketModule(BaseModule):
         """
         Buy a listing.
         """
-        listing = get(listing_id)
+        item = self.get(listing_id)
+        print(item)
         owner = self.get_signer_address()
         spender = self.address
-        total_price = listing.price_per_token * quantity
-        if listing.currency_contract is not None and listing.currency_contract != "0x0000000000000000000000000000000000000000":
-            erc20 = ERC20(self.get_client(), listing.currency_contract)
-            allowance = erc20.allowance(owner, spender)
+        total_price = item.pricePerToken * quantity
+        if item.currency is not None and item.currency != nulladdress:
+            erc20 = ERC20(self.get_client(), item.currency)
+            allowance = erc20.allowance.call(owner, spender)
             if allowance < total_price:
-                erc20.increase_allowance(
-                    spender,
+                tx = erc20.increase_allowance.build_transaction(    spender,
                     total_price,
-                    self.get_transact_opts()
-                )
+                    self.get_transact_opts())
+                self.execute_tx(tx)
+
         tx = self.__abi_module.buy.build_transaction(
             listing_id,
             quantity,
@@ -131,7 +123,6 @@ class MarketModule(BaseModule):
             self.get_transact_opts())
         self.execute_tx(tx)
 
-    def get(self, listing_id) -> List:
         """
         Get a listing.
         """
@@ -142,6 +133,12 @@ class MarketModule(BaseModule):
         Returns all the listings.
         """
         return self.get_all(search_filter)
+    
+    def get(self, listing_id) -> MarketListing:
+        """
+        Get a listing.
+        """
+        return MarketListing(**self.__abi_module.get_listing.call(listing_id))
 
     def set_module_metadata(metadata: str):
         """
@@ -183,4 +180,4 @@ class MarketModule(BaseModule):
         """
         Returns the total supply of the market.
         """
-        self.__abi_module.total_listings.call()
+        return self.__abi_module.total_listings.call()

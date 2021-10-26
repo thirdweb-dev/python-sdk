@@ -2,7 +2,7 @@
 from ..errors import NoSignerException
 from ..types import Role
 from ..abi.coin import Coin
-from .base import _BaseModule
+from .base import BaseModule
 from ..types.currency import Currency, CurrencyValue
 from ..abi.erc20 import ERC20
 from web3 import Web3
@@ -44,7 +44,7 @@ class CurrencyModule(BaseModule):
         """
         return self.__abi_module.balance_of.call(address)
 
-    def balance(self):
+    def balance(self) -> int:
         """ 
         Gets the balance of the current address
         """
