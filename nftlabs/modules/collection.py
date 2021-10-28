@@ -2,7 +2,7 @@ from typing import List, Dict
 
 from zero_ex.contract_wrappers import TxParams
 
-from .base import _BaseModule
+from .base import BaseModule
 from ..types.metadata import Metadata
 from ..types.nft import NftMetadata
 from ..errors import NoSignerException
@@ -13,7 +13,7 @@ from web3 import Web3
 from ..types.collection import CollectionMetadata, CreateCollectionArg, MintCollectionArg
 
 
-class CollectionModule(_BaseModule):
+class CollectionModule(BaseModule):
     address: str
     __abi_module: NFTCollection
 
@@ -114,11 +114,11 @@ class CollectionModule(_BaseModule):
         self.mint_batch_to(self.get_signer_address(), args)
 
     def mint_batch_to(self, to_address, args: List[MintCollectionArg]):
-        ids = [a.id for a in args]
+        ids = [a.token_id for a in args]
         amounts = [a.amount for a in args]
-        self.execute_tx(self.__abi_module.mint_batch.build_transaction(
-            to_address, ids, amounts, self.get_transact_opts()
-        ))
+        tx = self.__abi_module.mint_batch.build_transaction(
+            to_address, ids, amounts, self.get_transact_opts())
+        self.execute_tx(tx)
 
     def burn(self, args: MintCollectionArg):
         self.burn_from(self.get_signer_address(), args)

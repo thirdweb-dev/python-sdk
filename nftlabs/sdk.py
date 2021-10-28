@@ -4,7 +4,11 @@ from web3 import Web3, HTTPProvider
 from typing import Optional
 
 from .errors import NoSignerException
-from .modules import CurrencyModule, NftModule, PackModule, CollectionModule
+from .modules.nft import NftModule
+from .modules.pack import PackModule
+from .modules.collection import CollectionModule
+from .modules.currency import CurrencyModule
+from .modules.market import MarketModule
 from .options import SdkOptions
 from .storage import IpfsStorage
 
@@ -25,6 +29,7 @@ class NftlabsSdk(object):
 	__nft_module: Optional[NftModule]
 	__pack_module: Optional[PackModule]
 	__collection_module: Optional[CollectionModule]
+	__market_module: Optional[MarketModule]
 
 	"""
 	Create instance of the NftlabsSdk
@@ -37,6 +42,7 @@ class NftlabsSdk(object):
 		self.__pack_module = None
 		self.__collection_module = None
 		self.__current_account = None
+		self.__market_module = None
 
 		self.options = options
 		if self.options.private_key != "":
@@ -97,6 +103,14 @@ class NftlabsSdk(object):
 		self.__pack_module = module
 		return self.__pack_module
 
+	def get_market_module(self, address: str) -> MarketModule:
+		if self.__market_module is not None:
+			return self.__market_module
+		
+		module = MarketModule(address, self.__get_client())
+		self.__init_module(module)
+		self.__market_module = module
+		return self.__market_module
 	"""
 	Returns an instance of the collection module
 	"""

@@ -1,8 +1,8 @@
-import enum
+from enum import Enum
 from eth_hash.auto import keccak
 
 
-class Role(enum.Enum):
+class Role(Enum):
     admin = ""
     minter = "MINTER_ROLE"
     transfer = "TRANSFER_ROLE"

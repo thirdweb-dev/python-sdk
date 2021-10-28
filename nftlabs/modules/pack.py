@@ -4,13 +4,13 @@ from ..types.pack import PackMetadata, PackNftMetadata, CreatePackArg, AssetAmou
 from ..types.nft import NftMetadata
 from ..types.currency import Currency, CurrencyValue
 from ..abi.pack import Pack
-from .base import _BaseModule
+from .base import BaseModule
 from ..abi.erc20 import ERC20
 from web3 import Web3
 from typing import List, Dict
 
 
-class PackModule(_BaseModule):
+class PackModule(BaseModule):
     address: str
     __abi_module: Pack
 
@@ -23,9 +23,7 @@ class PackModule(_BaseModule):
         uri = self.__abi_module.token_uri.call(pack_id)
         if uri == "":
             raise AssetNotFoundException(pack_id)
-        print("uri = ", uri)
         metadata = self.get_storage().get(uri)
-        print("pack metadata -", metadata)
         return None
 
     def open(self, pack_id: int) -> List[NftMetadata]:

@@ -6,7 +6,7 @@ import json
 from web3 import Web3
 from zero_ex.contract_wrappers import TxParams
 
-from .base import _BaseModule
+from .base import BaseModule
 from typing import Dict, List
 from ..abi.nft import NFT
 
@@ -14,7 +14,7 @@ from ..types import Role
 from ..types.nft import MintArg, NftMetadata as NftType
 
 
-class NftModule(_BaseModule):
+class NftModule(BaseModule):
     """ 
     NFT Methods
     """
@@ -56,8 +56,8 @@ class NftModule(_BaseModule):
             'properties': final_properties
         }
 
-        uri = storage.upload(json.dumps(meta), self.address, self.__get_signer_address())
-        tx = self.__abi_module.mint_nft.build_transaction(to_address, uri, self.__get_transact_opts())
+        uri = storage.upload(json.dumps(meta), self.address, self.get_signer_address())
+        tx = self.__abi_module.mint_nft.build_transaction(to_address, uri, self.get_transact_opts())
         receipt = self.execute_tx(tx)
         result = self.__abi_module.get_minted_event(
             tx_hash=receipt.transactionHash.hex())
@@ -107,7 +107,7 @@ class NftModule(_BaseModule):
             'description': arg.description,
             'image': arg.image_uri,
             'properties': arg.properties if arg.properties is not None else {}
-        }), self.address, self.__get_signer_address()) for arg in args]
+        }), self.address, self.get_signer_address()) for arg in args]
 
         tx = self.__abi_module.mint_nft_batch.build_transaction(
             to_address, uris, self.get_transact_opts())
@@ -125,7 +125,7 @@ class NftModule(_BaseModule):
         """
         tx = self.__abi_module.burn.build_transaction(
             token_id,
-            self.__get_transact_opts()
+            self.get_transact_opts()
         )
         self.execute_tx(tx)
 
@@ -137,7 +137,7 @@ class NftModule(_BaseModule):
             from_address,
             to_address,
             token_id,
-            self.__get_transact_opts()
+            self.get_transact_opts()
         )
         self.execute_tx(tx)
 
@@ -146,10 +146,10 @@ class NftModule(_BaseModule):
         Transfers NFT from the current signers wallet to another wallet
         """
         tx = self.__abi_module.safe_transfer_from1.build_transaction(
-            self.__get_signer_address(),
+            self.get_signer_address(),
             to_address,
             token_id,
-            self.__get_transact_opts()
+            self.get_transact_opts()
         )
         self.execute_tx(tx)
 
@@ -175,7 +175,7 @@ class NftModule(_BaseModule):
         if the address parameter is not supplied
         """
         if address == "":
-            address = self.__get_signer_address()
+            address = self.get_signer_address()
 
         balance = self.__abi_module.balance_of.call(address)
         owned_tokens = [self.__token_of_owner_by_index(
@@ -225,9 +225,9 @@ class NftModule(_BaseModule):
         """
         Sets approval for specified operator, defaults to grant approval
         """
-        self.execute_tx(self.__abi_module.set_approval_for_all.call(
-            operator, approved, self.__get_transact_opts()
-        ))
+        tx = self.__abi_module.set_approval_for_all.build_transaction(operator, approved, self.get_transact_opts() )
+        self.execute_tx(tx)
+
 
     def grant_role(self, role: Role, address: str):
         """
@@ -248,12 +248,12 @@ class NftModule(_BaseModule):
         """
         role_hash = role.get_hash()
         self.execute_tx(self.__abi_module.revoke_role.build_transaction(
-            role_hash, address, self.__get_transact_opts()
+            role_hash, address, self.get_transact_opts()
         ))
 
     def set_restricted_transfer(self, restricted: bool = True):
         self.execute_tx(self.__abi_module.set_restricted_transfer.build_transaction(
-            restricted, self.__get_transact_opts()
+            restricted, self.get_transact_opts()
         ))
 
     def get_with_owner(self, token_id: int, owner: str):
@@ -293,7 +293,7 @@ class NftModule(_BaseModule):
         """
         Returns the members of the given role
         """
-        return [self.get_role_member(role, x) for x in range(stop=self.get_role_member_count(role))]
+        return [self.get_role_member(role, x) for x in range(self.get_role_member_count(role))]
 
     def get_role_member(self, role: Role, index: int):
         """
@@ -306,8 +306,8 @@ class NftModule(_BaseModule):
         Returns all the members of all the roles
         """
         return {
-            admin: [self.get_role_members(Role.admin) for admin in self.get_role_members(Role.admin)],
-            transfer: [self.get_role_members(Role.transfer) for transfer in self.get_role_members(Role.transfer)],
-            minter: [self.get_role_members(Role.minter) for minter in self.get_role_members(Role.minter)],
-            pauser: [self.get_role_members(Role.pauser) for pauser in self.get_role_members(Role.pauser)],
+            "admin": [item for item in self.get_role_members(Role.admin)],
+            "transfer": [item for item in self.get_role_members(Role.transfer)],
+            "minter": [item for item in self.get_role_members(Role.minter)],
+            "pauser": [item for item in self.get_role_members(Role.pauser)],
         }
