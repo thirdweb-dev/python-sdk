@@ -23,9 +23,7 @@ class PackModule(BaseModule):
         uri = self.__abi_module.token_uri.call(pack_id)
         if uri == "":
             raise AssetNotFoundException(pack_id)
-        print("uri = ", uri)
         metadata = self.get_storage().get(uri)
-        print("pack metadata -", metadata)
         return None
 
     def open(self, pack_id: int) -> List[NftMetadata]:

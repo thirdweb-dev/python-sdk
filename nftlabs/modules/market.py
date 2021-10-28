@@ -92,7 +92,6 @@ class MarketModule(BaseModule):
         Buy a listing.
         """
         item = self.get(listing_id)
-        print(item)
         owner = self.get_signer_address()
         spender = self.address
         total_price = item.pricePerToken * quantity
