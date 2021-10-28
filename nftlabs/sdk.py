@@ -35,8 +35,6 @@ class NftlabsSdk(object):
 	Create instance of the NftlabsSdk
 	"""
 	def __init__(self, options: SdkOptions, url: str):
-		print("Created Nftlabs SDK!")
-
 		self.__currency_module = None
 		self.__nft_module = None
 		self.__pack_module = None
