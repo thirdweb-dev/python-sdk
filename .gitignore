@@ -16,3 +16,5 @@ nftlabs/modules/.DS_Store
 .DS_Store
 x.sh
 examples/test.py
+
+**/*.pyc
