@@ -31,5 +31,5 @@ jobs:
           python -m pip install -r requirements.txt
       - name: "Run tests targets for ${{ matrix.python-version }}"
         run: "python3 -m unittest discover -s tests"
-      - name: "Test bundle package with sertup.py ${{ matrix.python-version }}"
+      - name: "Test bundle package with setup.py ${{ matrix.python-version }}"
         run: "python3 setup.py sdist"
