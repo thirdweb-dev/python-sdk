@@ -52,7 +52,7 @@ class NftModule(BaseModule):
         meta = {
             'name': arg.name,
             'description': arg.description,
-            'image': arg.image,
+            'image': arg.image_uri,
             'properties': final_properties
         }
 
@@ -105,7 +105,7 @@ class NftModule(BaseModule):
         uris = [self.get_storage().upload(json.dumps({
             'name': arg.name,
             'description': arg.description,
-            'image': arg.image,
+            'image': arg.image_uri,
             'properties': arg.properties if arg.properties is not None else {}
         }), self.address, self.get_signer_address()) for arg in args]
 
