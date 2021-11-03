@@ -68,7 +68,7 @@ class NftModule(BaseModule):
         """
         Returns the total supply
         """
-        return self.__abi_module.total_supply.call(tx_params=TxParams(from_=self.address))
+        return self.__abi_module.total_supply.call()
 
     def get(self, nft_id: int) -> NftType:
         """

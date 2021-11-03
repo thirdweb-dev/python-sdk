@@ -23,25 +23,25 @@ class CollectionModule(BaseModule):
         self.__abi_module = NFTCollection(client, address)
 
     def get(self, token_id: int) -> CollectionMetadata:
-        uri = self.__abi_module.uri.call(token_id, TxParams(from_=self.address))
+        uri = self.__abi_module.uri.call(token_id)
         meta_str = self.get_storage().get(uri)
         meta: NftMetadata = NftMetadata.from_json(meta_str)
         meta.id = token_id
         return CollectionMetadata(
             metadata=meta,
-            supply=self.__abi_module.total_supply.call(token_id, TxParams(from_=self.address)),
-            creator=self.__abi_module.creator.call(token_id, TxParams(from_=self.address)),
+            supply=self.__abi_module.total_supply.call(token_id),
+            creator=self.__abi_module.creator.call(token_id),
             id=token_id
         )
 
     def get_all(self) -> List[CollectionMetadata]:
-        return [self.get(i) for i in range(self.__abi_module.next_token_id.call(TxParams(from_=self.address)))]
+        return [self.get(i) for i in range(self.__abi_module.next_token_id.call())]
 
     '''
     Returns the balance for a given token at owned by a specific address
     '''
     def balance_of(self, address: str, token_id: int) -> int:
-        return self.__abi_module.balance_of.call(address, token_id, TxParams(from_=self.address))
+        return self.__abi_module.balance_of.call(address, token_id)
 
     '''
     Returns the balance for a given token id for the current signers address
@@ -49,15 +49,13 @@ class CollectionModule(BaseModule):
     def balance(self, token_id: int) -> int:
         return self.__abi_module.balance_of.call(
             self.get_signer_address(),
-            token_id,
-            TxParams(from_=self.address)
+            token_id
         )
 
     def is_approved(self, address: str, operator: str) -> bool:
         return self.__abi_module.is_approved_for_all.call(
             address,
-            operator,
-            TxParams(from_=self.address)
+            operator
         )
 
     def set_approval(self, operator: str, approved: bool = True):

@@ -14,6 +14,12 @@ from .storage import IpfsStorage
 
 from zero_ex.contract_wrappers import TxParams
 
+def set_default_account(func):
+	def wrapper(self, *args, **kwargs):
+		self.client.eth.defaultAccount = args[0] if self.signer_address == "" else self.signer_address
+		return func(self, *args, **kwargs)
+	return wrapper
+
 
 class NftlabsSdk(object):
 	client: Web3
@@ -68,6 +74,7 @@ class NftlabsSdk(object):
 	"""
 	Returns an instance of the currency module
 	"""
+	@set_default_account
 	def get_currency_module(self, address: str) -> CurrencyModule:
 		if self.__currency_module is not None:
 			return self.__currency_module
@@ -80,6 +87,7 @@ class NftlabsSdk(object):
 	"""
 	Returns an instance of the nft module
 	"""
+	@set_default_account
 	def get_nft_module(self, address: str) -> NftModule:
 		if self.__nft_module is not None:
 			return self.__nft_module
@@ -92,6 +100,7 @@ class NftlabsSdk(object):
 	"""
 	Returns an instance of the pack module
 	"""
+	@set_default_account
 	def get_pack_module(self, address: str) -> PackModule:
 		if self.__pack_module is not None:
 			return self.__pack_module
@@ -101,6 +110,10 @@ class NftlabsSdk(object):
 		self.__pack_module = module
 		return self.__pack_module
 
+	"""
+	Returns an instance of the market module
+	"""
+	@set_default_account
 	def get_market_module(self, address: str) -> MarketModule:
 		if self.__market_module is not None:
 			return self.__market_module
@@ -109,9 +122,11 @@ class NftlabsSdk(object):
 		self.__init_module(module)
 		self.__market_module = module
 		return self.__market_module
+
 	"""
 	Returns an instance of the collection module
 	"""
+	@set_default_account
 	def get_collection_module(self, address: str) -> CollectionModule:
 		if self.__collection_module is not None:
 			return self.__collection_module
