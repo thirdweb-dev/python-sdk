@@ -8,7 +8,7 @@ from dataclasses_json import dataclass_json
 class MintArg:
     name: str
     description: str = ""
-    image_uri: str = ""
+    image: str = ""
     properties: Optional[dict] = None
 
 

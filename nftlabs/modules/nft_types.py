@@ -10,6 +10,6 @@ class MintArg:
     """
     name: str
     description: str = ""
-    image_uri: str = ""
+    image: str = ""
     properties: Optional[dict] = None
 
