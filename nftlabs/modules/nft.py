@@ -264,12 +264,15 @@ class NftModule(BaseModule):
             meta: meta
         }
 
-    def set_module_metadata(metadata: str):
+    def set_module_metadata(self, metadata: str):
         """
         Sets the metadata for the module
         """
         uri = self.get_storage().upload_metadata(
             metadata, self.address, self.get_signer_address())
+        tx = self.__abi_module.set_contract_uri.build_transaction(
+            uri, self.get_transact_opts())
+        self.execute_tx(tx)
 
     def set_restricted_transfer(self, restricted: bool = False):
         """
