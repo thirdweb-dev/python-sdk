@@ -33,7 +33,6 @@ class NftModule(BaseModule):
         """
         return self.mint_to(self.get_signer_address(), arg)
 
-
     def mint_to(
             self,
             to_address: str,
@@ -56,8 +55,10 @@ class NftModule(BaseModule):
             'properties': final_properties
         }
 
-        uri = storage.upload(json.dumps(meta), self.address, self.get_signer_address())
-        tx = self.__abi_module.mint_nft.build_transaction(to_address, uri, self.get_transact_opts())
+        uri = storage.upload(json.dumps(meta), self.address,
+                             self.get_signer_address())
+        tx = self.__abi_module.mint_nft.build_transaction(
+            to_address, uri, self.get_transact_opts())
         receipt = self.execute_tx(tx)
         result = self.__abi_module.get_minted_event(
             tx_hash=receipt.transactionHash.hex())
@@ -70,22 +71,22 @@ class NftModule(BaseModule):
         """
         return self.__abi_module.total_supply.call()
 
-    def get(self, nft_id: int) -> NftType:
+    def get(self, token_id: int) -> NftType:
         """
         Returns the Metadata of a token
         """
-        uri = self.__get_metadata_uri(nft_id)
+        uri = self.__get_metadata_uri(token_id)
         meta = self.get_storage().get(uri)
         meta_obj: NftType = NftType.from_json(meta)
-        meta_obj.id = nft_id
+        meta_obj.id = token_id
         meta_obj.uri = uri
         return meta_obj
 
-    def __get_metadata_uri(self, nft_id: int):
+    def __get_metadata_uri(self, token_id: int):
         """
         Returns the uri of the metadata of a token
         """
-        uri = self.__abi_module.token_uri.call(nft_id)
+        uri = self.__abi_module.token_uri.call(token_id)
         if uri == "":
             raise Exception(
                 "Could not find NFT metadata, are you sure it exists?")
@@ -96,7 +97,6 @@ class NftModule(BaseModule):
         Mints a batch of tokens to the signer address
         """
         return self.mint_batch_to(self.get_signer_address(), args)
-
 
     def mint_batch_to(self, to_address: str, args: List[MintArg]):
         """
@@ -111,7 +111,6 @@ class NftModule(BaseModule):
 
         tx = self.__abi_module.mint_nft_batch.build_transaction(
             to_address, uris, self.get_transact_opts())
-
 
         receipt = self.execute_tx(tx)
         result = self.__abi_module.get_minted_batch_event(
@@ -191,7 +190,6 @@ class NftModule(BaseModule):
         """
         return self.__abi_module.balance_of.call(self.get_signer_address())
 
-
     def balance_of(self, address: str) -> int:
         """
         Returns balance of the given address
@@ -225,9 +223,9 @@ class NftModule(BaseModule):
         """
         Sets approval for specified operator, defaults to grant approval
         """
-        tx = self.__abi_module.set_approval_for_all.build_transaction(operator, approved, self.get_transact_opts() )
+        tx = self.__abi_module.set_approval_for_all.build_transaction(
+            operator, approved, self.get_transact_opts())
         self.execute_tx(tx)
-
 
     def grant_role(self, role: Role, address: str):
         """
@@ -240,7 +238,6 @@ class NftModule(BaseModule):
             self.get_transact_opts()
         )
         self.execute_tx(tx)
-
 
     def revoke_role(self, role: Role, address: str):
         """
