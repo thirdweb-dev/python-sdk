@@ -16,6 +16,7 @@ jobs:
       PKEY: ${{ secrets.PKEY }}
 
     strategy:
+      max-parallel: 1
       matrix:
         python-version: ["3.6", "3.7", "3.8", "pypy3"]
 
