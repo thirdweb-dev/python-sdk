@@ -5,6 +5,7 @@ from ..nft import NftMetadata
 from ..currency import CurrencyValue
 import datetime
 
+
 @dataclass
 class ListArg:
     """
@@ -20,7 +21,6 @@ class ListArg:
     seconds_until_end: int
     limit: Optional[int] = None
     offset: Optional[int] = None
-
 
 
 @dataclass
@@ -47,6 +47,7 @@ class MarketListing:
     saleEnd: int
     tokensPerBuyer: int
     tokenType: int
+
 
 @dataclass_json
 @dataclass

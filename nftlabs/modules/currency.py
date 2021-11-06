@@ -1,12 +1,9 @@
-"""Interact with the Coin module of your app."""
-from ..errors import NoSignerException
-from ..types import Role
-from ..abi.coin import Coin
-from .base import BaseModule
-from ..types.currency import Currency, CurrencyValue
-from ..abi.erc20 import ERC20
 from web3 import Web3
-from typing import List, Dict
+
+from ..abi.coin import Coin
+from ..abi.erc20 import ERC20
+from ..types.currency import Currency, CurrencyValue
+from .base import BaseModule
 
 
 class CurrencyModule(BaseModule):
@@ -110,61 +107,15 @@ class CurrencyModule(BaseModule):
             from_address, to_address, amount, self.get_transact_opts()
         ))
 
-    def grant_role(self, role: Role, address: str):
-        """ 
-        Grants the given role to the given address
-        """
-        role_hash = role.get_hash()
-        self.execute_tx(self.__abi_module.grant_role.build_transaction(
-            role_hash, address, self.get_transact_opts()
-        ))
-
-    def revoke_role(self, role: Role, address: str):
-        """ 
-        Revokes the given role from the given address
-        """
-        role_hash = role.get_hash()
-
-        try:
-            signer_address = self.get_signer_address()
-            if signer_address.lower() != address.lower():
-                pass
-            self.execute_tx(self.__abi_module.renounce_role.build_transaction(
-                role_hash, address, self.get_transact_opts()
-            ))
-            return
-        except NoSignerException:
-            pass
-
-        self.execute_tx(self.__abi_module.revoke_role.build_transaction(
-            role_hash, address, self.get_transact_opts()
-        ))
-
-    def get_role_members(self, role: Role) -> List[str]:
-        """ 
-        Gets the members of the given role
-        """
-        role_hash = role.get_hash()
-        count = self.__abi_module.get_role_member_count.call(role_hash)
-        return [self.__abi_module.get_role_member.call(role_hash, i) for i in range(count)]
-
-    def get_all_role_members(self) -> Dict[Role, List[str]]:
-        """ 
-        Gets all the role members
-        """
-        return {
-            Role.admin.name: self.get_role_members(Role.admin),
-            Role.minter.name: self.get_role_members(Role.minter),
-            Role.transfer.name: self.get_role_members(Role.transfer),
-            Role.pauser.name: self.get_role_members(Role.pauser)
-        }
-
-    def set_module_metadata(metadata: str):
+    def set_module_metadata(self, metadata: str):
         """
         Sets the metadata for the module
         """
         uri = self.get_storage().upload_metadata(
             metadata, self.address, self.get_signer_address())
+        self.execute_tx(self.__abi_module.set_contract_uri.build_transaction(
+            uri, self.get_transact_opts()
+        ))
 
     def get_value(self, value: int) -> Currency:
         """ 
@@ -215,3 +166,6 @@ class CurrencyModule(BaseModule):
         tx = self.__abi_module.set_restricted_transfer.build_transaction(
             restricted, self.get_transact_opts())
         self.execute_tx(tx)
+
+    def get_abi_module(self) -> Coin:
+        return self.__abi_module

@@ -1,17 +1,14 @@
 """ Interact with the NFT module of the app"""
 import copy
-
 import json
+from typing import Dict, List
 
 from web3 import Web3
-from zero_ex.contract_wrappers import TxParams
 
-from .base import BaseModule
-from typing import Dict, List
 from ..abi.nft import NFT
-
-from ..types import Role
-from ..types.nft import MintArg, NftMetadata as NftType
+from ..types.nft import MintArg
+from ..types.nft import NftMetadata as NftType
+from .base import BaseModule
 
 
 class NftModule(BaseModule):
@@ -227,27 +224,6 @@ class NftModule(BaseModule):
             operator, approved, self.get_transact_opts())
         self.execute_tx(tx)
 
-    def grant_role(self, role: Role, address: str):
-        """
-        Grants the given role to the given address
-        """
-
-        role_hash = role.get_hash()
-        tx = self.__abi_module.grant_role.build_transaction(
-            role_hash, address,
-            self.get_transact_opts()
-        )
-        self.execute_tx(tx)
-
-    def revoke_role(self, role: Role, address: str):
-        """
-        Revokes the given role from the given address
-        """
-        role_hash = role.get_hash()
-        self.execute_tx(self.__abi_module.revoke_role.build_transaction(
-            role_hash, address, self.get_transact_opts()
-        ))
-
     def set_restricted_transfer(self, restricted: bool = True):
         self.execute_tx(self.__abi_module.set_restricted_transfer.build_transaction(
             restricted, self.get_transact_opts()
@@ -283,31 +259,5 @@ class NftModule(BaseModule):
             restricted, self.get_transact_opts())
         self.execute_tx(tx)
 
-    def get_role_member_count(self, role: Role):
-        """
-        Returns the number of members in the given role
-        """
-        return self.__abi_module.get_role_member_count.call(role.get_hash())
-
-    def get_role_members(self, role: Role):
-        """
-        Returns the members of the given role
-        """
-        return [self.get_role_member(role, x) for x in range(self.get_role_member_count(role))]
-
-    def get_role_member(self, role: Role, index: int):
-        """
-        Returns the member at the given index of the given role
-        """
-        return self.__abi_module.get_role_member.call(role.get_hash(), index)
-
-    def get_all_role_members(self):
-        """
-        Returns all the members of all the roles
-        """
-        return {
-            "admin": [item for item in self.get_role_members(Role.admin)],
-            "transfer": [item for item in self.get_role_members(Role.transfer)],
-            "minter": [item for item in self.get_role_members(Role.minter)],
-            "pauser": [item for item in self.get_role_members(Role.pauser)],
-        }
+    def get_abi_module(self) -> NFT:
+        return self.__abi_module

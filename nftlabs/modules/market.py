@@ -8,7 +8,6 @@ from ..abi.erc1155 import ERC1155
 from ..abi.market import Market
 from ..abi.nft import NFT
 from ..constants import ZeroAddress
-from ..types import Role
 from ..types.listing import Listing
 from ..types.market import Filter, ListArg, MarketListing
 from . import BaseModule
@@ -193,3 +192,6 @@ class MarketModule(BaseModule):
         Returns the total supply of the market.
         """
         return self.__abi_module.total_listings.call()
+
+    def get_abi_module(self) -> Market:
+        return self.__abi_module

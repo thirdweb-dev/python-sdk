@@ -1,18 +1,27 @@
 """Base Module."""
 
-from typing import Callable, Optional, cast
+from abc import ABC, abstractmethod
+from typing import Callable, Dict, List, Optional, Union, cast
+
 from eth_account.account import LocalAccount
-from web3.types import TxReceipt
-
-from ..storage import IpfsStorage
-from ..options import SdkOptions
-
 from web3 import Web3
-
+from web3.types import TxReceipt
 from zero_ex.contract_wrappers import TxParams
 
+from ..abi.coin import Coin
+from ..abi.market import Market
+from ..abi.nft import NFT
+from ..abi.nft_collection import NFTCollection
+from ..abi.pack import Pack
+from ..errors import NoSignerException
+from ..options import SdkOptions
+from ..storage import IpfsStorage
+from ..types.role import Role
 
-class BaseModule:
+ModuleTypes = Union[NFT, Market, Pack, NFTCollection, Coin]
+
+
+class BaseModule(ABC):
     """
     Base module for all modules.
     """
@@ -62,3 +71,79 @@ class BaseModule:
         """
         signed_tx = self.get_account().sign_transaction(tx)
         return signed_tx
+
+    def grant_role(self, role: Role, address: str):
+        """
+        Grants the given role to the given address
+        """
+
+        role_hash = role.get_hash()
+        tx = self.__abi_module.grant_role.build_transaction(
+            role_hash, address,
+            self.get_transact_opts()
+        )
+        self.execute_tx(tx)
+
+    @abstractmethod
+    def get_abi_module(self) -> ModuleTypes:
+        pass
+
+    def grant_role(self, role: Role, address: str):
+        """
+        Grants the given role to the given address
+        """
+
+        role_hash = role.get_hash()
+        tx = self.get_abi_module().grant_role.build_transaction(
+            role_hash, address,
+            self.get_transact_opts()
+        )
+        self.execute_tx(tx)
+
+    def revoke_role(self, role: Role, address: str):
+        """
+        Revokes the given role from the given address
+        """
+        role_hash = role.get_hash()
+        try:
+            signer_address = self.get_signer_address()
+            if signer_address.lower() == address.lower():
+                self.execute_tx(self.get_abi_module().renounce_role.build_transaction(
+                    role_hash, address, self.get_transact_opts()
+                ))
+                return
+        except NoSignerException:
+            pass
+
+        self.execute_tx(self.get_abi_module().revoke_role.build_transaction(
+            role_hash, address, self.get_transact_opts()
+        ))
+
+    def get_role_member_count(self, role: Role):
+        """
+        Returns the number of members in the given role
+        """
+        return self.get_abi_module().get_role_member_count.call(role.get_hash())
+
+    def get_role_members(self, role: Role) -> List[str]:
+        """
+        Returns the members of the given role
+        """
+        return [self.get_role_member(role, x) for x in range(self.get_role_member_count(role))]
+
+    def get_role_member(self, role: Role, index: int) -> str:
+        """
+        Returns the member at the given index of the given role
+        """
+        return self.get_abi_module().get_role_member.call(role.get_hash(), index)
+
+    def get_all_role_members(self) -> Dict[str, List[str]]:
+        """
+        Returns all the members of all the roles
+        """
+        return {
+            Role.admin.name: self.get_role_members(Role.admin),
+            Role.minter.name: self.get_role_members(Role.minter),
+            Role.transfer.name: self.get_role_members(Role.transfer),
+            Role.pauser.name: self.get_role_members(Role.pauser)
+        }

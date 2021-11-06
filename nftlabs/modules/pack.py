@@ -1,13 +1,14 @@
-from ..errors import NoSignerException, AssetNotFoundException
-from ..types import Role
-from ..types.pack import PackMetadata, PackNftMetadata, CreatePackArg, AssetAmountPair
-from ..types.nft import NftMetadata
-from ..types.currency import Currency, CurrencyValue
-from ..abi.pack import Pack
-from .base import BaseModule
-from ..abi.erc20 import ERC20
+from typing import Dict, List
+
 from web3 import Web3
-from typing import List, Dict
+
+from ..abi.pack import Pack
+from ..errors import AssetNotFoundException
+from ..types.currency import CurrencyValue
+from ..types.nft import NftMetadata
+from ..types.pack import (AssetAmountPair, CreatePackArg, PackMetadata,
+                          PackNftMetadata)
+from .base import BaseModule
 
 
 class PackModule(BaseModule):
@@ -69,12 +70,21 @@ class PackModule(BaseModule):
         ))
 
     def get_link_balance(self) -> CurrencyValue:
+        """
+        WIP: This method is not ready to be called.
+        """
         pass
 
     def deposit_link(self, amount: int):
+        """
+        WIP: This method is not ready to be called.
+        """
         pass
 
     def withdraw_link(self, to_address: str, amount: int):
+        """
+        WIP: This method is not ready to be called.
+        """
         pass
 
     def set_royalty_bps(self, amount: int):
@@ -87,39 +97,5 @@ class PackModule(BaseModule):
             restricted, self.get_transact_opts()
         ))
 
-    def grant_role(self, role: Role, address: str):
-        role_hash = role.get_hash()
-        self.execute_tx(self.__abi_module.grant_role.build_transaction(
-            role_hash, address, self.get_transact_opts()
-        ))
-
-    def revoke_role(self, role: Role, address: str):
-        role_hash = role.get_hash()
-
-        try:
-            signer_address = self.get_signer_address()
-            if signer_address.lower() != address.lower():
-                pass
-            self.execute_tx(self.__abi_module.renounce_role.build_transaction(
-                role_hash, address, self.get_transact_opts()
-            ))
-            return
-        except NoSignerException:
-            pass
-
-        self.execute_tx(self.__abi_module.revoke_role.build_transaction(
-            role_hash, address, self.get_transact_opts()
-        ))
-
-    def get_role_members(self, role: Role) -> List[str]:
-        role_hash = role.get_hash()
-        count = self.__abi_module.get_role_member_count.call(role_hash)
-        return [self.__abi_module.get_role_member.call(role_hash, i) for i in range(count)]
-
-    def get_all_role_members(self) -> Dict[Role, List[str]]:
-        return {
-            Role.admin.name: self.get_role_members(Role.admin),
-            Role.minter.name: self.get_role_members(Role.minter),
-            Role.transfer.name: self.get_role_members(Role.transfer),
-            Role.pauser.name: self.get_role_members(Role.pauser)
-        }
+    def get_abi_module(self) -> Pack:
+        return self.__abi_module
