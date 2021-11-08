@@ -45,7 +45,8 @@ class PackModule(BaseModule):
         pass
 
     def get_all(self) -> List[PackMetadata]:
-        pass
+        max_id = self.__abi_module.next_token_id.call()
+        return [self.get(i) for i in range(max_id)]
 
     def get_nfts(self, pack_id: int) -> List[PackNftMetadata]:
         pass
