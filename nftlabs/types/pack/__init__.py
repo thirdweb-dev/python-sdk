@@ -27,9 +27,17 @@ class AssetAmountPair:
 
 @dataclass
 class CreatePackArg:
+    """CreatePackArg assembles the parameters used to create a new Pack
+
+    Args:
+        asset_contract_address: The address of the asset being put in the pack
+        metadata: The metadata of the pack (name, description, image, etc)
+        assets: The list of assets (pair of [id, amount]) to list in in the pack
+        rewards_per_open: The number of tokens that will be awarded when opening the pack
+        seconds_until_open_start: The number of seconds the pack is allowed to be opened
+    """
     asset_contract_address: str
     metadata: Union[str, dict]
     assets: List[AssetAmountPair]
-    seconds_until_open_start: int
-    seconds_until_open_end: int
-    rewards_per_open: int
+    rewards_per_open: int = 1
+    seconds_until_open_start: int = 0
