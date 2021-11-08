@@ -8,4 +8,11 @@ class NoSignerException(Exception):
 
 class AssetNotFoundException(Exception):
     def __init__(self, identifier: Optional[Any] = None):
-        super().__init__(f"Asset with ID '{identifier}' not found" if identifier is not None else "Asset not found")
+        super().__init__(
+            f"Asset with ID '{identifier}' not found" if identifier is not None else "Asset not found")
+
+
+class UnsupportedAssetException(Exception):
+    def __init__(self, identifier: Optional[Any] = None):
+        super().__init__(
+            f"Asset with address {identifier} is not compatible with this method")
