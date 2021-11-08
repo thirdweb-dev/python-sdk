@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Dict, List
 
 from web3 import Web3
@@ -25,7 +26,16 @@ class PackModule(BaseModule):
         if uri == "":
             raise AssetNotFoundException(pack_id)
         metadata = self.get_storage().get(uri)
-        return None
+        state = self.__abi_module.get_pack.call(pack_id)
+        total_supply = self.__abi_module.total_supply.call(pack_id)
+        return PackMetadata(
+            id=pack_id,
+            creator_address=state.creator,
+            current_supply=total_supply,
+            metadata=metadata,
+            open_start=None if state.openStart <= 0 else datetime.fromtimestamp(
+                state.openStart),
+        )
 
     def open(self, pack_id: int) -> List[NftMetadata]:
         pass
