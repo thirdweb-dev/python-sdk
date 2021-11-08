@@ -1,10 +1,14 @@
 from datetime import datetime
 from typing import Dict, List
+from json import dumps
 
 from web3 import Web3
+from eth_abi import encode_abi
 
+
+from ..abi.erc1155 import ERC1155
 from ..abi.pack import Pack
-from ..errors import AssetNotFoundException
+from ..errors import AssetNotFoundException, UnsupportedAssetException
 from ..types.currency import CurrencyValue
 from ..types.nft import NftMetadata
 from ..types.pack import (AssetAmountPair, CreatePackArg, PackMetadata,
@@ -22,7 +26,7 @@ class PackModule(BaseModule):
         self.__abi_module = Pack(client, address)
 
     def get(self, pack_id: int) -> PackMetadata:
-        uri = self.__abi_module.token_uri.call(pack_id)
+        uri = self._BaseModule__get_token_uri(pack_id)
         if uri == "":
             raise AssetNotFoundException(pack_id)
         metadata = self.get_storage().get(uri)
@@ -66,7 +70,33 @@ class PackModule(BaseModule):
         ))
 
     def create(self, arg: CreatePackArg) -> PackMetadata:
-        pass
+        """
+        WIP: This method is not ready to be called.
+
+        Suffers from same issue as MarketModule.list
+        """
+
+        if not self.is_erc1155(arg.asset_contract_address):
+            raise UnsupportedAssetException(arg.asset_contract_address)
+
+        asset_contract = ERC1155(
+            self.get_client(), arg.asset_contract_address)
+        from_address = self.get_signer_address()
+        ids = [a.token_id for a in arg.assets]
+        amounts = [a.amount for a in arg.assets]
+        uri = self.get_storage().upload(
+            dumps(arg.metadata), self.address, self.get_signer_address())
+
+        params = encode_abi(
+            ['string', 'uint256', 'uint256'],
+            [uri, arg.seconds_until_open_start, arg.rewards_per_open]
+        )
+
+        receipt = self.execute_tx(asset_contract.safe_batch_transfer_from.build_transaction(
+            from_address, self.address, ids, amounts, params, self.get_transact_opts(),
+        ))
+        result = self.__abi_module.get_pack_created_event(
+            receipt.transactionHash)
 
     def transfer_from(self, from_address: str, to_address: str, args: AssetAmountPair):
         return self.execute_tx(self.__abi_module.safe_transfer_from.build_transaction(

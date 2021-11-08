@@ -157,3 +157,18 @@ class BaseModule(ABC):
     def is_erc1155(self, address: str) -> bool:
         erc165 = ERC165(self.get_client(), address)
         return erc165.supports_interface.call(InterfaceIdErc1155)
+
+    def __get_token_uri(self, token_id: int) -> ModuleTypes:
+        module = self.get_abi_module()
+        uri = ""
+        try:
+            uri = module.token_uri(token_id)
+        except:
+            pass
+        if uri != "":
+            return uri
+        try:
+            uri = module.uri(token_id)
+        except:
+            pass
+        return uri
