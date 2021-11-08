@@ -3,11 +3,11 @@ from typing import Dict, List
 from web3 import Web3
 
 from ..abi.erc20 import ERC20
-from ..abi.erc165 import ERC165
 from ..abi.erc1155 import ERC1155
-from ..abi.market import Market
+from ..abi.market import Market, MarketListing
 from ..abi.nft import NFT
 from ..constants import ZeroAddress
+from ..errors import UnsupportedAssetException
 from ..types.listing import Listing
 from ..types.market import Filter, ListArg, MarketListing
 from . import BaseModule
@@ -33,56 +33,68 @@ class MarketModule(BaseModule):
         self.address = address
         self.__abi_module = Market(client, address)
 
-    def list(self, arg: ListArg):
+    def list(self, arg: ListArg) -> Listing:
         """
-        BETA: This method is still in beta and might contain bugs.
+        WIP: This method is still in beta and will contain bugs.
+        Status: Listing works but decoding the logs is breaking due to a bug
+        in the web3 library (https://github.com/ethereum/web3.py/pull/1484).
+        We're unable to return the new listing ID to the caller. Calling
+        this method will return None for now.
 
         List an asset for sale.
         """
-        from_address = self.get_signer_address()
-        client = self.get_client()
-        erc165 = ERC165(client, arg.asset_contract)
-        isERC721 = erc165.supports_interface.call(
-            bytearray.fromhex("80ac58cd"))
-        if isERC721:
-            asset = NFT(client, arg.asset_contract)
-            approved = asset.is_approved_for_all.call(
-                from_address, self.address)
-            if not approved:
-                is_token_approved = asset.get_approved.call(
-                    arg.token_id).lower() == self.address.lower()
-                if not is_token_approved:
-                    self.execute_tx(asset.set_approval_for_all.build_transaction(
-                        self.address, True, self.get_transact_opts()))
-
+        if self.is_erc721(arg.asset_contract):
+            self.__approve_erc_721(arg)
+        elif self.is_erc1155(arg.asset_contract):
+            self.__approve_erc_1155(arg.asset_contract)
         else:
-            asset = ERC1155(client, arg.asset_contract)
-            approved = asset.is_approved_for_all.call(
-                from_address, self.address)
+            raise UnsupportedAssetException()
 
-            if not approved:
-                asset.set_approval_for_all.call(self.address, True)
+        currency_address = self.get_client().toChecksumAddress(ZeroAddress)
+        print("Currency = ", currency_address)
+        receipt = self.execute_tx(
+            self.__abi_module._list.build_transaction(
+                asset_contract=arg.asset_contract,
+                token_id=arg.token_id,
+                currency=currency_address,
+                price_per_token=arg.price_per_token,
+                quantity=arg.quantity,
+                seconds_until_end=arg.seconds_until_end,
+                seconds_until_start=arg.seconds_until_start,
+                tokens_per_buyer=arg.tokens_per_buyer,
+                tx_params=self.get_transact_opts()))
+        return None
+        # result = self.__abi_module.get_new_listing_event(
+        #     tx_hash=receipt.transactionHash.hex())
+        # listing = result[0]['args']['listing']
+        # return self.__transform_result_to_listing(listing)
 
-        tx = self.__abi_module._list.build_transaction(
-            arg.asset_contract,
-            arg.token_id,
-            arg.currency_contract,
-            arg.price_per_token,
-            arg.quantity,
-            arg.tokens_per_buyer,
-            arg.seconds_until_start,
-            arg.seconds_until_end,
-            self.get_transact_opts()
-        )
+    def __approve_erc_1155(self, arg: ListArg) -> Listing:
+        """
+        BETA: This method is still in beta and might contain bugs.
+        """
+        from_address = self.get_signer_address()
+        asset = ERC1155(self.get_client(), arg.asset_contract)
+        approved = asset.is_approved_for_all.call(
+            from_address, self.address)
+        if not approved:
+            asset.set_approval_for_all.call(self.address, True)
+        return None
 
-        receipt = self.execute_tx(tx)
-        result = self.__abi_module.get_new_listing_event(
-            tx_hash=receipt.transactionHash.hex())
-        # listing_id = result[0]['args']['token_id']
-        # return self.get(listing_id)
+    def __approve_erc_721(self, arg: ListArg):
+        from_address = self.get_signer_address()
+        asset = NFT(self.get_client(), arg.asset_contract)
+        approved = asset.is_approved_for_all.call(
+            from_address, self.address)
+        if not approved:
+            is_token_approved = asset.get_approved.call(
+                arg.token_id).lower() == self.address.lower()
+            if not is_token_approved:
+                self.execute_tx(asset.set_approval_for_all.build_transaction(
+                    self.address, True, self.get_transact_opts()))
 
     def unlist(self, listing_id, quantity):
-        """ 
+        """
         Unlist an asset for sale.
         """
         tx = self.__abi_module.unlist.build_transaction(
@@ -93,7 +105,7 @@ class MarketModule(BaseModule):
         self.execute_tx(tx)
 
     def unlist_all(self, listing_id: int):
-        """ 
+        """
         Unlist all assets for sale with a given listing ID.
         """
         self.unlist(listing_id, self.get(listing_id).quantity)
@@ -127,7 +139,7 @@ class MarketModule(BaseModule):
             tx_hash=receipt.transactionHash.hex())
 
     def set_market_fee_bps(self, amount: int):
-        """ 
+        """
         Set the market fee in basis points.
         """
         tx = self.__abi_module.set_market_fee_bps.build_transaction(
@@ -136,7 +148,7 @@ class MarketModule(BaseModule):
         self.execute_tx(tx)
 
     def get_all_listings(self, search_filter: Filter = None) -> List[Listing]:
-        """ 
+        """
         Returns all the listings.
         """
         return self.get_all(search_filter)
@@ -165,7 +177,7 @@ class MarketModule(BaseModule):
         return self.get(listing_id)
 
     def get_all(self, filter: Filter = None) -> List[Listing]:
-        """ 
+        """
         Returns all the listings.
         """
         if filter is None:
@@ -195,3 +207,6 @@ class MarketModule(BaseModule):
 
     def get_abi_module(self) -> Market:
         return self.__abi_module
+
+    def __transform_result_to_listing(self, listing: MarketListing) -> Listing:
+        pass
