@@ -51,7 +51,6 @@ class MarketModule(BaseModule):
             raise UnsupportedAssetException()
 
         currency_address = self.get_client().toChecksumAddress(ZeroAddress)
-        print("Currency = ", currency_address)
         receipt = self.execute_tx(
             self.__abi_module._list.build_transaction(
                 asset_contract=arg.asset_contract,
@@ -95,7 +94,7 @@ class MarketModule(BaseModule):
 
     def unlist(self, listing_id, quantity):
         """
-        Unlist an asset for sale.
+        Unlist a certain quantity of tokens from a listing.
         """
         tx = self.__abi_module.unlist.build_transaction(
             listing_id,
@@ -106,7 +105,7 @@ class MarketModule(BaseModule):
 
     def unlist_all(self, listing_id: int):
         """
-        Unlist all assets for sale with a given listing ID.
+        Unlist all available tokens from a listing.
         """
         self.unlist(listing_id, self.get(listing_id).quantity)
 
