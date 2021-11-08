@@ -4,11 +4,14 @@ from abc import ABC, abstractmethod
 from typing import Callable, Dict, List, Optional, Union, cast
 
 from eth_account.account import LocalAccount
+from nftlabs.abi.erc165 import ERC165
+from nftlabs.constants.erc_interfaces import InterfaceIdErc1155, InterfaceIdErc721
 from web3 import Web3
 from web3.types import TxReceipt
 from zero_ex.contract_wrappers import TxParams
 
 from ..abi.coin import Coin
+from ..abi.erc1155 import ERC1155
 from ..abi.market import Market
 from ..abi.nft import NFT
 from ..abi.nft_collection import NFTCollection
@@ -147,3 +150,11 @@ class BaseModule(ABC):
             Role.transfer.name: self.get_role_members(Role.transfer),
             Role.pauser.name: self.get_role_members(Role.pauser)
         }
+
+    def is_erc721(self, address: str) -> bool:
+        erc165 = ERC165(self.get_client(), address)
+        return erc165.supports_interface.call(InterfaceIdErc721)
+
+    def is_erc1155(self, address: str) -> bool:
+        erc165 = ERC165(self.get_client(), address)
+        return erc165.supports_interface.call(InterfaceIdErc1155)
