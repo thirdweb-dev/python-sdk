@@ -2,9 +2,9 @@ import unittest
 
 from nftlabs import NftlabsSdk, SdkOptions
 
-from .test_constants import (TEST_COLLECTION_CONTRACT_ADDRESS,
-                             TEST_MARKET_CONTRACT_ADDRESS,
-                             TEST_NFT_CONTRACT_ADDRESS)
+from test_constants import (TEST_COLLECTION_CONTRACT_ADDRESS,
+                            TEST_MARKET_CONTRACT_ADDRESS,
+                            TEST_NFT_CONTRACT_ADDRESS)
 
 
 class TestMarket(unittest.TestCase):
