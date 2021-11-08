@@ -19,8 +19,6 @@ class ListArg:
     tokens_per_buyer: int
     seconds_until_start: int
     seconds_until_end: int
-    limit: Optional[int] = None
-    offset: Optional[int] = None
 
 
 @dataclass
