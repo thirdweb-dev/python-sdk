@@ -4,18 +4,17 @@ from abc import ABC, abstractmethod
 from typing import Callable, Dict, List, Optional, Union, cast
 
 from eth_account.account import LocalAccount
-from nftlabs.abi.erc165 import ERC165
-from nftlabs.constants.erc_interfaces import InterfaceIdErc1155, InterfaceIdErc721
 from web3 import Web3
 from web3.types import TxReceipt
 from zero_ex.contract_wrappers import TxParams
 
 from ..abi.coin import Coin
-from ..abi.erc1155 import ERC1155
+from ..abi.erc165 import ERC165
 from ..abi.market import Market
 from ..abi.nft import NFT
 from ..abi.nft_collection import NFTCollection
 from ..abi.pack import Pack
+from ..constants.erc_interfaces import InterfaceIdErc721, InterfaceIdErc1155
 from ..errors import NoSignerException
 from ..options import SdkOptions
 from ..storage import IpfsStorage
