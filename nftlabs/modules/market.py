@@ -146,12 +146,6 @@ class MarketModule(BaseModule):
             self.get_transact_opts())
         self.execute_tx(tx)
 
-    def get_all_listings(self, search_filter: Filter = None) -> List[Listing]:
-        """
-        Returns all the listings.
-        """
-        return self.get_all(search_filter)
-
     def get(self, listing_id) -> MarketListing:
         """
         Get a listing.
