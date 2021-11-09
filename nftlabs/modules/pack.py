@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Dict, List
 from json import dumps
 
-from web3 import Web3
+from thirdweb_web3 import Web3
 from eth_abi import encode_abi
 
 
@@ -26,7 +26,7 @@ class PackModule(BaseModule):
         self.__abi_module = Pack(client, address)
 
     def get(self, pack_id: int) -> PackMetadata:
-        uri = self._BaseModule__get_token_uri(pack_id)
+        uri = self.__abi_module.uri.call(pack_id)
         if uri == "":
             raise AssetNotFoundException(pack_id)
         metadata = self.get_storage().get(uri)
@@ -34,11 +34,11 @@ class PackModule(BaseModule):
         total_supply = self.__abi_module.total_supply.call(pack_id)
         return PackMetadata(
             id=pack_id,
-            creator_address=state.creator,
+            creator_address=state['creator'],
             current_supply=total_supply,
             metadata=metadata,
-            open_start=None if state.openStart <= 0 else datetime.fromtimestamp(
-                state.openStart),
+            open_start=None if state['openStart'] <= 0 else datetime.fromtimestamp(
+                state['openStart']),
         )
 
     def open(self, pack_id: int) -> List[NftMetadata]:
@@ -98,6 +98,8 @@ class PackModule(BaseModule):
         ))
         result = self.__abi_module.get_pack_created_event(
             receipt.transactionHash)
+        new_pack_id = result[0]['args']['packId']
+        return self.get(new_pack_id)
 
     def transfer_from(self, from_address: str, to_address: str, args: AssetAmountPair):
         return self.execute_tx(self.__abi_module.safe_transfer_from.build_transaction(
