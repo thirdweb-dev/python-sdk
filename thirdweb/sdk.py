@@ -22,7 +22,7 @@ def set_default_account(func):
     return wrapper
 
 
-class NftlabsSdk(object):
+class ThirdwebSdk(object):
     client: Web3
     options: SdkOptions
 
@@ -39,7 +39,7 @@ class NftlabsSdk(object):
     __market_module: Optional[MarketModule]
 
     """
-	Create instance of the NftlabsSdk
+	Create instance of the ThirdwebSdk
 	"""
 
     def __init__(self, options: SdkOptions, url: str):
@@ -180,3 +180,6 @@ class NftlabsSdk(object):
         module.get_signer_address = self.__get_signer_address
         module.get_private_key = self.__get_private_key
         module.get_transact_opts = self.__get_transact_ops
+
+
+NftlabsSdk = ThirdwebSdk
