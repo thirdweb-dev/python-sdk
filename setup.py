@@ -15,7 +15,7 @@ if "PACKAGE_NAME" in environ:
 
 setup(
     name=package_name,
-    version="0.3.0",
+    version="0.3.1",
     description="Official Thirdweb sdk",
     long_description=README,
     long_description_content_type="text/markdown",

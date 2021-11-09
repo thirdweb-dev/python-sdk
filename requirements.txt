@@ -1,3 +1,5 @@
+thirdweb-web3==5.24.8
+thirdweb-contract-wrappers==2.0.3
 0x-contract-addresses==3.0.0
 0x-contract-artifacts==3.0.0
 0x-contract-wrappers==2.0.0
@@ -45,6 +47,7 @@ typing-inspect==0.7.1
 urllib3==1.26.7
 varint==1.0.2
 web3==5.24.0
+thirdweb-web3==5.24.8
 websockets==9.1
 wrapt==1.13.1
 yarl==1.7.0
