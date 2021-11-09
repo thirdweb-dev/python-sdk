@@ -1,9 +1,6 @@
-from typing import Dict, List
+from typing import List
 
 from thirdweb_web3 import Web3
-
-from nftlabs.modules.currency import CurrencyModule
-from nftlabs.modules.nft import NftModule
 
 from ..abi.erc20 import ERC20
 from ..abi.erc1155 import ERC1155
@@ -11,7 +8,9 @@ from ..abi.market import Market, MarketListing
 from ..abi.nft import NFT
 from ..constants import ZeroAddress
 from ..errors import AssetNotFoundException, UnsupportedAssetException
-from ..types.currency import Currency, CurrencyValue
+from ..modules.currency import CurrencyModule
+from ..modules.nft import NftModule
+from ..types.currency import CurrencyValue
 from ..types.listing import Listing
 from ..types.market import Filter, ListArg, MarketListing
 from . import BaseModule
@@ -148,7 +147,7 @@ class MarketModule(BaseModule):
             self.get_transact_opts())
         self.execute_tx(tx)
 
-    def get(self, listing_id) -> MarketListing:
+    def get(self, listing_id) -> Listing:
         """
         Get a listing.
         """
