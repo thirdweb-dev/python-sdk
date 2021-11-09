@@ -2,12 +2,16 @@ from typing import Dict, List
 
 from thirdweb_web3 import Web3
 
+from nftlabs.modules.currency import CurrencyModule
+from nftlabs.modules.nft import NftModule
+
 from ..abi.erc20 import ERC20
 from ..abi.erc1155 import ERC1155
 from ..abi.market import Market, MarketListing
 from ..abi.nft import NFT
 from ..constants import ZeroAddress
-from ..errors import UnsupportedAssetException
+from ..errors import AssetNotFoundException, UnsupportedAssetException
+from ..types.currency import Currency, CurrencyValue
 from ..types.listing import Listing
 from ..types.market import Filter, ListArg, MarketListing
 from . import BaseModule
@@ -44,50 +48,48 @@ class MarketModule(BaseModule):
         List an asset for sale.
         """
         if self.is_erc721(arg.asset_contract):
-            self.__approve_erc_721(arg)
+            self.__approve_erc_721(arg.asset_contract, arg.token_id)
         elif self.is_erc1155(arg.asset_contract):
             self.__approve_erc_1155(arg.asset_contract)
         else:
             raise UnsupportedAssetException()
 
-        currency_address = self.get_client().toChecksumAddress(ZeroAddress)
         receipt = self.execute_tx(
             self.__abi_module._list.build_transaction(
                 asset_contract=arg.asset_contract,
                 token_id=arg.token_id,
-                currency=currency_address,
+                currency=arg.currency_contract,
                 price_per_token=arg.price_per_token,
                 quantity=arg.quantity,
                 seconds_until_end=arg.seconds_until_end,
                 seconds_until_start=arg.seconds_until_start,
                 tokens_per_buyer=arg.tokens_per_buyer,
                 tx_params=self.get_transact_opts()))
-        return None
-        # result = self.__abi_module.get_new_listing_event(
-        #     tx_hash=receipt.transactionHash.hex())
-        # listing = result[0]['args']['listing']
-        # return self.__transform_result_to_listing(listing)
+        result = self.__abi_module.get_new_listing_event(
+            tx_hash=receipt.transactionHash.hex())
+        listing = result[0]['args']['listing']
+        return self.get(listing[0])
 
-    def __approve_erc_1155(self, arg: ListArg) -> Listing:
+    def __approve_erc_1155(self, address: str) -> Listing:
         """
         BETA: This method is still in beta and might contain bugs.
         """
         from_address = self.get_signer_address()
-        asset = ERC1155(self.get_client(), arg.asset_contract)
+        asset = ERC1155(self.get_client(), address)
         approved = asset.is_approved_for_all.call(
             from_address, self.address)
         if not approved:
-            asset.set_approval_for_all.call(self.address, True)
-        return None
+            self.execute_tx(
+                asset.set_approval_for_all.build_transaction(self.address, True, self.get_transact_opts()))
 
-    def __approve_erc_721(self, arg: ListArg):
+    def __approve_erc_721(self, address: str, token_id: int):
         from_address = self.get_signer_address()
-        asset = NFT(self.get_client(), arg.asset_contract)
+        asset = NFT(self.get_client(), address)
         approved = asset.is_approved_for_all.call(
             from_address, self.address)
         if not approved:
             is_token_approved = asset.get_approved.call(
-                arg.token_id).lower() == self.address.lower()
+                token_id).lower() == self.address.lower()
             if not is_token_approved:
                 self.execute_tx(asset.set_approval_for_all.build_transaction(
                     self.address, True, self.get_transact_opts()))
@@ -150,7 +152,11 @@ class MarketModule(BaseModule):
         """
         Get a listing.
         """
-        return MarketListing(**self.__abi_module.get_listing.call(listing_id))
+        listing = MarketListing(
+            **self.__abi_module.get_listing.call(listing_id))
+        if listing.listingId != listing_id:
+            raise AssetNotFoundException(identifier=listing_id)
+        return self.__transform_result_to_listing(listing)
 
     def set_module_metadata(self, metadata: str):
         """
@@ -202,4 +208,30 @@ class MarketModule(BaseModule):
         return self.__abi_module
 
     def __transform_result_to_listing(self, listing: MarketListing) -> Listing:
-        pass
+        currency: CurrencyValue = None
+        if listing.currency == ZeroAddress:
+            pass
+        else:
+            currency_module = CurrencyModule(
+                listing.currency, self.get_client())
+            currency_module.get_client = self.get_client
+            currency = currency_module.get_value(listing.pricePerToken)
+
+        nft_module = NftModule(listing.assetContract, self.get_client())
+        nft_module.get_storage = self.get_storage
+        metadata = nft_module.get(listing.tokenId)
+
+        return Listing(
+            currency_contract=listing.currency,
+            currency_metadata=currency,
+            id=listing.listingId,
+            price_per_token=listing.pricePerToken,
+            quantity=listing.quantity,
+            sale_end=listing.saleEnd,
+            sale_start=listing.saleStart,
+            seller=listing.seller,
+            token_contract=listing.assetContract,
+            token_id=listing.tokenId,
+            token_metadata=metadata,
+            tokens_per_buyer=listing.tokensPerBuyer,
+        )
