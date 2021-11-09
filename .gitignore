@@ -18,3 +18,5 @@ x.sh
 examples/test.py
 
 **/*.pyc
+
+*.egg-info
