@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from web3 import Web3
+from thirdweb_web3 import Web3
 
 from ..abi.erc20 import ERC20
 from ..abi.erc1155 import ERC1155

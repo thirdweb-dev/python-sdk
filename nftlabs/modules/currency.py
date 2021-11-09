@@ -1,4 +1,4 @@
-from web3 import Web3
+from thirdweb_web3 import Web3
 
 from ..abi.coin import Coin
 from ..abi.erc20 import ERC20

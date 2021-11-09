@@ -14,10 +14,10 @@ from typing import (  # pylint: disable=unused-import
 from eth_utils import to_checksum_address
 from mypy_extensions import TypedDict  # pylint: disable=unused-import
 from hexbytes import HexBytes
-from web3 import Web3
-from web3.contract import ContractFunction
-from web3.datastructures import AttributeDict
-from web3.providers.base import BaseProvider
+from thirdweb_web3 import Web3
+from thirdweb_web3.contract import ContractFunction
+from thirdweb_web3.datastructures import AttributeDict
+from thirdweb_web3.providers.base import BaseProvider
 
 from zero_ex.contract_wrappers.bases import ContractMethod, Validator
 from zero_ex.contract_wrappers.tx_params import TxParams
@@ -46,10 +46,7 @@ except ImportError:
     pass
 
 
-
-
-
-class DefaultAdminRoleMethod(ContractMethod): # pylint: disable=invalid-name
+class DefaultAdminRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the DEFAULT_ADMIN_ROLE method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -85,7 +82,8 @@ class DefaultAdminRoleMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class DomainSeparatorMethod(ContractMethod): # pylint: disable=invalid-name
+
+class DomainSeparatorMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the DOMAIN_SEPARATOR method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -121,7 +119,8 @@ class DomainSeparatorMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class MinterRoleMethod(ContractMethod): # pylint: disable=invalid-name
+
+class MinterRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the MINTER_ROLE method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -157,7 +156,8 @@ class MinterRoleMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class PauserRoleMethod(ContractMethod): # pylint: disable=invalid-name
+
+class PauserRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the PAUSER_ROLE method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -193,7 +193,8 @@ class PauserRoleMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class TransferRoleMethod(ContractMethod): # pylint: disable=invalid-name
+
+class TransferRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the TRANSFER_ROLE method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -229,7 +230,8 @@ class TransferRoleMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class ContractUri_Method(ContractMethod): # pylint: disable=invalid-name
+
+class ContractUri_Method(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the _contractURI method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -265,10 +267,11 @@ class ContractUri_Method(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class AllowanceMethod(ContractMethod): # pylint: disable=invalid-name
+
+class AllowanceMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the allowance method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -297,7 +300,8 @@ class AllowanceMethod(ContractMethod): # pylint: disable=invalid-name
         """
         (owner, spender) = self.validate_and_normalize_inputs(owner, spender)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(owner, spender).call(tx_params.as_dict())
+        returned = self._underlying_method(
+            owner, spender).call(tx_params.as_dict())
         return int(returned)
 
     def send_transaction(self, owner: str, spender: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
@@ -321,10 +325,11 @@ class AllowanceMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(owner, spender).estimateGas(tx_params.as_dict())
 
-class ApproveMethod(ContractMethod): # pylint: disable=invalid-name
+
+class ApproveMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the approve method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -354,7 +359,8 @@ class ApproveMethod(ContractMethod): # pylint: disable=invalid-name
         """
         (spender, amount) = self.validate_and_normalize_inputs(spender, amount)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(spender, amount).call(tx_params.as_dict())
+        returned = self._underlying_method(
+            spender, amount).call(tx_params.as_dict())
         return bool(returned)
 
     def send_transaction(self, spender: str, amount: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
@@ -378,10 +384,11 @@ class ApproveMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(spender, amount).estimateGas(tx_params.as_dict())
 
-class BalanceOfMethod(ContractMethod): # pylint: disable=invalid-name
+
+class BalanceOfMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the balanceOf method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -428,10 +435,11 @@ class BalanceOfMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(account).estimateGas(tx_params.as_dict())
 
-class BurnMethod(ContractMethod): # pylint: disable=invalid-name
+
+class BurnMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the burn method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -478,10 +486,11 @@ class BurnMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(amount).estimateGas(tx_params.as_dict())
 
-class BurnFromMethod(ContractMethod): # pylint: disable=invalid-name
+
+class BurnFromMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the burnFrom method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -534,7 +543,8 @@ class BurnFromMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(account, amount).estimateGas(tx_params.as_dict())
 
-class ContractUriMethod(ContractMethod): # pylint: disable=invalid-name
+
+class ContractUriMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the contractURI method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -570,7 +580,8 @@ class ContractUriMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class DecimalsMethod(ContractMethod): # pylint: disable=invalid-name
+
+class DecimalsMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the decimals method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -606,10 +617,11 @@ class DecimalsMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class DecreaseAllowanceMethod(ContractMethod): # pylint: disable=invalid-name
+
+class DecreaseAllowanceMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the decreaseAllowance method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -637,9 +649,11 @@ class DecreaseAllowanceMethod(ContractMethod): # pylint: disable=invalid-name
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (spender, subtracted_value) = self.validate_and_normalize_inputs(spender, subtracted_value)
+        (spender, subtracted_value) = self.validate_and_normalize_inputs(
+            spender, subtracted_value)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(spender, subtracted_value).call(tx_params.as_dict())
+        returned = self._underlying_method(
+            spender, subtracted_value).call(tx_params.as_dict())
         return bool(returned)
 
     def send_transaction(self, spender: str, subtracted_value: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
@@ -647,26 +661,30 @@ class DecreaseAllowanceMethod(ContractMethod): # pylint: disable=invalid-name
 
         :param tx_params: transaction parameters
         """
-        (spender, subtracted_value) = self.validate_and_normalize_inputs(spender, subtracted_value)
+        (spender, subtracted_value) = self.validate_and_normalize_inputs(
+            spender, subtracted_value)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(spender, subtracted_value).transact(tx_params.as_dict())
 
     def build_transaction(self, spender: str, subtracted_value: int, tx_params: Optional[TxParams] = None) -> dict:
         """Construct calldata to be used as input to the method."""
-        (spender, subtracted_value) = self.validate_and_normalize_inputs(spender, subtracted_value)
+        (spender, subtracted_value) = self.validate_and_normalize_inputs(
+            spender, subtracted_value)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(spender, subtracted_value).buildTransaction(tx_params.as_dict())
 
     def estimate_gas(self, spender: str, subtracted_value: int, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
-        (spender, subtracted_value) = self.validate_and_normalize_inputs(spender, subtracted_value)
+        (spender, subtracted_value) = self.validate_and_normalize_inputs(
+            spender, subtracted_value)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(spender, subtracted_value).estimateGas(tx_params.as_dict())
 
-class GetRoleAdminMethod(ContractMethod): # pylint: disable=invalid-name
+
+class GetRoleAdminMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the getRoleAdmin method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -712,10 +730,11 @@ class GetRoleAdminMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(role).estimateGas(tx_params.as_dict())
 
-class GetRoleMemberMethod(ContractMethod): # pylint: disable=invalid-name
+
+class GetRoleMemberMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the getRoleMember method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -744,7 +763,8 @@ class GetRoleMemberMethod(ContractMethod): # pylint: disable=invalid-name
         """
         (role, index) = self.validate_and_normalize_inputs(role, index)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(role, index).call(tx_params.as_dict())
+        returned = self._underlying_method(
+            role, index).call(tx_params.as_dict())
         return str(returned)
 
     def send_transaction(self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
@@ -768,10 +788,11 @@ class GetRoleMemberMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(role, index).estimateGas(tx_params.as_dict())
 
-class GetRoleMemberCountMethod(ContractMethod): # pylint: disable=invalid-name
+
+class GetRoleMemberCountMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the getRoleMemberCount method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -817,10 +838,11 @@ class GetRoleMemberCountMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(role).estimateGas(tx_params.as_dict())
 
-class GrantRoleMethod(ContractMethod): # pylint: disable=invalid-name
+
+class GrantRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the grantRole method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -871,10 +893,11 @@ class GrantRoleMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
 
-class HasRoleMethod(ContractMethod): # pylint: disable=invalid-name
+
+class HasRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the hasRole method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -902,7 +925,8 @@ class HasRoleMethod(ContractMethod): # pylint: disable=invalid-name
         """
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(role, account).call(tx_params.as_dict())
+        returned = self._underlying_method(
+            role, account).call(tx_params.as_dict())
         return bool(returned)
 
     def send_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
@@ -926,10 +950,11 @@ class HasRoleMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
 
-class IncreaseAllowanceMethod(ContractMethod): # pylint: disable=invalid-name
+
+class IncreaseAllowanceMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the increaseAllowance method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -957,9 +982,11 @@ class IncreaseAllowanceMethod(ContractMethod): # pylint: disable=invalid-name
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (spender, added_value) = self.validate_and_normalize_inputs(spender, added_value)
+        (spender, added_value) = self.validate_and_normalize_inputs(
+            spender, added_value)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(spender, added_value).call(tx_params.as_dict())
+        returned = self._underlying_method(
+            spender, added_value).call(tx_params.as_dict())
         return bool(returned)
 
     def send_transaction(self, spender: str, added_value: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
@@ -967,23 +994,27 @@ class IncreaseAllowanceMethod(ContractMethod): # pylint: disable=invalid-name
 
         :param tx_params: transaction parameters
         """
-        (spender, added_value) = self.validate_and_normalize_inputs(spender, added_value)
+        (spender, added_value) = self.validate_and_normalize_inputs(
+            spender, added_value)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(spender, added_value).transact(tx_params.as_dict())
 
     def build_transaction(self, spender: str, added_value: int, tx_params: Optional[TxParams] = None) -> dict:
         """Construct calldata to be used as input to the method."""
-        (spender, added_value) = self.validate_and_normalize_inputs(spender, added_value)
+        (spender, added_value) = self.validate_and_normalize_inputs(
+            spender, added_value)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(spender, added_value).buildTransaction(tx_params.as_dict())
 
     def estimate_gas(self, spender: str, added_value: int, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
-        (spender, added_value) = self.validate_and_normalize_inputs(spender, added_value)
+        (spender, added_value) = self.validate_and_normalize_inputs(
+            spender, added_value)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(spender, added_value).estimateGas(tx_params.as_dict())
 
-class IsRestrictedTransferMethod(ContractMethod): # pylint: disable=invalid-name
+
+class IsRestrictedTransferMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the isRestrictedTransfer method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -1019,10 +1050,11 @@ class IsRestrictedTransferMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class IsTrustedForwarderMethod(ContractMethod): # pylint: disable=invalid-name
+
+class IsTrustedForwarderMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the isTrustedForwarder method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -1069,10 +1101,11 @@ class IsTrustedForwarderMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(forwarder).estimateGas(tx_params.as_dict())
 
-class MintMethod(ContractMethod): # pylint: disable=invalid-name
+
+class MintMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the mint method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -1125,7 +1158,8 @@ class MintMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(to, amount).estimateGas(tx_params.as_dict())
 
-class NameMethod(ContractMethod): # pylint: disable=invalid-name
+
+class NameMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the name method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -1161,10 +1195,11 @@ class NameMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class NoncesMethod(ContractMethod): # pylint: disable=invalid-name
+
+class NoncesMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the nonces method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -1211,7 +1246,8 @@ class NoncesMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(owner).estimateGas(tx_params.as_dict())
 
-class PauseMethod(ContractMethod): # pylint: disable=invalid-name
+
+class PauseMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the pause method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -1246,7 +1282,8 @@ class PauseMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class PausedMethod(ContractMethod): # pylint: disable=invalid-name
+
+class PausedMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the paused method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -1282,10 +1319,11 @@ class PausedMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class PermitMethod(ContractMethod): # pylint: disable=invalid-name
+
+class PermitMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the permit method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -1341,35 +1379,41 @@ class PermitMethod(ContractMethod): # pylint: disable=invalid-name
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (owner, spender, value, deadline, v, r, s) = self.validate_and_normalize_inputs(owner, spender, value, deadline, v, r, s)
+        (owner, spender, value, deadline, v, r, s) = self.validate_and_normalize_inputs(
+            owner, spender, value, deadline, v, r, s)
         tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(owner, spender, value, deadline, v, r, s).call(tx_params.as_dict())
+        self._underlying_method(owner, spender, value,
+                                deadline, v, r, s).call(tx_params.as_dict())
 
     def send_transaction(self, owner: str, spender: str, value: int, deadline: int, v: int, r: Union[bytes, str], s: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (owner, spender, value, deadline, v, r, s) = self.validate_and_normalize_inputs(owner, spender, value, deadline, v, r, s)
+        (owner, spender, value, deadline, v, r, s) = self.validate_and_normalize_inputs(
+            owner, spender, value, deadline, v, r, s)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(owner, spender, value, deadline, v, r, s).transact(tx_params.as_dict())
 
     def build_transaction(self, owner: str, spender: str, value: int, deadline: int, v: int, r: Union[bytes, str], s: Union[bytes, str], tx_params: Optional[TxParams] = None) -> dict:
         """Construct calldata to be used as input to the method."""
-        (owner, spender, value, deadline, v, r, s) = self.validate_and_normalize_inputs(owner, spender, value, deadline, v, r, s)
+        (owner, spender, value, deadline, v, r, s) = self.validate_and_normalize_inputs(
+            owner, spender, value, deadline, v, r, s)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(owner, spender, value, deadline, v, r, s).buildTransaction(tx_params.as_dict())
 
     def estimate_gas(self, owner: str, spender: str, value: int, deadline: int, v: int, r: Union[bytes, str], s: Union[bytes, str], tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
-        (owner, spender, value, deadline, v, r, s) = self.validate_and_normalize_inputs(owner, spender, value, deadline, v, r, s)
+        (owner, spender, value, deadline, v, r, s) = self.validate_and_normalize_inputs(
+            owner, spender, value, deadline, v, r, s)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(owner, spender, value, deadline, v, r, s).estimateGas(tx_params.as_dict())
 
-class RenounceRoleMethod(ContractMethod): # pylint: disable=invalid-name
+
+class RenounceRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the renounceRole method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -1420,10 +1464,11 @@ class RenounceRoleMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
 
-class RevokeRoleMethod(ContractMethod): # pylint: disable=invalid-name
+
+class RevokeRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the revokeRole method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -1474,10 +1519,11 @@ class RevokeRoleMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
 
-class SetContractUriMethod(ContractMethod): # pylint: disable=invalid-name
+
+class SetContractUriMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the setContractURI method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -1522,10 +1568,11 @@ class SetContractUriMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(uri).estimateGas(tx_params.as_dict())
 
-class SetRestrictedTransferMethod(ContractMethod): # pylint: disable=invalid-name
+
+class SetRestrictedTransferMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the setRestrictedTransfer method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -1545,7 +1592,8 @@ class SetRestrictedTransferMethod(ContractMethod): # pylint: disable=invalid-nam
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (restricted_transfer) = self.validate_and_normalize_inputs(restricted_transfer)
+        (restricted_transfer) = self.validate_and_normalize_inputs(
+            restricted_transfer)
         tx_params = super().normalize_tx_params(tx_params)
         self._underlying_method(restricted_transfer).call(tx_params.as_dict())
 
@@ -1554,26 +1602,30 @@ class SetRestrictedTransferMethod(ContractMethod): # pylint: disable=invalid-nam
 
         :param tx_params: transaction parameters
         """
-        (restricted_transfer) = self.validate_and_normalize_inputs(restricted_transfer)
+        (restricted_transfer) = self.validate_and_normalize_inputs(
+            restricted_transfer)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(restricted_transfer).transact(tx_params.as_dict())
 
     def build_transaction(self, restricted_transfer: bool, tx_params: Optional[TxParams] = None) -> dict:
         """Construct calldata to be used as input to the method."""
-        (restricted_transfer) = self.validate_and_normalize_inputs(restricted_transfer)
+        (restricted_transfer) = self.validate_and_normalize_inputs(
+            restricted_transfer)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(restricted_transfer).buildTransaction(tx_params.as_dict())
 
     def estimate_gas(self, restricted_transfer: bool, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
-        (restricted_transfer) = self.validate_and_normalize_inputs(restricted_transfer)
+        (restricted_transfer) = self.validate_and_normalize_inputs(
+            restricted_transfer)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(restricted_transfer).estimateGas(tx_params.as_dict())
 
-class SupportsInterfaceMethod(ContractMethod): # pylint: disable=invalid-name
+
+class SupportsInterfaceMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the supportsInterface method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -1595,7 +1647,8 @@ class SupportsInterfaceMethod(ContractMethod): # pylint: disable=invalid-name
         """
         (interface_id) = self.validate_and_normalize_inputs(interface_id)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(interface_id).call(tx_params.as_dict())
+        returned = self._underlying_method(
+            interface_id).call(tx_params.as_dict())
         return bool(returned)
 
     def send_transaction(self, interface_id: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
@@ -1619,7 +1672,8 @@ class SupportsInterfaceMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(interface_id).estimateGas(tx_params.as_dict())
 
-class SymbolMethod(ContractMethod): # pylint: disable=invalid-name
+
+class SymbolMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the symbol method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -1655,7 +1709,8 @@ class SymbolMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class TotalSupplyMethod(ContractMethod): # pylint: disable=invalid-name
+
+class TotalSupplyMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the totalSupply method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -1691,10 +1746,11 @@ class TotalSupplyMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class TransferMethod(ContractMethod): # pylint: disable=invalid-name
+
+class TransferMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the transfer method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -1724,7 +1780,8 @@ class TransferMethod(ContractMethod): # pylint: disable=invalid-name
         """
         (recipient, amount) = self.validate_and_normalize_inputs(recipient, amount)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(recipient, amount).call(tx_params.as_dict())
+        returned = self._underlying_method(
+            recipient, amount).call(tx_params.as_dict())
         return bool(returned)
 
     def send_transaction(self, recipient: str, amount: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
@@ -1748,10 +1805,11 @@ class TransferMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(recipient, amount).estimateGas(tx_params.as_dict())
 
-class TransferFromMethod(ContractMethod): # pylint: disable=invalid-name
+
+class TransferFromMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the transferFrom method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -1785,9 +1843,11 @@ class TransferFromMethod(ContractMethod): # pylint: disable=invalid-name
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (sender, recipient, amount) = self.validate_and_normalize_inputs(sender, recipient, amount)
+        (sender, recipient, amount) = self.validate_and_normalize_inputs(
+            sender, recipient, amount)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(sender, recipient, amount).call(tx_params.as_dict())
+        returned = self._underlying_method(
+            sender, recipient, amount).call(tx_params.as_dict())
         return bool(returned)
 
     def send_transaction(self, sender: str, recipient: str, amount: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
@@ -1795,23 +1855,27 @@ class TransferFromMethod(ContractMethod): # pylint: disable=invalid-name
 
         :param tx_params: transaction parameters
         """
-        (sender, recipient, amount) = self.validate_and_normalize_inputs(sender, recipient, amount)
+        (sender, recipient, amount) = self.validate_and_normalize_inputs(
+            sender, recipient, amount)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(sender, recipient, amount).transact(tx_params.as_dict())
 
     def build_transaction(self, sender: str, recipient: str, amount: int, tx_params: Optional[TxParams] = None) -> dict:
         """Construct calldata to be used as input to the method."""
-        (sender, recipient, amount) = self.validate_and_normalize_inputs(sender, recipient, amount)
+        (sender, recipient, amount) = self.validate_and_normalize_inputs(
+            sender, recipient, amount)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(sender, recipient, amount).buildTransaction(tx_params.as_dict())
 
     def estimate_gas(self, sender: str, recipient: str, amount: int, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
-        (sender, recipient, amount) = self.validate_and_normalize_inputs(sender, recipient, amount)
+        (sender, recipient, amount) = self.validate_and_normalize_inputs(
+            sender, recipient, amount)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(sender, recipient, amount).estimateGas(tx_params.as_dict())
 
-class UnpauseMethod(ContractMethod): # pylint: disable=invalid-name
+
+class UnpauseMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the unpause method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
@@ -1847,6 +1911,8 @@ class UnpauseMethod(ContractMethod): # pylint: disable=invalid-name
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
+
+
 class Coin:
     """Wrapper class for Coin Solidity contract."""
     default_admin_role: DefaultAdminRoleMethod
@@ -2039,7 +2105,6 @@ class Coin:
     :class:`UnpauseMethod`.
     """
 
-
     def __init__(
         self,
         web3_or_provider: Union[Web3, BaseProvider],
@@ -2080,7 +2145,7 @@ class Coin:
             try:
                 for middleware in MIDDLEWARE:
                     web3.middleware_onion.inject(
-                         middleware['function'], layer=middleware['layer'],
+                        middleware['function'], layer=middleware['layer'],
                     )
             except ValueError as value_error:
                 if value_error.args == ("You can't add the same un-named instance twice",):
@@ -2088,83 +2153,122 @@ class Coin:
 
         self._web3_eth = web3.eth
 
-        functions = self._web3_eth.contract(address=to_checksum_address(contract_address), abi=Coin.abi()).functions
+        functions = self._web3_eth.contract(address=to_checksum_address(
+            contract_address), abi=Coin.abi()).functions
 
-        self.default_admin_role = DefaultAdminRoleMethod(web3_or_provider, contract_address, functions.DEFAULT_ADMIN_ROLE)
+        self.default_admin_role = DefaultAdminRoleMethod(
+            web3_or_provider, contract_address, functions.DEFAULT_ADMIN_ROLE)
 
-        self.domain_separator = DomainSeparatorMethod(web3_or_provider, contract_address, functions.DOMAIN_SEPARATOR)
+        self.domain_separator = DomainSeparatorMethod(
+            web3_or_provider, contract_address, functions.DOMAIN_SEPARATOR)
 
-        self.minter_role = MinterRoleMethod(web3_or_provider, contract_address, functions.MINTER_ROLE)
+        self.minter_role = MinterRoleMethod(
+            web3_or_provider, contract_address, functions.MINTER_ROLE)
 
-        self.pauser_role = PauserRoleMethod(web3_or_provider, contract_address, functions.PAUSER_ROLE)
+        self.pauser_role = PauserRoleMethod(
+            web3_or_provider, contract_address, functions.PAUSER_ROLE)
 
-        self.transfer_role = TransferRoleMethod(web3_or_provider, contract_address, functions.TRANSFER_ROLE)
+        self.transfer_role = TransferRoleMethod(
+            web3_or_provider, contract_address, functions.TRANSFER_ROLE)
 
-        self.contract_uri_ = ContractUri_Method(web3_or_provider, contract_address, functions._contractURI)
+        self.contract_uri_ = ContractUri_Method(
+            web3_or_provider, contract_address, functions._contractURI)
 
-        self.allowance = AllowanceMethod(web3_or_provider, contract_address, functions.allowance, validator)
+        self.allowance = AllowanceMethod(
+            web3_or_provider, contract_address, functions.allowance, validator)
 
-        self.approve = ApproveMethod(web3_or_provider, contract_address, functions.approve, validator)
+        self.approve = ApproveMethod(
+            web3_or_provider, contract_address, functions.approve, validator)
 
-        self.balance_of = BalanceOfMethod(web3_or_provider, contract_address, functions.balanceOf, validator)
+        self.balance_of = BalanceOfMethod(
+            web3_or_provider, contract_address, functions.balanceOf, validator)
 
-        self.burn = BurnMethod(web3_or_provider, contract_address, functions.burn, validator)
+        self.burn = BurnMethod(
+            web3_or_provider, contract_address, functions.burn, validator)
 
-        self.burn_from = BurnFromMethod(web3_or_provider, contract_address, functions.burnFrom, validator)
+        self.burn_from = BurnFromMethod(
+            web3_or_provider, contract_address, functions.burnFrom, validator)
 
-        self.contract_uri = ContractUriMethod(web3_or_provider, contract_address, functions.contractURI)
+        self.contract_uri = ContractUriMethod(
+            web3_or_provider, contract_address, functions.contractURI)
 
-        self.decimals = DecimalsMethod(web3_or_provider, contract_address, functions.decimals)
+        self.decimals = DecimalsMethod(
+            web3_or_provider, contract_address, functions.decimals)
 
-        self.decrease_allowance = DecreaseAllowanceMethod(web3_or_provider, contract_address, functions.decreaseAllowance, validator)
+        self.decrease_allowance = DecreaseAllowanceMethod(
+            web3_or_provider, contract_address, functions.decreaseAllowance, validator)
 
-        self.get_role_admin = GetRoleAdminMethod(web3_or_provider, contract_address, functions.getRoleAdmin, validator)
+        self.get_role_admin = GetRoleAdminMethod(
+            web3_or_provider, contract_address, functions.getRoleAdmin, validator)
 
-        self.get_role_member = GetRoleMemberMethod(web3_or_provider, contract_address, functions.getRoleMember, validator)
+        self.get_role_member = GetRoleMemberMethod(
+            web3_or_provider, contract_address, functions.getRoleMember, validator)
 
-        self.get_role_member_count = GetRoleMemberCountMethod(web3_or_provider, contract_address, functions.getRoleMemberCount, validator)
+        self.get_role_member_count = GetRoleMemberCountMethod(
+            web3_or_provider, contract_address, functions.getRoleMemberCount, validator)
 
-        self.grant_role = GrantRoleMethod(web3_or_provider, contract_address, functions.grantRole, validator)
+        self.grant_role = GrantRoleMethod(
+            web3_or_provider, contract_address, functions.grantRole, validator)
 
-        self.has_role = HasRoleMethod(web3_or_provider, contract_address, functions.hasRole, validator)
+        self.has_role = HasRoleMethod(
+            web3_or_provider, contract_address, functions.hasRole, validator)
 
-        self.increase_allowance = IncreaseAllowanceMethod(web3_or_provider, contract_address, functions.increaseAllowance, validator)
+        self.increase_allowance = IncreaseAllowanceMethod(
+            web3_or_provider, contract_address, functions.increaseAllowance, validator)
 
-        self.is_restricted_transfer = IsRestrictedTransferMethod(web3_or_provider, contract_address, functions.isRestrictedTransfer)
+        self.is_restricted_transfer = IsRestrictedTransferMethod(
+            web3_or_provider, contract_address, functions.isRestrictedTransfer)
 
-        self.is_trusted_forwarder = IsTrustedForwarderMethod(web3_or_provider, contract_address, functions.isTrustedForwarder, validator)
+        self.is_trusted_forwarder = IsTrustedForwarderMethod(
+            web3_or_provider, contract_address, functions.isTrustedForwarder, validator)
 
-        self.mint = MintMethod(web3_or_provider, contract_address, functions.mint, validator)
+        self.mint = MintMethod(
+            web3_or_provider, contract_address, functions.mint, validator)
 
-        self.name = NameMethod(web3_or_provider, contract_address, functions.name)
+        self.name = NameMethod(
+            web3_or_provider, contract_address, functions.name)
 
-        self.nonces = NoncesMethod(web3_or_provider, contract_address, functions.nonces, validator)
+        self.nonces = NoncesMethod(
+            web3_or_provider, contract_address, functions.nonces, validator)
 
-        self.pause = PauseMethod(web3_or_provider, contract_address, functions.pause)
+        self.pause = PauseMethod(
+            web3_or_provider, contract_address, functions.pause)
 
-        self.paused = PausedMethod(web3_or_provider, contract_address, functions.paused)
+        self.paused = PausedMethod(
+            web3_or_provider, contract_address, functions.paused)
 
-        self.permit = PermitMethod(web3_or_provider, contract_address, functions.permit, validator)
+        self.permit = PermitMethod(
+            web3_or_provider, contract_address, functions.permit, validator)
 
-        self.renounce_role = RenounceRoleMethod(web3_or_provider, contract_address, functions.renounceRole, validator)
+        self.renounce_role = RenounceRoleMethod(
+            web3_or_provider, contract_address, functions.renounceRole, validator)
 
-        self.revoke_role = RevokeRoleMethod(web3_or_provider, contract_address, functions.revokeRole, validator)
+        self.revoke_role = RevokeRoleMethod(
+            web3_or_provider, contract_address, functions.revokeRole, validator)
 
-        self.set_contract_uri = SetContractUriMethod(web3_or_provider, contract_address, functions.setContractURI, validator)
+        self.set_contract_uri = SetContractUriMethod(
+            web3_or_provider, contract_address, functions.setContractURI, validator)
 
-        self.set_restricted_transfer = SetRestrictedTransferMethod(web3_or_provider, contract_address, functions.setRestrictedTransfer, validator)
+        self.set_restricted_transfer = SetRestrictedTransferMethod(
+            web3_or_provider, contract_address, functions.setRestrictedTransfer, validator)
 
-        self.supports_interface = SupportsInterfaceMethod(web3_or_provider, contract_address, functions.supportsInterface, validator)
+        self.supports_interface = SupportsInterfaceMethod(
+            web3_or_provider, contract_address, functions.supportsInterface, validator)
 
-        self.symbol = SymbolMethod(web3_or_provider, contract_address, functions.symbol)
+        self.symbol = SymbolMethod(
+            web3_or_provider, contract_address, functions.symbol)
 
-        self.total_supply = TotalSupplyMethod(web3_or_provider, contract_address, functions.totalSupply)
+        self.total_supply = TotalSupplyMethod(
+            web3_or_provider, contract_address, functions.totalSupply)
 
-        self.transfer = TransferMethod(web3_or_provider, contract_address, functions.transfer, validator)
+        self.transfer = TransferMethod(
+            web3_or_provider, contract_address, functions.transfer, validator)
 
-        self.transfer_from = TransferFromMethod(web3_or_provider, contract_address, functions.transferFrom, validator)
+        self.transfer_from = TransferFromMethod(
+            web3_or_provider, contract_address, functions.transferFrom, validator)
 
-        self.unpause = UnpauseMethod(web3_or_provider, contract_address, functions.unpause)
+        self.unpause = UnpauseMethod(
+            web3_or_provider, contract_address, functions.unpause)
 
     def get_approval_event(
         self, tx_hash: Union[HexBytes, bytes]
@@ -2175,6 +2279,7 @@ class Coin:
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=Coin.abi()).events.Approval().processReceipt(tx_receipt)
+
     def get_paused_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -2184,6 +2289,7 @@ class Coin:
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=Coin.abi()).events.Paused().processReceipt(tx_receipt)
+
     def get_role_admin_changed_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -2193,6 +2299,7 @@ class Coin:
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=Coin.abi()).events.RoleAdminChanged().processReceipt(tx_receipt)
+
     def get_role_granted_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -2202,6 +2309,7 @@ class Coin:
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=Coin.abi()).events.RoleGranted().processReceipt(tx_receipt)
+
     def get_role_revoked_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -2211,6 +2319,7 @@ class Coin:
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=Coin.abi()).events.RoleRevoked().processReceipt(tx_receipt)
+
     def get_transfer_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -2220,6 +2329,7 @@ class Coin:
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=Coin.abi()).events.Transfer().processReceipt(tx_receipt)
+
     def get_unpaused_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:

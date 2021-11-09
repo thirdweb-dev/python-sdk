@@ -14,10 +14,10 @@ from typing import (  # pylint: disable=unused-import
 from eth_utils import to_checksum_address
 from mypy_extensions import TypedDict  # pylint: disable=unused-import
 from hexbytes import HexBytes
-from web3 import Web3
-from web3.contract import ContractFunction
-from web3.datastructures import AttributeDict
-from web3.providers.base import BaseProvider
+from thirdweb_web3 import Web3
+from thirdweb_web3.contract import ContractFunction
+from thirdweb_web3.datastructures import AttributeDict
+from thirdweb_web3.providers.base import BaseProvider
 
 from zero_ex.contract_wrappers.bases import ContractMethod, Validator
 from zero_ex.contract_wrappers.tx_params import TxParams
@@ -46,13 +46,10 @@ except ImportError:
     pass
 
 
-
-
-
-class SupportsInterfaceMethod(ContractMethod): # pylint: disable=invalid-name
+class SupportsInterfaceMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the supportsInterface method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -74,7 +71,8 @@ class SupportsInterfaceMethod(ContractMethod): # pylint: disable=invalid-name
         """
         (interface_id) = self.validate_and_normalize_inputs(interface_id)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(interface_id).call(tx_params.as_dict())
+        returned = self._underlying_method(
+            interface_id).call(tx_params.as_dict())
         return bool(returned)
 
     def send_transaction(self, interface_id: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
@@ -99,13 +97,14 @@ class SupportsInterfaceMethod(ContractMethod): # pylint: disable=invalid-name
         return self._underlying_method(interface_id).estimateGas(tx_params.as_dict())
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
+
+
 class ERC165:
     """Wrapper class for ERC165 Solidity contract."""
     supports_interface: SupportsInterfaceMethod
     """Constructor-initialized instance of
     :class:`SupportsInterfaceMethod`.
     """
-
 
     def __init__(
         self,
@@ -147,7 +146,7 @@ class ERC165:
             try:
                 for middleware in MIDDLEWARE:
                     web3.middleware_onion.inject(
-                         middleware['function'], layer=middleware['layer'],
+                        middleware['function'], layer=middleware['layer'],
                     )
             except ValueError as value_error:
                 if value_error.args == ("You can't add the same un-named instance twice",):
@@ -155,10 +154,11 @@ class ERC165:
 
         self._web3_eth = web3.eth
 
-        functions = self._web3_eth.contract(address=to_checksum_address(contract_address), abi=ERC165.abi()).functions
+        functions = self._web3_eth.contract(address=to_checksum_address(
+            contract_address), abi=ERC165.abi()).functions
 
-        self.supports_interface = SupportsInterfaceMethod(web3_or_provider, contract_address, functions.supportsInterface, validator)
-
+        self.supports_interface = SupportsInterfaceMethod(
+            web3_or_provider, contract_address, functions.supportsInterface, validator)
 
     @staticmethod
     def abi():

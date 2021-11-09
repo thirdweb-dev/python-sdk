@@ -1,6 +1,6 @@
 from typing import List
 
-from web3 import Web3
+from thirdweb_web3 import Web3
 
 from ..abi.nft_collection import NFTCollection
 from ..types.collection import (CollectionMetadata, CreateCollectionArg,

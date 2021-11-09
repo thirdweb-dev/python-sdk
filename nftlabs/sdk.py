@@ -1,5 +1,5 @@
 from eth_account.account import LocalAccount, Account
-from web3 import Web3, HTTPProvider
+from thirdweb_web3 import Web3, HTTPProvider
 
 from typing import Optional
 

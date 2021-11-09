@@ -3,7 +3,7 @@ import copy
 import json
 from typing import Dict, List
 
-from web3 import Web3
+from thirdweb_web3 import Web3
 
 from ..abi.nft import NFT
 from ..types.nft import MintArg

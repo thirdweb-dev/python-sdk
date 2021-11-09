@@ -10,7 +10,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="nftlabs-sdk",
-    version="0.2.1",
+    version="0.3.0",
     description="Official Nftlabs sdk",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -25,5 +25,6 @@ setup(
     ],
     packages=find_packages(),
     include_package_data=True,
-    install_requires=["dataclasses-json", "web3", "requests", "0x-contract-wrappers"],
+    install_requires=["dataclasses-json", "thirdweb-web3",
+                      "requests", "thirdweb-contract-wrappers", "web3"],
 )
