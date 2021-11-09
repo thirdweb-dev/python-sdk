@@ -1,6 +1,14 @@
 # NFTLabs Python SDK
 
-PyPi package found [here](https://pypi.org/project/nftlabs-sdk).
+PyPi package found [here](https://pypi.org/project/thirdweb-sdk).
+
+## Deprecation Notice
+
+> The `nftlabs-sdk` pypi package will be deprecated on November 30th, 2021
+>
+> Please make sure you install the new `thirdweb-sdk` package found [here](https://pypi.org/project/thirdweb-sdk)
+>
+> In your code, update all imports to use the `thirdweb` package and switch to using the `ThirdwebSdk` package (instead of the `NftlabsSdk` package)
 
 
 ### Docs
@@ -11,6 +19,11 @@ https://python-docs.nftlabs.co/
 
 
 
+## Installing the SDK
+
+```bash
+$ pip install thirdweb-sdk
+```
 
 
 
