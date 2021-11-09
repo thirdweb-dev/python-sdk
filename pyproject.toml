@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "nftlabs-sdk"
+version = "0.3.0"
+description = "Official ThirdWeb sdk"
+authors = ["Ibrahim Ahmed <abe@thirdweb.com>", "Jake Loo <jake@thirdweb.com>", "Ayush Pathak <ayush@thirdweb.com>"]
+packages = [
+    { include = "nftlabs/**/*.py" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+web3 = "^5.24.0"
+thirdweb-web3 = "^5.24.8"
+thirdweb-contract-wrappers = "^2.0.0"
+dataclasses-json = "^0.5.6"
+requests = "^2.26.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
