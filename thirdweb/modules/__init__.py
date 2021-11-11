@@ -6,3 +6,4 @@ from .currency import *
 from .market import *
 from .pack import *
 from .collection import *
+from .bundle import *

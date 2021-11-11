@@ -9,10 +9,7 @@ from ..metadata import Metadata
 
 @dataclass_json
 @dataclass
-class CollectionMetadata:
-    """
-    COLLECTION MODULE AND ALL ITS CLASSES WILL BE DEPRECATED SOON. USE BUNDLE MODULE INSTEAD.
-    """
+class BundleMetadata:
     id: Optional[int] = None
     creator: Optional[str] = None
     supply: Optional[int] = None
@@ -21,20 +18,14 @@ class CollectionMetadata:
 
 @dataclass_json
 @dataclass
-class CreateCollectionArg:
-    """
-    COLLECTION MODULE AND ALL ITS CLASSES WILL BE DEPRECATED SOON. USE BUNDLE MODULE INSTEAD.
-    """
+class CreateBundleArg:
     metadata: Optional[Metadata] = None
     supply: Optional[int] = None
 
 
 @dataclass_json
 @dataclass
-class MintCollectionArg:
-    """
-    COLLECTION MODULE AND ALL ITS CLASSES WILL BE DEPRECATED SOON. USE BUNDLE MODULE INSTEAD.
-    """
+class MintBundleArg:
     token_id: Optional[int] = None
     amount: Optional[int] = None
 
