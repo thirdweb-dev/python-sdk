@@ -2,13 +2,25 @@
 
 PyPi package found [here](https://pypi.org/project/thirdweb-sdk).
 
-## Deprecation Notice
+## Deprecation Notices
 
 > The `nftlabs-sdk` pypi package will be deprecated on November 30th, 2021
 >
 > Please make sure you install the new `thirdweb-sdk` package found [here](https://pypi.org/project/thirdweb-sdk)
 >
 > In your code, update all imports to use the `thirdweb` package and switch to using the `ThirdwebSdk` package (instead of the `NftlabsSdk` package)
+
+---
+
+> The `collection` module has been renamed to `bundle` and will be deprecated on November 30th, 2021
+>
+> All references to `collection` module and its associated classes should be updated to `bundle` and its newely created classes.
+> 
+> You can find the detailed documentation for the `bundle` module [here](https://python-docs.nftlabs.co/modules.bundle.html)
+
+
+
+
 
 
 ### Docs
@@ -76,3 +88,30 @@ $ abi-gen --language Python -o nftlabs/abi --abis ../nftlabs-protocols/abi/NFT.j
 ```
 
 Anytime there are ABI contract changes, you should regenerate the abi wrappers.
+
+
+### Writing Documentation
+
+This package uses [`PyDoctor`](https://github.com/twisted/pydoctor) to auto-generate docs. Each method, class and variable should have a detailed description of what it is meant for as a comment enclosed in triple quoation marks (`""" """`) just below the line they are defined.
+
+Example:
+
+Do:
+```python
+def my_method(self, arg1, arg2):
+    """
+    This part goes into the documentation.
+    """
+    return arg1 + arg2
+```
+
+Don't:
+```python
+"""
+This part will not go into the documentation.
+"""
+
+def my_method(self, arg1, arg2):
+    return arg1 + arg2
+```
+
