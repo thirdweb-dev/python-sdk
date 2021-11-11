@@ -139,7 +139,7 @@ class ThirdwebSdk(object):
         """
         COLLECTION MODULE AND ALL ITS CLASSES WILL BE DEPRECATED SOON. USE BUNDLE MODULE INSTEAD.
         """
-        get_bundle_module(self, address)
+        return self.get_bundle_module(address)
 
     def get_bundle_module(self, address: str) -> BundleModule:
 
