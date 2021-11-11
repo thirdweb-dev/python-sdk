@@ -295,5 +295,4 @@ class NftModule(BaseModule):
         self.execute_tx(tx)
 
     def get_abi_module(self) -> NFT:
-        """To be removed"""
         return self.__abi_module
