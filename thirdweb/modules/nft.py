@@ -27,19 +27,19 @@ class NftModule(BaseModule):
         super().__init__()
         self.address = address
         """
-        NFT module contract address [Dashboard: Project ➝ NFT Module]
+        NFT module contract address [https://thirdweb.com/: Dashboard: Project ➝ NFT Module]
         """
 
         self.__abi_module = NFT(client, address)
         """
-        The ABI makes calls the EVM. Client is defaul 'Web3' and Address is nft module contract address.
+        The ABI makes calls the EVM. Client is default 'Web3' and Address is nft module contract address.
         """
 
     def mint(self, arg: MintArg) -> NftType:
         """
-        Mints a new token. 
-        Arguments passed:
-        Returns the 'NftMetadata(name,description,image,properties,id,uri)
+        - Mints a new token. 
+        - Arguments passed: Note, a class is used -> MintArg(name, description, image_uri, properties) *Preferrably, using a link
+        - Returns the 'NftMetadata(name,description,image,properties,id,uri)
         """
         return self.mint_to(self.get_signer_address(), arg)
         
@@ -203,15 +203,25 @@ class NftModule(BaseModule):
     def __token_of_owner_by_index(self, address: str, token_id: int) -> int:
         return self.__abi_module.token_of_owner_by_index.call(address, token_id)
 
+        
     def balance(self) -> int:
         """
         Returns balance of the current signers wallet
+        - Arguments: none. Method refers to nft module class.
+        - Use-case: Use this method if you want to use the currently connected wallet
+        - Dashboard: Project ➝ NFT Module ➝ Total amount of NFT's
+
         """
+        
         return self.__abi_module.balance_of.call(self.get_signer_address())
+        
 
     def balance_of(self, address: str) -> int:
         """
-        Returns balance of the given address
+        Returns balance of the given addressss
+        - Arguments: Pass the address of which to check the balance
+        - Use-case: Use this method if you don't want to use the connected wallet, but want to check another wallet.
+        - Dashboard: Project ➝ NFT Module ➝ Total amount of NFT's 
         """
         return self.__abi_module.balance_of.call(address)
 

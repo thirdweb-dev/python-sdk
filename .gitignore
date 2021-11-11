@@ -21,4 +21,4 @@ examples/test.py
 
 *.egg-info
 
-./docs
+./docs/*
