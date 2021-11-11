@@ -59,7 +59,7 @@ class ThirdwebSdk(object):
 
         self.storage = IpfsStorage(
             options.ipfs_gateway_url if options.ipfs_gateway_url
-            else "https://cloudflare-ipfs.com/ipfs/")
+            else "https://ipfs.io/ipfs/")
 
         self.client = Web3(HTTPProvider(url))
         if not self.client.isConnected():
