@@ -4,14 +4,19 @@ PyPi package found [here](https://pypi.org/project/thirdweb-sdk).
 
 ## Deprecation Notices
 
+> 1 of 2
+>
 > The `nftlabs-sdk` pypi package will be deprecated on November 30th, 2021
 >
 > Please make sure you install the new `thirdweb-sdk` package found [here](https://pypi.org/project/thirdweb-sdk)
 >
 > In your code, update all imports to use the `thirdweb` package and switch to using the `ThirdwebSdk` package (instead of the `NftlabsSdk` package)
 
+
 ---
 
+> 2 of 2
+>
 > The `collection` module has been renamed to `bundle` and will be deprecated on November 30th, 2021
 >
 > All references to `collection` module and its associated classes should be updated to `bundle` and its newely created classes.
@@ -115,3 +120,12 @@ def my_method(self, arg1, arg2):
     return arg1 + arg2
 ```
 
+
+Addtionally, each module should also have a docstring at the top of the file. This will be used as a breif descroption of the module on the [homepage of the documentation](https://python-docs.nftlabs.co/). 
+
+Example:
+```python
+1 """Interact with the NFT module of the app""" # docstring
+2 # Module code starts from here
+3 # ...
+```
