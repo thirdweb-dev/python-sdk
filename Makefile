@@ -16,3 +16,6 @@ test:
 build:
 	python3 setup.py sdist bdist_wheel
 	PACKAGE_NAME=nftlabs-sdk python3 setup.py sdist bdist_wheel
+
+publish:
+	twine upload dist/*
