@@ -11,13 +11,13 @@ from .nft import NftMetadata
 @dataclass_json
 @dataclass
 class Listing:
-    """A listing of an some asset (e.g. a NFT, Collection, Pack, etc.)
+    """A listing of an some asset (e.g. a NFT, Bundle, Pack, etc.)
 
     Attributes:
         id        (str): The id of the listing
         seller    (str): The wallet address of the seller
         token_contract (str): The address of the token contract
-        token_id  (str): The id of the token (e.g. id of NFT, Pack, or Collection)
+        token_id  (str): The id of the token (e.g. id of NFT, Pack, or Bundle)
         quantity  (int): The quantity of token being listed (a single listing could sell >= 1 token)
         currency_contract (str): The address of the currency contract. This property is set to 0x0 if the listing is free.
         price_per_token (int): The price per token. E.g. if the currency_contract is pointing to a contract with token symbol $DAI, then this listing costs (price_per_token * $DAI).

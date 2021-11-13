@@ -3,6 +3,7 @@ from .util import replace_ipfs_prefix_with_gateway
 from requests import get, post
 import json
 
+
 class IpfsStorage:
     __nftlabsApiUrl = "https://upload.nftlabs.co"
 
@@ -14,7 +15,7 @@ class IpfsStorage:
     def get(self, uri: str) -> str:
         ipfs_uri = replace_ipfs_prefix_with_gateway(uri, self.gateway_uri)
 
-        response = get(ipfs_uri)
+        response = get(ipfs_uri, timeout=10)
 
         if response.status_code != 200:
             raise Exception("Failed to download metadata")
@@ -24,6 +25,7 @@ class IpfsStorage:
     """
     Upload data to IPFS, data parameter
     """
+
     def upload(self, data, contract_address: str, signer_address: str) -> str:
         if isinstance(data, str) and data.startswith("ipfs://"):
             return data
@@ -40,7 +42,7 @@ class IpfsStorage:
 
         response = result.json()
         return response['IpfsUri']
-    
+
     def upload_metadata(self, metadata: str, contract_address: str, signer_address: str) -> str:
         if type(metadata) == str:
             return self.upload(metadata, contract_address, signer_address)

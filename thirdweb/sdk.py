@@ -7,6 +7,7 @@ from .errors import NoSignerException
 from .modules.nft import NftModule
 from .modules.pack import PackModule
 from .modules.collection import CollectionModule
+from .modules.bundle import BundleModule
 from .modules.currency import CurrencyModule
 from .modules.market import MarketModule
 from .options import SdkOptions
@@ -36,6 +37,7 @@ class ThirdwebSdk(object):
     __nft_module: Optional[NftModule]
     __pack_module: Optional[PackModule]
     __collection_module: Optional[CollectionModule]
+    __bundle_module = Optional[BundleModule]
     __market_module: Optional[MarketModule]
 
     """
@@ -47,6 +49,7 @@ class ThirdwebSdk(object):
         self.__nft_module = None
         self.__pack_module = None
         self.__collection_module = None
+        self.__bundle_module = None
         self.__current_account = None
         self.__market_module = None
 
@@ -56,7 +59,7 @@ class ThirdwebSdk(object):
 
         self.storage = IpfsStorage(
             options.ipfs_gateway_url if options.ipfs_gateway_url
-            else "https://cloudflare-ipfs.com/ipfs/")
+            else "https://ipfs.io/ipfs/")
 
         self.client = Web3(HTTPProvider(url))
         if not self.client.isConnected():
@@ -129,17 +132,24 @@ class ThirdwebSdk(object):
         return self.__market_module
 
     """
-	Returns an instance of the collection module
+	Returns an instance of the bundle module
 	"""
     @set_default_account
     def get_collection_module(self, address: str) -> CollectionModule:
-        if self.__collection_module is not None:
-            return self.__collection_module
+        """
+        COLLECTION MODULE AND ALL ITS CLASSES WILL BE DEPRECATED SOON. USE BUNDLE MODULE INSTEAD.
+        """
+        return self.get_bundle_module(address)
 
-        module = CollectionModule(address, self.__get_client())
+    def get_bundle_module(self, address: str) -> BundleModule:
+
+        if self.__bundle_module is not None:
+            return self.__bundle_module
+
+        module = BundleModule(address, self.__get_client())
         self.__init_module(module)
-        self.__collection_module = module
-        return self.__collection_module
+        self.__bundle_module = module
+        return self.__bundle_module
 
     """
 	Internal function used to return the current web3 provider used by downstream modules
