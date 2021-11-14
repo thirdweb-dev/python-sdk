@@ -24,12 +24,13 @@ class TestSum(unittest.TestCase):
         sdk = NftlabsSdk(SdkOptions(), "https://rpc-mumbai.maticvigil.com")
         currency_module = sdk.get_currency_module("0xF18FEb8b2F58691d67C98dB98B360840df340e74")
 
-    def test_init_collection_module(self):
+    
+    def test_init_bundle_module(self):
         """
-        Test that tries to instantiate the Currency module
+        Test that tries to instantiate the Bundle module
         """
         sdk = NftlabsSdk(SdkOptions(), "https://rpc-mumbai.maticvigil.com")
-        collection_module = sdk.get_collection_module("0x6Da734b14e4CE604f1e18efb7E7f7ef022e96616")
+        bundle_module = sdk.get_bundle_module("0x6Da734b14e4CE604f1e18efb7E7f7ef022e96616")
 
     def test_init_pack_module(self):
         """
