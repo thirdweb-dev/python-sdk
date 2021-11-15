@@ -2,6 +2,7 @@
 import copy
 import json
 from typing import Dict, List
+import io
 
 from thirdweb_web3 import Web3
 
@@ -9,7 +10,6 @@ from ..abi.nft import NFT
 from ..types.nft import MintArg
 from ..types.nft import NftMetadata as NftType
 from .base import BaseModule
-
 
 class NftModule(BaseModule):
     """ 
@@ -45,10 +45,17 @@ class NftModule(BaseModule):
             final_properties = copy.copy(arg.properties)
         storage = self.get_storage()
 
+        if arg.image == "":
+            arg.image = arg.image_uri
+
+        if isinstance(arg.image, io.BufferedReader):
+            arg.image = self.get_storage().upload(arg.image, self.address, self.get_signer_address())
+
+        
         meta = {
             'name': arg.name,
             'description': arg.description,
-            'image': arg.image_uri,
+            'image': arg.image,
             'properties': final_properties
         }
 
@@ -99,10 +106,13 @@ class NftModule(BaseModule):
         """
         Mints a batch of tokens to the given address
         """
+
+        if isinstance(arg.image, io.TextIOWrapper):
+            arg.image = self.get_storage().upload(arg.image, self.address, self.get_signer_address())
         uris = [self.get_storage().upload(json.dumps({
             'name': arg.name,
             'description': arg.description,
-            'image': arg.image_uri,
+            'image': arg.image,
             'properties': arg.properties if arg.properties is not None else {}
         }), self.address, self.get_signer_address()) for arg in args]
 

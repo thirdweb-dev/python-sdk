@@ -1,8 +1,8 @@
 
-#from .util import replace_ipfs_prefix_with_gateway
+from .util import replace_ipfs_prefix_with_gateway
 from requests import get, post
 import json
-from io import TextIOBase, BytesIO
+import io
 
 
 class IpfsStorage:
@@ -31,7 +31,7 @@ class IpfsStorage:
         if isinstance(data, str) and data.startswith("ipfs://"):
             return data
 
-        if isinstance(data, TextIOBase):
+        if isinstance(data, io.TextIOWrapper):
             form = {
                 'file': data
             }
@@ -43,6 +43,8 @@ class IpfsStorage:
                 raise Exception("Failed to upload image")
             response = result.json()
             return response['IpfsUri']
+
+
 
         form = {
             'file': data
