@@ -1,17 +1,19 @@
+import io
+import os
 import unittest
-from nftlabs import NftlabsSdk, SdkOptions, MintArg
+
+from nftlabs import MintArg, NftlabsSdk, SdkOptions
 from nftlabs.storage import ipfs_storage
-from test_constants import (TEST_NFT_CONTRACT_ADDRESS)
-import os, io
+
 
 class TestStorage(unittest.TestCase):
-    def storage(self):
+    def test_storage(self):
         sdk = NftlabsSdk(SdkOptions(
-            private_key=environ['PKEY']
+            private_key=os.environ['PKEY']
         ), "https://rpc-mumbai.maticvigil.com")
 
         nft_module = sdk.get_nft_module(
-            "0xe76Fc319fD15a92328bAE16D3320F6ceB20759C6")
+            "0xEeD541b524Ae738c48211Be91EB81E97739A0A29")
 
         # mint by uploading a file
         with open(file='test.png', mode='rb') as f:
