@@ -5,7 +5,7 @@ from test_constants import (TEST_NFT_CONTRACT_ADDRESS)
 import os, io
 
 class TestStorage(unittest.TestCase):
-    def test():
+    def storage(self):
         sdk = NftlabsSdk(SdkOptions(
             private_key=environ['PKEY']
         ), "https://rpc-mumbai.maticvigil.com")
