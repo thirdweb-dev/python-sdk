@@ -41,6 +41,7 @@ class BaseModule(ABC):
     """ Returns the account object. """
     get_options: Optional[Callable[[], SdkOptions]]
     """ Returns the options object. """
+    __nftlabsApiUrl = "https://upload.nftlabs.co"
 
     def __init__(self):
         self.get_client = None
@@ -102,12 +103,25 @@ class BaseModule(ABC):
         )
         self.execute_tx(tx)
 
-    def upload_ipfs(self, data) -> str:
+    def upload_metadata(self, data, contract_address: str, signer_address: str) -> str:
         """
         Uploads to IPFS
         """
-        # todo
-        return self.get_storage().upload_ipfs(data)
+
+        if isinstance(data, str):
+            return data
+
+        if isinstance(data, dict)  :
+            if data["image"] == "":
+                data["image"] = data["image_uri"]
+            
+            image = data["image"]    
+
+            if isinstance(image, io.TextIOWrapper):
+                data["image"] = storage.upload(data["image"], self.address, self.get_signer_address())
+            
+            return storage.upload(json.dumps(data), self.address,self.get_signer_address())
+
         
 
     def revoke_role(self, role: Role, address: str):
