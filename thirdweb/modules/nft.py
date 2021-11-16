@@ -43,15 +43,10 @@ class NftModule(BaseModule):
             final_properties = {}
         else:
             final_properties = copy.copy(arg.properties)
-        storage = self.get_storage()
 
         if arg.image == "":
             arg.image = arg.image_uri
 
-        if isinstance(arg.image, io.BufferedReader):
-            arg.image = self.get_storage().upload(arg.image, self.address, self.get_signer_address())
-
-        
         meta = {
             'name': arg.name,
             'description': arg.description,
@@ -59,8 +54,7 @@ class NftModule(BaseModule):
             'properties': final_properties
         }
 
-        uri = storage.upload(json.dumps(meta), self.address,
-                             self.get_signer_address())
+        uri = self.upload_metadata(meta)
         tx = self.__abi_module.mint_nft.build_transaction(
             to_address, uri, self.get_transact_opts())
         receipt = self.execute_tx(tx)
@@ -109,12 +103,12 @@ class NftModule(BaseModule):
 
         if isinstance(arg.image, io.TextIOWrapper):
             arg.image = self.get_storage().upload(arg.image, self.address, self.get_signer_address())
-        uris = [self.get_storage().upload(json.dumps({
+        uris = [self.upload_metadata({
             'name': arg.name,
             'description': arg.description,
             'image': arg.image,
             'properties': arg.properties if arg.properties is not None else {}
-        }), self.address, self.get_signer_address()) for arg in args]
+        }) for arg in args]
 
         tx = self.__abi_module.mint_nft_batch.build_transaction(
             to_address, uris, self.get_transact_opts())

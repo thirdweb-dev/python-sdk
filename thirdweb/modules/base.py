@@ -103,7 +103,7 @@ class BaseModule(ABC):
         )
         self.execute_tx(tx)
 
-    def upload_metadata(self, data, contract_address: str, signer_address: str) -> str:
+    def upload_metadata(self, data) -> str:
         """
         Uploads to IPFS
         """
