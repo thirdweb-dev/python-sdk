@@ -102,6 +102,14 @@ class BaseModule(ABC):
         )
         self.execute_tx(tx)
 
+    def upload_ipfs(self, data) -> str:
+        """
+        Uploads to IPFS
+        """
+        # todo
+        return self.get_storage().upload_ipfs(data)
+        
+
     def revoke_role(self, role: Role, address: str):
         """
         Revokes the given role from the given address
@@ -172,3 +180,4 @@ class BaseModule(ABC):
         except:
             pass
         return uri
+    

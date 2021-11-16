@@ -28,38 +28,7 @@ class IpfsStorage:
     Upload data to IPFS, data parameter
     """
 
-    def upload(self, data, contract_address: str, signer_address: str) -> str:
-        if isinstance(data, str) and data.startswith("ipfs://"):
-            return data
 
-        if isinstance(data, io.TextIOWrapper):
-            form = {
-                'file': data
-            }
-            result = post(f'{self.__nftlabsApiUrl}/upload', data=form, headers={
-                'X-App-Name': f'CONSOLE-PYTHON-SDK-{contract_address}',
-                'X-Public-Address': signer_address,
-            })
-            if result.status_code != 200:
-                raise Exception("Failed to upload image")
-            response = result.json()
-            return response['IpfsUri']
-
-
-
-        form = {
-            'file': data
-        }
-        result = post(f'{self.__nftlabsApiUrl}/upload', files=form, headers={
-            'X-App-Name': f'CONSOLE-PYTHON-SDK-{contract_address}',
-            'X-Public-Address': signer_address,
-        })
-        if result.status_code != 200:
-            raise Exception(
-                "Failed to upload image. Please provide a valid URL.")
-        response = result.json()
-        return response['IpfsUri']
-      
     def upload_metadata(self, metadata: str, contract_address: str, signer_address: str) -> str:
         if type(metadata) == str:
             return self.upload(metadata, contract_address, signer_address)
