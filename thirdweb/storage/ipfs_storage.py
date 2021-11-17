@@ -5,7 +5,7 @@ import json
 import io
 from ..errors import UploadError
 
-
+import base64
 class IpfsStorage:
     __nftlabsApiUrl = "https://upload.nftlabs.co"
 
@@ -31,7 +31,7 @@ class IpfsStorage:
     def upload(self, data, contract_address: str, signer_address: str) -> str:
         if isinstance(data, str) and data.startswith("ipfs://"):
             return data
-        if isinstance(data, io.TextIOWrapper):
+        if isinstance(data, io.BufferedReader):
             form = {
                 'file': data
             }

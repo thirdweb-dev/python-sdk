@@ -13,10 +13,10 @@ class TestStorage(unittest.TestCase):
         ), "https://rpc-mumbai.maticvigil.com")
 
         nft_module = sdk.get_nft_module(
-            "0xEeD541b524Ae738c48211Be91EB81E97739A0A29")
+            "0xEeD541b524Ae738c48211Be91EB81E97739A0A29") 
 
         # mint by uploading a file
-        with open(file='test.png', mode='rb') as f:
+        with open(file='tests/test.png', mode='rb') as f:
             print(nft_module.mint(MintArg(name="example",
                   description="example nft!", image=f, properties={})))
 

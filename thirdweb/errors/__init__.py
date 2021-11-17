@@ -1,5 +1,5 @@
 from typing import Any, Optional
-
+import json
 
 class NoSignerException(Exception):
     def __init__(self):
@@ -19,5 +19,5 @@ class UnsupportedAssetException(Exception):
 
 class UploadError(Exception):
     def __init__(self, message: str):
-        super().__init__(f"There was an error while uploading the image. {message}")
+        super().__init__(f"There was an error while uploading the image : {message}")
 

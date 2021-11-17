@@ -15,8 +15,8 @@ from ..abi.nft import NFT
 from ..abi.nft_collection import NFTCollection as NFTBundle
 from ..abi.pack import Pack
 from ..constants.erc_interfaces import InterfaceIdErc721, InterfaceIdErc1155
-from ..errors import NoSignerException, UploadError
-
+from ..errors import NoSignerException
+import io
 from ..options import SdkOptions
 from ..storage import IpfsStorage
 from ..types.role import Role
@@ -108,18 +108,17 @@ class BaseModule(ABC):
         """
         Uploads the metadata to IPFS and returns the uri.
         """
-
+        storage = self.get_storage()
         if isinstance(data, str):
             return data
 
         if isinstance(data, dict) and ('image' in data or 'image_uri' in data):
-            raise Exception(str(type(data)))
-            if data.image == "":
-                data.image = data.image_uri
+            
+            if data["image"] == "":
+                data["image"] = data["image_uri"]
 
-            if isinstance(data.image, io.TextIOWrapper):
-                data.image = storage.upload(
-                    data.image, self.address, self.get_signer_address())
+            if isinstance(data["image"], io.BufferedReader):
+                data["image"] = storage.upload(data["image"], self.address, self.get_signer_address())
 
             return storage.upload(json.dumps(data), self.address, self.get_signer_address())
 
