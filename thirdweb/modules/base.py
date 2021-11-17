@@ -7,7 +7,7 @@ from eth_account.account import LocalAccount
 from thirdweb_web3 import Web3
 from thirdweb_web3.types import TxReceipt
 from zero_ex.contract_wrappers import TxParams
-
+import json
 from ..abi.coin import Coin
 from ..abi.erc165 import ERC165
 from ..abi.market import Market
@@ -15,7 +15,8 @@ from ..abi.nft import NFT
 from ..abi.nft_collection import NFTCollection as NFTBundle
 from ..abi.pack import Pack
 from ..constants.erc_interfaces import InterfaceIdErc721, InterfaceIdErc1155
-from ..errors import NoSignerException
+from ..errors import NoSignerException, UploadError
+
 from ..options import SdkOptions
 from ..storage import IpfsStorage
 from ..types.role import Role
@@ -105,23 +106,22 @@ class BaseModule(ABC):
 
     def upload_metadata(self, data) -> str:
         """
-        Uploads to IPFS
+        Uploads the metadata to IPFS and returns the uri.
         """
 
         if isinstance(data, str):
             return data
 
-        if isinstance(data, dict)  :
-
+        if isinstance(data, dict) and ('image' in data or 'image_uri' in data):
+            raise Exception(str(type(data)))
             if data.image == "":
                 data.image = data.image_uri
-        
-            if isinstance(image, io.TextIOWrapper):
-                data.image = storage.upload(data.image, self.address, self.get_signer_address())
-            
-            return storage.upload(json.dumps(data), self.address,self.get_signer_address())
 
-        
+            if isinstance(data.image, io.TextIOWrapper):
+                data.image = storage.upload(
+                    data.image, self.address, self.get_signer_address())
+
+            return storage.upload(json.dumps(data), self.address, self.get_signer_address())
 
     def revoke_role(self, role: Role, address: str):
         """
@@ -193,4 +193,3 @@ class BaseModule(ABC):
         except:
             pass
         return uri
-    

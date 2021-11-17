@@ -3,7 +3,7 @@ from .util import replace_ipfs_prefix_with_gateway
 from requests import get, post
 import json
 import io
-
+from ..errors import UploadError
 
 
 class IpfsStorage:
@@ -40,7 +40,7 @@ class IpfsStorage:
                 'X-Public-Address': signer_address,
             })
             if result.status_code != 200:
-                raise Exception("Failed to upload image")
+                raise UploadError(result.text)
             response = result.json()
             return response['IpfsUri']
         form = {
@@ -51,8 +51,7 @@ class IpfsStorage:
             'X-Public-Address': signer_address,
         })
         if result.status_code != 200:
-            raise Exception(
-                "Failed to upload image. Please provide a valid URL.")
+            raise UploadError(result.text)
       
     def upload_metadata(self, metadata: str, contract_address: str, signer_address: str) -> str:
         if type(metadata) == str:

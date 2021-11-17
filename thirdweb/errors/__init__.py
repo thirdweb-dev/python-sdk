@@ -16,3 +16,8 @@ class UnsupportedAssetException(Exception):
     def __init__(self, identifier: Optional[Any] = None):
         super().__init__(
             f"Asset with address {identifier} is not compatible with this method")
+
+class UploadError(Exception):
+    def __init__(self, message: str):
+        super().__init__(f"There was an error while uploading the image. {message}")
+
