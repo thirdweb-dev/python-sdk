@@ -85,8 +85,7 @@ class PackModule(BaseModule):
         from_address = self.get_signer_address()
         ids = [a.token_id for a in arg.assets]
         amounts = [a.amount for a in arg.assets]
-        uri = self.get_storage().upload(
-            dumps(arg.metadata), self.address, self.get_signer_address())
+        uri = self.upload_metadata(arg.metadata)
 
         params = encode_abi(
             ['string', 'uint256', 'uint256'],

@@ -104,7 +104,7 @@ class BaseModule(ABC):
         )
         self.execute_tx(tx)
 
-    def upload_metadata(self, data: Dict) -> str:
+    def upload_metadata(self, data: Union[Dict, str]) -> str:
         """
         Uploads the metadata to IPFS and returns the uri.
         """

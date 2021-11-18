@@ -80,8 +80,8 @@ class BundleModule(BaseModule):
         return self.create_and_mint_batch([meta_with_supply])[0]
 
     def create_and_mint_batch(self, meta_with_supply: List[CreateBundleArg]) -> List[BundleMetadata]:
-        uris = [self.get_storage().upload(meta.to_json(), self.address,
-                                          self.get_signer_address()) for meta in meta_with_supply]
+        uris = [self.upload_metadata(meta.metadata)
+                for meta in meta_with_supply]
         supplies = [a.supply for a in meta_with_supply]
         receipt = self.execute_tx(self.__abi_module.create_native_tokens.build_transaction(
             self.get_signer_address(), uris, supplies, "", self.get_transact_opts()
@@ -92,15 +92,16 @@ class BundleModule(BaseModule):
         return [self.get(i) for i in token_ids]
 
     def create_with_erc20(self, token_contract: str, token_amount: int, arg: CreateBundleArg):
-        uri = self.get_storage().upload(
-            arg.metadata, self.address, self.get_signer_address())
+        uri = self.upload_metadata(arg.metadata)
         self.execute_tx(self.__abi_module.wrap_erc20.build_transaction(
             token_contract, token_amount, arg.supply, uri, self.get_transact_opts()
         ))
 
     def create_with_erc721(self, token_contract: str, token_id: int, metadata):
-        uri = self.get_storage().upload(
-            metadata.metadata, self.address, self.get_signer_address())
+        """
+        WIP: This method is not yet complete.
+        """
+        uri = self.upload_metadata(metadata)
         self.execute_tx(self.__abi_module.wrap_erc721.build_transaction(
             token_contract, token_id, uri, self.get_transact_opts()
         ))
