@@ -54,7 +54,7 @@ class BaseModule(ABC):
         self.get_options = None
 
     def execute_tx(self, tx) -> TxReceipt:
-        """ 
+        """
         Execute a transaction and return the receipt.
         """
         client = self.get_client()
@@ -70,7 +70,7 @@ class BaseModule(ABC):
         )
 
     def __sign_tx(self, tx):
-        """ 
+        """
         Sign a transaction.
         """
         signed_tx = self.get_account().sign_transaction(tx)
@@ -104,24 +104,22 @@ class BaseModule(ABC):
         )
         self.execute_tx(tx)
 
-    def upload_metadata(self, data) -> str:
+    def upload_metadata(self, data: Dict) -> str:
         """
         Uploads the metadata to IPFS and returns the uri.
         """
         storage = self.get_storage()
-        if isinstance(data, str):
+        if isinstance(data, str) and data.startswith("ipfs://"):
             return data
 
-        if isinstance(data, dict) and ('image' in data or 'image_uri' in data):
+        if 'image_uri' in data and data["image"] == "":
+            data["image"] = data["image_uri"]
 
-            if data["image"] == "":
-                data["image"] = data["image_uri"]
+        if isinstance(data["image"], bytes) or isinstance(data["image"], bytearray):
+            data["image"] = storage.upload(
+                data["image"], self.address, self.get_signer_address())
 
-            if isinstance(data["image"], bytes):
-                data["image"] = storage.upload(
-                    data["image"], self.address, self.get_signer_address())
-
-            return storage.upload(json.dumps(data), self.address, self.get_signer_address())
+        return storage.upload(json.dumps(data), self.address, self.get_signer_address())
 
     def revoke_role(self, role: Role, address: str):
         """

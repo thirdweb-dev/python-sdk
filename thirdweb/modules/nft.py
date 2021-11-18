@@ -11,6 +11,7 @@ from ..types.nft import MintArg
 from ..types.nft import NftMetadata as NftType
 from .base import BaseModule
 
+
 class NftModule(BaseModule):
     """ 
     NFT Methods
@@ -100,9 +101,6 @@ class NftModule(BaseModule):
         """
         Mints a batch of tokens to the given address
         """
-
-        if isinstance(arg.image, io.BufferedReader):
-            arg.image = self.get_storage().upload(arg.image, self.address, self.get_signer_address())
         uris = [self.upload_metadata({
             'name': arg.name,
             'description': arg.description,
