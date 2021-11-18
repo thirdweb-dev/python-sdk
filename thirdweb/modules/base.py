@@ -113,12 +113,13 @@ class BaseModule(ABC):
             return data
 
         if isinstance(data, dict) and ('image' in data or 'image_uri' in data):
-            
+
             if data["image"] == "":
                 data["image"] = data["image_uri"]
 
-            if isinstance(data["image"], io.BufferedReader):
-                data["image"] = storage.upload(data["image"], self.address, self.get_signer_address())
+            if isinstance(data["image"], bytes):
+                data["image"] = storage.upload(
+                    data["image"], self.address, self.get_signer_address())
 
             return storage.upload(json.dumps(data), self.address, self.get_signer_address())
 
