@@ -115,9 +115,10 @@ class BaseModule(ABC):
         if 'image_uri' in data and data["image"] == "":
             data["image"] = data["image_uri"]
 
-        if isinstance(data["image"], bytes) or isinstance(data["image"], bytearray):
-            data["image"] = storage.upload(
-                data["image"], self.address, self.get_signer_address())
+        if 'image' in data:
+            if isinstance(data["image"], bytes) or isinstance(data["image"], bytearray):
+                data["image"] = storage.upload(
+                    data["image"], self.address, self.get_signer_address())
 
         return storage.upload(json.dumps(data), self.address, self.get_signer_address())
 
