@@ -55,8 +55,9 @@ class BundleModule(BaseModule):
             token_id
         )
 
-    def is_approved(self, address: str, operator: str, token_id: int = None) -> bool:
-        if not token_id: return self.__abi_module.is_approved_for_all.call(address,operator)
+    def is_approved(self, address: str, operator: str, token_contract: str = None, token_id: int = None) -> bool:
+        if not token_contract: return self.__abi_module.is_approved_for_all.call(address,operator)
+        asset = NFT(self.get_client(), token_contract)
         approved = asset.is_approved_for_all.call(address, operator)
         is_token_approved = asset.get_approved.call(token_id).lower() == self.address.lower()
         return approved or is_token_approved
@@ -110,7 +111,6 @@ class BundleModule(BaseModule):
             token_contract, token_amount, token_amount, uri, self.get_transact_opts()
         ))
         
-
     def create_with_nft(self, token_contract: str, token_id: int, metadata):
         """
         WIP: This method is not yet complete.
@@ -119,14 +119,16 @@ class BundleModule(BaseModule):
         nft_module = NFT(self.get_client(), token_contract)
 
         asset = NFT(self.get_client(), token_contract)
-        approved = asset.is_approved_for_all.call(
-            self.get_signer_address(), self.address)
+        approved = asset.is_approved_for_all.call(self.get_signer_address(), self.address)
+        
+        
         if not approved:
             is_token_approved = asset.get_approved.call(
                 token_id).lower() == self.address.lower()
             if not is_token_approved:
                 self.execute_tx(asset.set_approval_for_all.build_transaction(
                     self.address, True, self.get_transact_opts()))
+
         uri = self.upload_metadata(metadata)
         self.execute_tx(self.__abi_module.wrap_erc721.build_transaction(
             token_contract, token_id, uri, self.get_transact_opts()
