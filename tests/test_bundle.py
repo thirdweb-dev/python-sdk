@@ -8,6 +8,7 @@ from thirdweb.modules.bundle import BundleModule
 from thirdweb.modules.collection import CollectionModule
 from thirdweb.types.collection import CreateCollectionArg
 from typing import Union
+from test_constants import TEST_BUNDLE_CONTRACT_ADDRESS, TEST_CURRENCY_CONTRACT_ADDRESS, TEST_MARKET_CONTRACT_ADDRESS, TEST_NFT_CONTRACT_ADDRESS, TEST_COMPANION_WALLET_ADDRESS, TEST_PACK_CONTRACT_ADDRESS
 
 class TestRoles(unittest.TestCase):
     sdk: ThirdwebSdk
@@ -19,7 +20,7 @@ class TestRoles(unittest.TestCase):
          self.sdk = ThirdwebSdk(SdkOptions(
              private_key=environ['PKEY']
          ), "https://rpc-mumbai.maticvigil.com")
-         contract_address = "0x888bcEddB2af1537437420B320D6D4d60A358Cc0"
+         contract_address = TEST_BUNDLE_CONTRACT_ADDRESS
          self.module = self.sdk.get_bundle_module(contract_address)
          self.old_module = self.sdk.get_collection_module(contract_address)
   
@@ -50,14 +51,14 @@ class TestRoles(unittest.TestCase):
         """
         Test that tries to instantiate the Bundle  module
         """ 
-        result = self.module.create_with_token("0x71C37c568F5dB15dD0dD5930a3EFF23958722690", 20, {})
+        result = self.module.create_with_token(TEST_CURRENCY_CONTRACT_ADDRESS, 20, {})
 
     
     def test_bundle_create_with_nft(self):
         """
         Test that tries to instantiate the Bundle  module
         """
-        result = self.module.create_with_nft("0xaA00E3Af449B32382BF3962A1F61bC2f5EC2a467", 1, {})
+        result = self.module.create_with_nft(TEST_NFT_CONTRACT_ADDRESS, 1, {})
 
 
 
