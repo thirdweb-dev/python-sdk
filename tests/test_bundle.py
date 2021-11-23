@@ -51,14 +51,15 @@ class TestRoles(unittest.TestCase):
         result = self.bundle_module.create({"name": "test"})
         self.assertIsNotNone(result, "The resulting bundle should not be None")
 
-    def test_bundle_create_with_token(self):
-        """
-        Test that tries to instantiate the Bundle  module
-        """
-        self.currency_module.mint(20)
-        result = self.bundle_module.create_with_token(
-            TEST_CURRENCY_CONTRACT_ADDRESS, 20, {})
-        self.assertIsNotNone(result, "The resulting bundle should not be None")
+    # def test_bundle_create_with_token(self):
+    #     """
+    #     Test that tries to instantiate the Bundle  module
+    #     """
+    #     self.currency_module.mint(20)
+    #     result = self.bundle_module.create_with_token(
+    #         TEST_CURRENCY_CONTRACT_ADDRESS, 20, {})
+    #     self.assertIsNotNone(result, "The resulting bundle should not be None")
+    #     self.assertEqual(result, 20)
 
     def test_create(self):
         """
