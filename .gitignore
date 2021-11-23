@@ -20,3 +20,5 @@ examples/test.py
 **/*.pyc
 
 *.egg-info
+
+./docs/*
