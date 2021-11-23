@@ -1,6 +1,7 @@
 """Types for the NFT Module."""
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
+import io
 
 
 @dataclass
@@ -10,6 +11,7 @@ class MintArg:
     """
     name: str
     description: str = ""
-    image_uri: str = ""
+    image: Union[str, io.TextIOWrapper] = ""
     properties: Optional[dict] = None
+    image_uri: str = ""
 

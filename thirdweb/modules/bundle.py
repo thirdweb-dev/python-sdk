@@ -5,11 +5,14 @@ from thirdweb_web3 import Web3
 from ..abi.nft_collection import NFTCollection as NFTBundle
 # from ..types.collection import (BundleMetadata, CreateBundleArg,
 #                                 MintBundleArg)
+from ..abi.erc20 import ERC20
+from ..constants import ZeroAddress
+
 from ..types.bundle import (BundleMetadata, CreateBundleArg, MintBundleArg)
 from ..types.metadata import Metadata
 from ..types.nft import NftMetadata
 from .base import BaseModule
-
+from ..abi.nft import NFT
 
 class BundleModule(BaseModule):
     address: str
@@ -52,11 +55,13 @@ class BundleModule(BaseModule):
             token_id
         )
 
-    def is_approved(self, address: str, operator: str) -> bool:
-        return self.__abi_module.is_approved_for_all.call(
-            address,
-            operator
-        )
+    def is_approved(self, address: str, operator: str, token_contract: str = None, token_id: int = None) -> bool:
+        if not token_contract: return self.__abi_module.is_approved_for_all.call(address,operator)
+        asset = NFT(self.get_client(), token_contract)
+        approved = asset.is_approved_for_all.call(address, operator)
+        is_token_approved = asset.get_approved.call(token_id).lower() == self.address.lower()
+        return approved or is_token_approved
+
 
     def set_approval(self, operator: str, approved: bool = True):
         self.execute_tx(self.__abi_module.set_approval_for_all.build_transaction(
@@ -80,8 +85,8 @@ class BundleModule(BaseModule):
         return self.create_and_mint_batch([meta_with_supply])[0]
 
     def create_and_mint_batch(self, meta_with_supply: List[CreateBundleArg]) -> List[BundleMetadata]:
-        uris = [self.get_storage().upload(meta.to_json(), self.address,
-                                          self.get_signer_address()) for meta in meta_with_supply]
+        uris = [self.upload_metadata(meta.metadata)
+                for meta in meta_with_supply]
         supplies = [a.supply for a in meta_with_supply]
         receipt = self.execute_tx(self.__abi_module.create_native_tokens.build_transaction(
             self.get_signer_address(), uris, supplies, "", self.get_transact_opts()
@@ -91,19 +96,49 @@ class BundleModule(BaseModule):
         token_ids = result[0]['args']['tokenIds']
         return [self.get(i) for i in token_ids]
 
-    def create_with_erc20(self, token_contract: str, token_amount: int, arg: CreateBundleArg):
-        uri = self.get_storage().upload(
-            arg.metadata, self.address, self.get_signer_address())
-        self.execute_tx(self.__abi_module.wrap_erc20.build_transaction(
-            token_contract, token_amount, arg.supply, uri, self.get_transact_opts()
-        ))
+    def create_with_token(self, token_contract: str, token_amount: int, metadata: dict = None):
+        uri = self.upload_metadata(metadata)
+        if token_contract is not None and token_contract != ZeroAddress:
+            erc20 = ERC20(self.get_client(), token_contract)
+            allowance = erc20.allowance.call(self.get_signer_address(), self.address)
+            if allowance < token_amount:
+                tx = erc20.increase_allowance.build_transaction(self.address,
+                                                                token_amount,
+                                                                self.get_transact_opts()) 
+                self.execute_tx(tx)
 
-    def create_with_erc721(self, token_contract: str, token_id: int, metadata):
-        uri = self.get_storage().upload(
-            metadata.metadata, self.address, self.get_signer_address())
+        self.execute_tx(self.__abi_module.wrap_erc20.build_transaction(
+            token_contract, token_amount, token_amount, uri, self.get_transact_opts()
+        ))
+        
+    def create_with_nft(self, token_contract: str, token_id: int, metadata):
+        """
+        WIP: This method is not yet complete.
+        """
+        #token_module = sdk.get_nft_module(token_contract)
+        nft_module = NFT(self.get_client(), token_contract)
+
+        asset = NFT(self.get_client(), token_contract)
+        approved = asset.is_approved_for_all.call(self.get_signer_address(), self.address)
+        
+        
+        if not approved:
+            is_token_approved = asset.get_approved.call(
+                token_id).lower() == self.address.lower()
+            if not is_token_approved:
+                self.execute_tx(asset.set_approval_for_all.build_transaction(
+                    self.address, True, self.get_transact_opts()))
+
+        uri = self.upload_metadata(metadata)
         self.execute_tx(self.__abi_module.wrap_erc721.build_transaction(
             token_contract, token_id, uri, self.get_transact_opts()
         ))
+
+    def create_with_erc721(self, token_contract: str, token_id: int, metadata):
+        return create_with_nft(token_contract, token_id, metadata)
+    
+    def create_with_erc20(self, token_contract: str, token_amount: int, metadata):
+        return create_with_token(token_contract, token_amount, metadata)
 
     def mint(self, args: MintBundleArg):
         self.mint_to(self.get_signer_address(), args)

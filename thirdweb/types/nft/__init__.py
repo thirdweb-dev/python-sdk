@@ -1,15 +1,15 @@
 from dataclasses import dataclass
 from typing import Optional, Union
-
 from dataclasses_json import dataclass_json
-
+import io
 
 @dataclass
 class MintArg:
     name: str
     description: str = ""
-    image_uri: str = ""
+    image: Union[str, io.TextIOWrapper] = ""
     properties: Optional[dict] = None
+    image_uri: str = ""
 
 
 @dataclass_json

@@ -2,6 +2,7 @@
 import copy
 import json
 from typing import Dict, List
+import io
 
 from thirdweb_web3 import Web3
 
@@ -18,7 +19,6 @@ class NftModule(BaseModule):
 
     address: str
     __abi_module: NFT
-
 
     def __init__(self, address: str, client: Web3):
         """
@@ -42,7 +42,6 @@ class NftModule(BaseModule):
         - Returns the `NftMetadata(name,description,image,properties,id,uri)`  *Preferrably, using a link
         """
         return self.mint_to(self.get_signer_address(), arg)
-        
 
     def mint_to(
         self,
@@ -59,16 +58,18 @@ class NftModule(BaseModule):
             final_properties = {}
         else:
             final_properties = copy.copy(arg.properties)
-        storage = self.get_storage()
+
+        if arg.image == "":
+            arg.image = arg.image_uri
 
         meta = {
-            "name": arg.name,
-            "description": arg.description,
-            "image": arg.image_uri,
-            "properties": final_properties,
+            'name': arg.name,
+            'description': arg.description,
+            'image': arg.image,
+            'properties': final_properties
         }
 
-        uri = storage.upload(json.dumps(meta), self.address, self.get_signer_address())
+        uri = self.upload_metadata(meta)
         tx = self.__abi_module.mint_nft.build_transaction(
             to_address, uri, self.get_transact_opts()
         )
@@ -102,7 +103,8 @@ class NftModule(BaseModule):
         """
         uri = self.__abi_module.token_uri.call(token_id)
         if uri == "":
-            raise Exception("Could not find NFT metadata, are you sure it exists?")
+            raise Exception(
+                "Could not find NFT metadata, are you sure it exists?")
         return uri
 
     def mint_batch(self, args: List[MintArg]):
@@ -115,23 +117,12 @@ class NftModule(BaseModule):
         """
         Mints a batch of tokens to the given address
         """
-        uris = [
-            self.get_storage().upload(
-                json.dumps(
-                    {
-                        "name": arg.name,
-                        "description": arg.description,
-                        "image": arg.image_uri,
-                        "properties": arg.properties
-                        if arg.properties is not None
-                        else {},
-                    }
-                ),
-                self.address,
-                self.get_signer_address(),
-            )
-            for arg in args
-        ]
+        uris = [self.upload_metadata({
+            'name': arg.name,
+            'description': arg.description,
+            'image': arg.image,
+            'properties': arg.properties if arg.properties is not None else {}
+        }) for arg in args]
 
         tx = self.__abi_module.mint_nft_batch.build_transaction(
             to_address, uris, self.get_transact_opts()
@@ -205,7 +196,6 @@ class NftModule(BaseModule):
     def __token_of_owner_by_index(self, address: str, token_id: int) -> int:
         return self.__abi_module.token_of_owner_by_index.call(address, token_id)
 
-        
     def balance(self) -> int:
         """
         Returns balance of the current signers wallet
@@ -214,9 +204,8 @@ class NftModule(BaseModule):
         - Dashboard: Project ➝ NFT Module ➝ Total amount of NFT's
 
         """
-        
+
         return self.__abi_module.balance_of.call(self.get_signer_address())
-        
 
     def balance_of(self, address: str) -> int:
         """

@@ -1,9 +1,14 @@
 import unittest
-
-from nftlabs import NftlabsSdk, SdkOptions
-from nftlabs.types.role import Role
 from os import environ
-from test_constants import TEST_BUNDLE_CONTRACT_ADDRESS, TEST_CURRENCY_CONTRACT_ADDRESS, TEST_MARKET_CONTRACT_ADDRESS, TEST_NFT_CONTRACT_ADDRESS, TEST_COMPANION_WALLET_ADDRESS, TEST_PACK_CONTRACT_ADDRESS
+
+from thirdweb import SdkOptions, ThirdwebSdk
+from thirdweb.types.role import Role
+
+from .constants import (TEST_BUNDLE_CONTRACT_ADDRESS,
+                        TEST_COMPANION_WALLET_ADDRESS,
+                        TEST_CURRENCY_CONTRACT_ADDRESS,
+                        TEST_MARKET_CONTRACT_ADDRESS,
+                        TEST_NFT_CONTRACT_ADDRESS, TEST_PACK_CONTRACT_ADDRESS)
 
 
 class TestRoles(unittest.TestCase):
@@ -11,7 +16,7 @@ class TestRoles(unittest.TestCase):
         """
         Test that tries to instantiate the NFT module
         """
-        sdk = NftlabsSdk(SdkOptions(
+        sdk = ThirdwebSdk(SdkOptions(
             private_key=environ['PKEY']
         ), "https://rpc-mumbai.maticvigil.com")
 

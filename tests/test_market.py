@@ -1,10 +1,10 @@
 import unittest
 
-from nftlabs import NftlabsSdk, SdkOptions
+from thirdweb import ThirdwebSdk, SdkOptions
 
-from test_constants import (TEST_BUNDLE_CONTRACT_ADDRESS,
-                            TEST_MARKET_CONTRACT_ADDRESS,
-                            TEST_NFT_CONTRACT_ADDRESS)
+from .constants import (TEST_BUNDLE_CONTRACT_ADDRESS,
+                        TEST_MARKET_CONTRACT_ADDRESS,
+                        TEST_NFT_CONTRACT_ADDRESS)
 
 
 class TestMarket(unittest.TestCase):
@@ -12,7 +12,7 @@ class TestMarket(unittest.TestCase):
         """
         Test that tries to instantiate the Marketplace module
         """
-        sdk = NftlabsSdk(SdkOptions(), "https://rpc-mumbai.maticvigil.com")
+        sdk = ThirdwebSdk(SdkOptions(), "https://rpc-mumbai.maticvigil.com")
         market_module = sdk.get_market_module(TEST_MARKET_CONTRACT_ADDRESS)
 
         self.assertFalse(market_module.is_erc721(

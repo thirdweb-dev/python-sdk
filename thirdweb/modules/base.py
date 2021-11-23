@@ -7,7 +7,7 @@ from eth_account.account import LocalAccount
 from thirdweb_web3 import Web3
 from thirdweb_web3.types import TxReceipt
 from zero_ex.contract_wrappers import TxParams
-
+import json
 from ..abi.coin import Coin
 from ..abi.erc165 import ERC165
 from ..abi.market import Market
@@ -16,6 +16,7 @@ from ..abi.nft_collection import NFTCollection as NFTBundle
 from ..abi.pack import Pack
 from ..constants.erc_interfaces import InterfaceIdErc721, InterfaceIdErc1155
 from ..errors import NoSignerException
+import io
 from ..options import SdkOptions
 from ..storage import IpfsStorage
 from ..types.role import Role
@@ -52,7 +53,7 @@ class BaseModule(ABC):
         self.get_options = None
 
     def execute_tx(self, tx) -> TxReceipt:
-        """ 
+        """
         Execute a transaction and return the receipt.
         """
         client = self.get_client()
@@ -68,7 +69,7 @@ class BaseModule(ABC):
         )
 
     def __sign_tx(self, tx):
-        """ 
+        """
         Sign a transaction.
         """
         signed_tx = self.get_account().sign_transaction(tx)
@@ -101,6 +102,24 @@ class BaseModule(ABC):
             self.get_transact_opts()
         )
         self.execute_tx(tx)
+
+    def upload_metadata(self, data: Union[Dict, str]) -> str:
+        """
+        Uploads the metadata to IPFS and returns the uri.
+        """
+        storage = self.get_storage()
+        if isinstance(data, str) and data.startswith("ipfs://"):
+            return data
+
+        if 'image_uri' in data and data["image"] == "":
+            data["image"] = data["image_uri"]
+
+        if 'image' in data:
+            if isinstance(data["image"], bytes) or isinstance(data["image"], bytearray):
+                data["image"] = storage.upload(
+                    data["image"], self.address, self.get_signer_address())
+
+        return storage.upload(json.dumps(data), self.address, self.get_signer_address())
 
     def revoke_role(self, role: Role, address: str):
         """
