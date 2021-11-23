@@ -34,33 +34,28 @@ class BundleModule(BaseModule):
         )
 
     def get_all(self) -> List[BundleMetadata]:
+        '''
+        Returns all the bundles in the contract
+        '''
         return [self.get(i) for i in range(self.__abi_module.next_token_id.call())]
 
-    '''
-    Returns the balance for a given token at owned by a specific address
-    '''
-
     def balance_of(self, address: str, token_id: int) -> int:
+        '''
+        Returns the balance for a given token at owned by a specific address
+        '''
         return self.__abi_module.balance_of.call(address, token_id)
 
-    '''
-    Returns the balance for a given token id for the current signers address
-    '''
-
     def balance(self, token_id: int) -> int:
+        '''
+        Returns the balance for a given token id for the current signers address
+        '''
         return self.__abi_module.balance_of.call(
             self.get_signer_address(),
             token_id
         )
 
-    def is_approved(self, address: str, operator: str, token_contract: str = None, token_id: int = None) -> bool:
-        if not token_contract:
-            return self.__abi_module.is_approved_for_all.call(address, operator)
-        asset = NFT(self.get_client(), token_contract)
-        approved = asset.is_approved_for_all.call(address, operator)
-        is_token_approved = asset.get_approved.call(
-            token_id).lower() == self.address.lower()
-        return approved or is_token_approved
+    def is_approved(self, address: str, operator: str) -> bool:
+        return self.__abi_module.is_approved_for_all.call(address, operator)
 
     def set_approval(self, operator: str, approved: bool = True):
         self.execute_tx(self.__abi_module.set_approval_for_all.build_transaction(
@@ -96,16 +91,23 @@ class BundleModule(BaseModule):
         return [self.get(i) for i in token_ids]
 
     def create_with_token(self, token_contract: str, token_amount: int, metadata: dict = None):
+        """
+        WIP: This method is not yet complete.
+        """
+        if token_contract == "" or token_contract is None or not self.get_client().isAddress(token_contract):
+            raise Exception("token_contract not a valid address")
+        if token_amount <= 0:
+            raise Exception("token_amount must be greater than 0")
+
         uri = self.upload_metadata(metadata)
-        if token_contract is not None and token_contract != ZeroAddress:
-            erc20 = ERC20(self.get_client(), token_contract)
-            allowance = erc20.allowance.call(
-                self.get_signer_address(), self.address)
-            if allowance < token_amount:
-                tx = erc20.increase_allowance.build_transaction(self.address,
-                                                                token_amount,
-                                                                self.get_transact_opts())
-                self.execute_tx(tx)
+        erc20 = ERC20(self.get_client(), token_contract)
+        allowance = erc20.allowance.call(
+            self.get_signer_address(), self.address)
+        if allowance < token_amount:
+            tx = erc20.increase_allowance.build_transaction(self.address,
+                                                            token_amount,
+                                                            self.get_transact_opts())
+            self.execute_tx(tx)
 
         self.execute_tx(self.__abi_module.wrap_erc20.build_transaction(
             token_contract, token_amount, token_amount, uri, self.get_transact_opts()
@@ -135,10 +137,10 @@ class BundleModule(BaseModule):
         ))
 
     def create_with_erc721(self, token_contract: str, token_id: int, metadata):
-        return create_with_nft(token_contract, token_id, metadata)
+        return self.create_with_nft(token_contract, token_id, metadata)
 
     def create_with_erc20(self, token_contract: str, token_amount: int, metadata):
-        return create_with_token(token_contract, token_amount, metadata)
+        return self.create_with_token(token_contract, token_amount, metadata)
 
     def mint(self, args: MintBundleArg):
         self.mint_to(self.get_signer_address(), args)
