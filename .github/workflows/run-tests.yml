@@ -32,6 +32,6 @@ jobs:
           python -m site
           python -m pip install -r requirements.txt
       - name: "Run tests targets for ${{ matrix.python-version }}"
-        run: "python3 -m unittest discover -s tests"
+        run: "python3 -m unittest discover -t ."
       - name: "Test bundle package with setup.py ${{ matrix.python-version }}"
         run: "python3 setup.py sdist"
