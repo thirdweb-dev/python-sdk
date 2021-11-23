@@ -42,7 +42,6 @@ class BaseModule(ABC):
     """ Returns the account object. """
     get_options: Optional[Callable[[], SdkOptions]]
     """ Returns the options object. """
-    __nftlabsApiUrl = "https://upload.nftlabs.co"
 
     def __init__(self):
         self.get_client = None
