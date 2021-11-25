@@ -13,16 +13,20 @@ from .base import BaseModule
 
 
 class NftModule(BaseModule):
-    """
-    NFT Methods
-    """
+    """ Interact with the NFT module of the app"""
 
     address: str
+    """
+    Address of the module
+    """
     __abi_module: NFT
 
     def __init__(self, address: str, client: Web3):
         """
-        Initializing the class attributes
+        :param address: The address of the module
+        :param client: Web3 client
+
+        Initializes the module
         """
         super().__init__()
         self.address = address
@@ -174,6 +178,7 @@ class NftModule(BaseModule):
         """
         :param from_address: the address to transfer the token from
         :param to_address: the address to transfer the token to
+        :param token_id: the id of the token
 
         Transfers a token from one address to another
         """
@@ -185,7 +190,9 @@ class NftModule(BaseModule):
     def transfer(self, to_address: str, token_id: int):
         """
         :param to_address: the address to transfer the token to
+        :param token_id: the id of the token
         :return: the metadata of the token
+
 
         Transfers NFT from the current signers wallet to another wallet
         """
@@ -349,4 +356,9 @@ class NftModule(BaseModule):
         self.execute_tx(tx)
 
     def get_abi_module(self) -> NFT:
+        """
+        :return: The ABI module for the NFT
+
+        Returns the ABI for the NFT module
+        """
         return self.__abi_module

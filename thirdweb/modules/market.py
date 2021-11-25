@@ -1,3 +1,6 @@
+"""
+Interact with the Market module of the app.
+"""
 from typing import List
 
 from thirdweb_web3 import Web3
@@ -18,10 +21,13 @@ from . import BaseModule
 
 class MarketModule(BaseModule):
     """
-    The market module allows you to manage listings.
+    Interact with the Market module of the app.
     """
 
     address: str
+    """
+    Address of the module
+    """
     """
     Address of the market contract.
     """
@@ -246,7 +252,7 @@ class MarketModule(BaseModule):
     def get_abi_module(self) -> Market:
         """
         :return: The ABI module for the market.
-        
+
         Returns the ABI module for the market.
 
         """

@@ -1,7 +1,9 @@
+"""
+Interact with the Bundle module of the app. Previously `collection`.
+"""
+
 from typing import List
-
 from thirdweb_web3 import Web3
-
 from ..abi.erc20 import ERC20
 from ..abi.nft import NFT
 from ..abi.nft_collection import NFTCollection as NFTBundle
@@ -13,15 +15,33 @@ from .base import BaseModule
 
 
 class BundleModule(BaseModule):
+    """
+    Interact with the Bundle module of the app. Previously `collection`.
+    """
     address: str
+    """
+    Address of the module
+    """
     __abi_module: NFTBundle
 
     def __init__(self, address: str, client: Web3):
+        """
+        :param address: The address of the module
+        :param client: Web3 client
+
+        Initializes the module
+        """
         super().__init__()
         self.address = address
         self.__abi_module = NFTBundle(client, address)
 
     def get(self, token_id: int) -> BundleMetadata:
+        """
+        :param token_id: The token id to get
+        :return: Metadata of the bundle
+
+        Get the metadata for a given token id
+        """
         uri = self.__abi_module.uri.call(token_id)
         meta_str = self.get_storage().get(uri)
         meta: NftMetadata = NftMetadata.from_json(meta_str)
@@ -67,9 +87,19 @@ class BundleModule(BaseModule):
         )
 
     def is_approved(self, address: str, operator: str) -> bool:
+        """
+        :param address: The address to check
+        :param operator: The operator to check
+        :return: True if approved, False otherwise
+
+        """
         return self.__abi_module.is_approved_for_all.call(address, operator)
 
     def set_approval(self, operator: str, approved: bool = True):
+        """
+        :param operator: The operator to set approval for
+        :param approved: True if you want to approve, False otherwise
+        """
         self.execute_tx(self.__abi_module.set_approval_for_all.build_transaction(
             operator, approved, self.get_transact_opts()
         ))
@@ -100,6 +130,7 @@ class BundleModule(BaseModule):
     def create_batch(self, metas: List[Metadata]) -> List[BundleMetadata]:
         """
         :param metas: The metadata to be stored
+        :return: List of metadatas of the bundles
 
         Creates a bundle of NFTs
 
@@ -226,6 +257,7 @@ class BundleModule(BaseModule):
     def mint_to(self, to_address: str, arg: MintBundleArg):
         """
         :param to_address: The address to mint to
+        :param arg: The arguments for the mint
 
         Mints a bundle to the given address
 
@@ -246,6 +278,8 @@ class BundleModule(BaseModule):
     def mint_batch_to(self, to_address, args: List[MintBundleArg]):
         """
         :param to_address: The address to mint to
+        :param args: The arguments for the mint
+        :return: A list of minted bundles
 
         Mints a list of bundles to the given address
 
@@ -270,7 +304,7 @@ class BundleModule(BaseModule):
     def burn_batch(self, args: List[MintBundleArg]):
         """
         :param args: List of the arguments to burn
-        
+
         Burns a list of bundles from the current signer address
 
         """
@@ -343,6 +377,8 @@ class BundleModule(BaseModule):
 
     def get_abi_module(self) -> NFTBundle:
         """
+        :return: The ABI module
+
         Returns the ABI module
         """
         return self.__abi_module

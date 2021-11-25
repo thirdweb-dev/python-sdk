@@ -1,5 +1,5 @@
 """
-Deprecated. Use `modules.bundle.BundleModule` instead.
+Deprecated. Use `bundle` instead.
 """
 from ..bundle import BundleModule
 

@@ -1,3 +1,6 @@
+"""
+Interact with the Currency module of the app.
+"""
 from thirdweb_web3 import Web3
 
 from ..abi.coin import Coin
@@ -8,15 +11,21 @@ from .base import BaseModule
 
 class CurrencyModule(BaseModule):
     """
-    Currency Methods
+    Interact with the Currency module of the app.
     """
 
     address: str
+    """
+    Address of the module
+    """
     __abi_module: Coin
 
     def __init__(self, address: str, client: Web3):
         """
-        Initializes the Currency module
+        :param address: The address of the module
+        :param client: Web3 client
+
+        Initializes the module
         """
         super().__init__()
         self.address = address
@@ -44,6 +53,7 @@ class CurrencyModule(BaseModule):
     def balance_of(self, address: str) -> int:
         """
         :param address: The address to get the balance of
+        :return: The balance of the given address
 
         Gets the balance of the given address
 
@@ -81,6 +91,10 @@ class CurrencyModule(BaseModule):
 
     def set_allowance(self, spender: str, amount: int):
         """ 
+        :param spender: The address to set the allowance of
+        :param amount: The amount to set the allowance to
+        :return: The transaction receipt
+
         Sets the allowance of the current address
         """
         return self.execute_tx(self.__abi_module.approve.build_transaction(
@@ -219,7 +233,7 @@ class CurrencyModule(BaseModule):
     def set_restricted_transfer(self, restricted: bool = True):
         """
         :param restricted: Whether to grant restricted transfer or revoke it
-        
+
         Sets restricted transfer for the NFT, defaults to restricted.
 
         """
@@ -231,6 +245,8 @@ class CurrencyModule(BaseModule):
 
     def get_abi_module(self) -> Coin:
         """
+        :return: The ABI for the Coin contract
+
         Gets the ABI module
         """
         return self.__abi_module

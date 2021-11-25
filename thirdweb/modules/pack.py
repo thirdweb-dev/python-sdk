@@ -1,3 +1,6 @@
+"""
+Interact with the Pack module of the app.
+"""
 from datetime import datetime
 from typing import Dict, List
 from json import dumps
@@ -17,15 +20,33 @@ from .base import BaseModule
 
 
 class PackModule(BaseModule):
+    """
+    Interact with the Pack module of the app.
+    """
     address: str
+    """
+    Address of the module
+    """
     __abi_module: Pack
 
     def __init__(self, address: str, client: Web3):
+        """
+        :param address: The address of the module
+        :param client: Web3 client
+
+        Initializes the module
+        """
         super().__init__()
         self.address = address
         self.__abi_module = Pack(client, address)
 
     def get(self, pack_id: int) -> PackMetadata:
+        """
+        :param pack_id: The id of the pack to get.
+        :return: The metadata for the pack.
+
+        Gets the metadata for a pack.
+        """
         uri = self.__abi_module.uri.call(pack_id)
         if uri == "":
             raise AssetNotFoundException(pack_id)
@@ -42,6 +63,17 @@ class PackModule(BaseModule):
         )
 
     def open(self, pack_id: int) -> List[NftMetadata]:
+        """
+        :param pack_id: The id of the pack to open.
+        :return: The NFTs in the pack.
+
+        Opens a pack and returns the NFTs in the pack.
+        """
+        uri = self.__abi_module.uri.call(pack_id)
+        if uri == "":
+            raise AssetNotFoundException(pack_id)
+        self.__abi_module.open.send(pack_id)
+        return self.get_storage().get(uri)
         pass
 
     def get_all(self) -> List[PackMetadata]:
@@ -49,12 +81,17 @@ class PackModule(BaseModule):
         :return: List of metadata for all the packs.
 
         Gets all the packs.
-
         """
         max_id = self.__abi_module.next_token_id.call()
         return [self.get(i) for i in range(max_id)]
 
     def get_nfts(self, pack_id: int) -> List[PackNftMetadata]:
+        """
+        :param pack_id: The id of the pack to get the nfts for.
+        :return: The nfts for the pack.
+
+        WIP: This method is not ready to be called.
+        """
         pass
 
     def balance_of(self, address: str, token_id: int) -> int:
@@ -64,7 +101,6 @@ class PackModule(BaseModule):
         :return: The balance of the token for the given address.
 
         Gets the balance of a token for a given address.
-
         """
         return self.__abi_module.balance_of.call(address, token_id)
 
@@ -90,6 +126,13 @@ class PackModule(BaseModule):
         return self.__abi_module.is_approved_for_all.call(address, operator)
 
     def set_approval(self, operator: str, approved: bool):
+        """
+        :param operator: The operator to set the approval for.
+        :param approved: True if the operator should be approved, false otherwise.
+        :return: The transaction receipt.
+
+        Approves a given operator to perform an action on the pack.
+        """
         return self.execute_tx(self.__abi_module.set_approval_for_all.build_transaction(
             operator, approved, self.get_transact_opts()
         ))
@@ -102,7 +145,6 @@ class PackModule(BaseModule):
         :return: The transaction receipt.
 
         Transfers a token to a given address.
-
         """
         return self.execute_tx(self.__abi_module.safe_transfer_from.build_transaction(
             self.get_signer_address(), to_address, token_id, amount, "", self.get_transact_opts(),
@@ -113,7 +155,7 @@ class PackModule(BaseModule):
 
         :param arg: The arguments to create the pack with.
         :return: The metadata for the newly created pack.
-        
+
         WIP: This method is not ready to be called.
 
         Suffers from same issue as MarketModule.list
@@ -173,18 +215,26 @@ class PackModule(BaseModule):
 
     def get_link_balance(self) -> CurrencyValue:
         """
+        :return: The balance of the pack.
+
         WIP: This method is not ready to be called.
+
         """
         pass
 
     def deposit_link(self, amount: int):
         """
+        :param amount: The amount to deposit.
+
         WIP: This method is not ready to be called.
         """
         pass
 
     def withdraw_link(self, to_address: str, amount: int):
         """
+        :param to_address: The address to transfer the token to.
+        :param amount: The amount to transfer.
+
         WIP: This method is not ready to be called.
         """
         pass
