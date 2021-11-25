@@ -295,15 +295,5 @@ class NftModule(BaseModule):
         )
         self.execute_tx(tx)
 
-    def set_restricted_transfer(self, restricted: bool = False):
-        """
-        Sets the restricted transfer flag
-        """
-
-        tx = self.__abi_module.set_restricted_transfer.build_transaction(
-            restricted, self.get_transact_opts()
-        )
-        self.execute_tx(tx)
-
     def get_abi_module(self) -> NFT:
         return self.__abi_module
