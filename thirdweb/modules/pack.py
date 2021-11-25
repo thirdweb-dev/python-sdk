@@ -46,8 +46,9 @@ class PackModule(BaseModule):
 
     def get_all(self) -> List[PackMetadata]:
         """
-        Gets all the packs.
         :return: List of metadata for all the packs.
+        Gets all the packs.
+
         """
         max_id = self.__abi_module.next_token_id.call()
         return [self.get(i) for i in range(max_id)]
@@ -57,27 +58,30 @@ class PackModule(BaseModule):
 
     def balance_of(self, address: str, token_id: int) -> int:
         """
-        Gets the balance of a token for a given address.
         :param address: The address to get the balance for.
         :param token_id: The token id to get the balance for.
         :return: The balance of the token for the given address.
+        Gets the balance of a token for a given address.
+
         """
         return self.__abi_module.balance_of.call(address, token_id)
 
     def balance(self, token_id: int) -> int:
         """
-        Gets the balance of a token for the current address.
         :param token_id: The token id to get the balance for.
         :return: The balance of the token for the pack.
+        Gets the balance of a token for the current address.
+
         """
         return self.__abi_module.balance_of.call(self.get_signer_address(), token_id)
 
     def is_approved(self, address: str, operator: str) -> bool:
         """
-        Checks if a given address is approved by a given operator.
         :param address: The address to check.
         :param operator: The operator to check.
         :return: True if the address is approved by the operator.
+        Checks if a given address is approved by a given operator.
+
         """
         return self.__abi_module.is_approved_for_all.call(address, operator)
 
@@ -88,11 +92,12 @@ class PackModule(BaseModule):
 
     def transfer(self, to_address: str, token_id: int, amount: int):
         """
-        Transfers a token to a given address.
         :param to_address: The address to transfer the token to.
         :param token_id: The token id to transfer.
         :param amount: The amount to transfer.
         :return: The transaction receipt.
+        Transfers a token to a given address.
+
         """
         return self.execute_tx(self.__abi_module.safe_transfer_from.build_transaction(
             self.get_signer_address(), to_address, token_id, amount, "", self.get_transact_opts(),
@@ -100,11 +105,12 @@ class PackModule(BaseModule):
 
     def create(self, arg: CreatePackArg) -> PackMetadata:
         """
+
+        :param arg: The arguments to create the pack with.
+        :return: The metadata for the newly created pack.
         WIP: This method is not ready to be called.
 
         Suffers from same issue as MarketModule.list
-        :param arg: The arguments to create the pack with.
-        :return: The metadata for the newly created pack.
         """
 
         if not self.is_erc1155(arg.asset_contract_address):
@@ -132,11 +138,12 @@ class PackModule(BaseModule):
 
     def transfer_from(self, from_address: str, to_address: str, args: AssetAmountPair):
         """
-        Transfers a token from a given address to a given address.
         :param from_address: The address to transfer the token from.
         :param to_address: The address to transfer the token to.
         :param args: The token id and amount to transfer.
         :return: The transaction receipt.
+        Transfers a token from a given address to a given address.
+
         """
         return self.execute_tx(self.__abi_module.safe_transfer_from.build_transaction(
             from_address, to_address, args.token_id, args.amount, "", self.get_transact_opts(),
@@ -144,11 +151,12 @@ class PackModule(BaseModule):
 
     def transfer_batch_from(self, from_address: str, to_address: str, args: List[AssetAmountPair]):
         """
-        Transfers a batch of tokens from a given address to a given address.
         :param from_address: The address to transfer the token from.
         :param to_address: The address to transfer the token to.
         :param args: The token ids and amounts to transfer.
         :return: The transaction receipt.
+        Transfers a batch of tokens from a given address to a given address.
+
         """
         ids, amounts = [i.token_id for i in args], [i.amount for i in args]
         return self.execute_tx(self.__abi_module.safe_batch_transfer_from.build_transaction(
@@ -175,9 +183,10 @@ class PackModule(BaseModule):
 
     def set_royalty_bps(self, amount: int):
         """
-        Sets the royalty BPS for the pack.
         :param amount: The amount to set the royalty BPS to.
         :return: The transaction receipt.
+        Sets the royalty BPS for the pack.
+
         """
         return self.execute_tx(self.__abi_module.set_royalty_bps.build_transaction(
             amount, self.get_transact_opts()
@@ -185,8 +194,9 @@ class PackModule(BaseModule):
 
     def set_restricted_transfer(self, restricted: bool = True):
         """
-        Sets restricted transfer for the NFT, defaults to restricted.
         :param restricted: Whether to grant restricted transfer or revoke it
+        Sets restricted transfer for the NFT, defaults to restricted.
+
         """
         return self.execute_tx(self.__abi_module.set_restricted_transfer.build_transaction(
             restricted, self.get_transact_opts()
@@ -194,7 +204,7 @@ class PackModule(BaseModule):
 
     def get_abi_module(self) -> Pack:
         """
-        Gets the ABI module for the pack.
         :return: The ABI module for the pack.
+        Gets the ABI module for the pack.
         """
         return self.__abi_module
