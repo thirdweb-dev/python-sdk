@@ -1,0 +1,4 @@
+Types
+=========
+
+.. automodule:: thirdweb.types
