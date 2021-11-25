@@ -1,3 +1,7 @@
+"""
+Types for Pack module.
+"""
+
 from dataclasses import dataclass
 from datetime import datetime
 from ..nft import NftMetadata
