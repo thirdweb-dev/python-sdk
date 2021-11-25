@@ -38,8 +38,9 @@ class NftModule(BaseModule):
     def mint(self, arg: MintArg) -> NftType:
         """
         Mints a new token to the signer. 
-        - Arguments passed: Note, a class is used -> MintArg(name, description, image_uri, properties)
-        - Returns the `NftMetadata(name,description,image,properties,id,uri)`  *Preferrably, using a link
+
+        :param arg: The mint parameters
+        :return: The `NftMetadata(name,description,image,properties,id,uri)`  *Preferrably, using a link
         """
         return self.mint_to(self.get_signer_address(), arg)
 
