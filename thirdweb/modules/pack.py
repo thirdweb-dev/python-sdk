@@ -47,6 +47,7 @@ class PackModule(BaseModule):
     def get_all(self) -> List[PackMetadata]:
         """
         :return: List of metadata for all the packs.
+
         Gets all the packs.
 
         """
@@ -61,6 +62,7 @@ class PackModule(BaseModule):
         :param address: The address to get the balance for.
         :param token_id: The token id to get the balance for.
         :return: The balance of the token for the given address.
+
         Gets the balance of a token for a given address.
 
         """
@@ -70,6 +72,7 @@ class PackModule(BaseModule):
         """
         :param token_id: The token id to get the balance for.
         :return: The balance of the token for the pack.
+
         Gets the balance of a token for the current address.
 
         """
@@ -80,6 +83,7 @@ class PackModule(BaseModule):
         :param address: The address to check.
         :param operator: The operator to check.
         :return: True if the address is approved by the operator.
+
         Checks if a given address is approved by a given operator.
 
         """
@@ -96,6 +100,7 @@ class PackModule(BaseModule):
         :param token_id: The token id to transfer.
         :param amount: The amount to transfer.
         :return: The transaction receipt.
+
         Transfers a token to a given address.
 
         """
@@ -108,6 +113,7 @@ class PackModule(BaseModule):
 
         :param arg: The arguments to create the pack with.
         :return: The metadata for the newly created pack.
+        
         WIP: This method is not ready to be called.
 
         Suffers from same issue as MarketModule.list
@@ -142,6 +148,7 @@ class PackModule(BaseModule):
         :param to_address: The address to transfer the token to.
         :param args: The token id and amount to transfer.
         :return: The transaction receipt.
+
         Transfers a token from a given address to a given address.
 
         """
@@ -155,6 +162,7 @@ class PackModule(BaseModule):
         :param to_address: The address to transfer the token to.
         :param args: The token ids and amounts to transfer.
         :return: The transaction receipt.
+
         Transfers a batch of tokens from a given address to a given address.
 
         """
@@ -185,6 +193,7 @@ class PackModule(BaseModule):
         """
         :param amount: The amount to set the royalty BPS to.
         :return: The transaction receipt.
+
         Sets the royalty BPS for the pack.
 
         """
@@ -195,6 +204,7 @@ class PackModule(BaseModule):
     def set_restricted_transfer(self, restricted: bool = True):
         """
         :param restricted: Whether to grant restricted transfer or revoke it
+
         Sets restricted transfer for the NFT, defaults to restricted.
 
         """
@@ -205,6 +215,7 @@ class PackModule(BaseModule):
     def get_abi_module(self) -> Pack:
         """
         :return: The ABI module for the pack.
+
         Gets the ABI module for the pack.
         """
         return self.__abi_module

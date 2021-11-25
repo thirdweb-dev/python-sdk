@@ -25,8 +25,9 @@ class CurrencyModule(BaseModule):
 
     def total_supply(self) -> int:
         """
-:return: The total supply of the currency
-Gets the total supply of the currency
+        :return: The total supply of the currency
+
+        Gets the total supply of the currency
 
         """
         return self.__abi_module.total_supply.call()
@@ -34,6 +35,7 @@ Gets the total supply of the currency
     def get(self) -> Currency:
         """
         :return: The currency name, symbol, and decimals
+
         Gets the currency name, symbol, and decimals
 
         """
@@ -42,6 +44,7 @@ Gets the total supply of the currency
     def balance_of(self, address: str) -> int:
         """
         :param address: The address to get the balance of
+
         Gets the balance of the given address
 
         """
@@ -50,6 +53,7 @@ Gets the total supply of the currency
     def balance(self) -> int:
         """ 
         :return: The balance of the current address
+
         Gets the balance of the current address
         """
         return self.__abi_module.balance_of.call(self.get_signer_address())
@@ -58,6 +62,7 @@ Gets the total supply of the currency
         """ 
         :param spender: The address to get the allowance of
         :return: The allowance of the current address
+
         Gets the allowance of the current address
 
         """
@@ -68,6 +73,7 @@ Gets the total supply of the currency
         :param owner: The address to get the allowance of
         :param spender: The address to get the allowance of
         :return: The allowance of the current address
+
         Gets the allowance of the current address
 
         """
@@ -85,6 +91,7 @@ Gets the total supply of the currency
         """ 
         :param to: The address to mint to
         :param amount: The amount to mint
+
         Mints the given amount to the given address
 
         """
@@ -96,6 +103,7 @@ Gets the total supply of the currency
         """ 
         :param amount: The amount to mint
         :return: The transaction hash
+
         Mints the given amount to the current address
 
         """
@@ -107,6 +115,7 @@ Gets the total supply of the currency
         """ 
         :param amount: The amount to burn
         :return: The transaction hash
+
         Burns the given amount from the current address
 
         """
@@ -119,6 +128,7 @@ Gets the total supply of the currency
         :param from_address: The address to burn from
         :param amount: The amount to burn
         :return: The transaction hash
+
         Burns the given amount from the current address
 
         """
@@ -131,6 +141,7 @@ Gets the total supply of the currency
         :param from_address: The address to transfer from
         :param to_address: The address to transfer to
         :param amount: The amount to transfer
+
         Transfers the given amount from the current address
         """
         return self.execute_tx(self.__abi_module.transfer_from.build_transaction(
@@ -141,6 +152,7 @@ Gets the total supply of the currency
         """
         :param metadata: The metadata to set
         :return: The transaction hash
+
         Sets the metadata for the module
         """
         uri = self.get_storage().upload_metadata(
@@ -153,6 +165,7 @@ Gets the total supply of the currency
         """ 
         :param value: The value to get
         :return: The value of the given amount
+
         Gets the value of the given amount
 
         """
@@ -162,6 +175,7 @@ Gets the total supply of the currency
         """ 
         :param asset_address: The address of the asset
         :param price: The price of the asset
+
         Gets the value of the given amount
 
         """
@@ -205,6 +219,7 @@ Gets the total supply of the currency
     def set_restricted_transfer(self, restricted: bool = True):
         """
         :param restricted: Whether to grant restricted transfer or revoke it
+        
         Sets restricted transfer for the NFT, defaults to restricted.
 
         """

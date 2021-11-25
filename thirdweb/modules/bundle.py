@@ -35,8 +35,10 @@ class BundleModule(BaseModule):
 
     def get_all(self) -> List[BundleMetadata]:
         '''
-        Returns all the bundles in the contract
         :return: A list of metadata
+
+        Returns all the bundles in the contract
+
         '''
         return [self.get(i) for i in range(self.__abi_module.next_token_id.call())]
 
@@ -45,6 +47,7 @@ class BundleModule(BaseModule):
         :param address: The address to check
         :param token_id: The token id to check
         :return: The balance
+
         Returns the balance for a given token at owned by a specific address
 
         '''
@@ -54,6 +57,7 @@ class BundleModule(BaseModule):
         '''
         :param token_id: The token id to check
         :return: The balance
+
         Returns the balance for a given token id for the current signers address
 
         '''
@@ -75,6 +79,7 @@ class BundleModule(BaseModule):
         :param to_address: The address to transfer to
         :param token_id: The token id to transfer
         :param amount: The amount to transfer
+
         Transfers a token to a new owner
 
         """
@@ -86,6 +91,7 @@ class BundleModule(BaseModule):
         """
         :param metadata: The metadata to be stored
         :return: Metadata of the bundle
+
         Creates a bundle.
 
         """
@@ -94,6 +100,7 @@ class BundleModule(BaseModule):
     def create_batch(self, metas: List[Metadata]) -> List[BundleMetadata]:
         """
         :param metas: The metadata to be stored
+
         Creates a bundle of NFTs
 
         """
@@ -105,6 +112,7 @@ class BundleModule(BaseModule):
         """
         :param meta_with_supply: Metadata with supply
         :return: A metadata with supply
+
         Create a bundle and mint it to the current signer address
 
         """
@@ -114,6 +122,7 @@ class BundleModule(BaseModule):
         """
         :param meta_with_supply: A list of metadata with supply
         :return: A list of metadata with supply
+
         Creates bundles and mints them to the current signer address
 
         """
@@ -135,6 +144,7 @@ class BundleModule(BaseModule):
         :param token_contract: The address of the token contract
         :param token_amount: The amount of tokens to mint
         :param metadata: The metadata to be stored
+
         WIP: This method is not yet complete. 
 
         """
@@ -162,6 +172,7 @@ class BundleModule(BaseModule):
         :param token_contract: The address of the token contract
         :param token_id: The id of the token
         :param metadata: The metadata to be stored
+
         WIP: This method is not yet complete.
 
         """
@@ -186,6 +197,7 @@ class BundleModule(BaseModule):
         :param token_contract: The address of the token contract
         :param token_id: The id of the token
         :param metadata: The metadata to be stored
+
         WIP: This method is not yet complete. Same as create_with_nft()
 
         """
@@ -196,6 +208,7 @@ class BundleModule(BaseModule):
         :param token_contract: The address of the token contract
         :param token_amount: The amount of tokens to mint
         :param metadata: The metadata to be stored
+
         WIP: This method is not yet complete. Same as create_with_token()
 
         """
@@ -204,6 +217,7 @@ class BundleModule(BaseModule):
     def mint(self, args: MintBundleArg):
         """
         :param args: The arguments for the mint
+
         Mints a bundle to the current signer address
 
         """
@@ -212,6 +226,7 @@ class BundleModule(BaseModule):
     def mint_to(self, to_address: str, arg: MintBundleArg):
         """
         :param to_address: The address to mint to
+
         Mints a bundle to the given address
 
         """
@@ -222,6 +237,7 @@ class BundleModule(BaseModule):
     def mint_batch(self, args: List[MintBundleArg]):
         """
         :param args: The arguments for the mint
+
         Mints a list of bundles to the current signer address
 
         """
@@ -230,6 +246,7 @@ class BundleModule(BaseModule):
     def mint_batch_to(self, to_address, args: List[MintBundleArg]):
         """
         :param to_address: The address to mint to
+
         Mints a list of bundles to the given address
 
         """
@@ -243,6 +260,7 @@ class BundleModule(BaseModule):
     def burn(self, args: MintBundleArg):
         """
         :param args: The arguments for the burn
+
         Burns a bundle from the current signer address
 
         """
@@ -252,6 +270,7 @@ class BundleModule(BaseModule):
     def burn_batch(self, args: List[MintBundleArg]):
         """
         :param args: List of the arguments to burn
+        
         Burns a list of bundles from the current signer address
 
         """
@@ -261,6 +280,7 @@ class BundleModule(BaseModule):
         """
         :param account: The account to burn from
         :param args: The arguments for the burn
+
         Burns a bundle from the given account
 
         """
@@ -273,6 +293,7 @@ class BundleModule(BaseModule):
         """
         :param account: The account to burn from
         :param args: The arguments for the burn
+
         Burns a list of bundles from the given account
 
         """
@@ -287,6 +308,7 @@ class BundleModule(BaseModule):
         :param from_address: The account to transfer from
         :param to_address: The address to transfer to
         :param args: The arguments for the transfer
+
         Transfers a bundle from the given account to the given address
 
         """
@@ -299,6 +321,7 @@ class BundleModule(BaseModule):
         :param from_address: The account to transfer from
         :param to_address: The address to transfer to
         :param args: The arguments for the transfer
+
         Transfers a list of bundles from the given account to the given address
 
         """
@@ -309,6 +332,7 @@ class BundleModule(BaseModule):
     def set_royalty_bps(self, amount: int):
         """
         :param amount: The amount of BPS to set
+
         Sets the royalty BPS
 
         """

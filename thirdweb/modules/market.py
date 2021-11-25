@@ -31,6 +31,7 @@ class MarketModule(BaseModule):
         """
         :param address: The address of the market contract.
         :param client: The web3 client.
+
         Initialize the Market Module.
 
         """
@@ -43,6 +44,7 @@ class MarketModule(BaseModule):
         """
         :param arg: The listing details.
         :return: Does not return anything, yet.
+
         WIP: This method is still in beta and will contain bugs.
         Status: Listing works but decoding the logs is breaking due to a bug
         in the web3 library (https://github.com/ethereum/web3.py/pull/1484).
@@ -102,6 +104,7 @@ class MarketModule(BaseModule):
         """
         :param listing_id: The listing ID.
         :param quantity: The quantity to unlist.
+
         Unlist a certain quantity of tokens from a listing.
 
         """
@@ -115,6 +118,7 @@ class MarketModule(BaseModule):
     def unlist_all(self, listing_id: int):
         """
         :param listing_id: The listing ID.
+
         Unlist all available tokens from a listing.
 
         """
@@ -125,6 +129,7 @@ class MarketModule(BaseModule):
 
         :param listing_id: The listing ID.
         :param quantity: The quantity to buy.
+
         BETA: This method is still in beta and might contain bugs.
 
         Buy a listing.
@@ -155,6 +160,7 @@ class MarketModule(BaseModule):
         """
         :note: For example, if you want to set the market fee to 0.1%, set amount to 10  (which is 0.1 x 100).
         :param amount: The amount of basis points.
+
         Set the market fee in basis points.
 
         """
@@ -167,6 +173,7 @@ class MarketModule(BaseModule):
         """
         :param listing_id: The listing ID.
         :return: Details about the listing.
+
         Get the details about a listing.
 
         """
@@ -179,6 +186,7 @@ class MarketModule(BaseModule):
     def set_module_metadata(self, metadata: str):
         """
         :param metadata: The metadata to set
+
         Sets the metadata for the module
 
         """
@@ -193,6 +201,7 @@ class MarketModule(BaseModule):
         """
         :param listing_id: The listing ID.
         :return: Details about the listing.
+
         Get the details about a listing.
 
         """
@@ -202,6 +211,7 @@ class MarketModule(BaseModule):
         """
         :param filter: Filter to apply to the listings.
         :return: A list of all the listings in the market.
+
         Returns all the listings.
 
         """
@@ -227,6 +237,7 @@ class MarketModule(BaseModule):
     def total_listings(self) -> int:
         """
         :return: The total supply of the market.
+
         Returns the total supply of the market.
 
         """
@@ -235,6 +246,7 @@ class MarketModule(BaseModule):
     def get_abi_module(self) -> Market:
         """
         :return: The ABI module for the market.
+        
         Returns the ABI module for the market.
 
         """
