@@ -183,6 +183,9 @@ class NftModule(BaseModule):
         """
         Defaults to fetching the NFTs owned by the current signer (as indicated by the private key)
         if the address parameter is not supplied
+
+        :param address: The address to fetch the NFTs for.
+        :return: A list of NFTs owned by the given address
         """
         if address == "":
             address = self.get_signer_address()
@@ -199,10 +202,9 @@ class NftModule(BaseModule):
     def balance(self) -> int:
         """
         Returns balance of the current signers wallet
-        - Arguments: none. Method refers to nft module class.
         - Use-case: Use this method if you want to use the currently connected wallet
         - Dashboard: Project ➝ NFT Module ➝ Total amount of NFT's
-
+        :return: The balance of the current signers wallet
         """
 
         return self.__abi_module.balance_of.call(self.get_signer_address())
@@ -210,21 +212,26 @@ class NftModule(BaseModule):
     def balance_of(self, address: str) -> int:
         """
         Returns balance of the given addressss
-        - Arguments: Pass the address of which to check the balance
         - Use-case: Use this method if you don't want to use the connected wallet, but want to check another wallet.
         - Dashboard: Project ➝ NFT Module ➝ Total amount of NFT's 
+        :param address: The address to fetch the NFTs for.
+        :return: The balance of the given address
         """
         return self.__abi_module.balance_of.call(address)
 
     def owner_of(self, token_id: int) -> str:
         """
         Returns the owner of the given token
+        :param token_id: The token id to fetch the owner for.
+        :return: The owner of the given token
         """
         return self.__abi_module.owner_of.call(token_id)
 
     def get_metadata(self, token_id: int) -> NftType:
         """
         Returns the metadata of the given token
+        :param token_id: The token id to fetch the metadata for.
+        :return: The metadata of the given token
         """
         uri = self.__get_metadata_uri(token_id)
         meta = self.get_storage().get(uri)
@@ -236,12 +243,17 @@ class NftModule(BaseModule):
     def is_approved(self, address: str, operator: str) -> bool:
         """
         Returns whether the given address is approved
+        :param address: The address to check
+        :param operator: The operator to check
+        :return: Whether the given address is approved
         """
         return self.__abi_module.is_approved_for_all.call(address, operator)
 
     def set_approval(self, operator: str, approved: bool = True):
         """
         Sets approval for specified operator, defaults to grant approval
+        :param operator: The operator to set approval for
+        :param approved: Whether to grant approval or revoke it
         """
         tx = self.__abi_module.set_approval_for_all.build_transaction(
             operator, approved, self.get_transact_opts()
@@ -249,6 +261,10 @@ class NftModule(BaseModule):
         self.execute_tx(tx)
 
     def set_restricted_transfer(self, restricted: bool = True):
+        """
+        Sets restricted transfer for the NFT, defaults to restricted.
+        :param restricted: Whether to grant restricted transfer or revoke it
+        """
         self.execute_tx(
             self.__abi_module.set_restricted_transfer.build_transaction(
                 restricted, self.get_transact_opts()
@@ -258,6 +274,9 @@ class NftModule(BaseModule):
     def get_with_owner(self, token_id: int, owner: str):
         """
         Returns the NFT with the given token id and owner
+        :param token_id: The token id to fetch the NFT for
+        :param owner: The owner of the NFT
+        :return: The NFT with the given token id and owner
         """
         owner = self.owner_of(token_id)
         meta = self.get_metadata(token_id)
@@ -266,6 +285,7 @@ class NftModule(BaseModule):
     def set_module_metadata(self, metadata: str):
         """
         Sets the metadata for the module
+        :param metadata: The metadata to set
         """
         uri = self.get_storage().upload_metadata(
             metadata, self.address, self.get_signer_address()
