@@ -31,7 +31,7 @@ class IpfsStorage:
     """
 
     def upload(self, data, contract_address: str, signer_address: str) -> str:
-        if isinstance(data, str) and data.startswith("ipfs://"):
+        if isinstance(data, str):
             return data
         form = {
             'file': data

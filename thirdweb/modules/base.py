@@ -108,7 +108,7 @@ class BaseModule(ABC):
         Uploads the metadata to IPFS and returns the uri.
         """
         storage = self.get_storage()
-        if isinstance(data, str) and data.startswith("ipfs://"):
+        if isinstance(data, str):
             return data
 
         if 'image_uri' in data and data["image"] == "":
