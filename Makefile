@@ -33,6 +33,7 @@ init:
 setup-venv:
 	python3 -m venv .env
 	source .env/bin/activate
+	pip install -r requirements.txt
 
 live-docs:
 	# windows/mac/linux support
