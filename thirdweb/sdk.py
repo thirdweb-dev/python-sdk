@@ -1,22 +1,27 @@
-from eth_account.account import LocalAccount, Account
-from thirdweb_web3 import Web3, HTTPProvider
-
+from functools import wraps
 from typing import Optional
 
+from eth_account.account import Account, LocalAccount
+from thirdweb_web3 import HTTPProvider, Web3
+from zero_ex.contract_wrappers import TxParams
+
 from .errors import NoSignerException
-from .modules.nft import NftModule
-from .modules.pack import PackModule
-from .modules.collection import CollectionModule
 from .modules.bundle import BundleModule
+from .modules.collection import CollectionModule
 from .modules.currency import CurrencyModule
 from .modules.market import MarketModule
+from .modules.nft import NftModule
+from .modules.pack import PackModule
 from .options import SdkOptions
 from .storage import IpfsStorage
 
-from zero_ex.contract_wrappers import TxParams
-
 
 def set_default_account(func):
+    '''
+    Sets the default account on all modules
+    '''
+
+    @wraps(func)
     def wrapper(self, *args, **kwargs):
         self.client.eth.defaultAccount = args[0] if self.signer_address == "" else self.signer_address
         return func(self, *args, **kwargs)
@@ -36,19 +41,16 @@ class ThirdwebSdk(object):
     __currency_module: Optional[CurrencyModule]
     __nft_module: Optional[NftModule]
     __pack_module: Optional[PackModule]
-    __collection_module: Optional[CollectionModule]
     __bundle_module = Optional[BundleModule]
     __market_module: Optional[MarketModule]
 
-    """
-	Create instance of the ThirdwebSdk
-	"""
-
     def __init__(self, options: SdkOptions, url: str):
+        """
+        Create instance of the ThirdwebSdk
+        """
         self.__currency_module = None
         self.__nft_module = None
         self.__pack_module = None
-        self.__collection_module = None
         self.__bundle_module = None
         self.__current_account = None
         self.__market_module = None
@@ -65,25 +67,24 @@ class ThirdwebSdk(object):
         if not self.client.isConnected():
             raise Exception("Failed to connect to the web3 provider")
 
-    """
-	Sets the Private Key used across the entire SDK. Calling this method
-	will automatically reload the private key across all instantiated
-	modules, which allows you to operate on behalf of multiple
-	wallets by calling a single method.
-	"""
-
     def set_private_key(self, private_key=""):
+        """
+        Sets the Private Key used across the entire SDK. Calling this method
+        will automatically reload the private key across all instantiated
+        modules, which allows you to operate on behalf of multiple
+        wallets by calling a single method.
+        """
         if private_key == "" or private_key is None:
             raise NoSignerException()
         self.__current_account = Account.from_key(private_key)
         self.__private_key = "0x" + private_key.lstrip("0x")
         self.signer_address = self.__current_account.address
 
-    """
-	Returns an instance of the currency module
-	"""
     @set_default_account
     def get_currency_module(self, address: str) -> CurrencyModule:
+        """
+        Returns an instance of the currency module
+        """
         if self.__currency_module is not None:
             return self.__currency_module
 
@@ -92,11 +93,11 @@ class ThirdwebSdk(object):
         self.__currency_module = module
         return self.__currency_module
 
-    """
-	Returns an instance of the nft module
-	"""
     @set_default_account
     def get_nft_module(self, address: str) -> NftModule:
+        """
+        Returns an instance of the nft module
+        """
         if self.__nft_module is not None:
             return self.__nft_module
 
@@ -105,11 +106,11 @@ class ThirdwebSdk(object):
         self.__nft_module = module
         return self.__nft_module
 
-    """
-	Returns an instance of the pack module
-	"""
     @set_default_account
     def get_pack_module(self, address: str) -> PackModule:
+        """
+        Returns an instance of the pack module
+        """
         if self.__pack_module is not None:
             return self.__pack_module
 
@@ -118,11 +119,11 @@ class ThirdwebSdk(object):
         self.__pack_module = module
         return self.__pack_module
 
-    """
-	Returns an instance of the market module
-	"""
     @set_default_account
     def get_market_module(self, address: str) -> MarketModule:
+        """
+        Returns an instance of the market module
+        """
         if self.__market_module is not None:
             return self.__market_module
 
@@ -131,9 +132,6 @@ class ThirdwebSdk(object):
         self.__market_module = module
         return self.__market_module
 
-    """
-	Returns an instance of the bundle module
-	"""
     @set_default_account
     def get_collection_module(self, address: str) -> CollectionModule:
         """
@@ -150,10 +148,6 @@ class ThirdwebSdk(object):
         self.__init_module(module)
         self.__bundle_module = module
         return self.__bundle_module
-
-    """
-	Internal function used to return the current web3 provider used by downstream modules
-	"""
 
     def __get_client(self) -> Web3:
         return self.client

@@ -26,3 +26,10 @@ plugins:
           setup_commands:
             - import sys
             - sys.path.append('../')
+
+extra:
+  social:
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/thirdweb_
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/thirdweb
