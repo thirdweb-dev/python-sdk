@@ -1,5 +1,7 @@
 .PHONY: clean-pyc clean-build
 
+SHELL := /bin/bash
+
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = {{ rsrcdir }}
@@ -27,8 +29,7 @@ build:
 publish:
 	twine upload dist/*
 
-init:
-	setup-venv
+init : setup-venv
 
 setup-venv:
 	python3 -m venv .env
@@ -41,4 +42,4 @@ live-docs:
 	cd docs && mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
 build-docs:
-	cd docs && mkdocs build
+	source .env/bin/activate && cd docs && mkdocs build
