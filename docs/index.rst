@@ -6,15 +6,25 @@
 Welcome to Thirdweb SDK's documentation!
 ========================================
 
+.. note::
+   Python version ``>= 3.6`` supported
+
+Getting Started
+~~~~~~~~~~~~~~~
+
+Start by installing the Thirdweb sdk
+
+.. code-block:: console
+
+   $ pip install thirdweb-sdk
+
+
+
 .. toctree::
-   :maxdepth: 3
-   :caption: Contents:
+   :maxdepth: 2
+   :caption: Index
 
+   overview
    modules
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   examples
+   deprecation-notices

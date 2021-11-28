@@ -16,9 +16,7 @@
 
 import sys
 import os
-print("I'm in", os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('..'))
-#sys.path.insert(0, os.path.abspath('../.env/lib/python3.8/site-packages'))
 
 
 # -- Project information -----------------------------------------------------
@@ -64,7 +62,7 @@ html_static_path = ['_static']
 
 autodoc_default_options = {
     'member-order': 'bysource',
-    #'special-members': '__init__',
+    # 'special-members': '__init__',
     'undoc-members': True,
 }
 

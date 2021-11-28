@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pack Module &mdash; Thirdweb SDK 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Examples" href="../examples.html" />
+    <link rel="prev" title="Bundle Module" href="bundle-module.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Thirdweb SDK
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Index</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nft-module.html">NFT Collection Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bundle-module.html">Bundle Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Pack Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-thirdweb.modules.pack">Methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-thirdweb.types.pack">Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deprecation-notices.html">Deprecation Notices</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Thirdweb SDK</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../modules.html">Modules</a> &raquo;</li>
+      <li>Pack Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/pack-module.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pack-module">
+<h1>Pack Module<a class="headerlink" href="#pack-module" title="Permalink to this headline"></a></h1>
+<p>The pack interface allows anyone to fetch the public metadata about any of the on-chain packs,  and it allows users to check their pack ownership, transfer packs to others, and most importantly to open packs.</p>
+<section id="module-thirdweb.modules.pack">
+<span id="methods"></span><h2>Methods<a class="headerlink" href="#module-thirdweb.modules.pack" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">thirdweb.modules.pack.</span></span><span class="sig-name descname"><span class="pre">PackModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">thirdweb_web3.main.Web3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.modules.pack.PackModule" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.address">
+<span class="sig-name descname"><span class="pre">address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#thirdweb.modules.pack.PackModule.address" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pack_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#thirdweb.types.pack.PackMetadata" title="thirdweb.types.pack.PackMetadata"><span class="pre">thirdweb.types.pack.PackMetadata</span></a></span></span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.get" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pack_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">thirdweb.types.nft.NftMetadata</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.open" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.get_all">
+<span class="sig-name descname"><span class="pre">get_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#thirdweb.types.pack.PackMetadata" title="thirdweb.types.pack.PackMetadata"><span class="pre">thirdweb.types.pack.PackMetadata</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.get_all" title="Permalink to this definition"></a></dt>
+<dd><p>Gets all the packs.
+:return: List of metadata for all the packs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.get_nfts">
+<span class="sig-name descname"><span class="pre">get_nfts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pack_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#thirdweb.types.pack.PackNftMetadata" title="thirdweb.types.pack.PackNftMetadata"><span class="pre">thirdweb.types.pack.PackNftMetadata</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.get_nfts" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.balance_of">
+<span class="sig-name descname"><span class="pre">balance_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.balance_of" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the balance of a token for a given address.
+:param address: The address to get the balance for.
+:param token_id: The token id to get the balance for.
+:return: The balance of the token for the given address.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.balance">
+<span class="sig-name descname"><span class="pre">balance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.balance" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the balance of a token for the current address.
+:param token_id: The token id to get the balance for.
+:return: The balance of the token for the pack.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.is_approved">
+<span class="sig-name descname"><span class="pre">is_approved</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.is_approved" title="Permalink to this definition"></a></dt>
+<dd><p>Checks if a given address is approved by a given operator.
+:param address: The address to check.
+:param operator: The operator to check.
+:return: True if the address is approved by the operator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.set_approval">
+<span class="sig-name descname"><span class="pre">set_approval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approved</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.set_approval" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.transfer">
+<span class="sig-name descname"><span class="pre">transfer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.transfer" title="Permalink to this definition"></a></dt>
+<dd><p>Transfers a token to a given address.
+:param to_address: The address to transfer the token to.
+:param token_id: The token id to transfer.
+:param amount: The amount to transfer.
+:return: The transaction receipt.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#thirdweb.types.pack.CreatePackArg" title="thirdweb.types.pack.CreatePackArg"><span class="pre">thirdweb.types.pack.CreatePackArg</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#thirdweb.types.pack.PackMetadata" title="thirdweb.types.pack.PackMetadata"><span class="pre">thirdweb.types.pack.PackMetadata</span></a></span></span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.create" title="Permalink to this definition"></a></dt>
+<dd><p>WIP: This method is not ready to be called.</p>
+<p>Suffers from same issue as MarketModule.list
+:param arg: The arguments to create the pack with.
+:return: The metadata for the newly created pack.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.transfer_from">
+<span class="sig-name descname"><span class="pre">transfer_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#thirdweb.types.pack.AssetAmountPair" title="thirdweb.types.pack.AssetAmountPair"><span class="pre">thirdweb.types.pack.AssetAmountPair</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.transfer_from" title="Permalink to this definition"></a></dt>
+<dd><p>Transfers a token from a given address to a given address.
+:param from_address: The address to transfer the token from.
+:param to_address: The address to transfer the token to.
+:param args: The token id and amount to transfer.
+:return: The transaction receipt.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.transfer_batch_from">
+<span class="sig-name descname"><span class="pre">transfer_batch_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#thirdweb.types.pack.AssetAmountPair" title="thirdweb.types.pack.AssetAmountPair"><span class="pre">thirdweb.types.pack.AssetAmountPair</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.transfer_batch_from" title="Permalink to this definition"></a></dt>
+<dd><p>Transfers a batch of tokens from a given address to a given address.
+:param from_address: The address to transfer the token from.
+:param to_address: The address to transfer the token to.
+:param args: The token ids and amounts to transfer.
+:return: The transaction receipt.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.get_link_balance">
+<span class="sig-name descname"><span class="pre">get_link_balance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">thirdweb.types.currency.CurrencyValue</span></span></span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.get_link_balance" title="Permalink to this definition"></a></dt>
+<dd><p>WIP: This method is not ready to be called.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.deposit_link">
+<span class="sig-name descname"><span class="pre">deposit_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.deposit_link" title="Permalink to this definition"></a></dt>
+<dd><p>WIP: This method is not ready to be called.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.withdraw_link">
+<span class="sig-name descname"><span class="pre">withdraw_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.withdraw_link" title="Permalink to this definition"></a></dt>
+<dd><p>WIP: This method is not ready to be called.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.set_royalty_bps">
+<span class="sig-name descname"><span class="pre">set_royalty_bps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.set_royalty_bps" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the royalty BPS for the pack.
+:param amount: The amount to set the royalty BPS to.
+:return: The transaction receipt.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.set_restricted_transfer">
+<span class="sig-name descname"><span class="pre">set_restricted_transfer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">restricted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.set_restricted_transfer" title="Permalink to this definition"></a></dt>
+<dd><p>Sets restricted transfer for the NFT, defaults to restricted.
+:param restricted: Whether to grant restricted transfer or revoke it</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thirdweb.modules.pack.PackModule.get_abi_module">
+<span class="sig-name descname"><span class="pre">get_abi_module</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">thirdweb.abi.pack.Pack</span></span></span><a class="headerlink" href="#thirdweb.modules.pack.PackModule.get_abi_module" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the ABI module for the pack.
+:return: The ABI module for the pack.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-thirdweb.types.pack">
+<span id="types"></span><h2>Types<a class="headerlink" href="#module-thirdweb.types.pack" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="thirdweb.types.pack.PackMetadata">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">thirdweb.types.pack.</span></span><span class="sig-name descname"><span class="pre">PackMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">creator_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_supply</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">open_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime.datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">thirdweb.types.nft.NftMetadata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.types.pack.PackMetadata" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.PackMetadata.id">
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#thirdweb.types.pack.PackMetadata.id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.PackMetadata.creator_address">
+<span class="sig-name descname"><span class="pre">creator_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#thirdweb.types.pack.PackMetadata.creator_address" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.PackMetadata.current_supply">
+<span class="sig-name descname"><span class="pre">current_supply</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#thirdweb.types.pack.PackMetadata.current_supply" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.PackMetadata.open_start">
+<span class="sig-name descname"><span class="pre">open_start</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime.datetime</span></em><a class="headerlink" href="#thirdweb.types.pack.PackMetadata.open_start" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.PackMetadata.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">thirdweb.types.nft.NftMetadata</span></em><a class="headerlink" href="#thirdweb.types.pack.PackMetadata.metadata" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="thirdweb.types.pack.PackNftMetadata">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">thirdweb.types.pack.</span></span><span class="sig-name descname"><span class="pre">PackNftMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">supply</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">thirdweb.types.nft.NftMetadata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.types.pack.PackNftMetadata" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.PackNftMetadata.supply">
+<span class="sig-name descname"><span class="pre">supply</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#thirdweb.types.pack.PackNftMetadata.supply" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.PackNftMetadata.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">thirdweb.types.nft.NftMetadata</span></em><a class="headerlink" href="#thirdweb.types.pack.PackNftMetadata.metadata" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="thirdweb.types.pack.AssetAmountPair">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">thirdweb.types.pack.</span></span><span class="sig-name descname"><span class="pre">AssetAmountPair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.types.pack.AssetAmountPair" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.AssetAmountPair.token_id">
+<span class="sig-name descname"><span class="pre">token_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#thirdweb.types.pack.AssetAmountPair.token_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.AssetAmountPair.amount">
+<span class="sig-name descname"><span class="pre">amount</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#thirdweb.types.pack.AssetAmountPair.amount" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="thirdweb.types.pack.CreatePackArg">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">thirdweb.types.pack.</span></span><span class="sig-name descname"><span class="pre">CreatePackArg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">asset_contract_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#thirdweb.types.pack.AssetAmountPair" title="thirdweb.types.pack.AssetAmountPair"><span class="pre">thirdweb.types.pack.AssetAmountPair</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rewards_per_open</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seconds_until_open_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#thirdweb.types.pack.CreatePackArg" title="Permalink to this definition"></a></dt>
+<dd><p>CreatePackArg assembles the parameters used to create a new Pack</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>asset_contract_address: The address of the asset being put in the pack
+metadata: The metadata of the pack (name, description, image, etc)
+assets: The list of assets (pair of [id, amount]) to list in in the pack
+rewards_per_open: The number of tokens that will be awarded when opening the pack
+seconds_until_open_start: The number of seconds the pack is allowed to be opened</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.CreatePackArg.asset_contract_address">
+<span class="sig-name descname"><span class="pre">asset_contract_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#thirdweb.types.pack.CreatePackArg.asset_contract_address" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.CreatePackArg.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#thirdweb.types.pack.CreatePackArg.metadata" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.CreatePackArg.assets">
+<span class="sig-name descname"><span class="pre">assets</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#thirdweb.types.pack.AssetAmountPair" title="thirdweb.types.pack.AssetAmountPair"><span class="pre">thirdweb.types.pack.AssetAmountPair</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#thirdweb.types.pack.CreatePackArg.assets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.CreatePackArg.rewards_per_open">
+<span class="sig-name descname"><span class="pre">rewards_per_open</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#thirdweb.types.pack.CreatePackArg.rewards_per_open" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="thirdweb.types.pack.CreatePackArg.seconds_until_open_start">
+<span class="sig-name descname"><span class="pre">seconds_until_open_start</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#thirdweb.types.pack.CreatePackArg.seconds_until_open_start" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="bundle-module.html" class="btn btn-neutral float-left" title="Bundle Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Thirdweb.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

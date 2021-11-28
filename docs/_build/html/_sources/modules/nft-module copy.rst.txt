@@ -1,0 +1,14 @@
+NFT Module
+==========
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   .. automodule:: thirdweb.modules.nft
+      :members:
+      :undoc-members:
+
+   .. automodule:: thirdweb.types.nft
+      :members:
+      :undoc-members:
