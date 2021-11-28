@@ -5,9 +5,7 @@ SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = {{ rsrcdir }}
 BUILDDIR      = {{ rbuilddir }}
 
-SOURCE_DIR = docs
-BUILD_DIR = $(SOURCE_DIR)/_build/html
-SERVER_PORT = 8087
+DOCS_SERVER_PORT = 8087
 
 clean-build:
 	rm -fr build/
@@ -36,7 +34,10 @@ setup-venv:
 	python3 -m venv .env
 	source .env/bin/activate
 
-livehtml:
+live-docs:
 	# windows/mac/linux support
-	xdg-open http://localhost:$(SERVER_PORT) || open http://localhost:$(SERVER_PORT) || start http://localhost:$(SERVER_PORT)
-	./.env/bin/sphinx-autobuild --port $(SERVER_PORT) $(SOURCE_DIR) $(BUILD_DIR) $(SPHINXOPTS) $(O)
+	xdg-open http://localhost:$(DOCS_SERVER_PORT) || open http://localhost:$(DOCS_SERVER_PORT) || start http://localhost:$(DOCS_SERVER_PORT)
+	cd docs && mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
+
+build-docs:
+	cd docs && mkdocs build
