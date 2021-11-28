@@ -1,10 +1,24 @@
 site_name: Thirdweb Python SDK
 
 theme:
+  logo: images/logo.png
+  favicon: images/logo.png
   name: material
   features:
     - navigation.tracking
     - navigation.indexes
+  palette:
+    - scheme: default
+      primary: black
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
 
     
 
