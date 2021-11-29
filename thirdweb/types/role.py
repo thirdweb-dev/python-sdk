@@ -1,3 +1,6 @@
+"""
+Roles
+"""
 from enum import Enum
 from eth_hash.auto import keccak
 

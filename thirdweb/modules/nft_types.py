@@ -1,4 +1,4 @@
-"""Types for the NFT Module."""
+"""Deprecated. Use `types.nft` instead."""
 from dataclasses import dataclass
 from typing import Optional, Union
 import io

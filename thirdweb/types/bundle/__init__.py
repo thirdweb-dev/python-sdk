@@ -1,3 +1,5 @@
+"""Types for the bundle module"""
+
 from dataclasses import dataclass
 from typing import Optional
 
@@ -10,9 +12,21 @@ from ..metadata import Metadata
 @dataclass_json
 @dataclass
 class BundleMetadata:
+    """
+    Metadata for a bundle
+    """
     id: Optional[int] = None
+    """
+    ID of the bundle
+    """
     creator: Optional[str] = None
+    """
+    Creator of the bundle
+    """
     supply: Optional[int] = None
+    """
+    Supply of the bundle
+    """
     metadata: Optional[NftMetadata] = None
 
 
