@@ -46,8 +46,6 @@ nav:
     - "Roles": "api-reference/roles.md"
   - "deprecations.md"
 
-
-
 markdown_extensions:
   - pymdownx.details
   - pymdownx.highlight
@@ -63,6 +61,8 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
+          selection:
+            docstring_style: restructured-text
           setup_commands:
             - import sys
             - sys.path.append('../')
