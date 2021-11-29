@@ -9,10 +9,23 @@ import io
 
 @dataclass
 class MintArg:
+    """The name of the NFT being minted"""
     name: str
+    """Short description of the NFT (optional)"""
     description: str = ""
-    image: Union[str, io.TextIOWrapper] = ""
+    """
+    Either an image URI *or* a `bytes`/`bytesarray` object.
+
+    If the property is a `bytes`/`bytesarray` object, it'll be uploaded
+    to the default storage provider and the uri will replace this properties
+    value.
+    """
+    image: Union[str, bytes, bytearray] = ""
     properties: Optional[dict] = None
+    """
+    .. deprecated:: 0.4.0
+        This property is deprecated. Use the `image` property instead
+    """
     image_uri: str = ""
 
 

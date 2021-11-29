@@ -1,0 +1,75 @@
+site_name: Thirdweb Python SDK
+
+theme:
+  logo: images/logo.png
+  favicon: images/logo.png
+  name: material
+  features:
+    - navigation.tracking
+    - navigation.indexes
+    - navigation.top
+    - navigation.instant
+  palette:
+    - scheme: default
+      primary: black
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+nav:
+  - "index.md"
+  - "installation.md"
+  - "API Reference":
+    - "ThirdwebSdk Class": "api-reference/sdk-class.md"
+    - "Modules":
+      - "api-reference/modules/index.md"
+      - "Bundle":
+        - "api-reference/modules/bundle/index.md"
+        - "Examples": "api-reference/modules/bundle/examples.md"
+      - "Currency":
+        - "api-reference/modules/currency/index.md"
+        - "Examples": "api-reference/modules/currency/examples.md"
+      - "Market":
+        - "api-reference/modules/market/index.md"
+        - "Examples": "api-reference/modules/market/examples.md"
+      - "NFT Collection":
+        - "api-reference/modules/nft-collection/index.md"
+        - "Examples": "api-reference/modules/nft-collection/examples.md"
+      - "Pack":
+        - "api-reference/modules/pack/index.md"
+        - "Examples": "api-reference/modules/pack/examples.md"
+    - "Roles": "api-reference/roles.md"
+  - "deprecations.md"
+
+markdown_extensions:
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.snippets
+
+extra_css:
+  - css/autodoc.css
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          selection:
+            docstring_style: restructured-text
+          setup_commands:
+            - import sys
+            - sys.path.append('../')
+
+extra:
+  social:
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/thirdweb_
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/thirdweb

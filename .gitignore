@@ -22,4 +22,4 @@ docs/
 
 *.egg-info
 
-./docs/*
+docs/site
