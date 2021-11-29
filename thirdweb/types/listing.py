@@ -1,3 +1,7 @@
+"""
+Type for a listing.
+"""
+
 import datetime
 from dataclasses import dataclass
 from typing import Optional

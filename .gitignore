@@ -17,6 +17,7 @@ nftlabs/modules/.DS_Store
 x.sh
 examples/test.py
 
+docs/
 **/*.pyc
 
 *.egg-info

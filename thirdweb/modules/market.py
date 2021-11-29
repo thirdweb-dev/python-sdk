@@ -1,3 +1,6 @@
+"""
+Interact with the Market module of the app.
+"""
 from typing import List
 
 from thirdweb_web3 import Web3
@@ -18,10 +21,13 @@ from . import BaseModule
 
 class MarketModule(BaseModule):
     """
-    The market module allows you to manage listings.
+    Interact with the Market module of the app.
     """
 
     address: str
+    """
+    Address of the module
+    """
     """
     Address of the market contract.
     """
@@ -29,7 +35,11 @@ class MarketModule(BaseModule):
 
     def __init__(self, address: str, client: Web3, ):
         """
+        :param address: The address of the market contract.
+        :param client: The web3 client.
+
         Initialize the Market Module.
+
         """
 
         super().__init__()
@@ -38,6 +48,9 @@ class MarketModule(BaseModule):
 
     def list(self, arg: ListArg) -> Listing:
         """
+        :param arg: The listing details.
+        :return: Does not return anything, yet.
+
         WIP: This method is still in beta and will contain bugs.
         Status: Listing works but decoding the logs is breaking due to a bug
         in the web3 library (https://github.com/ethereum/web3.py/pull/1484).
@@ -95,7 +108,11 @@ class MarketModule(BaseModule):
 
     def unlist(self, listing_id, quantity):
         """
+        :param listing_id: The listing ID.
+        :param quantity: The quantity to unlist.
+
         Unlist a certain quantity of tokens from a listing.
+
         """
         tx = self.__abi_module.unlist.build_transaction(
             listing_id,
@@ -106,12 +123,19 @@ class MarketModule(BaseModule):
 
     def unlist_all(self, listing_id: int):
         """
+        :param listing_id: The listing ID.
+
         Unlist all available tokens from a listing.
+
         """
         self.unlist(listing_id, self.get(listing_id).quantity)
 
     def buy(self, listing_id: int, quantity: int):
         """
+
+        :param listing_id: The listing ID.
+        :param quantity: The quantity to buy.
+
         BETA: This method is still in beta and might contain bugs.
 
         Buy a listing.
@@ -140,7 +164,11 @@ class MarketModule(BaseModule):
 
     def set_market_fee_bps(self, amount: int):
         """
+        :note: For example, if you want to set the market fee to 0.1%, set amount to 10  (which is 0.1 x 100).
+        :param amount: The amount of basis points.
+
         Set the market fee in basis points.
+
         """
         tx = self.__abi_module.set_market_fee_bps.build_transaction(
             amount,
@@ -149,7 +177,11 @@ class MarketModule(BaseModule):
 
     def get(self, listing_id) -> Listing:
         """
-        Get a listing.
+        :param listing_id: The listing ID.
+        :return: Details about the listing.
+
+        Get the details about a listing.
+
         """
         listing = MarketListing(
             **self.__abi_module.get_listing.call(listing_id))
@@ -159,7 +191,10 @@ class MarketModule(BaseModule):
 
     def set_module_metadata(self, metadata: str):
         """
+        :param metadata: The metadata to set
+
         Sets the metadata for the module
+
         """
         uri = self.get_storage().upload_metadata(
             metadata, self.address, self.get_signer_address())
@@ -170,13 +205,21 @@ class MarketModule(BaseModule):
 
     def get_listing(self, listing_id: int) -> Listing:
         """
-        Get a listing.
+        :param listing_id: The listing ID.
+        :return: Details about the listing.
+
+        Get the details about a listing.
+
         """
         return self.get(listing_id)
 
     def get_all(self, filter: Filter = None) -> List[Listing]:
         """
+        :param filter: Filter to apply to the listings.
+        :return: A list of all the listings in the market.
+
         Returns all the listings.
+
         """
         if filter is None:
             return self.__abi_module.get_all_listings.call()
@@ -199,11 +242,20 @@ class MarketModule(BaseModule):
 
     def total_listings(self) -> int:
         """
+        :return: The total supply of the market.
+
         Returns the total supply of the market.
+
         """
         return self.__abi_module.total_listings.call()
 
     def get_abi_module(self) -> Market:
+        """
+        :return: The ABI module for the market.
+
+        Returns the ABI module for the market.
+
+        """
         return self.__abi_module
 
     def __transform_result_to_listing(self, listing: MarketListing) -> Listing:

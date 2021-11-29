@@ -13,16 +13,20 @@ from .base import BaseModule
 
 
 class NftModule(BaseModule):
-    """
-    NFT Methods
-    """
+    """ Interact with the NFT module of the app"""
 
     address: str
+    """
+    Address of the module
+    """
     __abi_module: NFT
 
     def __init__(self, address: str, client: Web3):
         """
-        Initializing the class attributes
+        :param address: The address of the module
+        :param client: Web3 client
+
+        Initializes the module
         """
         super().__init__()
         self.address = address
@@ -37,9 +41,12 @@ class NftModule(BaseModule):
 
     def mint(self, arg: MintArg) -> NftType:
         """
+        :param arg: the `MintArg` object
+        :return: the metadata of the token
+
         Mints a new token to the signer. 
         - Arguments passed: Note, a class is used -> MintArg(name, description, image_uri, properties)
-        - Returns the `NftMetadata(name,description,image,properties,id,uri)`  *Preferrably, using a link
+        - Returns the `NftMetadata(name,description,image,properties,id,uri)`
         """
         return self.mint_to(self.get_signer_address(), arg)
 
@@ -49,9 +56,14 @@ class NftModule(BaseModule):
         arg: MintArg,
     ) -> NftType:
         """
+        :param to_address: the address to mint the token to
+        :param arg: the `name`, `description`, `image_uri`, `properties` of the token
+        :return: the metadata of the token
+
+
         Mints a new token to an address
         - Arguments passed: `to_address` and a class -> `MintArg(name, description, image_uri, properties)`
-        - Returns the `NftMetadata(name,description,image,properties,id,uri)`  *Preferrably, using a link
+        - Returns the `NftMetadata(name,description,image,properties,id,uri)` 
         """
         final_properties: Dict
         if arg.properties is None:
@@ -82,12 +94,17 @@ class NftModule(BaseModule):
 
     def total_supply(self) -> int:
         """
+        :return: the total supply of the NFT module
+
         Returns the total supply
         """
         return self.__abi_module.total_supply.call()
 
     def get(self, token_id: int) -> NftType:
         """
+        :param token_id: the id of the token
+        :return: the metadata of the token
+
         Returns the Metadata of a token
         """
         uri = self.__get_metadata_uri(token_id)
@@ -99,6 +116,9 @@ class NftModule(BaseModule):
 
     def __get_metadata_uri(self, token_id: int):
         """
+        :param token_id: the id of the token
+        :return: the uri of the token metadata
+
         Returns the uri of the metadata of a token
         """
         uri = self.__abi_module.token_uri.call(token_id)
@@ -109,12 +129,19 @@ class NftModule(BaseModule):
 
     def mint_batch(self, args: List[MintArg]):
         """
+        :param args: the `name`, `description`, `image_uri`, `properties` of the token
+        :return: the metadata of the token
+
         Mints a batch of tokens to the signer address
         """
         return self.mint_batch_to(self.get_signer_address(), args)
 
     def mint_batch_to(self, to_address: str, args: List[MintArg]):
         """
+        :param to_address: the address to mint the token to
+        :param args: the `name`, `description`, `image_uri`, `properties` of the token
+        :return: the metadata of the token
+
         Mints a batch of tokens to the given address
         """
         uris = [self.upload_metadata({
@@ -137,6 +164,9 @@ class NftModule(BaseModule):
 
     def burn(self, token_id: int):
         """
+        :param token_id: the id of the token
+        :return: the metadata of the token
+
         Burns a given token
         """
         tx = self.__abi_module.burn.build_transaction(
@@ -146,6 +176,10 @@ class NftModule(BaseModule):
 
     def transfer_from(self, from_address: str, to_address: str, token_id: int):
         """
+        :param from_address: the address to transfer the token from
+        :param to_address: the address to transfer the token to
+        :param token_id: the id of the token
+
         Transfers a token from one address to another
         """
         tx = self.__abi_module.transfer_from.build_transaction(
@@ -155,6 +189,11 @@ class NftModule(BaseModule):
 
     def transfer(self, to_address: str, token_id: int):
         """
+        :param to_address: the address to transfer the token to
+        :param token_id: the id of the token
+        :return: the metadata of the token
+
+
         Transfers NFT from the current signers wallet to another wallet
         """
         tx = self.__abi_module.safe_transfer_from1.build_transaction(
@@ -164,6 +203,9 @@ class NftModule(BaseModule):
 
     def set_royalty_bps(self, amount: int):
         """
+        :param amount: the amount of BPS to set
+        :return: the metadata of the token
+
         Sets the royalty percentage for the NFT
         """
         tx = self.__abi_module.set_royalty_bps.build_transaction(
@@ -174,6 +216,8 @@ class NftModule(BaseModule):
 
     def get_all(self) -> List[NftType]:
         """
+        :return: the metadata of all the tokens
+
         Returns all the NFTs in the system
         """
         max_id = self.__abi_module.next_token_id.call()
@@ -181,6 +225,9 @@ class NftModule(BaseModule):
 
     def get_owned(self, address: str = "") -> List[NftType]:
         """
+        :param address: The address to fetch the NFTs for.
+        :return: A list of NFTs owned by the given address
+
         Defaults to fetching the NFTs owned by the current signer (as indicated by the private key)
         if the address parameter is not supplied
         """
@@ -198,19 +245,21 @@ class NftModule(BaseModule):
 
     def balance(self) -> int:
         """
+        :return: The balance of the current signers wallet
+
         Returns balance of the current signers wallet
-        - Arguments: none. Method refers to nft module class.
         - Use-case: Use this method if you want to use the currently connected wallet
         - Dashboard: Project ➝ NFT Module ➝ Total amount of NFT's
-
         """
 
         return self.__abi_module.balance_of.call(self.get_signer_address())
 
     def balance_of(self, address: str) -> int:
         """
+        :param address: The address to fetch the NFTs for.
+        :return: The balance of the given address
+
         Returns balance of the given addressss
-        - Arguments: Pass the address of which to check the balance
         - Use-case: Use this method if you don't want to use the connected wallet, but want to check another wallet.
         - Dashboard: Project ➝ NFT Module ➝ Total amount of NFT's 
         """
@@ -218,13 +267,21 @@ class NftModule(BaseModule):
 
     def owner_of(self, token_id: int) -> str:
         """
+        :param token_id: The token id to fetch the owner for.
+        :return: The owner of the given token
+
         Returns the owner of the given token
+
         """
         return self.__abi_module.owner_of.call(token_id)
 
     def get_metadata(self, token_id: int) -> NftType:
         """
+        :param token_id: The token id to fetch the metadata for.
+        :return: The metadata of the given token
+
         Returns the metadata of the given token
+
         """
         uri = self.__get_metadata_uri(token_id)
         meta = self.get_storage().get(uri)
@@ -235,13 +292,22 @@ class NftModule(BaseModule):
 
     def is_approved(self, address: str, operator: str) -> bool:
         """
+        :param address: The address to check
+        :param operator: The operator to check
+        :return: Whether the given address is approved
+
         Returns whether the given address is approved
+
         """
         return self.__abi_module.is_approved_for_all.call(address, operator)
 
     def set_approval(self, operator: str, approved: bool = True):
         """
+        :param operator: The operator to set approval for
+        :param approved: Whether to grant approval or revoke it
+
         Sets approval for specified operator, defaults to grant approval
+
         """
         tx = self.__abi_module.set_approval_for_all.build_transaction(
             operator, approved, self.get_transact_opts()
@@ -249,6 +315,12 @@ class NftModule(BaseModule):
         self.execute_tx(tx)
 
     def set_restricted_transfer(self, restricted: bool = True):
+        """
+        :param restricted: Whether to grant restricted transfer or revoke it
+
+        Sets restricted transfer for the NFT, defaults to restricted.
+
+        """
         self.execute_tx(
             self.__abi_module.set_restricted_transfer.build_transaction(
                 restricted, self.get_transact_opts()
@@ -257,7 +329,12 @@ class NftModule(BaseModule):
 
     def get_with_owner(self, token_id: int, owner: str):
         """
+        :param token_id: The token id to fetch the NFT for
+        :param owner: The owner of the NFT
+        :return: The NFT with the given token id and owner
+
         Returns the NFT with the given token id and owner
+
         """
         owner = self.owner_of(token_id)
         meta = self.get_metadata(token_id)
@@ -265,7 +342,10 @@ class NftModule(BaseModule):
 
     def set_module_metadata(self, metadata: str):
         """
+        :param metadata: The metadata to set
+
         Sets the metadata for the module
+
         """
         uri = self.get_storage().upload_metadata(
             metadata, self.address, self.get_signer_address()
@@ -275,15 +355,10 @@ class NftModule(BaseModule):
         )
         self.execute_tx(tx)
 
-    def set_restricted_transfer(self, restricted: bool = False):
-        """
-        Sets the restricted transfer flag
-        """
-
-        tx = self.__abi_module.set_restricted_transfer.build_transaction(
-            restricted, self.get_transact_opts()
-        )
-        self.execute_tx(tx)
-
     def get_abi_module(self) -> NFT:
+        """
+        :return: The ABI module for the NFT
+
+        Returns the ABI for the NFT module
+        """
         return self.__abi_module
