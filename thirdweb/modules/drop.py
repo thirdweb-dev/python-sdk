@@ -5,6 +5,7 @@ from .base import BaseModule
 import json
 from types.drop import Query, claim
 
+
 class DropModule(BaseModule):
     """ Interact with the NFT module of the app"""
 
@@ -41,14 +42,13 @@ class DropModule(BaseModule):
             "owner": owner,
         }
 
-
     def get_all(self, query: Query = None):
         """
         :param query: Query object
         :return: List of drops
         Gets all drops
         """
-        
+
         start = query.start
         count = query.count
         maxid = min([self.__abi_module.next_token_id.call(), (start + count)])
@@ -94,8 +94,6 @@ class DropModule(BaseModule):
         token_ids = [self.__abi_module.token_of_owner_by_index.call(
             address, i) for i in indices]
         return [self.get(i) for i in token_ids]
-
-
 
     def transform_result_to_claim_condition(self, pm: claim):
         # todo
@@ -159,7 +157,7 @@ class DropModule(BaseModule):
         :param approved: Approved or not
         Sets approval for a user
         """
-        self.__abi_module.set_approval_for_all(operator, approved)        
+        self.__abi_module.set_approval_for_all(operator, approved)
 
     def transfer(self, to: str, token_id: str):
         """
@@ -279,12 +277,20 @@ class DropModule(BaseModule):
         if not (mc.merkle_root.startswith("0x0000000000000000000000000000000000000000")):
             snapshot = self.get_storage().get(metadata.merkle[mc.merkle_root])
             snapshot_data = json.loads(snapshot)
-            item  = list(filter(lambda x:x["address"]==address_to_claim, snapshot_data))
+            item = list(
+                filter(lambda x: x["address"] == address_to_claim, snapshot_data))
             if item is None:
                 return Exception("No claim for this address")
             proofs = item.proof
 
-        
+    def pin_to_ipfs(self, files: list):
+        """
+        :param files: List of files to pin
+        :return: Pinned data
+        :examples: >>> pin_to_ipfs([open("/home/user/image0.png", "rb"), open("/home/user/image1.png", "rb")])
+        Pins data to IPFS
+        """
+        return self.get_storage().upload_batch(files)
 
     def burn(self, token_id: int):
         """
