@@ -66,15 +66,13 @@ class PackModule(BaseModule):
         """
         :param pack_id: The id of the pack to open.
         :return: The NFTs in the pack.
-
         Opens a pack and returns the NFTs in the pack.
         """
         uri = self.__abi_module.uri.call(pack_id)
         if uri == "":
             raise AssetNotFoundException(pack_id)
-        self.__abi_module.open.send(pack_id)
+        self.__abi_module.open_pack.call(pack_id)
         return self.get_storage().get(uri)
-        pass
 
     def get_all(self) -> List[PackMetadata]:
         """
