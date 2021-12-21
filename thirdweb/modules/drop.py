@@ -249,7 +249,7 @@ class DropModule(BaseModule):
 
     def get_claim_conditions_factory():
         create_snapshot_func = create_snapshot()  # todo
-        factory = new claim_condition_factory(create_snapshot_func)  # todo
+        factory = claim_condition_factory(create_snapshot_func)  # todo
         return factory
 
     def set_mint_conditions(self, factory):
@@ -269,7 +269,7 @@ class DropModule(BaseModule):
                 if mc.currency == "0x0000000000000000000000000000000000000000":  # todo constant
                     overrides['value'] = mc.price_per_token * quantity
                 else:
-                    erc20 = ERC20(self.get_client(), item.currency)
+                    erc20 = ERC20(self.get_client(), mc.currency)
                     owner = self.get_signer_address()
                     spender = self.address
                     total_price = mc.price_per_token * quantity
@@ -364,8 +364,17 @@ class DropModule(BaseModule):
         if not metadata:
             return Exception("No metadata")
 
+        metadata.seller_fee_basis_points = amount
+        uri = self.get_storage().upload_metadata(
+            metadata, self.address, self.get_signer_address()
+        )
+
         tx = self.__abi_module.set_royalty_bps.build_transaction(
             amount, self.get_transact_opts()
+        )
+        self.execute_tx(tx)
+        tx = self.__abi_module.set_contract_uri.build_transaction(
+            uri
         )
         self.execute_tx(tx)
 
@@ -399,6 +408,12 @@ class DropModule(BaseModule):
         )
         self.execute_tx(tx)
 
+    def get_royalty_bps(self):
+        """
+        :return: The BPS of the NFT
+        """
+        return self.__abi_module.royalty_bps.call()
+
     def get_royalty_recipient_address(self):
         """
         :return: The address of the recipient
@@ -408,3 +423,25 @@ class DropModule(BaseModule):
         if 'fee_recipient' not in metadata.metadata:
             return metadata['fee_recipient']
         return ""
+
+    def create_batch(self, metadatas):
+        if not self.can_create_batch():
+            raise Exception("Batch already created!")
+        start_file_number = self.__abi_module.next_mint_token_id.call()
+        base_uri = self.get_storage().upload_batch(
+            metadatas, self.address, start_file_number
+        )
+        tx = self.__abi_module.set_base_token_uri.build_transaction(
+            base_uri, self.get_transact_opts()
+        )
+        self.execute_tx(tx)
+        tx = self.__abi_module.create_batch.build_transaction(
+            start_file_number, len(metadatas), self.get_transact_opts()
+        )
+        tx = self.__abi_module.lazy_mint_amount.build_transaction(
+            len(metadatas), self.get_transact_opts()
+        )
+        self.execute_tx(tx)
+    
+    def can_create_batch(self):
+        return (self.__abi_module.next_mint_token_id.call() == 0)

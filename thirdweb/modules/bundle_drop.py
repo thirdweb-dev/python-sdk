@@ -47,6 +47,9 @@ class DropModule(BaseModule):
             "supply": supply
         }
 
+    def get_token_metadata(self, token_id: int):
+        # todo
+        pass
     def get_all(self, query: Query = None):  # todo
         """
         :param query: Query object
@@ -100,8 +103,23 @@ class DropModule(BaseModule):
         return [self.get(i) for i in token_ids]
 
     def transform_result_to_claim_condition(self, pm: claim):
-        # todo
-        return
+        cv = get_currency_value(
+            self.get_signer_address(),
+            pm.currency_value,
+            pm.pricePerToken
+        )
+        return {
+            "start_timestamp": Date(pm.start_timestamp * 1000),
+            "max_mint_supply": pm.max_mint_supply,
+            "current_mint_supply": pm.current_mint_supply,
+            "available_supply": pm.max_mint_supply - pm.current_mint_supply,
+            "quantity_limit_per_transaction": pm.quantity_limit_per_transaction,
+            "merkle_root": pm.merkle_root,
+            "price_per_token": pm.pricePerToken,
+            "currency": pm.currency,
+            "price": pm.price_per_token,
+            "currency_metadata": cv
+        }
 
     def get_active_mint_condition(self):
         """
