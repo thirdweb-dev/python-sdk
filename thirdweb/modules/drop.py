@@ -58,7 +58,7 @@ class DropModule(BaseModule):
     def get_all_unclaimed(self, query: Query = None):
         start = query.start
         count = query.count
-        maxid = min([self.__abi_module.get_max_id.call(), (start + count)])
+        maxid = min([self.__abi_module.next_token_id.call(), (start + count)])
         unminted = self.__abi_module.next_mint_token_id.call()
         response = []
         for i in range(start, (maxid - unminted)):
