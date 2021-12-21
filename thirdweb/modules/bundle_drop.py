@@ -121,13 +121,6 @@ class DropModule(BaseModule):
             "currency_metadata": cv
         }
 
-    def get_active_mint_condition(self):
-        """
-        :return: Active mint condition
-        Gets the active mint condition
-        """
-        return self.__abi_module.mint_conditions(self.__abi_module.get_last_started_mint_condition_index.call())
-
     def get_active_claim_condition(self, token_id: int):
         index = self.__abi_module.get_last_started_mint_condition_index.call(
             token_id)
@@ -250,7 +243,7 @@ class DropModule(BaseModule):
         metadata_uri = self.get_storage().upload_metadata(metadata)
         # todo multicall
         from_address = self.get_signer_address()
-        return self.execute_tx(self.__abi_module.set_claim_condition.call(factory.get_claim_condition(), metadata_uri, from_address))
+        return self.execute_tx(self.__abi_module.set_claim_condition.build_transaction(factory.get_claim_condition(), metadata_uri, from_address))
 
     def claim(self, token_id: int, quantity: int, proofs: list):
         mc = self.get_active_claim_condition()
@@ -280,7 +273,7 @@ class DropModule(BaseModule):
         :param token_id: ID of the drop
         Burns a drop
         """
-        return self.execute_tx(self.__abi_module.burn.call(self.get_signer_address(), token_id, amount))
+        return self.execute_tx(self.__abi_module.burn.build_transaction(self.get_signer_address(), token_id, amount))
 
     def transfer_from(self, transfer_from: str, to: str, token_id: int, amount: int, data: bytes):
         """
