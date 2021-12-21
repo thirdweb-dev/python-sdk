@@ -62,7 +62,7 @@ class PackModule(BaseModule):
                 state['openStart']),
         )
 
-    def open(self, pack_id: int) -> List[NftMetadata]:
+    def open_pack(self, pack_id: int) -> List[NftMetadata]:
         """
         :param pack_id: The id of the pack to open.
         :return: The NFTs in the pack.
