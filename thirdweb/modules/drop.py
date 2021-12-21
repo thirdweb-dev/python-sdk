@@ -5,6 +5,7 @@ from ..abi.lazy_nft import Drop
 from .base import BaseModule
 import json
 from types.drop import Query, claim
+from ..abi.erc20 import ERC20
 
 
 class DropModule(BaseModule):
@@ -172,7 +173,6 @@ class DropModule(BaseModule):
         """
         return self.__abi_module.next_mint_token_id.call() - self.total_claimed_supply()
 
-
     def is_approved(self, address: str, operator: str):
         return self.__abi_module.is_approved_for_all.call(address, operator)
 
@@ -218,7 +218,6 @@ class DropModule(BaseModule):
         """
         return self.__abi_module.next_mint_token_id.call()
 
-
     def get_metadata(self):
         """
         :return: Metadata of the module
@@ -231,12 +230,13 @@ class DropModule(BaseModule):
         :param condition: Claim condition
         Sets the mint condition
         """
+        conditions = factory.build_conditions()
         merkle_info = {}
         for x in factory.allSnapshots():
             merkle_info[x.merkle_root] = x.merkle_path
         metadata = self.get_metadata()
         if not metadata:
-            return Exception("No metadata")
+            raise Exception("No metadata")
         if len(factory.allSnapshots()) == 0 and 'merkle' in metadata:
             metadata["merkle"] = {}
         else:
@@ -244,8 +244,13 @@ class DropModule(BaseModule):
 
         metadata_uri = self.get_storage().upload_metadata(metadata)
         # todo multicall
-        from_address = self.get_signer_address()
-        return self.execute_tx(self.__abi_module.set_claim_condition.call(factory.get_claim_condition(), metadata_uri, from_address))
+        self.__abi_module.set_contract_uri(metadata_uri)
+        self.__abi_module.set_public_mint_conditions(conditions)
+
+    def get_claim_conditions_factory():
+        create_snapshot_func = create_snapshot()  # todo
+        factory = new claim_condition_factory(create_snapshot_func)  # todo
+        return factory
 
     def set_mint_conditions(self, factory):
         return self.set_claim_conditions(factory)
@@ -260,17 +265,19 @@ class DropModule(BaseModule):
         try:
             mc = self.get_active_claim_condition()
             overrides = {}  # todo overrides
-            if mc.price_per_token.gt(0):
-                if mc.currency == "0x0000000000000000000000000000000000000000":
+            if mc.price_per_token > 0:
+                if mc.currency == "0x0000000000000000000000000000000000000000":  # todo constant
                     overrides['value'] = mc.price_per_token * quantity
                 else:
+                    erc20 = ERC20(self.get_client(), item.currency)
                     owner = self.get_signer_address()
                     spender = self.address
-                    allowance = self.__abi_module.allowance.call(
-                        owner, spender)  # todo erc20 module
                     total_price = mc.price_per_token * quantity
+                    allowance = erc20.allowance.call(owner, spender)
                     if allowance < total_price:
-                        return Exception("Not enough allowance")
+                        tx = erc20.increase_allowance.build_transaction(
+                            spender, total_price, self.get_transact_opts())
+                    self.execute_tx(tx)
 
             self.__abi_module.claim.call(quantity, proofs, overrides)
             return True
@@ -281,14 +288,31 @@ class DropModule(BaseModule):
         mc = self.get_active_claim_condition()
         metadata = self.get_metadata()
         address_to_claim = self.get_signer_address()
-        if not (mc.merkle_root.startswith("0x0000000000000000000000000000000000000000")):
+        if not (mc.merkle_root.startswith("0x0000000000000000000000000000000000000000")):  # todo constant
             snapshot = self.get_storage().get(metadata.merkle[mc.merkle_root])
-            snapshot_data = json.loads(snapshot)
+            snapshot_data = json.loads(snapshot)  # todo deserialize
             item = list(
                 filter(lambda x: x["address"] == address_to_claim, snapshot_data))
             if item is None:
                 return Exception("No claim for this address")
             proofs = item.proof
+        overrides = {}  # todo overrides
+        if mc.price_per_token > 0:
+            if mc.currency == "0x0000000000000000000000000000000000000000":  # todo constant
+                overrides['value'] = mc.price_per_token * quantity
+            else:
+                erc20 = ERC20(self.get_client(), item.currency)
+                owner = self.get_signer_address()
+                spender = self.address
+                total_price = mc.price_per_token * quantity
+                allowance = erc20.allowance.call(owner, spender)
+                if allowance < total_price:
+                    tx = erc20.increase_allowance.build_transaction(
+                        spender, total_price, self.get_transact_opts())
+                self.execute_tx(tx)
+        tx = self.__abi_module.claim.build_transaction(
+            quantity, proofs, overrides)
+        return self.execute_tx(tx)  # todo return properly
 
     def pin_to_ipfs(self, files: list):
         """
@@ -304,7 +328,7 @@ class DropModule(BaseModule):
         :param token_id: ID of the drop
         Burns a drop
         """
-        return self.execute_tx(self.__abi_module.burn.call(token_id))
+        return self.execute_tx(self.__abi_module.burn.build_transaction(token_id))
 
     def transfer_from(self, transfer_from: str, to: str, token_id: int):
         """
@@ -313,7 +337,7 @@ class DropModule(BaseModule):
         :param token_id: ID of the drop
         Transfers a drop
         """
-        return self.execute_tx(self.__abi_module.transfer_from.call(transfer_from, to, token_id))
+        return self.execute_tx(self.__abi_module.transfer_from.build_transaction(transfer_from, to, token_id))
 
     def set_module_metadata(self, metadata: str):
         """
@@ -329,7 +353,7 @@ class DropModule(BaseModule):
         )
         self.execute_tx(tx)
 
-    def set_royalty_bps(self, amount: int):
+    def set_royalty_bps(self, amount: int):  # todo multicall
         """
         :param amount: the amount of BPS to set
         :return: the metadata of the token
@@ -354,6 +378,12 @@ class DropModule(BaseModule):
         """
         tx = self.__abi_module.set_base_token_uri.build_transaction(
             uri, self.get_transact_opts()
+        )
+        self.execute_tx(tx)
+
+    def set_restricted_transfer(self, restricted: bool = True):
+        tx = self.__abi_module.set_restricted_transfer.build_transaction(
+            restricted, self.get_transact_opts()
         )
         self.execute_tx(tx)
 
