@@ -17,11 +17,11 @@ class Query:
 @dataclass_json
 @dataclass
 class claim:
-    startTimestamp: int
-    maxMintSupply: int
-    currentMintSupply: int
-    quantityLimitPerTransaction: int
-    waitTimeSecondsLimitPerTransaction: int
-    merkleRoot: bytes
-    pricePerToken: int
+    start_timestamp: int
+    max_mint_supply: int
+    current_mint_supply: int
+    quantity_limit_per_transaction: int
+    wait_time_seconds_limit_per_transaction: int
+    merkle_root: bytes
+    price_per_token: int
     currency: str  # todo

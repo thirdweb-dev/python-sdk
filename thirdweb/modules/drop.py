@@ -1,4 +1,5 @@
 """ Interact with the NFT module of the app"""
+from marshmallow.fields import Date
 from thirdweb_web3 import Web3
 from ..abi.lazy_nft import Drop
 from .base import BaseModule
@@ -96,31 +97,47 @@ class DropModule(BaseModule):
         return [self.get(i) for i in token_ids]
 
     def transform_result_to_claim_condition(self, pm: claim):
-        # todo
-        return
+        cv = get_currency_value(
+            self.get_signer_address(),
+            pm.currency_value,
+            pm.pricePerToken
+        )
+        return {
+            "start_timestamp": Date(pm.start_timestamp * 1000),
+            "max_mint_supply": pm.max_mint_supply,
+            "current_mint_supply": pm.current_mint_supply,
+            "available_supply": pm.max_mint_supply - pm.current_mint_supply,
+            "quantity_limit_per_transaction": pm.quantity_limit_per_transaction,
+            "merkle_root": pm.merkle_root,
+            "price_per_token": pm.pricePerToken,
+            "currency": pm.currency,
+            "price": pm.price_per_token,
+            "currency_metadata": cv
+        }
 
     def get_active_mint_condition(self):
         """
         :return: Active mint condition
         Gets the active mint condition
         """
-        return self.__abi_module.mint_conditions(self.__abi_module.get_last_started_mint_condition_index.call())
+        index = self.__abi_module.get_last_started_mint_condition_index.call()
+        return self.__abi_module.mint_conditions(index)
 
     def get_active_claim_condition(self):
         index = self.__abi_module.get_last_started_mint_condition_index.call()
         mc = self.__abi_module.mint_conditions.call(index)
         return self.transform_result_to_claim_condition(mc)
 
-    def get_all_mint_conditions(self):
-        conditions = []
-        i = 0
-        while True:
-            try:
-                conditions.append(self.__abi_module.mint_conditions.call(i))
-                i += 1
-            except:
-                break
-        return conditions
+    # def get_all_mint_conditions(self): // deprecated?
+    #     conditions = []
+    #     i = 0
+    #     while True:
+    #         try:
+    #             conditions.append(self.__abi_module.mint_conditions.call(i))
+    #             i += 1
+    #         except:
+    #             break
+    #     return conditions
 
     def get_all_claim_conditions(self):
         conditions = []
@@ -139,7 +156,7 @@ class DropModule(BaseModule):
         :return: Total supply of drops
         Gets the total supply of drops
         """
-        return self.__abi_module.total_supply.call()
+        return self.__abi_module.next_token_id.call()
 
     def max_total_supply(self):
         """
@@ -147,6 +164,14 @@ class DropModule(BaseModule):
         Gets the max total supply of drops
         """
         return self.__abi_module.max_total_supply.call()
+
+    def total_unclaimed_supply(self):
+        """
+        :return: Total unclaimed supply of drops
+        Gets the total unclaimed supply of drops
+        """
+        return self.__abi_module.next_mint_token_id.call() - self.total_claimed_supply()
+
 
     def is_approved(self, address: str, operator: str):
         return self.__abi_module.is_approved_for_all.call(address, operator)
@@ -193,24 +218,6 @@ class DropModule(BaseModule):
         """
         return self.__abi_module.next_mint_token_id.call()
 
-    def lazy_mint_batch(self, uris: list):
-        """
-        :param uris: List of uris to mint
-        :return: List of minted drops
-        Mints a batch of drops
-        """
-        return self.__abi_module.lazy_mint_batch.call(uris)
-
-    def lazy_mint_amount(self, amount: int):
-        """
-        :param amount: Amount of drops to mint
-        :return: List of minted drops
-        Mints a batch of drops
-        """
-        return self.__abi_module.lazy_mint_amount.call(amount)
-
-    def lazy_mint(self, metadata):
-        self.lazy_mint_batch([metadata])
 
     def get_metadata(self):
         """
