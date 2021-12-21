@@ -165,11 +165,12 @@ class DropModule(BaseModule):
         """
         start_file_number = self.__abi_module.next_token_id_to_mint()
         base_uri = self.get_storage().upload_batch(
-            metadatas, self.address, start_file_number) #todo upload metadata batch 
-    
-        tx = self.__abi_module.lazy_mint.build_transaction(len(metadatas), base_uri)
+            metadatas, self.address, start_file_number)  # todo upload metadata batch
+
+        tx = self.__abi_module.lazy_mint.build_transaction(
+            len(metadatas), base_uri)
         receipt = self.execute_tx(tx)
-        return receipt #todo event parsing
+        return receipt  # todo event parsing
 
     def set_approval(self, operator: str, approved: bool = True):
         """
@@ -179,58 +180,18 @@ class DropModule(BaseModule):
         """
         self.__abi_module.set_approval_for_all(operator, approved)
 
-    def transfer(self, to: str, token_id: str):
+    def transfer(self, to: str, token_id: str, amount: int, data: bytes):
         """
-        :param to: Address of the new owner
+        :param to: Address of the recipient
         :param token_id: ID of the drop
+        :param amount: Amount of the drop
+        :param data: Data to be stored
         Transfers a drop
         """
         from_address = self.get_signer_address()
-        self.__abi_module.safe_transfer_from(from_address, to, token_id)
-
-    def total_unclaimed_supply(self):
-        return self.__abi_module.next_token_id.call() - self.__abi_module.next_mint_token_id.call()
-
-    def balance_of(self, address: str):
-        """
-        :param address: Address of the owner
-        :return: Balance of the owner
-        Gets the balance of the owner
-        """
-        return self.__abi_module.balance_of.call(address)
-
-    def balance(self):
-        """
-        :return: Balance of the module
-        Gets the balance of the module
-        """
-        return self.balance_of(self.get_signer_address())
-
-    def total_claimed_supply(self):
-        """
-        :return: Total claimed supply of drops
-        Gets the total claimed supply of drops
-        """
-        return self.__abi_module.next_mint_token_id.call()
-
-    def lazy_mint_batch(self, uris: list):
-        """
-        :param uris: List of uris to mint
-        :return: List of minted drops
-        Mints a batch of drops
-        """
-        return self.__abi_module.lazy_mint_batch.call(uris)
-
-    def lazy_mint_amount(self, amount: int):
-        """
-        :param amount: Amount of drops to mint
-        :return: List of minted drops
-        Mints a batch of drops
-        """
-        return self.__abi_module.lazy_mint_amount.call(amount)
-
-    def lazy_mint(self, metadata):
-        self.lazy_mint_batch([metadata])
+        tx = self.__abi_module.transfer.build_transaction(
+            from_address, to, token_id, amount, data)
+        self.execute_tx(tx)
 
     def get_metadata(self):
         """
@@ -239,17 +200,30 @@ class DropModule(BaseModule):
         """
         return self.__abi_module.get_metadata.call()
 
-    def set_claim_condition(self, factory):
+    def set_claim_condition(self, token_id: int, factory):
         """
-        :param condition: Claim condition
-        Sets the mint condition
+        :param token_id: ID of the drop
+        :param factory: Factory of the condition
+        :return:
+        Sets the claim condition of a drop
         """
+        conditions = [{
+            "start_timestamp": x.start_timestamp,
+            "max_claim_supply": x.max_claim_supply,
+            "supply_claimed": x.supply_claimed,
+            "quantity_limit_per_transaction": x.quantity_limit_per_transaction,
+            "wait_time_in_seconds_between_claims": x.wait_time_in_seconds_per_transaction,
+            "price_per_token": x.price_per_token,
+            "currency": x.currency if x.currency != "0x0000000000000000000000000000000000000000" else "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "merkle_root": x.merkle_root
+        } for x in factory.build_conditions()]
+
         merkle_info = {}
         for x in factory.allSnapshots():
-            merkle_info[x.merkle_root] = x.merkle_path
+            merkle_info[x.merkle_root] = x.snapshot_uri
         metadata = self.get_metadata()
         if not metadata:
-            return Exception("No metadata")
+            raise Exception("Metadata is not set, this should never happen")
         if len(factory.allSnapshots()) == 0 and 'merkle' in metadata:
             metadata["merkle"] = {}
         else:
@@ -260,73 +234,48 @@ class DropModule(BaseModule):
         from_address = self.get_signer_address()
         return self.execute_tx(self.__abi_module.set_claim_condition.call(factory.get_claim_condition(), metadata_uri, from_address))
 
-    def set_mint_conditions(self, factory):
-        return self.set_claim_conditions(factory)
-
-    def can_claim(self, quantity: int, proofs: list):
-        """
-        :param quantity: Amount of drops to claim
-        :param proofs: List of proofs
-        :return: True if can claim
-        Checks if can claim
-        """
-        try:
-            mc = self.get_active_claim_condition()
-            overrides = {}  # todo overrides
-            if mc.price_per_token.gt(0):
-                if mc.currency == "0x0000000000000000000000000000000000000000":
-                    overrides['value'] = mc.price_per_token * quantity
-                else:
-                    owner = self.get_signer_address()
-                    spender = self.address
-                    allowance = self.__abi_module.allowance.call(
-                        owner, spender)  # todo erc20 module
-                    total_price = mc.price_per_token * quantity
-                    if allowance < total_price:
-                        return Exception("Not enough allowance")
-
-            self.__abi_module.claim.call(quantity, proofs, overrides)
-            return True
-        except:
-            return False
-
-    def claim(self, quantity: int, proofs: list):
+    def claim(self, token_id: int, quantity: int, proofs: list):
         mc = self.get_active_claim_condition()
+        # todo overrides
+        address_to_claim = self.get_signer_address()
         metadata = self.get_metadata()
         address_to_claim = self.get_signer_address()
         if not (mc.merkle_root.startswith("0x0000000000000000000000000000000000000000")):
             snapshot = self.get_storage().get(metadata.merkle[mc.merkle_root])
-            snapshot_data = json.loads(snapshot)
+            snapshot_data = json.loads(snapshot)  # deserialize
             item = list(
                 filter(lambda x: x["address"] == address_to_claim, snapshot_data))
             if item is None:
                 return Exception("No claim for this address")
             proofs = item.proof
+        if mc.price_per_token > 0:
+            if is_native_currency(mc.currency):  # todo
+                overrides["value"] = mc.price_per_token * quantity
+            else:
+                pass  # todo erc20 faactory
+        tx = self.__abi_module.claim.build_transaction(
+            token_id, quantity, proofs)
+        return self.execute_tx(tx)  # todo overrides
 
-    def pin_to_ipfs(self, files: list):
-        """
-        :param files: List of files to pin
-        :return: Pinned data
-        :examples: >>> pin_to_ipfs([open("/home/user/image0.png", "rb"), open("/home/user/image1.png", "rb")])
-        Pins data to IPFS
-        """
-        return self.get_storage().upload_batch(files)
-
-    def burn(self, token_id: int):
+    def burn(self, token_id: int, amount: int):
         """
         :param token_id: ID of the drop
         Burns a drop
         """
-        return self.execute_tx(self.__abi_module.burn.call(token_id))
+        return self.execute_tx(self.__abi_module.burn.call(self.get_signer_address(), token_id, amount))
 
-    def transfer_from(self, transfer_from: str, to: str, token_id: int):
+    def transfer_from(self, transfer_from: str, to: str, token_id: int, amount: int, data: bytes):
         """
-        :param transfer_from: Address of the owner
-        :param to: Address of the new owner
+        :param transfer_from: Address of the sender
+        :param to: Address of the recipient
         :param token_id: ID of the drop
-        Transfers a drop
+        :param amount: Amount of the drop
+        :param data: Data to be stored
+        Transfers a drop from one user to another
         """
-        return self.execute_tx(self.__abi_module.transfer_from.call(transfer_from, to, token_id))
+        tx = self.__abi_module.transfer_from.build_transaction(
+            transfer_from, to, token_id, amount, data)
+        return self.execute_tx(tx)
 
     def set_module_metadata(self, metadata: str):
         """
@@ -342,7 +291,7 @@ class DropModule(BaseModule):
         )
         self.execute_tx(tx)
 
-    def set_royalty_bps(self, amount: int):
+    def set_royalty_bps(self, amount: int):  # todo multicall
         """
         :param amount: the amount of BPS to set
         :return: the metadata of the token
@@ -370,17 +319,24 @@ class DropModule(BaseModule):
         )
         self.execute_tx(tx)
 
-    def set_max_total_supply(self, amount: int):
+    def set_restricted_transfer(self, restricted: bool):
         """
-        :param amount: The amount to set
+        :param restricted: Whether the transfer is restricted
         :return: The transaction hash
 
-        Sets the max total supply for the NFT
+        Sets whether the transfer is restricted
         """
-        tx = self.__abi_module.set_max_total_supply.build_transaction(
-            amount, self.get_transact_opts()
+        tx = self.__abi_module.set_restricted_transfer.build_transaction(
+            restricted, self.get_transact_opts()
         )
         self.execute_tx(tx)
+
+    def get_royalty_bps(self):
+        """
+        :return: The royalty percentage
+        Gets the royalty percentage for the NFT
+        """
+        return self.__abi_module.royalty_bps.call()
 
     def get_royalty_recipient_address(self):
         """
@@ -391,3 +347,42 @@ class DropModule(BaseModule):
         if 'fee_recipient' not in metadata.metadata:
             return metadata['fee_recipient']
         return ""
+
+    def get_claim_conditions_factory(self):
+        """
+        :return: The address of the factory
+        Gets the address of the factory
+        """
+        # todo
+        pass
+
+    def get_all_claimer_addresses(self, token_id: int):
+        """
+        :param token_id: The ID of the drop
+        :return: The list of claimers
+        Gets the list of claimers for the drop
+        """
+        # todo
+        pass
+
+    def can_claim(self, token_id: int, quantity: int):
+        """
+        :param token_id: The ID of the drop
+        :return: Whether the drop can be claimed
+        Checks whether the drop can be claimed
+        """
+        try:
+            mc = self.get_active_claim_condition()
+            proofs = self.get_claimer_proofs(mc.merkle_root)
+            overrides = {}  # todo
+            if mc.price_per_token > 0:
+                if is_native_currency(mc.currency):
+                    overrides["value"] = mc.price_per_token * quantity
+                else:
+                    pass  # todo
+            self.__abi_module.claim.call_static(
+                token_id, quantity, proofs, overrides)
+            return True
+        except:
+            return False
+        pass
