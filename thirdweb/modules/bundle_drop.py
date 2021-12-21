@@ -50,6 +50,7 @@ class DropModule(BaseModule):
     def get_token_metadata(self, token_id: int):
         # todo
         pass
+
     def get_all(self, query: Query = None):  # todo
         """
         :param query: Query object
@@ -179,7 +180,7 @@ class DropModule(BaseModule):
             metadatas, self.address, start_file_number)  # todo upload metadata batch
 
         tx = self.__abi_module.lazy_mint.build_transaction(
-            len(metadatas), base_uri)
+            len(metadatas), base_uri,  self.get_transact_opts())
         receipt = self.execute_tx(tx)
         return receipt  # todo event parsing
 
@@ -201,7 +202,7 @@ class DropModule(BaseModule):
         """
         from_address = self.get_signer_address()
         tx = self.__abi_module.transfer.build_transaction(
-            from_address, to, token_id, amount, data)
+            from_address, to, token_id, amount, data,  self.get_transact_opts())
         self.execute_tx(tx)
 
     def get_metadata(self):
@@ -243,7 +244,7 @@ class DropModule(BaseModule):
         metadata_uri = self.get_storage().upload_metadata(metadata)
         # todo multicall
         from_address = self.get_signer_address()
-        return self.execute_tx(self.__abi_module.set_claim_condition.build_transaction(factory.get_claim_condition(), metadata_uri, from_address))
+        return self.execute_tx(self.__abi_module.set_claim_condition.build_transaction(factory.get_claim_condition(), metadata_uri, from_address,  self.get_transact_opts()))
 
     def claim(self, token_id: int, quantity: int, proofs: list):
         mc = self.get_active_claim_condition()
@@ -265,7 +266,7 @@ class DropModule(BaseModule):
             else:
                 pass  # todo erc20 faactory
         tx = self.__abi_module.claim.build_transaction(
-            token_id, quantity, proofs)
+            token_id, quantity, proofs,  self.get_transact_opts())
         return self.execute_tx(tx)  # todo overrides
 
     def burn(self, token_id: int, amount: int):
@@ -273,7 +274,7 @@ class DropModule(BaseModule):
         :param token_id: ID of the drop
         Burns a drop
         """
-        return self.execute_tx(self.__abi_module.burn.build_transaction(self.get_signer_address(), token_id, amount))
+        return self.execute_tx(self.__abi_module.burn.build_transaction(self.get_signer_address(), token_id, amount,  self.get_transact_opts()))
 
     def transfer_from(self, transfer_from: str, to: str, token_id: int, amount: int, data: bytes):
         """
@@ -285,7 +286,7 @@ class DropModule(BaseModule):
         Transfers a drop from one user to another
         """
         tx = self.__abi_module.transfer_from.build_transaction(
-            transfer_from, to, token_id, amount, data)
+            transfer_from, to, token_id, amount, data,  self.get_transact_opts())
         return self.execute_tx(tx)
 
     def set_module_metadata(self, metadata: str):

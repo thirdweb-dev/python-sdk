@@ -328,7 +328,7 @@ class DropModule(BaseModule):
         :param token_id: ID of the drop
         Burns a drop
         """
-        return self.execute_tx(self.__abi_module.burn.build_transaction(token_id))
+        return self.execute_tx(self.__abi_module.burn.build_transaction(token_id), self.get_transact_opts())
 
     def transfer_from(self, transfer_from: str, to: str, token_id: int):
         """
@@ -337,7 +337,7 @@ class DropModule(BaseModule):
         :param token_id: ID of the drop
         Transfers a drop
         """
-        return self.execute_tx(self.__abi_module.transfer_from.build_transaction(transfer_from, to, token_id))
+        return self.execute_tx(self.__abi_module.transfer_from.build_transaction(transfer_from, to, token_id),  self.get_transact_opts())
 
     def set_module_metadata(self, metadata: str):
         """
@@ -374,7 +374,7 @@ class DropModule(BaseModule):
         )
         self.execute_tx(tx)
         tx = self.__abi_module.set_contract_uri.build_transaction(
-            uri
+            uri,  self.get_transact_opts()
         )
         self.execute_tx(tx)
 
@@ -442,6 +442,6 @@ class DropModule(BaseModule):
             len(metadatas), self.get_transact_opts()
         )
         self.execute_tx(tx)
-    
+
     def can_create_batch(self):
         return (self.__abi_module.next_mint_token_id.call() == 0)
