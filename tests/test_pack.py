@@ -1,4 +1,4 @@
-from thirdweb import ThirdwebSdk, SdkOptions, MintArg, CreatePackArg, AssetAmountPair
+from thirdweb import ThirdwebSdk, SdkOptions
 from dotenv import load_dotenv
 import os
 
@@ -27,4 +27,4 @@ pack_module = sdk.get_pack_module(pack_contract)
 # ))
 
 pack_module.deposit_link(1)
-print(pack_module.get_link_balance())
+print(pack_module.open_pack(1))

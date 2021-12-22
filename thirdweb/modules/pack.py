@@ -203,11 +203,8 @@ class PackModule(BaseModule):
         ))
 
     def get_link_balance(self, pack_id: int) -> CurrencyValue:
-        uri = self.__abi_module.uri.call(pack_id)
-        if uri == "":
-            raise AssetNotFoundException(pack_id)
-        self.__abi_module.open_pack.call(pack_id)
-        return self.get_storage().get(uri)
+
+        pass
 
     def deposit_link(self, amount: int):
         """
