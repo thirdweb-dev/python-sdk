@@ -4,11 +4,11 @@ import os
 
 
 #network = "https://polygon-rpc.com"
-network = "https://rpc-mumbai.maticvigil.com"
+network = "https://rinkeby-light.eth.linkpool.io/"
 sdk = ThirdwebSdk(SdkOptions(), network)
 
 load_dotenv()
-PRIVATE_KEY = os.getenv('PKEY')
+PRIVATE_KEY = os.getenv('PRIVATE_KEY')
 
 sdk.set_private_key(PRIVATE_KEY)
 
