@@ -202,14 +202,12 @@ class PackModule(BaseModule):
             from_address, to_address, ids, amounts, "", self.get_transact_opts(),
         ))
 
-    def get_link_balance(self) -> CurrencyValue:
-        """
-        :return: The balance of the pack.
-
-        WIP: This method is not ready to be called.
-
-        """
-        pass
+    def get_link_balance(self, pack_id: int) -> CurrencyValue:
+        uri = self.__abi_module.uri.call(pack_id)
+        if uri == "":
+            raise AssetNotFoundException(pack_id)
+        self.__abi_module.open_pack.call(pack_id)
+        return self.get_storage().get(uri)
 
     def deposit_link(self, amount: int):
         """
