@@ -26,5 +26,5 @@ pack_module = sdk.get_pack_module(pack_contract)
 #     seconds_until_open_start=0,
 # ))
 
-pack_module.deposit_link(5)
-print(pack_module.open_pack(1))
+pack_module.deposit_link(1)
+print(pack_module.get_link_balance())
