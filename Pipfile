@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+web3 = "*"
+thirdweb-web3 = "*"
+thirdweb-contract-wrappers = "*"
+dataclasses-json = "*"
+requests = "*"
+
+[dev-packages]
