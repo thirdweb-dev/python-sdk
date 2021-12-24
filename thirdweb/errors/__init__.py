@@ -20,4 +20,3 @@ class UnsupportedAssetException(Exception):
 class UploadError(Exception):
     def __init__(self, message: str):
         super().__init__(f"There was an error while uploading the image : {message}")
-

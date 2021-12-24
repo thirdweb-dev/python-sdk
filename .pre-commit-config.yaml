@@ -1,0 +1,26 @@
+repos:
+  - repo: local
+    hooks:
+      - id: flake8
+        name: Flake8
+        description: Run flake8 checks on the code
+        entry: pipenv run flake8
+        language: python
+        types: [python]
+        require_serial: true
+
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.9.0
+    hooks:
+      - id: python-check-blanket-noqa
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: mixed-line-ending
+        args: [--fix=lf]

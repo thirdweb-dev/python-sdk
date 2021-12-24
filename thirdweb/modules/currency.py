@@ -61,7 +61,7 @@ class CurrencyModule(BaseModule):
         return self.__abi_module.balance_of.call(address)
 
     def balance(self) -> int:
-        """ 
+        """
         :return: The balance of the current address
 
         Gets the balance of the current address
@@ -69,7 +69,7 @@ class CurrencyModule(BaseModule):
         return self.__abi_module.balance_of.call(self.get_signer_address())
 
     def allowance(self, spender: str) -> int:
-        """ 
+        """
         :param spender: The address to get the allowance of
         :return: The allowance of the current address
 
@@ -79,7 +79,7 @@ class CurrencyModule(BaseModule):
         return self.__abi_module.allowance.call(self.get_signer_address(), spender)
 
     def allowance_of(self, owner: str, spender: str) -> int:
-        """ 
+        """
         :param owner: The address to get the allowance of
         :param spender: The address to get the allowance of
         :return: The allowance of the current address
@@ -90,7 +90,7 @@ class CurrencyModule(BaseModule):
         return self.__abi_module.allowance.call(owner, spender)
 
     def set_allowance(self, spender: str, amount: int):
-        """ 
+        """
         :param spender: The address to set the allowance of
         :param amount: The amount to set the allowance to
         :return: The transaction receipt
@@ -102,7 +102,7 @@ class CurrencyModule(BaseModule):
         ))
 
     def mint_to(self, to: str, amount: int):
-        """ 
+        """
         :param to: The address to mint to
         :param amount: The amount to mint
 
@@ -114,7 +114,7 @@ class CurrencyModule(BaseModule):
         ))
 
     def mint(self, amount: int):
-        """ 
+        """
         :param amount: The amount to mint
         :return: The transaction hash
 
@@ -126,7 +126,7 @@ class CurrencyModule(BaseModule):
         ))
 
     def burn(self, amount: int):
-        """ 
+        """
         :param amount: The amount to burn
         :return: The transaction hash
 
@@ -138,7 +138,7 @@ class CurrencyModule(BaseModule):
         ))
 
     def burn_from(self, from_address: str, amount: int):
-        """ 
+        """
         :param from_address: The address to burn from
         :param amount: The amount to burn
         :return: The transaction hash
@@ -151,7 +151,7 @@ class CurrencyModule(BaseModule):
         ))
 
     def transfer_from(self, from_address: str, to_address: str, amount: int):
-        """ 
+        """
         :param from_address: The address to transfer from
         :param to_address: The address to transfer to
         :param amount: The amount to transfer
@@ -176,7 +176,7 @@ class CurrencyModule(BaseModule):
         ))
 
     def get_value(self, value: int) -> Currency:
-        """ 
+        """
         :param value: The value to get
         :return: The value of the given amount
 
@@ -186,7 +186,7 @@ class CurrencyModule(BaseModule):
         return self.__get_currency_value(self.address, value)
 
     def __get_currency_value(self, asset_address: str, price: int) -> CurrencyValue:
-        """ 
+        """
         :param asset_address: The address of the asset
         :param price: The price of the asset
 
@@ -204,7 +204,7 @@ class CurrencyModule(BaseModule):
 
     @staticmethod
     def format_units(value: int, decimals: int) -> str:
-        """ 
+        """
         :param value: The value to format
         :param decimals: The number of decimals
         :return: The formatted amount
@@ -217,7 +217,7 @@ class CurrencyModule(BaseModule):
         return f'{val:.{decimals}f}'
 
     def __get_currency_metadata(self, asset_address: str) -> Currency:
-        """ 
+        """
         Gets the metadata of the given asset
         """
         if asset_address.lower().startswith("0x0000000000000000000000000000000000000000"):

@@ -44,7 +44,7 @@ class NftModule(BaseModule):
         :param arg: the `MintArg` object
         :return: the metadata of the token
 
-        Mints a new token to the signer. 
+        Mints a new token to the signer.
         - Arguments passed: Note, a class is used -> MintArg(name, description, image_uri, properties)
         - Returns the `NftMetadata(name,description,image,properties,id,uri)`
         """
@@ -63,7 +63,7 @@ class NftModule(BaseModule):
 
         Mints a new token to an address
         - Arguments passed: `to_address` and a class -> `MintArg(name, description, image_uri, properties)`
-        - Returns the `NftMetadata(name,description,image,properties,id,uri)` 
+        - Returns the `NftMetadata(name,description,image,properties,id,uri)`
         """
         final_properties: Dict
         if arg.properties is None:
@@ -261,7 +261,7 @@ class NftModule(BaseModule):
 
         Returns balance of the given addressss
         - Use-case: Use this method if you don't want to use the connected wallet, but want to check another wallet.
-        - Dashboard: Project ➝ NFT Module ➝ Total amount of NFT's 
+        - Dashboard: Project ➝ NFT Module ➝ Total amount of NFT's
         """
         return self.__abi_module.balance_of.call(address)
 

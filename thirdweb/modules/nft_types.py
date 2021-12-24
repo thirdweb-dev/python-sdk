@@ -14,4 +14,3 @@ class MintArg:
     image: Union[str, io.TextIOWrapper] = ""
     properties: Optional[dict] = None
     image_uri: str = ""
-

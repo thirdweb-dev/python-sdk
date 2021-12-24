@@ -44,4 +44,3 @@ sdk = ThirdwebSdk(SdkOptions(), "https://rpc-mumbai.maticvigil.com")
 ```
 
 Notice on line 5 that we passed in the RPC URL for the *Polygon Mumbai (testnet)* chain.
-

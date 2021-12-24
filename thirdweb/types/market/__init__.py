@@ -27,7 +27,7 @@ class ListArg:
 
 @dataclass
 class Filter:
-    """ 
+    """
     Filter for the list_all method.
     """
     seller: Optional[str] = None

@@ -11,3 +11,14 @@ dataclasses-json = "*"
 requests = "*"
 
 [dev-packages]
+flake8 = "*"
+flake8-annotations = "*"
+autopep8 = "*"
+flake8-bugbear = "*"
+flake8-import-order = "*"
+pre-commit = "*"
+
+[scripts]
+precommit = "pre-commit install"
+lint = "pre-commit run --all-files"
+tests = "python -m unittest"

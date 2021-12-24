@@ -13,7 +13,7 @@ class Currency:
 
 @dataclasses.dataclass
 class CurrencyValue(Currency):
-    """ 
+    """
     Type for currency values.
     """
     value: str

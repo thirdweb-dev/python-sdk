@@ -42,4 +42,3 @@ class CreateBundleArg:
 class MintBundleArg:
     token_id: Optional[int] = None
     amount: Optional[int] = None
-

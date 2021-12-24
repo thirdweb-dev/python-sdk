@@ -176,7 +176,7 @@ class BundleModule(BaseModule):
         :param token_amount: The amount of tokens to mint
         :param metadata: The metadata to be stored
 
-        WIP: This method is not yet complete. 
+        WIP: This method is not yet complete.
 
         """
         if token_contract == "" or token_contract is None or not self.get_client().isAddress(token_contract):
