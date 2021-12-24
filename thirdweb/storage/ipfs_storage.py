@@ -1,11 +1,7 @@
+from requests import get, post
 
 from .util import replace_ipfs_prefix_with_gateway
-from requests import get, post
-import json
-import io
 from ..errors import UploadError
-
-import base64
 
 
 class IpfsStorage:
@@ -33,18 +29,26 @@ class IpfsStorage:
     def upload(self, data, contract_address: str, signer_address: str) -> str:
         if isinstance(data, str) and data.startswith("ipfs://"):
             return data
-        form = {
-            'file': data
-        }
-        result = post(f'{self.__nftlabsApiUrl}/upload', files=form, headers={
-            'X-App-Name': f'CONSOLE-PYTHON-SDK-{contract_address}',
-            'X-Public-Address': signer_address,
-        })
+
+        form = {"file": data}
+
+        result = post(
+            f"{self.__nftlabsApiUrl}/upload",
+            files=form,
+            headers={
+                "X-App-Name": f"CONSOLE-PYTHON-SDK-{contract_address}",
+                "X-Public-Address": signer_address,
+            },
+        )
+
         if result.status_code != 200:
             raise UploadError(result.text)
-        response = result.json()
-        return response['IpfsUri']
 
-    def upload_metadata(self, metadata: str, contract_address: str, signer_address: str) -> str:
+        response = result.json()
+        return response["IpfsUri"]
+
+    def upload_metadata(
+        self, metadata: str, contract_address: str, signer_address: str
+    ) -> str:
         if type(metadata) == str:
             return self.upload(metadata, contract_address, signer_address)

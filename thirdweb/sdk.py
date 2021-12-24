@@ -17,14 +17,17 @@ from .storage import IpfsStorage
 
 
 def set_default_account(func):
-    '''
+    """
     Sets the default account on all modules
-    '''
+    """
 
     @wraps(func)
     def wrapper(self, *args, **kwargs):
-        self.client.eth.defaultAccount = args[0] if self.signer_address == "" else self.signer_address
+        self.client.eth.defaultAccount = (
+            args[0] if self.signer_address == "" else self.signer_address
+        )
         return func(self, *args, **kwargs)
+
     return wrapper
 
 
@@ -60,8 +63,10 @@ class ThirdwebSdk(object):
             self.set_private_key(self.options.private_key)
 
         self.storage = IpfsStorage(
-            options.ipfs_gateway_url if options.ipfs_gateway_url
-            else "https://ipfs.io/ipfs/")
+            options.ipfs_gateway_url
+            if options.ipfs_gateway_url
+            else "https://ipfs.io/ipfs/"
+        )
 
         self.client = Web3(HTTPProvider(url))
         if not self.client.isConnected():
@@ -166,8 +171,7 @@ class ThirdwebSdk(object):
     def __get_transact_ops(self) -> TxParams:
         return TxParams(
             from_=self.__get_signer_address(),
-            gas_price=self.client.toWei(
-                self.options.max_gas_price_in_gwei, 'gwei')
+            gas_price=self.client.toWei(self.options.max_gas_price_in_gwei, "gwei"),
         )
 
     def __get_account(self) -> Optional[LocalAccount]:

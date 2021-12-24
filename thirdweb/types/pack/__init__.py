@@ -1,11 +1,9 @@
-"""
-Types for Pack module.
-"""
-
+"""Types for Pack module."""
 from dataclasses import dataclass
 from datetime import datetime
+from typing import List, Union
+
 from ..nft import NftMetadata
-from typing import Union, List
 
 
 @dataclass
@@ -40,6 +38,7 @@ class CreatePackArg:
         rewards_per_open: The number of tokens that will be awarded when opening the pack
         seconds_until_open_start: The number of seconds the pack is allowed to be opened
     """
+
     asset_contract_address: str
     metadata: Union[str, dict]
     assets: List[AssetAmountPair]

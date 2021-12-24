@@ -1,1 +1,1 @@
-from .ipfs_storage import *
+from .ipfs_storage import IpfsStorage

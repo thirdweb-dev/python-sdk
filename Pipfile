@@ -17,6 +17,7 @@ autopep8 = "*"
 flake8-bugbear = "*"
 flake8-import-order = "*"
 pre-commit = "*"
+thirdweb-sdk = {editable = true, path = "."}
 
 [scripts]
 precommit = "pre-commit install"

@@ -6,6 +6,7 @@ import dataclasses
 @dataclasses.dataclass
 class Currency:
     """Currency class."""
+
     name: str
     symbol: str
     decimals: int
@@ -16,5 +17,6 @@ class CurrencyValue(Currency):
     """
     Type for currency values.
     """
+
     value: str
     display_value: str

@@ -1,15 +1,13 @@
 """ Interact with the NFT module of the app"""
 import copy
-import json
 from typing import Dict, List
-import io
 
 from thirdweb_web3 import Web3
 
+from .base import BaseModule
 from ..abi.nft import NFT
 from ..types.nft import MintArg
 from ..types.nft import NftMetadata as NftType
-from .base import BaseModule
 
 
 class NftModule(BaseModule):
@@ -50,11 +48,7 @@ class NftModule(BaseModule):
         """
         return self.mint_to(self.get_signer_address(), arg)
 
-    def mint_to(
-        self,
-        to_address: str,
-        arg: MintArg,
-    ) -> NftType:
+    def mint_to(self, to_address: str, arg: MintArg,) -> NftType:
         """
         :param to_address: the address to mint the token to
         :param arg: the `name`, `description`, `image_uri`, `properties` of the token
@@ -75,10 +69,10 @@ class NftModule(BaseModule):
             arg.image = arg.image_uri
 
         meta = {
-            'name': arg.name,
-            'description': arg.description,
-            'image': arg.image,
-            'properties': final_properties
+            "name": arg.name,
+            "description": arg.description,
+            "image": arg.image,
+            "properties": final_properties,
         }
 
         uri = self.upload_metadata(meta)
@@ -123,8 +117,7 @@ class NftModule(BaseModule):
         """
         uri = self.__abi_module.token_uri.call(token_id)
         if uri == "":
-            raise Exception(
-                "Could not find NFT metadata, are you sure it exists?")
+            raise Exception("Could not find NFT metadata, are you sure it exists?")
         return uri
 
     def mint_batch(self, args: List[MintArg]):
@@ -144,12 +137,17 @@ class NftModule(BaseModule):
 
         Mints a batch of tokens to the given address
         """
-        uris = [self.upload_metadata({
-            'name': arg.name,
-            'description': arg.description,
-            'image': arg.image,
-            'properties': arg.properties if arg.properties is not None else {}
-        }) for arg in args]
+        uris = [
+            self.upload_metadata(
+                {
+                    "name": arg.name,
+                    "description": arg.description,
+                    "image": arg.image,
+                    "properties": arg.properties if arg.properties is not None else {},
+                }
+            )
+            for arg in args
+        ]
 
         tx = self.__abi_module.mint_nft_batch.build_transaction(
             to_address, uris, self.get_transact_opts()

@@ -3,10 +3,10 @@ Interact with the Currency module of the app.
 """
 from thirdweb_web3 import Web3
 
+from .base import BaseModule
 from ..abi.coin import Coin
 from ..abi.erc20 import ERC20
 from ..types.currency import Currency, CurrencyValue
-from .base import BaseModule
 
 
 class CurrencyModule(BaseModule):
@@ -97,9 +97,11 @@ class CurrencyModule(BaseModule):
 
         Sets the allowance of the current address
         """
-        return self.execute_tx(self.__abi_module.approve.build_transaction(
-            spender, amount, self.get_transact_opts()
-        ))
+        return self.execute_tx(
+            self.__abi_module.approve.build_transaction(
+                spender, amount, self.get_transact_opts()
+            )
+        )
 
     def mint_to(self, to: str, amount: int):
         """
@@ -109,9 +111,11 @@ class CurrencyModule(BaseModule):
         Mints the given amount to the given address
 
         """
-        return self.execute_tx(self.__abi_module.mint.build_transaction(
-            to, amount, self.get_transact_opts()
-        ))
+        return self.execute_tx(
+            self.__abi_module.mint.build_transaction(
+                to, amount, self.get_transact_opts()
+            )
+        )
 
     def mint(self, amount: int):
         """
@@ -121,9 +125,11 @@ class CurrencyModule(BaseModule):
         Mints the given amount to the current address
 
         """
-        return self.execute_tx(self.__abi_module.mint.build_transaction(
-            self.get_signer_address(), amount, self.get_transact_opts()
-        ))
+        return self.execute_tx(
+            self.__abi_module.mint.build_transaction(
+                self.get_signer_address(), amount, self.get_transact_opts()
+            )
+        )
 
     def burn(self, amount: int):
         """
@@ -133,9 +139,9 @@ class CurrencyModule(BaseModule):
         Burns the given amount from the current address
 
         """
-        return self.execute_tx(self.__abi_module.burn.build_transaction(
-            amount, self.get_transact_opts()
-        ))
+        return self.execute_tx(
+            self.__abi_module.burn.build_transaction(amount, self.get_transact_opts())
+        )
 
     def burn_from(self, from_address: str, amount: int):
         """
@@ -146,9 +152,11 @@ class CurrencyModule(BaseModule):
         Burns the given amount from the current address
 
         """
-        return self.execute_tx(self.__abi_module.burn_from.build_transaction(
-            from_address, amount, self.get_transact_opts()
-        ))
+        return self.execute_tx(
+            self.__abi_module.burn_from.build_transaction(
+                from_address, amount, self.get_transact_opts()
+            )
+        )
 
     def transfer_from(self, from_address: str, to_address: str, amount: int):
         """
@@ -158,9 +166,11 @@ class CurrencyModule(BaseModule):
 
         Transfers the given amount from the current address
         """
-        return self.execute_tx(self.__abi_module.transfer_from.build_transaction(
-            from_address, to_address, amount, self.get_transact_opts()
-        ))
+        return self.execute_tx(
+            self.__abi_module.transfer_from.build_transaction(
+                from_address, to_address, amount, self.get_transact_opts()
+            )
+        )
 
     def set_module_metadata(self, metadata: str):
         """
@@ -170,10 +180,13 @@ class CurrencyModule(BaseModule):
         Sets the metadata for the module
         """
         uri = self.get_storage().upload_metadata(
-            metadata, self.address, self.get_signer_address())
-        self.execute_tx(self.__abi_module.set_contract_uri.build_transaction(
-            uri, self.get_transact_opts()
-        ))
+            metadata, self.address, self.get_signer_address()
+        )
+        self.execute_tx(
+            self.__abi_module.set_contract_uri.build_transaction(
+                uri, self.get_transact_opts()
+            )
+        )
 
     def get_value(self, value: int) -> Currency:
         """
@@ -199,7 +212,7 @@ class CurrencyModule(BaseModule):
             decimals=metadata.decimals,
             symbol=metadata.symbol,
             value=str(price),
-            display_value=self.format_units(price, metadata.decimals)
+            display_value=self.format_units(price, metadata.decimals),
         )
 
     @staticmethod
@@ -212,22 +225,24 @@ class CurrencyModule(BaseModule):
         Formats the given amount
 
         """
-        decimal_transformer = float(10**decimals)
+        decimal_transformer = float(10 ** decimals)
         val = float(value) / decimal_transformer
-        return f'{val:.{decimals}f}'
+        return f"{val:.{decimals}f}"
 
     def __get_currency_metadata(self, asset_address: str) -> Currency:
         """
         Gets the metadata of the given asset
         """
-        if asset_address.lower().startswith("0x0000000000000000000000000000000000000000"):
+        if asset_address.lower().startswith(
+            "0x0000000000000000000000000000000000000000"
+        ):
             return Currency(name="", symbol="", decimals=0)
 
         erc20_module = ERC20(self.get_client(), asset_address)
         return Currency(
             name=erc20_module.name.call(),
             symbol=erc20_module.symbol.call(),
-            decimals=erc20_module.decimals.call()
+            decimals=erc20_module.decimals.call(),
         )
 
     def set_restricted_transfer(self, restricted: bool = True):

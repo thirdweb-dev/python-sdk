@@ -5,9 +5,10 @@ from typing import List
 
 from thirdweb_web3 import Web3
 
-from ..abi.erc20 import ERC20
+from . import BaseModule
 from ..abi.erc1155 import ERC1155
-from ..abi.market import Market, MarketListing
+from ..abi.erc20 import ERC20
+from ..abi.market import Market
 from ..abi.nft import NFT
 from ..constants import ZeroAddress
 from ..errors import AssetNotFoundException, UnsupportedAssetException
@@ -16,7 +17,6 @@ from ..modules.nft import NftModule
 from ..types.currency import CurrencyValue
 from ..types.listing import Listing
 from ..types.market import Filter, ListArg, MarketListing
-from . import BaseModule
 
 
 class MarketModule(BaseModule):
@@ -33,7 +33,9 @@ class MarketModule(BaseModule):
     """
     __abi_module: Market
 
-    def __init__(self, address: str, client: Web3, ):
+    def __init__(
+        self, address: str, client: Web3,
+    ):
         """
         :param address: The address of the market contract.
         :param client: The web3 client.
@@ -76,10 +78,13 @@ class MarketModule(BaseModule):
                 seconds_until_end=arg.seconds_until_end,
                 seconds_until_start=arg.seconds_until_start,
                 tokens_per_buyer=arg.tokens_per_buyer,
-                tx_params=self.get_transact_opts()))
+                tx_params=self.get_transact_opts(),
+            )
+        )
         result = self.__abi_module.get_new_listing_event(
-            tx_hash=receipt.transactionHash.hex())
-        listing = result[0]['args']['listing']
+            tx_hash=receipt.transactionHash.hex()
+        )
+        listing = result[0]["args"]["listing"]
         return self.get(listing[0])
 
     def __approve_erc_1155(self, address: str) -> Listing:
@@ -88,23 +93,28 @@ class MarketModule(BaseModule):
         """
         from_address = self.get_signer_address()
         asset = ERC1155(self.get_client(), address)
-        approved = asset.is_approved_for_all.call(
-            from_address, self.address)
+        approved = asset.is_approved_for_all.call(from_address, self.address)
         if not approved:
             self.execute_tx(
-                asset.set_approval_for_all.build_transaction(self.address, True, self.get_transact_opts()))
+                asset.set_approval_for_all.build_transaction(
+                    self.address, True, self.get_transact_opts()
+                )
+            )
 
     def __approve_erc_721(self, address: str, token_id: int):
         from_address = self.get_signer_address()
         asset = NFT(self.get_client(), address)
-        approved = asset.is_approved_for_all.call(
-            from_address, self.address)
+        approved = asset.is_approved_for_all.call(from_address, self.address)
         if not approved:
-            is_token_approved = asset.get_approved.call(
-                token_id).lower() == self.address.lower()
+            is_token_approved = (
+                asset.get_approved.call(token_id).lower() == self.address.lower()
+            )
             if not is_token_approved:
-                self.execute_tx(asset.set_approval_for_all.build_transaction(
-                    self.address, True, self.get_transact_opts()))
+                self.execute_tx(
+                    asset.set_approval_for_all.build_transaction(
+                        self.address, True, self.get_transact_opts()
+                    )
+                )
 
     def unlist(self, listing_id, quantity):
         """
@@ -115,9 +125,7 @@ class MarketModule(BaseModule):
 
         """
         tx = self.__abi_module.unlist.build_transaction(
-            listing_id,
-            quantity,
-            self.get_transact_opts()
+            listing_id, quantity, self.get_transact_opts()
         )
         self.execute_tx(tx)
 
@@ -132,7 +140,6 @@ class MarketModule(BaseModule):
 
     def buy(self, listing_id: int, quantity: int):
         """
-
         :param listing_id: The listing ID.
         :param quantity: The quantity to buy.
 
@@ -143,24 +150,26 @@ class MarketModule(BaseModule):
         item = self.get(listing_id)
         owner = self.get_signer_address()
         spender = self.address
+
         total_price = item.pricePerToken * quantity
+
         if item.currency is not None and item.currency != ZeroAddress:
             erc20 = ERC20(self.get_client(), item.currency)
             allowance = erc20.allowance.call(owner, spender)
+
             if allowance < total_price:
-                tx = erc20.increase_allowance.build_transaction(spender,
-                                                                total_price,
-                                                                self.get_transact_opts())
+                tx = erc20.increase_allowance.build_transaction(
+                    spender, total_price, self.get_transact_opts()
+                )
                 self.execute_tx(tx)
 
         tx = self.__abi_module.buy.build_transaction(
-            listing_id,
-            quantity,
-            self.get_transact_opts()
+            listing_id, quantity, self.get_transact_opts()
         )
         receipt = self.execute_tx(tx)
-        result = self.__abi_module.get_new_sale_event(
-            tx_hash=receipt.transactionHash.hex())
+        self.__abi_module.get_new_sale_event(
+            tx_hash=receipt.transactionHash.hex()
+        )
 
     def set_market_fee_bps(self, amount: int):
         """
@@ -171,8 +180,8 @@ class MarketModule(BaseModule):
 
         """
         tx = self.__abi_module.set_market_fee_bps.build_transaction(
-            amount,
-            self.get_transact_opts())
+            amount, self.get_transact_opts()
+        )
         self.execute_tx(tx)
 
     def get(self, listing_id) -> Listing:
@@ -183,8 +192,7 @@ class MarketModule(BaseModule):
         Get the details about a listing.
 
         """
-        listing = MarketListing(
-            **self.__abi_module.get_listing.call(listing_id))
+        listing = MarketListing(**self.__abi_module.get_listing.call(listing_id))
         if listing.listingId != listing_id:
             raise AssetNotFoundException(identifier=listing_id)
         return self.__transform_result_to_listing(listing)
@@ -197,10 +205,11 @@ class MarketModule(BaseModule):
 
         """
         uri = self.get_storage().upload_metadata(
-            metadata, self.address, self.get_signer_address())
+            metadata, self.address, self.get_signer_address()
+        )
         tx = self.__abi_module.set_contract_uri.build_transaction(
-            uri,
-            self.get_transact_opts())
+            uri, self.get_transact_opts()
+        )
         self.execute_tx(tx)
 
     def get_listing(self, listing_id: int) -> Listing:
@@ -226,17 +235,14 @@ class MarketModule(BaseModule):
         elif filter.asset_contract is not None:
             if filter.token_id is not None:
                 return self.__abi_module.get_listings_by_asset.call(
-                    filter.asset_contract,
-                    filter.token_id
+                    filter.asset_contract, filter.token_id
                 )
             else:
                 return self.__abi_module.get_listings_by_asset_contract.call(
                     filter.asset_contract
                 )
         elif filter.seller is not None:
-            return self.__abi_module.get_listings_by_seller.call(
-                filter.seller
-            )
+            return self.__abi_module.get_listings_by_seller.call(filter.seller)
         else:
             return self.__abi_module.get_all_listings.call()
 
@@ -263,8 +269,7 @@ class MarketModule(BaseModule):
         if listing.currency == ZeroAddress:
             pass
         else:
-            currency_module = CurrencyModule(
-                listing.currency, self.get_client())
+            currency_module = CurrencyModule(listing.currency, self.get_client())
             currency_module.get_client = self.get_client
             currency = currency_module.get_value(listing.pricePerToken)
 

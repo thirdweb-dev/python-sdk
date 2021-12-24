@@ -1,16 +1,21 @@
 import os
+from pprint import pprint
 
 import nftlabs.options
 from nftlabs import NftlabsSdk
-from pprint import pprint
 from nftlabs.types.nft import MintArg
 from nftlabs.types import Role
 
+# Get the SDK options.
 options = nftlabs.options.SdkOptions()
+
+# Initialize SDK.
 sdk = NftlabsSdk(options, "https://rpc-mumbai.maticvigil.com")
 # sdk = NftlabsSdk(options, "https://polygon-rpc.com")
+
+# Get the private key.
 sdk.set_private_key(os.getenv("PKEY"))
-#
+
 # currency_module = sdk.get_currency_module("0xd75807e8D122A4DDF3bCCBB67fC33D8d78955726")
 #
 # pprint(currency_module.get_value(1))
@@ -21,7 +26,6 @@ sdk.set_private_key(os.getenv("PKEY"))
 # pprint(currency_module.total_supply())
 # pprint(currency_module.get())
 # pprint(currency_module.get_all_role_members())
-#
 
 # nft_module = sdk.get_nft_module("0x718526F74cD27bAc8ae256D2B94dB4a8c640C283")
 # print(nft_module.total_supply())

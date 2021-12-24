@@ -49,7 +49,13 @@ except ImportError:
 class AllowanceMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the allowance method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -57,20 +63,18 @@ class AllowanceMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, owner: str, spender: str):
         """Validate the inputs to the allowance method."""
         self.validator.assert_valid(
-            method_name='allowance',
-            parameter_name='owner',
-            argument_value=owner,
+            method_name="allowance", parameter_name="owner", argument_value=owner,
         )
         owner = self.validate_and_checksum_address(owner)
         self.validator.assert_valid(
-            method_name='allowance',
-            parameter_name='spender',
-            argument_value=spender,
+            method_name="allowance", parameter_name="spender", argument_value=spender,
         )
         spender = self.validate_and_checksum_address(spender)
         return (owner, spender)
 
-    def call(self, owner: str, spender: str, tx_params: Optional[TxParams] = None) -> int:
+    def call(
+        self, owner: str, spender: str, tx_params: Optional[TxParams] = None
+    ) -> int:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -78,11 +82,12 @@ class AllowanceMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (owner, spender) = self.validate_and_normalize_inputs(owner, spender)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(
-            owner, spender).call(tx_params.as_dict())
+        returned = self._underlying_method(owner, spender).call(tx_params.as_dict())
         return int(returned)
 
-    def send_transaction(self, owner: str, spender: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, owner: str, spender: str, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -91,13 +96,19 @@ class AllowanceMethod(ContractMethod):  # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(owner, spender).transact(tx_params.as_dict())
 
-    def build_transaction(self, owner: str, spender: str, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self, owner: str, spender: str, tx_params: Optional[TxParams] = None
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (owner, spender) = self.validate_and_normalize_inputs(owner, spender)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(owner, spender).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(owner, spender).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, owner: str, spender: str, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self, owner: str, spender: str, tx_params: Optional[TxParams] = None
+    ) -> int:
         """Estimate gas consumption of method call."""
         (owner, spender) = self.validate_and_normalize_inputs(owner, spender)
         tx_params = super().normalize_tx_params(tx_params)
@@ -107,7 +118,13 @@ class AllowanceMethod(ContractMethod):  # pylint: disable=invalid-name
 class ApproveMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the approve method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -115,21 +132,19 @@ class ApproveMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, spender: str, amount: int):
         """Validate the inputs to the approve method."""
         self.validator.assert_valid(
-            method_name='approve',
-            parameter_name='spender',
-            argument_value=spender,
+            method_name="approve", parameter_name="spender", argument_value=spender,
         )
         spender = self.validate_and_checksum_address(spender)
         self.validator.assert_valid(
-            method_name='approve',
-            parameter_name='amount',
-            argument_value=amount,
+            method_name="approve", parameter_name="amount", argument_value=amount,
         )
         # safeguard against fractional inputs
         amount = int(amount)
         return (spender, amount)
 
-    def call(self, spender: str, amount: int, tx_params: Optional[TxParams] = None) -> bool:
+    def call(
+        self, spender: str, amount: int, tx_params: Optional[TxParams] = None
+    ) -> bool:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -137,11 +152,12 @@ class ApproveMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (spender, amount) = self.validate_and_normalize_inputs(spender, amount)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(
-            spender, amount).call(tx_params.as_dict())
+        returned = self._underlying_method(spender, amount).call(tx_params.as_dict())
         return bool(returned)
 
-    def send_transaction(self, spender: str, amount: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, spender: str, amount: int, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -150,13 +166,19 @@ class ApproveMethod(ContractMethod):  # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(spender, amount).transact(tx_params.as_dict())
 
-    def build_transaction(self, spender: str, amount: int, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self, spender: str, amount: int, tx_params: Optional[TxParams] = None
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (spender, amount) = self.validate_and_normalize_inputs(spender, amount)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(spender, amount).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(spender, amount).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, spender: str, amount: int, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self, spender: str, amount: int, tx_params: Optional[TxParams] = None
+    ) -> int:
         """Estimate gas consumption of method call."""
         (spender, amount) = self.validate_and_normalize_inputs(spender, amount)
         tx_params = super().normalize_tx_params(tx_params)
@@ -166,7 +188,13 @@ class ApproveMethod(ContractMethod):  # pylint: disable=invalid-name
 class BalanceOfMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the balanceOf method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -174,12 +202,10 @@ class BalanceOfMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, account: str):
         """Validate the inputs to the balanceOf method."""
         self.validator.assert_valid(
-            method_name='balanceOf',
-            parameter_name='account',
-            argument_value=account,
+            method_name="balanceOf", parameter_name="account", argument_value=account,
         )
         account = self.validate_and_checksum_address(account)
-        return (account)
+        return account
 
     def call(self, account: str, tx_params: Optional[TxParams] = None) -> int:
         """Execute underlying contract method via eth_call.
@@ -192,7 +218,9 @@ class BalanceOfMethod(ContractMethod):  # pylint: disable=invalid-name
         returned = self._underlying_method(account).call(tx_params.as_dict())
         return int(returned)
 
-    def send_transaction(self, account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, account: str, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -201,7 +229,9 @@ class BalanceOfMethod(ContractMethod):  # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(account).transact(tx_params.as_dict())
 
-    def build_transaction(self, account: str, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self, account: str, tx_params: Optional[TxParams] = None
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (account) = self.validate_and_normalize_inputs(account)
         tx_params = super().normalize_tx_params(tx_params)
@@ -217,7 +247,12 @@ class BalanceOfMethod(ContractMethod):  # pylint: disable=invalid-name
 class DecimalsMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the decimals method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address)
         self._underlying_method = contract_function
@@ -232,7 +267,9 @@ class DecimalsMethod(ContractMethod):  # pylint: disable=invalid-name
         returned = self._underlying_method().call(tx_params.as_dict())
         return int(returned)
 
-    def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -254,7 +291,13 @@ class DecimalsMethod(ContractMethod):  # pylint: disable=invalid-name
 class DecreaseAllowanceMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the decreaseAllowance method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -262,62 +305,87 @@ class DecreaseAllowanceMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, spender: str, subtracted_value: int):
         """Validate the inputs to the decreaseAllowance method."""
         self.validator.assert_valid(
-            method_name='decreaseAllowance',
-            parameter_name='spender',
+            method_name="decreaseAllowance",
+            parameter_name="spender",
             argument_value=spender,
         )
         spender = self.validate_and_checksum_address(spender)
         self.validator.assert_valid(
-            method_name='decreaseAllowance',
-            parameter_name='subtractedValue',
+            method_name="decreaseAllowance",
+            parameter_name="subtractedValue",
             argument_value=subtracted_value,
         )
         # safeguard against fractional inputs
         subtracted_value = int(subtracted_value)
         return (spender, subtracted_value)
 
-    def call(self, spender: str, subtracted_value: int, tx_params: Optional[TxParams] = None) -> bool:
+    def call(
+        self, spender: str, subtracted_value: int, tx_params: Optional[TxParams] = None
+    ) -> bool:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
         (spender, subtracted_value) = self.validate_and_normalize_inputs(
-            spender, subtracted_value)
+            spender, subtracted_value
+        )
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(
-            spender, subtracted_value).call(tx_params.as_dict())
+        returned = self._underlying_method(spender, subtracted_value).call(
+            tx_params.as_dict()
+        )
         return bool(returned)
 
-    def send_transaction(self, spender: str, subtracted_value: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, spender: str, subtracted_value: int, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
         (spender, subtracted_value) = self.validate_and_normalize_inputs(
-            spender, subtracted_value)
+            spender, subtracted_value
+        )
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(spender, subtracted_value).transact(tx_params.as_dict())
+        return self._underlying_method(spender, subtracted_value).transact(
+            tx_params.as_dict()
+        )
 
-    def build_transaction(self, spender: str, subtracted_value: int, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self, spender: str, subtracted_value: int, tx_params: Optional[TxParams] = None
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (spender, subtracted_value) = self.validate_and_normalize_inputs(
-            spender, subtracted_value)
+            spender, subtracted_value
+        )
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(spender, subtracted_value).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(spender, subtracted_value).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, spender: str, subtracted_value: int, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self, spender: str, subtracted_value: int, tx_params: Optional[TxParams] = None
+    ) -> int:
         """Estimate gas consumption of method call."""
         (spender, subtracted_value) = self.validate_and_normalize_inputs(
-            spender, subtracted_value)
+            spender, subtracted_value
+        )
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(spender, subtracted_value).estimateGas(tx_params.as_dict())
+        return self._underlying_method(spender, subtracted_value).estimateGas(
+            tx_params.as_dict()
+        )
 
 
 class IncreaseAllowanceMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the increaseAllowance method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -325,62 +393,86 @@ class IncreaseAllowanceMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, spender: str, added_value: int):
         """Validate the inputs to the increaseAllowance method."""
         self.validator.assert_valid(
-            method_name='increaseAllowance',
-            parameter_name='spender',
+            method_name="increaseAllowance",
+            parameter_name="spender",
             argument_value=spender,
         )
         spender = self.validate_and_checksum_address(spender)
         self.validator.assert_valid(
-            method_name='increaseAllowance',
-            parameter_name='addedValue',
+            method_name="increaseAllowance",
+            parameter_name="addedValue",
             argument_value=added_value,
         )
         # safeguard against fractional inputs
         added_value = int(added_value)
         return (spender, added_value)
 
-    def call(self, spender: str, added_value: int, tx_params: Optional[TxParams] = None) -> bool:
+    def call(
+        self, spender: str, added_value: int, tx_params: Optional[TxParams] = None
+    ) -> bool:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
         (spender, added_value) = self.validate_and_normalize_inputs(
-            spender, added_value)
+            spender, added_value
+        )
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(
-            spender, added_value).call(tx_params.as_dict())
+        returned = self._underlying_method(spender, added_value).call(
+            tx_params.as_dict()
+        )
         return bool(returned)
 
-    def send_transaction(self, spender: str, added_value: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, spender: str, added_value: int, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
         (spender, added_value) = self.validate_and_normalize_inputs(
-            spender, added_value)
+            spender, added_value
+        )
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(spender, added_value).transact(tx_params.as_dict())
+        return self._underlying_method(spender, added_value).transact(
+            tx_params.as_dict()
+        )
 
-    def build_transaction(self, spender: str, added_value: int, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self, spender: str, added_value: int, tx_params: Optional[TxParams] = None
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (spender, added_value) = self.validate_and_normalize_inputs(
-            spender, added_value)
+            spender, added_value
+        )
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(spender, added_value).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(spender, added_value).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, spender: str, added_value: int, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self, spender: str, added_value: int, tx_params: Optional[TxParams] = None
+    ) -> int:
         """Estimate gas consumption of method call."""
         (spender, added_value) = self.validate_and_normalize_inputs(
-            spender, added_value)
+            spender, added_value
+        )
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(spender, added_value).estimateGas(tx_params.as_dict())
+        return self._underlying_method(spender, added_value).estimateGas(
+            tx_params.as_dict()
+        )
 
 
 class NameMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the name method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address)
         self._underlying_method = contract_function
@@ -395,7 +487,9 @@ class NameMethod(ContractMethod):  # pylint: disable=invalid-name
         returned = self._underlying_method().call(tx_params.as_dict())
         return str(returned)
 
-    def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -417,7 +511,12 @@ class NameMethod(ContractMethod):  # pylint: disable=invalid-name
 class SymbolMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the symbol method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address)
         self._underlying_method = contract_function
@@ -432,7 +531,9 @@ class SymbolMethod(ContractMethod):  # pylint: disable=invalid-name
         returned = self._underlying_method().call(tx_params.as_dict())
         return str(returned)
 
-    def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -454,7 +555,12 @@ class SymbolMethod(ContractMethod):  # pylint: disable=invalid-name
 class TotalSupplyMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the totalSupply method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address)
         self._underlying_method = contract_function
@@ -469,7 +575,9 @@ class TotalSupplyMethod(ContractMethod):  # pylint: disable=invalid-name
         returned = self._underlying_method().call(tx_params.as_dict())
         return int(returned)
 
-    def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -491,7 +599,13 @@ class TotalSupplyMethod(ContractMethod):  # pylint: disable=invalid-name
 class TransferMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the transfer method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -499,21 +613,21 @@ class TransferMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, recipient: str, amount: int):
         """Validate the inputs to the transfer method."""
         self.validator.assert_valid(
-            method_name='transfer',
-            parameter_name='recipient',
+            method_name="transfer",
+            parameter_name="recipient",
             argument_value=recipient,
         )
         recipient = self.validate_and_checksum_address(recipient)
         self.validator.assert_valid(
-            method_name='transfer',
-            parameter_name='amount',
-            argument_value=amount,
+            method_name="transfer", parameter_name="amount", argument_value=amount,
         )
         # safeguard against fractional inputs
         amount = int(amount)
         return (recipient, amount)
 
-    def call(self, recipient: str, amount: int, tx_params: Optional[TxParams] = None) -> bool:
+    def call(
+        self, recipient: str, amount: int, tx_params: Optional[TxParams] = None
+    ) -> bool:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -521,11 +635,12 @@ class TransferMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (recipient, amount) = self.validate_and_normalize_inputs(recipient, amount)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(
-            recipient, amount).call(tx_params.as_dict())
+        returned = self._underlying_method(recipient, amount).call(tx_params.as_dict())
         return bool(returned)
 
-    def send_transaction(self, recipient: str, amount: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, recipient: str, amount: int, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -534,23 +649,37 @@ class TransferMethod(ContractMethod):  # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(recipient, amount).transact(tx_params.as_dict())
 
-    def build_transaction(self, recipient: str, amount: int, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self, recipient: str, amount: int, tx_params: Optional[TxParams] = None
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (recipient, amount) = self.validate_and_normalize_inputs(recipient, amount)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(recipient, amount).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(recipient, amount).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, recipient: str, amount: int, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self, recipient: str, amount: int, tx_params: Optional[TxParams] = None
+    ) -> int:
         """Estimate gas consumption of method call."""
         (recipient, amount) = self.validate_and_normalize_inputs(recipient, amount)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(recipient, amount).estimateGas(tx_params.as_dict())
+        return self._underlying_method(recipient, amount).estimateGas(
+            tx_params.as_dict()
+        )
 
 
 class TransferFromMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the transferFrom method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator = None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -558,68 +687,101 @@ class TransferFromMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, sender: str, recipient: str, amount: int):
         """Validate the inputs to the transferFrom method."""
         self.validator.assert_valid(
-            method_name='transferFrom',
-            parameter_name='sender',
-            argument_value=sender,
+            method_name="transferFrom", parameter_name="sender", argument_value=sender,
         )
         sender = self.validate_and_checksum_address(sender)
         self.validator.assert_valid(
-            method_name='transferFrom',
-            parameter_name='recipient',
+            method_name="transferFrom",
+            parameter_name="recipient",
             argument_value=recipient,
         )
         recipient = self.validate_and_checksum_address(recipient)
         self.validator.assert_valid(
-            method_name='transferFrom',
-            parameter_name='amount',
-            argument_value=amount,
+            method_name="transferFrom", parameter_name="amount", argument_value=amount,
         )
         # safeguard against fractional inputs
         amount = int(amount)
         return (sender, recipient, amount)
 
-    def call(self, sender: str, recipient: str, amount: int, tx_params: Optional[TxParams] = None) -> bool:
+    def call(
+        self,
+        sender: str,
+        recipient: str,
+        amount: int,
+        tx_params: Optional[TxParams] = None,
+    ) -> bool:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
         (sender, recipient, amount) = self.validate_and_normalize_inputs(
-            sender, recipient, amount)
+            sender, recipient, amount
+        )
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(
-            sender, recipient, amount).call(tx_params.as_dict())
+        returned = self._underlying_method(sender, recipient, amount).call(
+            tx_params.as_dict()
+        )
         return bool(returned)
 
-    def send_transaction(self, sender: str, recipient: str, amount: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self,
+        sender: str,
+        recipient: str,
+        amount: int,
+        tx_params: Optional[TxParams] = None,
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
         (sender, recipient, amount) = self.validate_and_normalize_inputs(
-            sender, recipient, amount)
+            sender, recipient, amount
+        )
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(sender, recipient, amount).transact(tx_params.as_dict())
+        return self._underlying_method(sender, recipient, amount).transact(
+            tx_params.as_dict()
+        )
 
-    def build_transaction(self, sender: str, recipient: str, amount: int, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self,
+        sender: str,
+        recipient: str,
+        amount: int,
+        tx_params: Optional[TxParams] = None,
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (sender, recipient, amount) = self.validate_and_normalize_inputs(
-            sender, recipient, amount)
+            sender, recipient, amount
+        )
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(sender, recipient, amount).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(sender, recipient, amount).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, sender: str, recipient: str, amount: int, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self,
+        sender: str,
+        recipient: str,
+        amount: int,
+        tx_params: Optional[TxParams] = None,
+    ) -> int:
         """Estimate gas consumption of method call."""
         (sender, recipient, amount) = self.validate_and_normalize_inputs(
-            sender, recipient, amount)
+            sender, recipient, amount
+        )
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(sender, recipient, amount).estimateGas(tx_params.as_dict())
+        return self._underlying_method(sender, recipient, amount).estimateGas(
+            tx_params.as_dict()
+        )
+
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
 
 
 class ERC20:
     """Wrapper class for ERC20 Solidity contract."""
+
     allowance: AllowanceMethod
     """Constructor-initialized instance of
     :class:`AllowanceMethod`.
@@ -715,49 +877,59 @@ class ERC20:
             try:
                 for middleware in MIDDLEWARE:
                     web3.middleware_onion.inject(
-                        middleware['function'], layer=middleware['layer'],
+                        middleware["function"], layer=middleware["layer"],
                     )
             except ValueError as value_error:
-                if value_error.args == ("You can't add the same un-named instance twice",):
+                if value_error.args == (
+                    "You can't add the same un-named instance twice",
+                ):
                     pass
 
         self._web3_eth = web3.eth
 
-        functions = self._web3_eth.contract(address=to_checksum_address(
-            contract_address), abi=ERC20.abi()).functions
+        functions = self._web3_eth.contract(
+            address=to_checksum_address(contract_address), abi=ERC20.abi()
+        ).functions
 
         self.allowance = AllowanceMethod(
-            web3_or_provider, contract_address, functions.allowance, validator)
+            web3_or_provider, contract_address, functions.allowance, validator
+        )
 
         self.approve = ApproveMethod(
-            web3_or_provider, contract_address, functions.approve, validator)
+            web3_or_provider, contract_address, functions.approve, validator
+        )
 
         self.balance_of = BalanceOfMethod(
-            web3_or_provider, contract_address, functions.balanceOf, validator)
+            web3_or_provider, contract_address, functions.balanceOf, validator
+        )
 
         self.decimals = DecimalsMethod(
-            web3_or_provider, contract_address, functions.decimals)
+            web3_or_provider, contract_address, functions.decimals
+        )
 
         self.decrease_allowance = DecreaseAllowanceMethod(
-            web3_or_provider, contract_address, functions.decreaseAllowance, validator)
+            web3_or_provider, contract_address, functions.decreaseAllowance, validator
+        )
 
         self.increase_allowance = IncreaseAllowanceMethod(
-            web3_or_provider, contract_address, functions.increaseAllowance, validator)
+            web3_or_provider, contract_address, functions.increaseAllowance, validator
+        )
 
-        self.name = NameMethod(
-            web3_or_provider, contract_address, functions.name)
+        self.name = NameMethod(web3_or_provider, contract_address, functions.name)
 
-        self.symbol = SymbolMethod(
-            web3_or_provider, contract_address, functions.symbol)
+        self.symbol = SymbolMethod(web3_or_provider, contract_address, functions.symbol)
 
         self.total_supply = TotalSupplyMethod(
-            web3_or_provider, contract_address, functions.totalSupply)
+            web3_or_provider, contract_address, functions.totalSupply
+        )
 
         self.transfer = TransferMethod(
-            web3_or_provider, contract_address, functions.transfer, validator)
+            web3_or_provider, contract_address, functions.transfer, validator
+        )
 
         self.transfer_from = TransferFromMethod(
-            web3_or_provider, contract_address, functions.transferFrom, validator)
+            web3_or_provider, contract_address, functions.transferFrom, validator
+        )
 
     def get_approval_event(
         self, tx_hash: Union[HexBytes, bytes]
@@ -767,7 +939,13 @@ class ERC20:
         :param tx_hash: hash of transaction emitting Approval event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=ERC20.abi()).events.Approval().processReceipt(tx_receipt)
+        return (
+            self._web3_eth.contract(
+                address=to_checksum_address(self.contract_address), abi=ERC20.abi()
+            )
+            .events.Approval()
+            .processReceipt(tx_receipt)
+        )
 
     def get_transfer_event(
         self, tx_hash: Union[HexBytes, bytes]
@@ -777,7 +955,13 @@ class ERC20:
         :param tx_hash: hash of transaction emitting Transfer event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=ERC20.abi()).events.Transfer().processReceipt(tx_receipt)
+        return (
+            self._web3_eth.contract(
+                address=to_checksum_address(self.contract_address), abi=ERC20.abi()
+            )
+            .events.Transfer()
+            .processReceipt(tx_receipt)
+        )
 
     @staticmethod
     def abi():
@@ -785,5 +969,6 @@ class ERC20:
         return json.loads(
             '[{"inputs":[{"internalType":"string","name":"name_","type":"string"},{"internalType":"string","name":"symbol_","type":"string"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}]'  # noqa: E501 (line-too-long)
         )
+
 
 # pylint: disable=too-many-lines

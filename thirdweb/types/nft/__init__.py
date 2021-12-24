@@ -1,15 +1,15 @@
-"""
-Types for NFT module.
-"""
+"""Types for NFT module."""
 
 from dataclasses import dataclass
 from typing import Optional, Union
+
 from dataclasses_json import dataclass_json
-import io
+
 
 @dataclass
 class MintArg:
     """The name of the NFT being minted"""
+
     name: str
     """Short description of the NFT (optional)"""
     description: str = ""

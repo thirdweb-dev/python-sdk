@@ -1,13 +1,13 @@
-"""
-Types for the market module.
-"""
+"""Types for the market module."""
 
-from dataclasses import dataclass
-from dataclasses_json import dataclass_json
-from typing import Optional
-from ..nft import NftMetadata
-from ..currency import CurrencyValue
 import datetime
+from dataclasses import dataclass
+from typing import Optional
+
+from dataclasses_json import dataclass_json
+
+from ..currency import CurrencyValue
+from ..nft import NftMetadata
 
 
 @dataclass
@@ -15,6 +15,7 @@ class ListArg:
     """
     Arguments for listing a new item
     """
+
     asset_contract: str
     token_id: int
     currency_contract: str
@@ -30,6 +31,7 @@ class Filter:
     """
     Filter for the list_all method.
     """
+
     seller: Optional[str] = None
     tokenContract: Optional[str] = None
     tokenId: Optional[int] = None

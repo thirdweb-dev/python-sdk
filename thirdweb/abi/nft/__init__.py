@@ -281,15 +281,11 @@ class ApproveMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, to: str, token_id: int):
         """Validate the inputs to the approve method."""
         self.validator.assert_valid(
-            method_name="approve",
-            parameter_name="to",
-            argument_value=to,
+            method_name="approve", parameter_name="to", argument_value=to,
         )
         to = self.validate_and_checksum_address(to)
         self.validator.assert_valid(
-            method_name="approve",
-            parameter_name="tokenId",
-            argument_value=token_id,
+            method_name="approve", parameter_name="tokenId", argument_value=token_id,
         )
         # safeguard against fractional inputs
         token_id = int(token_id)
@@ -316,9 +312,7 @@ class ApproveMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (to, token_id) = self.validate_and_normalize_inputs(to, token_id)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(to, token_id).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(to, token_id).transact(tx_params.as_dict())
 
     def build_transaction(
         self, to: str, token_id: int, tx_params: Optional[TxParams] = None
@@ -336,9 +330,7 @@ class ApproveMethod(ContractMethod):  # pylint: disable=invalid-name
         """Estimate gas consumption of method call."""
         (to, token_id) = self.validate_and_normalize_inputs(to, token_id)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(to, token_id).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(to, token_id).estimateGas(tx_params.as_dict())
 
 
 class BalanceOfMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -358,9 +350,7 @@ class BalanceOfMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, owner: str):
         """Validate the inputs to the balanceOf method."""
         self.validator.assert_valid(
-            method_name="balanceOf",
-            parameter_name="owner",
-            argument_value=owner,
+            method_name="balanceOf", parameter_name="owner", argument_value=owner,
         )
         owner = self.validate_and_checksum_address(owner)
         return owner
@@ -393,13 +383,9 @@ class BalanceOfMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (owner) = self.validate_and_normalize_inputs(owner)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(owner).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(owner).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self, owner: str, tx_params: Optional[TxParams] = None
-    ) -> int:
+    def estimate_gas(self, owner: str, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
         (owner) = self.validate_and_normalize_inputs(owner)
         tx_params = super().normalize_tx_params(tx_params)
@@ -423,17 +409,13 @@ class BurnMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, token_id: int):
         """Validate the inputs to the burn method."""
         self.validator.assert_valid(
-            method_name="burn",
-            parameter_name="tokenId",
-            argument_value=token_id,
+            method_name="burn", parameter_name="tokenId", argument_value=token_id,
         )
         # safeguard against fractional inputs
         token_id = int(token_id)
         return token_id
 
-    def call(
-        self, token_id: int, tx_params: Optional[TxParams] = None
-    ) -> None:
+    def call(self, token_id: int, tx_params: Optional[TxParams] = None) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -460,19 +442,13 @@ class BurnMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (token_id) = self.validate_and_normalize_inputs(token_id)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(token_id).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(token_id).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self, token_id: int, tx_params: Optional[TxParams] = None
-    ) -> int:
+    def estimate_gas(self, token_id: int, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
         (token_id) = self.validate_and_normalize_inputs(token_id)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(token_id).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(token_id).estimateGas(tx_params.as_dict())
 
 
 class ContractUriMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -536,9 +512,7 @@ class CreatorMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, index_0: int):
         """Validate the inputs to the creator method."""
         self.validator.assert_valid(
-            method_name="creator",
-            parameter_name="index_0",
-            argument_value=index_0,
+            method_name="creator", parameter_name="index_0", argument_value=index_0,
         )
         # safeguard against fractional inputs
         index_0 = int(index_0)
@@ -572,19 +546,13 @@ class CreatorMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index_0).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(index_0).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self, index_0: int, tx_params: Optional[TxParams] = None
-    ) -> int:
+    def estimate_gas(self, index_0: int, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
         (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index_0).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(index_0).estimateGas(tx_params.as_dict())
 
 
 class GetApprovedMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -640,19 +608,13 @@ class GetApprovedMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (token_id) = self.validate_and_normalize_inputs(token_id)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(token_id).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(token_id).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self, token_id: int, tx_params: Optional[TxParams] = None
-    ) -> int:
+    def estimate_gas(self, token_id: int, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
         (token_id) = self.validate_and_normalize_inputs(token_id)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(token_id).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(token_id).estimateGas(tx_params.as_dict())
 
 
 class GetRoleAdminMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -672,9 +634,7 @@ class GetRoleAdminMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, role: Union[bytes, str]):
         """Validate the inputs to the getRoleAdmin method."""
         self.validator.assert_valid(
-            method_name="getRoleAdmin",
-            parameter_name="role",
-            argument_value=role,
+            method_name="getRoleAdmin", parameter_name="role", argument_value=role,
         )
         return role
 
@@ -708,9 +668,7 @@ class GetRoleAdminMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (role) = self.validate_and_normalize_inputs(role)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(role).buildTransaction(tx_params.as_dict())
 
     def estimate_gas(
         self, role: Union[bytes, str], tx_params: Optional[TxParams] = None
@@ -735,29 +693,20 @@ class GetRoleMemberMethod(ContractMethod):  # pylint: disable=invalid-name
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(
-        self, role: Union[bytes, str], index: int
-    ):
+    def validate_and_normalize_inputs(self, role: Union[bytes, str], index: int):
         """Validate the inputs to the getRoleMember method."""
         self.validator.assert_valid(
-            method_name="getRoleMember",
-            parameter_name="role",
-            argument_value=role,
+            method_name="getRoleMember", parameter_name="role", argument_value=role,
         )
         self.validator.assert_valid(
-            method_name="getRoleMember",
-            parameter_name="index",
-            argument_value=index,
+            method_name="getRoleMember", parameter_name="index", argument_value=index,
         )
         # safeguard against fractional inputs
         index = int(index)
         return (role, index)
 
     def call(
-        self,
-        role: Union[bytes, str],
-        index: int,
-        tx_params: Optional[TxParams] = None,
+        self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None,
     ) -> str:
         """Execute underlying contract method via eth_call.
 
@@ -766,16 +715,11 @@ class GetRoleMemberMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (role, index) = self.validate_and_normalize_inputs(role, index)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(role, index).call(
-            tx_params.as_dict()
-        )
+        returned = self._underlying_method(role, index).call(tx_params.as_dict())
         return str(returned)
 
     def send_transaction(
-        self,
-        role: Union[bytes, str],
-        index: int,
-        tx_params: Optional[TxParams] = None,
+        self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None,
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
@@ -783,15 +727,10 @@ class GetRoleMemberMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (role, index) = self.validate_and_normalize_inputs(role, index)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, index).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(role, index).transact(tx_params.as_dict())
 
     def build_transaction(
-        self,
-        role: Union[bytes, str],
-        index: int,
-        tx_params: Optional[TxParams] = None,
+        self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None,
     ) -> dict:
         """Construct calldata to be used as input to the method."""
         (role, index) = self.validate_and_normalize_inputs(role, index)
@@ -801,17 +740,12 @@ class GetRoleMemberMethod(ContractMethod):  # pylint: disable=invalid-name
         )
 
     def estimate_gas(
-        self,
-        role: Union[bytes, str],
-        index: int,
-        tx_params: Optional[TxParams] = None,
+        self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None,
     ) -> int:
         """Estimate gas consumption of method call."""
         (role, index) = self.validate_and_normalize_inputs(role, index)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, index).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(role, index).estimateGas(tx_params.as_dict())
 
 
 class GetRoleMemberCountMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -867,9 +801,7 @@ class GetRoleMemberCountMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (role) = self.validate_and_normalize_inputs(role)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(role).buildTransaction(tx_params.as_dict())
 
     def estimate_gas(
         self, role: Union[bytes, str], tx_params: Optional[TxParams] = None
@@ -894,19 +826,13 @@ class GrantRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(
-        self, role: Union[bytes, str], account: str
-    ):
+    def validate_and_normalize_inputs(self, role: Union[bytes, str], account: str):
         """Validate the inputs to the grantRole method."""
         self.validator.assert_valid(
-            method_name="grantRole",
-            parameter_name="role",
-            argument_value=role,
+            method_name="grantRole", parameter_name="role", argument_value=role,
         )
         self.validator.assert_valid(
-            method_name="grantRole",
-            parameter_name="account",
-            argument_value=account,
+            method_name="grantRole", parameter_name="account", argument_value=account,
         )
         account = self.validate_and_checksum_address(account)
         return (role, account)
@@ -938,9 +864,7 @@ class GrantRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(role, account).transact(tx_params.as_dict())
 
     def build_transaction(
         self,
@@ -964,9 +888,7 @@ class GrantRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         """Estimate gas consumption of method call."""
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
 
 
 class HasRoleMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -983,19 +905,13 @@ class HasRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(
-        self, role: Union[bytes, str], account: str
-    ):
+    def validate_and_normalize_inputs(self, role: Union[bytes, str], account: str):
         """Validate the inputs to the hasRole method."""
         self.validator.assert_valid(
-            method_name="hasRole",
-            parameter_name="role",
-            argument_value=role,
+            method_name="hasRole", parameter_name="role", argument_value=role,
         )
         self.validator.assert_valid(
-            method_name="hasRole",
-            parameter_name="account",
-            argument_value=account,
+            method_name="hasRole", parameter_name="account", argument_value=account,
         )
         account = self.validate_and_checksum_address(account)
         return (role, account)
@@ -1013,9 +929,7 @@ class HasRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(role, account).call(
-            tx_params.as_dict()
-        )
+        returned = self._underlying_method(role, account).call(tx_params.as_dict())
         return bool(returned)
 
     def send_transaction(
@@ -1030,9 +944,7 @@ class HasRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(role, account).transact(tx_params.as_dict())
 
     def build_transaction(
         self,
@@ -1056,9 +968,7 @@ class HasRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         """Estimate gas consumption of method call."""
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
 
 
 class IsApprovedForAllMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1101,9 +1011,7 @@ class IsApprovedForAllMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (owner, operator) = self.validate_and_normalize_inputs(owner, operator)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(owner, operator).call(
-            tx_params.as_dict()
-        )
+        returned = self._underlying_method(owner, operator).call(tx_params.as_dict())
         return bool(returned)
 
     def send_transaction(
@@ -1115,9 +1023,7 @@ class IsApprovedForAllMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (owner, operator) = self.validate_and_normalize_inputs(owner, operator)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(owner, operator).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(owner, operator).transact(tx_params.as_dict())
 
     def build_transaction(
         self, owner: str, operator: str, tx_params: Optional[TxParams] = None
@@ -1135,9 +1041,7 @@ class IsApprovedForAllMethod(ContractMethod):  # pylint: disable=invalid-name
         """Estimate gas consumption of method call."""
         (owner, operator) = self.validate_and_normalize_inputs(owner, operator)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(owner, operator).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(owner, operator).estimateGas(tx_params.as_dict())
 
 
 class IsTrustedForwarderMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1164,9 +1068,7 @@ class IsTrustedForwarderMethod(ContractMethod):  # pylint: disable=invalid-name
         forwarder = self.validate_and_checksum_address(forwarder)
         return forwarder
 
-    def call(
-        self, forwarder: str, tx_params: Optional[TxParams] = None
-    ) -> bool:
+    def call(self, forwarder: str, tx_params: Optional[TxParams] = None) -> bool:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1194,19 +1096,13 @@ class IsTrustedForwarderMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (forwarder) = self.validate_and_normalize_inputs(forwarder)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(forwarder).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(forwarder).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self, forwarder: str, tx_params: Optional[TxParams] = None
-    ) -> int:
+    def estimate_gas(self, forwarder: str, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
         (forwarder) = self.validate_and_normalize_inputs(forwarder)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(forwarder).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(forwarder).estimateGas(tx_params.as_dict())
 
 
 class MintMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1226,9 +1122,7 @@ class MintMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, index_0: str):
         """Validate the inputs to the mint method."""
         self.validator.assert_valid(
-            method_name="mint",
-            parameter_name="index_0",
-            argument_value=index_0,
+            method_name="mint", parameter_name="index_0", argument_value=index_0,
         )
         index_0 = self.validate_and_checksum_address(index_0)
         return index_0
@@ -1260,19 +1154,13 @@ class MintMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index_0).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(index_0).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self, index_0: str, tx_params: Optional[TxParams] = None
-    ) -> int:
+    def estimate_gas(self, index_0: str, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
         (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index_0).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(index_0).estimateGas(tx_params.as_dict())
 
 
 class MintNftMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1292,21 +1180,15 @@ class MintNftMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, to: str, uri: str):
         """Validate the inputs to the mintNFT method."""
         self.validator.assert_valid(
-            method_name="mintNFT",
-            parameter_name="_to",
-            argument_value=to,
+            method_name="mintNFT", parameter_name="_to", argument_value=to,
         )
         to = self.validate_and_checksum_address(to)
         self.validator.assert_valid(
-            method_name="mintNFT",
-            parameter_name="_uri",
-            argument_value=uri,
+            method_name="mintNFT", parameter_name="_uri", argument_value=uri,
         )
         return (to, uri)
 
-    def call(
-        self, to: str, uri: str, tx_params: Optional[TxParams] = None
-    ) -> None:
+    def call(self, to: str, uri: str, tx_params: Optional[TxParams] = None) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1333,9 +1215,7 @@ class MintNftMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (to, uri) = self.validate_and_normalize_inputs(to, uri)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(to, uri).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(to, uri).buildTransaction(tx_params.as_dict())
 
     def estimate_gas(
         self, to: str, uri: str, tx_params: Optional[TxParams] = None
@@ -1343,9 +1223,7 @@ class MintNftMethod(ContractMethod):  # pylint: disable=invalid-name
         """Estimate gas consumption of method call."""
         (to, uri) = self.validate_and_normalize_inputs(to, uri)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(to, uri).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(to, uri).estimateGas(tx_params.as_dict())
 
 
 class MintNftBatchMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1365,15 +1243,11 @@ class MintNftBatchMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, to: str, uris: List[str]):
         """Validate the inputs to the mintNFTBatch method."""
         self.validator.assert_valid(
-            method_name="mintNFTBatch",
-            parameter_name="_to",
-            argument_value=to,
+            method_name="mintNFTBatch", parameter_name="_to", argument_value=to,
         )
         to = self.validate_and_checksum_address(to)
         self.validator.assert_valid(
-            method_name="mintNFTBatch",
-            parameter_name="_uris",
-            argument_value=uris,
+            method_name="mintNFTBatch", parameter_name="_uris", argument_value=uris,
         )
         return (to, uris)
 
@@ -1406,9 +1280,7 @@ class MintNftBatchMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (to, uris) = self.validate_and_normalize_inputs(to, uris)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(to, uris).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(to, uris).buildTransaction(tx_params.as_dict())
 
     def estimate_gas(
         self, to: str, uris: List[str], tx_params: Optional[TxParams] = None
@@ -1416,9 +1288,7 @@ class MintNftBatchMethod(ContractMethod):  # pylint: disable=invalid-name
         """Estimate gas consumption of method call."""
         (to, uris) = self.validate_and_normalize_inputs(to, uris)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(to, uris).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(to, uris).estimateGas(tx_params.as_dict())
 
 
 class NameMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1526,9 +1396,7 @@ class NftUriMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, index_0: int):
         """Validate the inputs to the nftURI method."""
         self.validator.assert_valid(
-            method_name="nftURI",
-            parameter_name="index_0",
-            argument_value=index_0,
+            method_name="nftURI", parameter_name="index_0", argument_value=index_0,
         )
         # safeguard against fractional inputs
         index_0 = int(index_0)
@@ -1562,19 +1430,13 @@ class NftUriMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index_0).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(index_0).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self, index_0: int, tx_params: Optional[TxParams] = None
-    ) -> int:
+    def estimate_gas(self, index_0: int, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
         (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index_0).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(index_0).estimateGas(tx_params.as_dict())
 
 
 class OwnerOfMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1594,9 +1456,7 @@ class OwnerOfMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, token_id: int):
         """Validate the inputs to the ownerOf method."""
         self.validator.assert_valid(
-            method_name="ownerOf",
-            parameter_name="tokenId",
-            argument_value=token_id,
+            method_name="ownerOf", parameter_name="tokenId", argument_value=token_id,
         )
         # safeguard against fractional inputs
         token_id = int(token_id)
@@ -1630,19 +1490,13 @@ class OwnerOfMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (token_id) = self.validate_and_normalize_inputs(token_id)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(token_id).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(token_id).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self, token_id: int, tx_params: Optional[TxParams] = None
-    ) -> int:
+    def estimate_gas(self, token_id: int, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
         (token_id) = self.validate_and_normalize_inputs(token_id)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(token_id).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(token_id).estimateGas(tx_params.as_dict())
 
 
 class PauseMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1746,14 +1600,10 @@ class RenounceRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(
-        self, role: Union[bytes, str], account: str
-    ):
+    def validate_and_normalize_inputs(self, role: Union[bytes, str], account: str):
         """Validate the inputs to the renounceRole method."""
         self.validator.assert_valid(
-            method_name="renounceRole",
-            parameter_name="role",
-            argument_value=role,
+            method_name="renounceRole", parameter_name="role", argument_value=role,
         )
         self.validator.assert_valid(
             method_name="renounceRole",
@@ -1790,9 +1640,7 @@ class RenounceRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(role, account).transact(tx_params.as_dict())
 
     def build_transaction(
         self,
@@ -1816,9 +1664,7 @@ class RenounceRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         """Estimate gas consumption of method call."""
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
 
 
 class RevokeRoleMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1835,19 +1681,13 @@ class RevokeRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(
-        self, role: Union[bytes, str], account: str
-    ):
+    def validate_and_normalize_inputs(self, role: Union[bytes, str], account: str):
         """Validate the inputs to the revokeRole method."""
         self.validator.assert_valid(
-            method_name="revokeRole",
-            parameter_name="role",
-            argument_value=role,
+            method_name="revokeRole", parameter_name="role", argument_value=role,
         )
         self.validator.assert_valid(
-            method_name="revokeRole",
-            parameter_name="account",
-            argument_value=account,
+            method_name="revokeRole", parameter_name="account", argument_value=account,
         )
         account = self.validate_and_checksum_address(account)
         return (role, account)
@@ -1879,9 +1719,7 @@ class RevokeRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(role, account).transact(tx_params.as_dict())
 
     def build_transaction(
         self,
@@ -1905,9 +1743,7 @@ class RevokeRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         """Estimate gas consumption of method call."""
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
 
 
 class RoyaltyBpsMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1971,9 +1807,7 @@ class RoyaltyInfoMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, index_0: int, sale_price: int):
         """Validate the inputs to the royaltyInfo method."""
         self.validator.assert_valid(
-            method_name="royaltyInfo",
-            parameter_name="index_0",
-            argument_value=index_0,
+            method_name="royaltyInfo", parameter_name="index_0", argument_value=index_0,
         )
         # safeguard against fractional inputs
         index_0 = int(index_0)
@@ -1987,19 +1821,14 @@ class RoyaltyInfoMethod(ContractMethod):  # pylint: disable=invalid-name
         return (index_0, sale_price)
 
     def call(
-        self,
-        index_0: int,
-        sale_price: int,
-        tx_params: Optional[TxParams] = None,
+        self, index_0: int, sale_price: int, tx_params: Optional[TxParams] = None,
     ) -> Tuple[str, int]:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (index_0, sale_price) = self.validate_and_normalize_inputs(
-            index_0, sale_price
-        )
+        (index_0, sale_price) = self.validate_and_normalize_inputs(index_0, sale_price)
         tx_params = super().normalize_tx_params(tx_params)
         returned = self._underlying_method(index_0, sale_price).call(
             tx_params.as_dict()
@@ -2010,48 +1839,33 @@ class RoyaltyInfoMethod(ContractMethod):  # pylint: disable=invalid-name
         )
 
     def send_transaction(
-        self,
-        index_0: int,
-        sale_price: int,
-        tx_params: Optional[TxParams] = None,
+        self, index_0: int, sale_price: int, tx_params: Optional[TxParams] = None,
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (index_0, sale_price) = self.validate_and_normalize_inputs(
-            index_0, sale_price
-        )
+        (index_0, sale_price) = self.validate_and_normalize_inputs(index_0, sale_price)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(index_0, sale_price).transact(
             tx_params.as_dict()
         )
 
     def build_transaction(
-        self,
-        index_0: int,
-        sale_price: int,
-        tx_params: Optional[TxParams] = None,
+        self, index_0: int, sale_price: int, tx_params: Optional[TxParams] = None,
     ) -> dict:
         """Construct calldata to be used as input to the method."""
-        (index_0, sale_price) = self.validate_and_normalize_inputs(
-            index_0, sale_price
-        )
+        (index_0, sale_price) = self.validate_and_normalize_inputs(index_0, sale_price)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(index_0, sale_price).buildTransaction(
             tx_params.as_dict()
         )
 
     def estimate_gas(
-        self,
-        index_0: int,
-        sale_price: int,
-        tx_params: Optional[TxParams] = None,
+        self, index_0: int, sale_price: int, tx_params: Optional[TxParams] = None,
     ) -> int:
         """Estimate gas consumption of method call."""
-        (index_0, sale_price) = self.validate_and_normalize_inputs(
-            index_0, sale_price
-        )
+        (index_0, sale_price) = self.validate_and_normalize_inputs(index_0, sale_price)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(index_0, sale_price).estimateGas(
             tx_params.as_dict()
@@ -2072,20 +1886,14 @@ class SafeTransferFrom1Method(ContractMethod):  # pylint: disable=invalid-name
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(
-        self, _from: str, to: str, token_id: int
-    ):
+    def validate_and_normalize_inputs(self, _from: str, to: str, token_id: int):
         """Validate the inputs to the safeTransferFrom method."""
         self.validator.assert_valid(
-            method_name="safeTransferFrom",
-            parameter_name="from",
-            argument_value=_from,
+            method_name="safeTransferFrom", parameter_name="from", argument_value=_from,
         )
         _from = self.validate_and_checksum_address(_from)
         self.validator.assert_valid(
-            method_name="safeTransferFrom",
-            parameter_name="to",
-            argument_value=to,
+            method_name="safeTransferFrom", parameter_name="to", argument_value=to,
         )
         to = self.validate_and_checksum_address(to)
         self.validator.assert_valid(
@@ -2098,69 +1906,45 @@ class SafeTransferFrom1Method(ContractMethod):  # pylint: disable=invalid-name
         return (_from, to, token_id)
 
     def call(
-        self,
-        _from: str,
-        to: str,
-        token_id: int,
-        tx_params: Optional[TxParams] = None,
+        self, _from: str, to: str, token_id: int, tx_params: Optional[TxParams] = None,
     ) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (_from, to, token_id) = self.validate_and_normalize_inputs(
-            _from, to, token_id
-        )
+        (_from, to, token_id) = self.validate_and_normalize_inputs(_from, to, token_id)
         tx_params = super().normalize_tx_params(tx_params)
         self._underlying_method(_from, to, token_id).call(tx_params.as_dict())
 
     def send_transaction(
-        self,
-        _from: str,
-        to: str,
-        token_id: int,
-        tx_params: Optional[TxParams] = None,
+        self, _from: str, to: str, token_id: int, tx_params: Optional[TxParams] = None,
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (_from, to, token_id) = self.validate_and_normalize_inputs(
-            _from, to, token_id
-        )
+        (_from, to, token_id) = self.validate_and_normalize_inputs(_from, to, token_id)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(_from, to, token_id).transact(
             tx_params.as_dict()
         )
 
     def build_transaction(
-        self,
-        _from: str,
-        to: str,
-        token_id: int,
-        tx_params: Optional[TxParams] = None,
+        self, _from: str, to: str, token_id: int, tx_params: Optional[TxParams] = None,
     ) -> dict:
         """Construct calldata to be used as input to the method."""
-        (_from, to, token_id) = self.validate_and_normalize_inputs(
-            _from, to, token_id
-        )
+        (_from, to, token_id) = self.validate_and_normalize_inputs(_from, to, token_id)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(_from, to, token_id).buildTransaction(
             tx_params.as_dict()
         )
 
     def estimate_gas(
-        self,
-        _from: str,
-        to: str,
-        token_id: int,
-        tx_params: Optional[TxParams] = None,
+        self, _from: str, to: str, token_id: int, tx_params: Optional[TxParams] = None,
     ) -> int:
         """Estimate gas consumption of method call."""
-        (_from, to, token_id) = self.validate_and_normalize_inputs(
-            _from, to, token_id
-        )
+        (_from, to, token_id) = self.validate_and_normalize_inputs(_from, to, token_id)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(_from, to, token_id).estimateGas(
             tx_params.as_dict()
@@ -2186,15 +1970,11 @@ class SafeTransferFrom2Method(ContractMethod):  # pylint: disable=invalid-name
     ):
         """Validate the inputs to the safeTransferFrom method."""
         self.validator.assert_valid(
-            method_name="safeTransferFrom",
-            parameter_name="from",
-            argument_value=_from,
+            method_name="safeTransferFrom", parameter_name="from", argument_value=_from,
         )
         _from = self.validate_and_checksum_address(_from)
         self.validator.assert_valid(
-            method_name="safeTransferFrom",
-            parameter_name="to",
-            argument_value=to,
+            method_name="safeTransferFrom", parameter_name="to", argument_value=to,
         )
         to = self.validate_and_checksum_address(to)
         self.validator.assert_valid(
@@ -2205,9 +1985,7 @@ class SafeTransferFrom2Method(ContractMethod):  # pylint: disable=invalid-name
         # safeguard against fractional inputs
         token_id = int(token_id)
         self.validator.assert_valid(
-            method_name="safeTransferFrom",
-            parameter_name="_data",
-            argument_value=data,
+            method_name="safeTransferFrom", parameter_name="_data", argument_value=data,
         )
         return (_from, to, token_id, data)
 
@@ -2228,9 +2006,7 @@ class SafeTransferFrom2Method(ContractMethod):  # pylint: disable=invalid-name
             _from, to, token_id, data
         )
         tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(_from, to, token_id, data).call(
-            tx_params.as_dict()
-        )
+        self._underlying_method(_from, to, token_id, data).call(tx_params.as_dict())
 
     def send_transaction(
         self,
@@ -2265,9 +2041,9 @@ class SafeTransferFrom2Method(ContractMethod):  # pylint: disable=invalid-name
             _from, to, token_id, data
         )
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(
-            _from, to, token_id, data
-        ).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(_from, to, token_id, data).buildTransaction(
+            tx_params.as_dict()
+        )
 
     def estimate_gas(
         self,
@@ -2317,65 +2093,43 @@ class SetApprovalForAllMethod(ContractMethod):  # pylint: disable=invalid-name
         return (operator, approved)
 
     def call(
-        self,
-        operator: str,
-        approved: bool,
-        tx_params: Optional[TxParams] = None,
+        self, operator: str, approved: bool, tx_params: Optional[TxParams] = None,
     ) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (operator, approved) = self.validate_and_normalize_inputs(
-            operator, approved
-        )
+        (operator, approved) = self.validate_and_normalize_inputs(operator, approved)
         tx_params = super().normalize_tx_params(tx_params)
         self._underlying_method(operator, approved).call(tx_params.as_dict())
 
     def send_transaction(
-        self,
-        operator: str,
-        approved: bool,
-        tx_params: Optional[TxParams] = None,
+        self, operator: str, approved: bool, tx_params: Optional[TxParams] = None,
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (operator, approved) = self.validate_and_normalize_inputs(
-            operator, approved
-        )
+        (operator, approved) = self.validate_and_normalize_inputs(operator, approved)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(operator, approved).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(operator, approved).transact(tx_params.as_dict())
 
     def build_transaction(
-        self,
-        operator: str,
-        approved: bool,
-        tx_params: Optional[TxParams] = None,
+        self, operator: str, approved: bool, tx_params: Optional[TxParams] = None,
     ) -> dict:
         """Construct calldata to be used as input to the method."""
-        (operator, approved) = self.validate_and_normalize_inputs(
-            operator, approved
-        )
+        (operator, approved) = self.validate_and_normalize_inputs(operator, approved)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(operator, approved).buildTransaction(
             tx_params.as_dict()
         )
 
     def estimate_gas(
-        self,
-        operator: str,
-        approved: bool,
-        tx_params: Optional[TxParams] = None,
+        self, operator: str, approved: bool, tx_params: Optional[TxParams] = None,
     ) -> int:
         """Estimate gas consumption of method call."""
-        (operator, approved) = self.validate_and_normalize_inputs(
-            operator, approved
-        )
+        (operator, approved) = self.validate_and_normalize_inputs(operator, approved)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(operator, approved).estimateGas(
             tx_params.as_dict()
@@ -2399,9 +2153,7 @@ class SetContractUriMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, uri: str):
         """Validate the inputs to the setContractURI method."""
         self.validator.assert_valid(
-            method_name="setContractURI",
-            parameter_name="_URI",
-            argument_value=uri,
+            method_name="setContractURI", parameter_name="_URI", argument_value=uri,
         )
         return uri
 
@@ -2426,28 +2178,20 @@ class SetContractUriMethod(ContractMethod):  # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(uri).transact(tx_params.as_dict())
 
-    def build_transaction(
-        self, uri: str, tx_params: Optional[TxParams] = None
-    ) -> dict:
+    def build_transaction(self, uri: str, tx_params: Optional[TxParams] = None) -> dict:
         """Construct calldata to be used as input to the method."""
         (uri) = self.validate_and_normalize_inputs(uri)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(uri).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(uri).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self, uri: str, tx_params: Optional[TxParams] = None
-    ) -> int:
+    def estimate_gas(self, uri: str, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
         (uri) = self.validate_and_normalize_inputs(uri)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(uri).estimateGas(tx_params.as_dict())
 
 
-class SetRestrictedTransferMethod(
-    ContractMethod
-):  # pylint: disable=invalid-name
+class SetRestrictedTransferMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the setRestrictedTransfer method."""
 
     def __init__(
@@ -2478,9 +2222,7 @@ class SetRestrictedTransferMethod(
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (restricted_transfer) = self.validate_and_normalize_inputs(
-            restricted_transfer
-        )
+        (restricted_transfer) = self.validate_and_normalize_inputs(restricted_transfer)
         tx_params = super().normalize_tx_params(tx_params)
         self._underlying_method(restricted_transfer).call(tx_params.as_dict())
 
@@ -2491,9 +2233,7 @@ class SetRestrictedTransferMethod(
 
         :param tx_params: transaction parameters
         """
-        (restricted_transfer) = self.validate_and_normalize_inputs(
-            restricted_transfer
-        )
+        (restricted_transfer) = self.validate_and_normalize_inputs(restricted_transfer)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(restricted_transfer).transact(
             tx_params.as_dict()
@@ -2503,9 +2243,7 @@ class SetRestrictedTransferMethod(
         self, restricted_transfer: bool, tx_params: Optional[TxParams] = None
     ) -> dict:
         """Construct calldata to be used as input to the method."""
-        (restricted_transfer) = self.validate_and_normalize_inputs(
-            restricted_transfer
-        )
+        (restricted_transfer) = self.validate_and_normalize_inputs(restricted_transfer)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(restricted_transfer).buildTransaction(
             tx_params.as_dict()
@@ -2515,9 +2253,7 @@ class SetRestrictedTransferMethod(
         self, restricted_transfer: bool, tx_params: Optional[TxParams] = None
     ) -> int:
         """Estimate gas consumption of method call."""
-        (restricted_transfer) = self.validate_and_normalize_inputs(
-            restricted_transfer
-        )
+        (restricted_transfer) = self.validate_and_normalize_inputs(restricted_transfer)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(restricted_transfer).estimateGas(
             tx_params.as_dict()
@@ -2549,9 +2285,7 @@ class SetRoyaltyBpsMethod(ContractMethod):  # pylint: disable=invalid-name
         royalty_bps = int(royalty_bps)
         return royalty_bps
 
-    def call(
-        self, royalty_bps: int, tx_params: Optional[TxParams] = None
-    ) -> None:
+    def call(self, royalty_bps: int, tx_params: Optional[TxParams] = None) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -2570,9 +2304,7 @@ class SetRoyaltyBpsMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (royalty_bps) = self.validate_and_normalize_inputs(royalty_bps)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(royalty_bps).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(royalty_bps).transact(tx_params.as_dict())
 
     def build_transaction(
         self, royalty_bps: int, tx_params: Optional[TxParams] = None
@@ -2590,9 +2322,7 @@ class SetRoyaltyBpsMethod(ContractMethod):  # pylint: disable=invalid-name
         """Estimate gas consumption of method call."""
         (royalty_bps) = self.validate_and_normalize_inputs(royalty_bps)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(royalty_bps).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(royalty_bps).estimateGas(tx_params.as_dict())
 
 
 class SupportsInterfaceMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -2619,9 +2349,7 @@ class SupportsInterfaceMethod(ContractMethod):  # pylint: disable=invalid-name
         return interface_id
 
     def call(
-        self,
-        interface_id: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
+        self, interface_id: Union[bytes, str], tx_params: Optional[TxParams] = None,
     ) -> bool:
         """Execute underlying contract method via eth_call.
 
@@ -2630,15 +2358,11 @@ class SupportsInterfaceMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (interface_id) = self.validate_and_normalize_inputs(interface_id)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(interface_id).call(
-            tx_params.as_dict()
-        )
+        returned = self._underlying_method(interface_id).call(tx_params.as_dict())
         return bool(returned)
 
     def send_transaction(
-        self,
-        interface_id: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
+        self, interface_id: Union[bytes, str], tx_params: Optional[TxParams] = None,
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
@@ -2646,14 +2370,10 @@ class SupportsInterfaceMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (interface_id) = self.validate_and_normalize_inputs(interface_id)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(interface_id).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(interface_id).transact(tx_params.as_dict())
 
     def build_transaction(
-        self,
-        interface_id: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
+        self, interface_id: Union[bytes, str], tx_params: Optional[TxParams] = None,
     ) -> dict:
         """Construct calldata to be used as input to the method."""
         (interface_id) = self.validate_and_normalize_inputs(interface_id)
@@ -2663,16 +2383,12 @@ class SupportsInterfaceMethod(ContractMethod):  # pylint: disable=invalid-name
         )
 
     def estimate_gas(
-        self,
-        interface_id: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
+        self, interface_id: Union[bytes, str], tx_params: Optional[TxParams] = None,
     ) -> int:
         """Estimate gas consumption of method call."""
         (interface_id) = self.validate_and_normalize_inputs(interface_id)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(interface_id).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(interface_id).estimateGas(tx_params.as_dict())
 
 
 class SymbolMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -2736,9 +2452,7 @@ class TokenByIndexMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, index: int):
         """Validate the inputs to the tokenByIndex method."""
         self.validator.assert_valid(
-            method_name="tokenByIndex",
-            parameter_name="index",
-            argument_value=index,
+            method_name="tokenByIndex", parameter_name="index", argument_value=index,
         )
         # safeguard against fractional inputs
         index = int(index)
@@ -2772,22 +2486,16 @@ class TokenByIndexMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (index) = self.validate_and_normalize_inputs(index)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(index).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self, index: int, tx_params: Optional[TxParams] = None
-    ) -> int:
+    def estimate_gas(self, index: int, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
         (index) = self.validate_and_normalize_inputs(index)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(index).estimateGas(tx_params.as_dict())
 
 
-class TokenOfOwnerByIndexMethod(
-    ContractMethod
-):  # pylint: disable=invalid-name
+class TokenOfOwnerByIndexMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the tokenOfOwnerByIndex method."""
 
     def __init__(
@@ -2818,9 +2526,7 @@ class TokenOfOwnerByIndexMethod(
         index = int(index)
         return (owner, index)
 
-    def call(
-        self, owner: str, index: int, tx_params: Optional[TxParams] = None
-    ) -> int:
+    def call(self, owner: str, index: int, tx_params: Optional[TxParams] = None) -> int:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -2828,9 +2534,7 @@ class TokenOfOwnerByIndexMethod(
         """
         (owner, index) = self.validate_and_normalize_inputs(owner, index)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(owner, index).call(
-            tx_params.as_dict()
-        )
+        returned = self._underlying_method(owner, index).call(tx_params.as_dict())
         return int(returned)
 
     def send_transaction(
@@ -2842,9 +2546,7 @@ class TokenOfOwnerByIndexMethod(
         """
         (owner, index) = self.validate_and_normalize_inputs(owner, index)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(owner, index).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(owner, index).transact(tx_params.as_dict())
 
     def build_transaction(
         self, owner: str, index: int, tx_params: Optional[TxParams] = None
@@ -2862,9 +2564,7 @@ class TokenOfOwnerByIndexMethod(
         """Estimate gas consumption of method call."""
         (owner, index) = self.validate_and_normalize_inputs(owner, index)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(owner, index).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(owner, index).estimateGas(tx_params.as_dict())
 
 
 class TokenUriMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -2884,9 +2584,7 @@ class TokenUriMethod(ContractMethod):  # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, token_id: int):
         """Validate the inputs to the tokenURI method."""
         self.validator.assert_valid(
-            method_name="tokenURI",
-            parameter_name="tokenId",
-            argument_value=token_id,
+            method_name="tokenURI", parameter_name="tokenId", argument_value=token_id,
         )
         # safeguard against fractional inputs
         token_id = int(token_id)
@@ -2920,19 +2618,13 @@ class TokenUriMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (token_id) = self.validate_and_normalize_inputs(token_id)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(token_id).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(token_id).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self, token_id: int, tx_params: Optional[TxParams] = None
-    ) -> int:
+    def estimate_gas(self, token_id: int, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
         (token_id) = self.validate_and_normalize_inputs(token_id)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(token_id).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(token_id).estimateGas(tx_params.as_dict())
 
 
 class TotalSupplyMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -2993,20 +2685,14 @@ class TransferFromMethod(ContractMethod):  # pylint: disable=invalid-name
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(
-        self, _from: str, to: str, token_id: int
-    ):
+    def validate_and_normalize_inputs(self, _from: str, to: str, token_id: int):
         """Validate the inputs to the transferFrom method."""
         self.validator.assert_valid(
-            method_name="transferFrom",
-            parameter_name="from",
-            argument_value=_from,
+            method_name="transferFrom", parameter_name="from", argument_value=_from,
         )
         _from = self.validate_and_checksum_address(_from)
         self.validator.assert_valid(
-            method_name="transferFrom",
-            parameter_name="to",
-            argument_value=to,
+            method_name="transferFrom", parameter_name="to", argument_value=to,
         )
         to = self.validate_and_checksum_address(to)
         self.validator.assert_valid(
@@ -3019,78 +2705,52 @@ class TransferFromMethod(ContractMethod):  # pylint: disable=invalid-name
         return (_from, to, token_id)
 
     def call(
-        self,
-        _from: str,
-        to: str,
-        token_id: int,
-        tx_params: Optional[TxParams] = None,
+        self, _from: str, to: str, token_id: int, tx_params: Optional[TxParams] = None,
     ) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (_from, to, token_id) = self.validate_and_normalize_inputs(
-            _from, to, token_id
-        )
+        (_from, to, token_id) = self.validate_and_normalize_inputs(_from, to, token_id)
         tx_params = super().normalize_tx_params(tx_params)
         self._underlying_method(_from, to, token_id).call(tx_params.as_dict())
 
     def send_transaction(
-        self,
-        _from: str,
-        to: str,
-        token_id: int,
-        tx_params: Optional[TxParams] = None,
+        self, _from: str, to: str, token_id: int, tx_params: Optional[TxParams] = None,
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (_from, to, token_id) = self.validate_and_normalize_inputs(
-            _from, to, token_id
-        )
+        (_from, to, token_id) = self.validate_and_normalize_inputs(_from, to, token_id)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(_from, to, token_id).transact(
             tx_params.as_dict()
         )
 
     def build_transaction(
-        self,
-        _from: str,
-        to: str,
-        token_id: int,
-        tx_params: Optional[TxParams] = None,
+        self, _from: str, to: str, token_id: int, tx_params: Optional[TxParams] = None,
     ) -> dict:
         """Construct calldata to be used as input to the method."""
-        (_from, to, token_id) = self.validate_and_normalize_inputs(
-            _from, to, token_id
-        )
+        (_from, to, token_id) = self.validate_and_normalize_inputs(_from, to, token_id)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(_from, to, token_id).buildTransaction(
             tx_params.as_dict()
         )
 
     def estimate_gas(
-        self,
-        _from: str,
-        to: str,
-        token_id: int,
-        tx_params: Optional[TxParams] = None,
+        self, _from: str, to: str, token_id: int, tx_params: Optional[TxParams] = None,
     ) -> int:
         """Estimate gas consumption of method call."""
-        (_from, to, token_id) = self.validate_and_normalize_inputs(
-            _from, to, token_id
-        )
+        (_from, to, token_id) = self.validate_and_normalize_inputs(_from, to, token_id)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(_from, to, token_id).estimateGas(
             tx_params.as_dict()
         )
 
 
-class TransfersRestrictedMethod(
-    ContractMethod
-):  # pylint: disable=invalid-name
+class TransfersRestrictedMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the transfersRestricted method."""
 
     def __init__(
@@ -3455,8 +3115,7 @@ class NFT:
             try:
                 for middleware in MIDDLEWARE:
                     web3.middleware_onion.inject(
-                        middleware["function"],
-                        layer=middleware["layer"],
+                        middleware["function"], layer=middleware["layer"],
                     )
             except ValueError as value_error:
                 if value_error.args == (
@@ -3511,31 +3170,19 @@ class NFT:
         )
 
         self.get_approved = GetApprovedMethod(
-            web3_or_provider,
-            contract_address,
-            functions.getApproved,
-            validator,
+            web3_or_provider, contract_address, functions.getApproved, validator,
         )
 
         self.get_role_admin = GetRoleAdminMethod(
-            web3_or_provider,
-            contract_address,
-            functions.getRoleAdmin,
-            validator,
+            web3_or_provider, contract_address, functions.getRoleAdmin, validator,
         )
 
         self.get_role_member = GetRoleMemberMethod(
-            web3_or_provider,
-            contract_address,
-            functions.getRoleMember,
-            validator,
+            web3_or_provider, contract_address, functions.getRoleMember, validator,
         )
 
         self.get_role_member_count = GetRoleMemberCountMethod(
-            web3_or_provider,
-            contract_address,
-            functions.getRoleMemberCount,
-            validator,
+            web3_or_provider, contract_address, functions.getRoleMemberCount, validator,
         )
 
         self.grant_role = GrantRoleMethod(
@@ -3547,17 +3194,11 @@ class NFT:
         )
 
         self.is_approved_for_all = IsApprovedForAllMethod(
-            web3_or_provider,
-            contract_address,
-            functions.isApprovedForAll,
-            validator,
+            web3_or_provider, contract_address, functions.isApprovedForAll, validator,
         )
 
         self.is_trusted_forwarder = IsTrustedForwarderMethod(
-            web3_or_provider,
-            contract_address,
-            functions.isTrustedForwarder,
-            validator,
+            web3_or_provider, contract_address, functions.isTrustedForwarder, validator,
         )
 
         self.mint = MintMethod(
@@ -3569,15 +3210,10 @@ class NFT:
         )
 
         self.mint_nft_batch = MintNftBatchMethod(
-            web3_or_provider,
-            contract_address,
-            functions.mintNFTBatch,
-            validator,
+            web3_or_provider, contract_address, functions.mintNFTBatch, validator,
         )
 
-        self.name = NameMethod(
-            web3_or_provider, contract_address, functions.name
-        )
+        self.name = NameMethod(web3_or_provider, contract_address, functions.name)
 
         self.next_token_id = NextTokenIdMethod(
             web3_or_provider, contract_address, functions.nextTokenId
@@ -3591,19 +3227,12 @@ class NFT:
             web3_or_provider, contract_address, functions.ownerOf, validator
         )
 
-        self.pause = PauseMethod(
-            web3_or_provider, contract_address, functions.pause
-        )
+        self.pause = PauseMethod(web3_or_provider, contract_address, functions.pause)
 
-        self.paused = PausedMethod(
-            web3_or_provider, contract_address, functions.paused
-        )
+        self.paused = PausedMethod(web3_or_provider, contract_address, functions.paused)
 
         self.renounce_role = RenounceRoleMethod(
-            web3_or_provider,
-            contract_address,
-            functions.renounceRole,
-            validator,
+            web3_or_provider, contract_address, functions.renounceRole, validator,
         )
 
         self.revoke_role = RevokeRoleMethod(
@@ -3615,38 +3244,23 @@ class NFT:
         )
 
         self.royalty_info = RoyaltyInfoMethod(
-            web3_or_provider,
-            contract_address,
-            functions.royaltyInfo,
-            validator,
+            web3_or_provider, contract_address, functions.royaltyInfo, validator,
         )
 
         self.safe_transfer_from1 = SafeTransferFrom1Method(
-            web3_or_provider,
-            contract_address,
-            functions.safeTransferFrom,
-            validator,
+            web3_or_provider, contract_address, functions.safeTransferFrom, validator,
         )
 
         self.safe_transfer_from2 = SafeTransferFrom2Method(
-            web3_or_provider,
-            contract_address,
-            functions.safeTransferFrom,
-            validator,
+            web3_or_provider, contract_address, functions.safeTransferFrom, validator,
         )
 
         self.set_approval_for_all = SetApprovalForAllMethod(
-            web3_or_provider,
-            contract_address,
-            functions.setApprovalForAll,
-            validator,
+            web3_or_provider, contract_address, functions.setApprovalForAll, validator,
         )
 
         self.set_contract_uri = SetContractUriMethod(
-            web3_or_provider,
-            contract_address,
-            functions.setContractURI,
-            validator,
+            web3_or_provider, contract_address, functions.setContractURI, validator,
         )
 
         self.set_restricted_transfer = SetRestrictedTransferMethod(
@@ -3657,28 +3271,17 @@ class NFT:
         )
 
         self.set_royalty_bps = SetRoyaltyBpsMethod(
-            web3_or_provider,
-            contract_address,
-            functions.setRoyaltyBps,
-            validator,
+            web3_or_provider, contract_address, functions.setRoyaltyBps, validator,
         )
 
         self.supports_interface = SupportsInterfaceMethod(
-            web3_or_provider,
-            contract_address,
-            functions.supportsInterface,
-            validator,
+            web3_or_provider, contract_address, functions.supportsInterface, validator,
         )
 
-        self.symbol = SymbolMethod(
-            web3_or_provider, contract_address, functions.symbol
-        )
+        self.symbol = SymbolMethod(web3_or_provider, contract_address, functions.symbol)
 
         self.token_by_index = TokenByIndexMethod(
-            web3_or_provider,
-            contract_address,
-            functions.tokenByIndex,
-            validator,
+            web3_or_provider, contract_address, functions.tokenByIndex, validator,
         )
 
         self.token_of_owner_by_index = TokenOfOwnerByIndexMethod(
@@ -3697,10 +3300,7 @@ class NFT:
         )
 
         self.transfer_from = TransferFromMethod(
-            web3_or_provider,
-            contract_address,
-            functions.transferFrom,
-            validator,
+            web3_or_provider, contract_address, functions.transferFrom, validator,
         )
 
         self.transfers_restricted = TransfersRestrictedMethod(
@@ -3721,8 +3321,7 @@ class NFT:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=NFT.abi(),
+                address=to_checksum_address(self.contract_address), abi=NFT.abi(),
             )
             .events.Approval()
             .processReceipt(tx_receipt)
@@ -3738,16 +3337,13 @@ class NFT:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=NFT.abi(),
+                address=to_checksum_address(self.contract_address), abi=NFT.abi(),
             )
             .events.ApprovalForAll()
             .processReceipt(tx_receipt)
         )
 
-    def get_minted_event(
-        self, tx_hash: Union[HexBytes, bytes]
-    ) -> Tuple[AttributeDict]:
+    def get_minted_event(self, tx_hash: Union[HexBytes, bytes]) -> Tuple[AttributeDict]:
         """Get log entry for Minted event.
 
         :param tx_hash: hash of transaction emitting Minted event
@@ -3755,8 +3351,7 @@ class NFT:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=NFT.abi(),
+                address=to_checksum_address(self.contract_address), abi=NFT.abi(),
             )
             .events.Minted()
             .processReceipt(tx_receipt)
@@ -3772,16 +3367,13 @@ class NFT:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=NFT.abi(),
+                address=to_checksum_address(self.contract_address), abi=NFT.abi(),
             )
             .events.MintedBatch()
             .processReceipt(tx_receipt)
         )
 
-    def get_paused_event(
-        self, tx_hash: Union[HexBytes, bytes]
-    ) -> Tuple[AttributeDict]:
+    def get_paused_event(self, tx_hash: Union[HexBytes, bytes]) -> Tuple[AttributeDict]:
         """Get log entry for Paused event.
 
         :param tx_hash: hash of transaction emitting Paused event
@@ -3789,8 +3381,7 @@ class NFT:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=NFT.abi(),
+                address=to_checksum_address(self.contract_address), abi=NFT.abi(),
             )
             .events.Paused()
             .processReceipt(tx_receipt)
@@ -3806,8 +3397,7 @@ class NFT:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=NFT.abi(),
+                address=to_checksum_address(self.contract_address), abi=NFT.abi(),
             )
             .events.RoleAdminChanged()
             .processReceipt(tx_receipt)
@@ -3823,8 +3413,7 @@ class NFT:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=NFT.abi(),
+                address=to_checksum_address(self.contract_address), abi=NFT.abi(),
             )
             .events.RoleGranted()
             .processReceipt(tx_receipt)
@@ -3840,8 +3429,7 @@ class NFT:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=NFT.abi(),
+                address=to_checksum_address(self.contract_address), abi=NFT.abi(),
             )
             .events.RoleRevoked()
             .processReceipt(tx_receipt)
@@ -3857,8 +3445,7 @@ class NFT:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=NFT.abi(),
+                address=to_checksum_address(self.contract_address), abi=NFT.abi(),
             )
             .events.RoyaltyUpdated()
             .processReceipt(tx_receipt)
@@ -3874,8 +3461,7 @@ class NFT:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=NFT.abi(),
+                address=to_checksum_address(self.contract_address), abi=NFT.abi(),
             )
             .events.Transfer()
             .processReceipt(tx_receipt)
@@ -3891,8 +3477,7 @@ class NFT:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=NFT.abi(),
+                address=to_checksum_address(self.contract_address), abi=NFT.abi(),
             )
             .events.Unpaused()
             .processReceipt(tx_receipt)

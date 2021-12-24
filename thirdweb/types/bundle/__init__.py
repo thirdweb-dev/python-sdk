@@ -5,8 +5,8 @@ from typing import Optional
 
 from dataclasses_json import dataclass_json
 
-from ..nft import NftMetadata
 from ..metadata import Metadata
+from ..nft import NftMetadata
 
 
 @dataclass_json
@@ -15,6 +15,7 @@ class BundleMetadata:
     """
     Metadata for a bundle
     """
+
     id: Optional[int] = None
     """
     ID of the bundle

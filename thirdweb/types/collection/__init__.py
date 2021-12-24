@@ -1,4 +1,2 @@
-"""
-Deprecated. Use types.bundle instead.
-"""
-from .types import CreateCollectionArg, CollectionMetadata, MintCollectionArg
+"""Deprecated. Use `types.bundle` instead."""
+from .types import CollectionMetadata, CreateCollectionArg, MintCollectionArg

@@ -1,5 +1,5 @@
 from typing import Any, Optional
-import json
+
 
 class NoSignerException(Exception):
     def __init__(self):
@@ -9,13 +9,18 @@ class NoSignerException(Exception):
 class AssetNotFoundException(Exception):
     def __init__(self, identifier: Optional[Any] = None):
         super().__init__(
-            f"Asset with ID '{identifier}' not found" if identifier is not None else "Asset not found")
+            f"Asset with ID '{identifier}' not found"
+            if identifier is not None
+            else "Asset not found"
+        )
 
 
 class UnsupportedAssetException(Exception):
     def __init__(self, identifier: Optional[Any] = None):
         super().__init__(
-            f"Asset with address {identifier} is not compatible with this method")
+            f"Asset with address {identifier} is not compatible with this method"
+        )
+
 
 class UploadError(Exception):
     def __init__(self, message: str):

@@ -1,28 +1,24 @@
-"""
-Interact with the Pack module of the app.
-"""
+"""Interact with the Pack module of the app."""
 from datetime import datetime
-from typing import Dict, List
-from json import dumps
+from typing import List
 
-from thirdweb_web3 import Web3
 from eth_abi import encode_abi
+from thirdweb_web3 import Web3
 
-
+from .base import BaseModule
 from ..abi.erc1155 import ERC1155
 from ..abi.pack import Pack
 from ..errors import AssetNotFoundException, UnsupportedAssetException
 from ..types.currency import CurrencyValue
 from ..types.nft import NftMetadata
-from ..types.pack import (AssetAmountPair, CreatePackArg, PackMetadata,
-                          PackNftMetadata)
-from .base import BaseModule
+from ..types.pack import AssetAmountPair, CreatePackArg, PackMetadata, PackNftMetadata
 
 
 class PackModule(BaseModule):
     """
     Interact with the Pack module of the app.
     """
+
     address: str
     """
     Address of the module
@@ -55,11 +51,12 @@ class PackModule(BaseModule):
         total_supply = self.__abi_module.total_supply.call(pack_id)
         return PackMetadata(
             id=pack_id,
-            creator_address=state['creator'],
+            creator_address=state["creator"],
             current_supply=total_supply,
             metadata=metadata,
-            open_start=None if state['openStart'] <= 0 else datetime.fromtimestamp(
-                state['openStart']),
+            open_start=None
+            if state["openStart"] <= 0
+            else datetime.fromtimestamp(state["openStart"]),
         )
 
     def open(self, pack_id: int) -> List[NftMetadata]:
@@ -133,9 +130,11 @@ class PackModule(BaseModule):
 
         Approves a given operator to perform an action on the pack.
         """
-        return self.execute_tx(self.__abi_module.set_approval_for_all.build_transaction(
-            operator, approved, self.get_transact_opts()
-        ))
+        return self.execute_tx(
+            self.__abi_module.set_approval_for_all.build_transaction(
+                operator, approved, self.get_transact_opts()
+            )
+        )
 
     def transfer(self, to_address: str, token_id: int, amount: int):
         """
@@ -146,9 +145,16 @@ class PackModule(BaseModule):
 
         Transfers a token to a given address.
         """
-        return self.execute_tx(self.__abi_module.safe_transfer_from.build_transaction(
-            self.get_signer_address(), to_address, token_id, amount, "", self.get_transact_opts(),
-        ))
+        return self.execute_tx(
+            self.__abi_module.safe_transfer_from.build_transaction(
+                self.get_signer_address(),
+                to_address,
+                token_id,
+                amount,
+                "",
+                self.get_transact_opts(),
+            )
+        )
 
     def create(self, arg: CreatePackArg) -> PackMetadata:
         """
@@ -164,24 +170,29 @@ class PackModule(BaseModule):
         if not self.is_erc1155(arg.asset_contract_address):
             raise UnsupportedAssetException(arg.asset_contract_address)
 
-        asset_contract = ERC1155(
-            self.get_client(), arg.asset_contract_address)
+        asset_contract = ERC1155(self.get_client(), arg.asset_contract_address)
         from_address = self.get_signer_address()
         ids = [a.token_id for a in arg.assets]
         amounts = [a.amount for a in arg.assets]
         uri = self.upload_metadata(arg.metadata)
 
         params = encode_abi(
-            ['string', 'uint256', 'uint256'],
-            [uri, arg.seconds_until_open_start, arg.rewards_per_open]
+            ["string", "uint256", "uint256"],
+            [uri, arg.seconds_until_open_start, arg.rewards_per_open],
         )
 
-        receipt = self.execute_tx(asset_contract.safe_batch_transfer_from.build_transaction(
-            from_address, self.address, ids, amounts, params, self.get_transact_opts(),
-        ))
-        result = self.__abi_module.get_pack_created_event(
-            receipt.transactionHash)
-        new_pack_id = result[0]['args']['packId']
+        receipt = self.execute_tx(
+            asset_contract.safe_batch_transfer_from.build_transaction(
+                from_address,
+                self.address,
+                ids,
+                amounts,
+                params,
+                self.get_transact_opts(),
+            )
+        )
+        result = self.__abi_module.get_pack_created_event(receipt.transactionHash)
+        new_pack_id = result[0]["args"]["packId"]
         return self.get(new_pack_id)
 
     def transfer_from(self, from_address: str, to_address: str, args: AssetAmountPair):
@@ -194,11 +205,20 @@ class PackModule(BaseModule):
         Transfers a token from a given address to a given address.
 
         """
-        return self.execute_tx(self.__abi_module.safe_transfer_from.build_transaction(
-            from_address, to_address, args.token_id, args.amount, "", self.get_transact_opts(),
-        ))
+        return self.execute_tx(
+            self.__abi_module.safe_transfer_from.build_transaction(
+                from_address,
+                to_address,
+                args.token_id,
+                args.amount,
+                "",
+                self.get_transact_opts(),
+            )
+        )
 
-    def transfer_batch_from(self, from_address: str, to_address: str, args: List[AssetAmountPair]):
+    def transfer_batch_from(
+        self, from_address: str, to_address: str, args: List[AssetAmountPair]
+    ):
         """
         :param from_address: The address to transfer the token from.
         :param to_address: The address to transfer the token to.
@@ -209,9 +229,11 @@ class PackModule(BaseModule):
 
         """
         ids, amounts = [i.token_id for i in args], [i.amount for i in args]
-        return self.execute_tx(self.__abi_module.safe_batch_transfer_from.build_transaction(
-            from_address, to_address, ids, amounts, "", self.get_transact_opts(),
-        ))
+        return self.execute_tx(
+            self.__abi_module.safe_batch_transfer_from.build_transaction(
+                from_address, to_address, ids, amounts, "", self.get_transact_opts(),
+            )
+        )
 
     def get_link_balance(self) -> CurrencyValue:
         """
@@ -247,9 +269,11 @@ class PackModule(BaseModule):
         Sets the royalty BPS for the pack.
 
         """
-        return self.execute_tx(self.__abi_module.set_royalty_bps.build_transaction(
-            amount, self.get_transact_opts()
-        ))
+        return self.execute_tx(
+            self.__abi_module.set_royalty_bps.build_transaction(
+                amount, self.get_transact_opts()
+            )
+        )
 
     def set_restricted_transfer(self, restricted: bool = True):
         """
@@ -258,9 +282,11 @@ class PackModule(BaseModule):
         Sets restricted transfer for the NFT, defaults to restricted.
 
         """
-        return self.execute_tx(self.__abi_module.set_restricted_transfer.build_transaction(
-            restricted, self.get_transact_opts()
-        ))
+        return self.execute_tx(
+            self.__abi_module.set_restricted_transfer.build_transaction(
+                restricted, self.get_transact_opts()
+            )
+        )
 
     def get_abi_module(self) -> Pack:
         """
