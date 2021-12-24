@@ -25,25 +25,25 @@ nav:
   - "index.md"
   - "installation.md"
   - "API Reference":
-    - "ThirdwebSdk Class": "api-reference/sdk-class.md"
-    - "Modules":
-      - "api-reference/modules/index.md"
-      - "Bundle":
-        - "api-reference/modules/bundle/index.md"
-        - "Examples": "api-reference/modules/bundle/examples.md"
-      - "Currency":
-        - "api-reference/modules/currency/index.md"
-        - "Examples": "api-reference/modules/currency/examples.md"
-      - "Market":
-        - "api-reference/modules/market/index.md"
-        - "Examples": "api-reference/modules/market/examples.md"
-      - "NFT Collection":
-        - "api-reference/modules/nft-collection/index.md"
-        - "Examples": "api-reference/modules/nft-collection/examples.md"
-      - "Pack":
-        - "api-reference/modules/pack/index.md"
-        - "Examples": "api-reference/modules/pack/examples.md"
-    - "Roles": "api-reference/roles.md"
+      - "ThirdwebSdk Class": "api-reference/sdk-class.md"
+      - "Modules":
+          - "api-reference/modules/index.md"
+          - "Bundle":
+              - "api-reference/modules/bundle/index.md"
+              - "Examples": "api-reference/modules/bundle/examples.md"
+          - "Currency":
+              - "api-reference/modules/currency/index.md"
+              - "Examples": "api-reference/modules/currency/examples.md"
+          - "Market":
+              - "api-reference/modules/market/index.md"
+              - "Examples": "api-reference/modules/market/examples.md"
+          - "NFT Collection":
+              - "api-reference/modules/nft-collection/index.md"
+              - "Examples": "api-reference/modules/nft-collection/examples.md"
+          - "Pack":
+              - "api-reference/modules/pack/index.md"
+              - "Examples": "api-reference/modules/pack/examples.md"
+      - "Roles": "api-reference/roles.md"
   - "deprecations.md"
 
 markdown_extensions:

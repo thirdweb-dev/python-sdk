@@ -26,12 +26,12 @@ Here's a table of common public RPC's you can use as you work through our
 docs:
 
 ??? "Click to view the table of RPC urls"
-    | Chain Name                 | ID    | RPC URL                                |
-    | -------------------------- | ----- | -------------------------------------- |
-    | Ethereym Mainnet           | 1     | https://main-light.eth.linkpool.io     |
-    | Ethereum Rinkeby (testnet) | 4     | https://rinkeby-light.eth.linkpool.io/ |
-    | Polygon Mainnet            | 137   | https://polygon-rpc.com                |
-    | Polygon Mumbai (testnet)   | 80001 | https://rpc-mumbai.maticvigil.com      |
+| Chain Name | ID | RPC URL |
+| -------------------------- | ----- | -------------------------------------- |
+| Ethereym Mainnet | 1 | https://main-light.eth.linkpool.io |
+| Ethereum Rinkeby (testnet) | 4 | https://rinkeby-light.eth.linkpool.io/ |
+| Polygon Mainnet | 137 | https://polygon-rpc.com |
+| Polygon Mumbai (testnet) | 80001 | https://rpc-mumbai.maticvigil.com |
 
 Instantiate the SDK like so:
 
@@ -43,4 +43,4 @@ from thirdweb import ThirdwebSdk, SdkOptions
 sdk = ThirdwebSdk(SdkOptions(), "https://rpc-mumbai.maticvigil.com")
 ```
 
-Notice on line 5 that we passed in the RPC URL for the *Polygon Mumbai (testnet)* chain.
+Notice on line 5 that we passed in the RPC URL for the _Polygon Mumbai (testnet)_ chain.

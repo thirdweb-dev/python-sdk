@@ -12,7 +12,6 @@ PyPi package found [here](https://pypi.org/project/thirdweb-sdk).
 >
 > In your code, update all imports to use the `thirdweb` package and switch to using the `ThirdwebSdk` package (instead of the `NftlabsSdk` package)
 
-
 ---
 
 > 2 of 2
@@ -23,22 +22,19 @@ PyPi package found [here](https://pypi.org/project/thirdweb-sdk).
 >
 > You can find the detailed documentation for the `bundle` module [here](https://python-docs.thirdweb.com/modules.bundle.html)
 
-
 ### Docs
+
 https://docs.thirdweb.com
 
 ### API Reference
+
 https://python-docs.thidweb.com/
-
-
 
 ## Installing the SDK
 
 ```bash
 $ pip install thirdweb-sdk
 ```
-
-
 
 ## Package Structure
 
@@ -90,7 +86,6 @@ $ abi-gen --language Python -o nftlabs/abi --abis ../nftlabs-protocols/abi/NFT.j
 
 Anytime there are ABI contract changes, you should regenerate the abi wrappers.
 
-
 ### Writing Documentation
 
 This package uses [`PyDoctor`](https://github.com/twisted/pydoctor) to auto-generate docs. Each method, class and variable should have a detailed description of what it is meant for as a comment enclosed in triple quoation marks (`""" """`) just below the line they are defined.
@@ -98,6 +93,7 @@ This package uses [`PyDoctor`](https://github.com/twisted/pydoctor) to auto-gene
 Example:
 
 Do:
+
 ```python
 def my_method(self, arg1, arg2):
     """
@@ -107,6 +103,7 @@ def my_method(self, arg1, arg2):
 ```
 
 Don't:
+
 ```python
 """
 This part will not go into the documentation.
@@ -116,10 +113,10 @@ def my_method(self, arg1, arg2):
     return arg1 + arg2
 ```
 
-
 Addtionally, each module should also have a docstring at the top of the file. This will be used as a breif descroption of the module on the [homepage of the documentation](https://python-docs.thirdweb.com/).
 
 Example:
+
 ```python
 1 """Interact with the NFT module of the app""" # docstring
 2 # Module code starts from here

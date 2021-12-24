@@ -1,9 +1,8 @@
 # Deprecation Notices
 
+## The `nftlabs-sdk` package
 
-## The ``nftlabs-sdk`` package
-
-*As of November 1st, 2021*
+_As of November 1st, 2021_
 
 > To be removed in `v1.0.0`
 
@@ -17,7 +16,7 @@ official `v1.0.0` release will not include the `NftlabsSdk` class.
 
 ## The `CollectionModule` class
 
-*As of November 1st, 2021*
+_As of November 1st, 2021_
 
 > To be removed in `v1.0.0`
 
