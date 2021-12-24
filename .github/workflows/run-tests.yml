@@ -22,16 +22,19 @@ jobs:
 
     steps:
       - uses: "actions/checkout@v2"
+
       - uses: "actions/setup-python@v2"
         with:
           python-version: "${{ matrix.python-version }}"
+
       - name: "Install dependencies"
         run: |
-          set -xe
-          python -VV
-          python -m site
-          python -m pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          pip install pipenv
+          pipenv sync -d
+
       - name: "Run tests targets for ${{ matrix.python-version }}"
-        run: "python3 -m unittest discover -t ."
+        run: pipenv run tests
+
       - name: "Test bundle package with setup.py ${{ matrix.python-version }}"
         run: "python3 setup.py sdist"
