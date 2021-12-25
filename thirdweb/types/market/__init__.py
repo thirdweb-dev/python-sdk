@@ -33,6 +33,7 @@ class Filter:
     seller: Optional[str] = None
     tokenContract: Optional[str] = None
     tokenId: Optional[int] = None
+    active: Optional[bool] = None
 
 
 @dataclass_json

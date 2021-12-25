@@ -221,24 +221,34 @@ class MarketModule(BaseModule):
         Returns all the listings.
 
         """
+        listings = []
         if filter is None:
             return self.__abi_module.get_all_listings.call()
         elif filter.asset_contract is not None:
             if filter.token_id is not None:
-                return self.__abi_module.get_listings_by_asset.call(
+                listings = self.__abi_module.get_listings_by_asset.call(
                     filter.asset_contract,
                     filter.token_id
                 )
             else:
-                return self.__abi_module.get_listings_by_asset_contract.call(
+                listings = self.__abi_module.get_listings_by_asset_contract.call(
                     filter.asset_contract
                 )
         elif filter.seller is not None:
-            return self.__abi_module.get_listings_by_seller.call(
+            listings = self.__abi_module.get_listings_by_seller.call(
                 filter.seller
             )
         else:
-            return self.__abi_module.get_all_listings.call()
+            listings = self.__abi_module.get_all_listings.call()
+        
+        if filter.active:
+            active_listings = []
+            for listing in listings:
+                if listing.quantity > 0:
+                    active_listings.append(listing)
+            return active_listings
+        else:
+            return listings
 
     def total_listings(self) -> int:
         """
@@ -248,6 +258,16 @@ class MarketModule(BaseModule):
 
         """
         return self.__abi_module.total_listings.call()
+
+    def total_active_listings(self) -> int:
+        """
+        :return: The number of active listings on the market
+
+        Returns the number of active listings on the market
+        """
+        
+        active_listings = self.get_all(Filter(active=True))
+        return len(active_listings)
 
     def get_abi_module(self) -> Market:
         """
