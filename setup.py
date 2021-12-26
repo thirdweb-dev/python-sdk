@@ -1,3 +1,4 @@
+import re
 from os import environ
 from pathlib import Path
 
@@ -8,6 +9,17 @@ BASE_DIR = Path(__file__).resolve().parent
 
 # The text of the README file
 README = (BASE_DIR / "README.md").read_text()
+
+# Version location.
+VERSION = re.search(
+    r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+    Path(BASE_DIR / "hypixelio/__init__.py").read_text(),
+    re.MULTILINE,
+).group(1)
+
+# Version error
+if not VERSION:
+    raise RuntimeError("VERSION is not set!")
 
 # Github URL
 GITHUB_URL = "https://github.com/nftlabs/nftlabs-sdk-python"
@@ -20,25 +32,31 @@ if "PACKAGE_NAME" in environ:
 setup(
     # Project info.
     name=package_name,
-    version="0.4.0",
+    version=VERSION,
+
     # Descriptions
     description="Official Thirdweb sdk",
     long_description=README,
     long_description_content_type="text/markdown",
+
     # Author info.
     author="NFTLabs",
     author_email="sdk@thirdweb.com",
+
     # Project repo info.
     url=GITHUB_URL,
     project_urls={
         "Documentation": GITHUB_URL,
         "Issue Tracker": GITHUB_URL + "/issues",
     },
+
     # Licensing.
     license="MIT",
+
     # Packaging.
     packages=find_packages(exclude=["tests", "tests.*", "tools", "tools.*"]),
     include_package_data=True,
+
     # Dependencies.
     install_requires=[
         "dataclasses-json==0.5.6",
@@ -47,6 +65,7 @@ setup(
         "thirdweb-contract-wrappers==2.0.3",
         "web3==5.25.0",
     ],
+
     # PyPI classifiers.
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -59,8 +78,10 @@ setup(
         "Natural Language :: English",
         "Typing :: Typed",
     ],
+
     # Modules in this package.
     py_modules=["thirdweb", "nftlabs"],
+
     # Minimum python version
     python_requires=">=3.6",
 )
