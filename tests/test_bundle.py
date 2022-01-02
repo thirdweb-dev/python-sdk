@@ -27,6 +27,8 @@ class TestRoles(unittest.TestCase):
         self.nft_module = self.sdk.get_nft_module(TEST_NFT_CONTRACT_ADDRESS)
         self.currency_module = self.sdk.get_currency_module(
             TEST_CURRENCY_CONTRACT_ADDRESS)
+        self.collection_module = self.sdk.get_collection_module(
+            TEST_BUNDLE_CONTRACT_ADDRESS)
 
     def test_bundle_get_all(self):
         """
@@ -40,7 +42,7 @@ class TestRoles(unittest.TestCase):
         """
         Test that tries to instantiate the Collection module
         """
-        result = self.bundle_module.get_all()
+        result = self.collection_module.get_all()
         self.assertGreater(
             len(result), 0, "There should be at least 1 token in the contract")
 
