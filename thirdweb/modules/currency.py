@@ -1,6 +1,7 @@
 """
 Interact with the Currency module of the app.
 """
+from thirdweb.errors import RestrictedTransferError
 from thirdweb_web3 import Web3
 
 from ..abi.coin import Coin
@@ -156,7 +157,9 @@ class CurrencyModule(BaseModule):
 
         Transfers the given amount from the current address
         """
-        return self.execute_tx(self.__abi_module.transfer_from.build_transaction(
+        if(self.__abi_module.is_restricted_transfer()):
+            raise RestrictedTransferError(self.address)
+        return self.execute_tx(self.__abi_module.transfer.build_transaction(
             self.get_signer_address(), to_address, amount, self.get_transact_opts()
         ))        
 
