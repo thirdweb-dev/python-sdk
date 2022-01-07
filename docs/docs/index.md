@@ -17,7 +17,7 @@ Start by installing the Thirdweb sdk with pip
 $ pip install thirdweb-sdk
 ```
 
-## Initializing Up The SDK
+## Initializing The SDK
 
 In order to setup the SDK, the minimum configuration that's required is an
 **RPC URL**. The URL will depend on what chain you'd like to interact with.
@@ -28,7 +28,7 @@ docs:
 ??? "Click to view the table of RPC urls"
     | Chain Name                 | ID    | RPC URL                                |
     | -------------------------- | ----- | -------------------------------------- |
-    | Ethereym Mainnet           | 1     | https://main-light.eth.linkpool.io     |
+    | Ethereum Mainnet           | 1     | https://main-light.eth.linkpool.io     |
     | Ethereum Rinkeby (testnet) | 4     | https://rinkeby-light.eth.linkpool.io/ |
     | Polygon Mainnet            | 137   | https://polygon-rpc.com                |
     | Polygon Mumbai (testnet)   | 80001 | https://rpc-mumbai.maticvigil.com      |
