@@ -28,7 +28,7 @@ PyPi package found [here](https://pypi.org/project/thirdweb-sdk).
 https://docs.thirdweb.com
 
 ### API Reference
-https://python-docs.thidweb.com/
+https://python-docs.thirdweb.com/
 
 
 
