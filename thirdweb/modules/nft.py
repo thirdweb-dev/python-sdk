@@ -87,9 +87,9 @@ class NftModule(BaseModule):
         )
         receipt = self.execute_tx(tx)
         result = self.__abi_module.get_minted_event(
-            tx_hash=receipt.transactionHash.hex()
+            receipt.transactionHash.hex()
         )
-        token_id = result[0]["args"]["tokenId"]
+        token_id = result[0]["args"]["tokenIdMinted"]
         return self.get(token_id)
 
     def total_supply(self) -> int:
@@ -136,7 +136,7 @@ class NftModule(BaseModule):
         """
         return self.mint_batch_to(self.get_signer_address(), args)
 
-    def mint_batch_to(self, to_address: str, args: List[MintArg]):
+    def mint_batch_to(self, to_address: str, args: List[MintArg]): # TODO: switch this to multicall 
         """
         :param to_address: the address to mint the token to
         :param args: the `name`, `description`, `image_uri`, `properties` of the token
@@ -151,12 +151,13 @@ class NftModule(BaseModule):
             'properties': arg.properties if arg.properties is not None else {}
         }) for arg in args]
 
+        
         tx = self.__abi_module.mint_nft_batch.build_transaction(
             to_address, uris, self.get_transact_opts()
         )
 
         receipt = self.execute_tx(tx)
-        result = self.__abi_module.get_minted_batch_event(
+        result = self.__abi_module.get_minted_event(
             tx_hash=receipt.transactionHash.hex()
         )
         token_ids = result[0]["args"]["tokenIds"]

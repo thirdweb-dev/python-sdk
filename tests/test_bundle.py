@@ -4,17 +4,14 @@ from os import environ
 from thirdweb import SdkOptions, ThirdwebSdk
 from thirdweb.modules.bundle import BundleModule
 from thirdweb.modules.currency import CurrencyModule
-from thirdweb.modules.nft_v1 import NftModule
 
 from .constants import (TEST_BUNDLE_CONTRACT_ADDRESS,
-                        TEST_CURRENCY_CONTRACT_ADDRESS,
-                        TEST_NFT_CONTRACT_ADDRESS)
+                        TEST_CURRENCY_CONTRACT_ADDRESS)
 
 
 class TestRoles(unittest.TestCase):
     sdk: ThirdwebSdk
     bundle_module: BundleModule
-    nft_module: NftModule
     currency_module: CurrencyModule
 
     @classmethod
@@ -24,7 +21,6 @@ class TestRoles(unittest.TestCase):
         ), "https://rpc-mumbai.maticvigil.com")
         self.bundle_module = self.sdk.get_bundle_module(
             TEST_BUNDLE_CONTRACT_ADDRESS)
-        self.nft_module = self.sdk.get_nft_module(TEST_NFT_CONTRACT_ADDRESS)
         self.currency_module = self.sdk.get_currency_module(
             TEST_CURRENCY_CONTRACT_ADDRESS)
         self.collection_module = self.sdk.get_collection_module(
