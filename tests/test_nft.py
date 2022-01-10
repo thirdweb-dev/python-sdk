@@ -8,10 +8,9 @@ from thirdweb.modules.nft import NftModule
 from thirdweb.modules.nft_types import MintArg
 from thirdweb.modules.nft_v1 import NftModule as NftModuleV1
 
-from .constants import (TEST_BUNDLE_CONTRACT_ADDRESS,
-                        TEST_CURRENCY_CONTRACT_ADDRESS,
-                        TEST_NFT_CONTRACT_ADDRESS,
-                        TEST_OLD_NFT_CONTRACT_ADDRESS,)
+from .constants import (
+    TEST_NFT_CONTRACT_ADDRESS,
+    TEST_OLD_NFT_CONTRACT_ADDRESS,)
 
 
 class TestRoles(unittest.TestCase):
