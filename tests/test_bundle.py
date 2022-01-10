@@ -4,7 +4,7 @@ from os import environ
 from thirdweb import SdkOptions, ThirdwebSdk
 from thirdweb.modules.bundle import BundleModule
 from thirdweb.modules.currency import CurrencyModule
-from thirdweb.modules.nft import NftModule
+from thirdweb.modules.nft_v1 import NftModule
 
 from .constants import (TEST_BUNDLE_CONTRACT_ADDRESS,
                         TEST_CURRENCY_CONTRACT_ADDRESS,

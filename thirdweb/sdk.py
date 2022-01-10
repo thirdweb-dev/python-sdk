@@ -11,6 +11,7 @@ from .modules.collection import CollectionModule
 from .modules.currency import CurrencyModule
 from .modules.market import MarketModule
 from .modules.nft import NftModule
+from .modules.nft_v1 import NftModule as NftModuleV1
 from .modules.pack import PackModule
 from .options import SdkOptions
 from .storage import IpfsStorage
@@ -94,14 +95,17 @@ class ThirdwebSdk(object):
         return self.__currency_module
 
     @set_default_account
-    def get_nft_module(self, address: str) -> NftModule:
+    def get_nft_module(self, address: str, old_module: bool = False) -> NftModule:
         """
         Returns an instance of the nft module
         """
         if self.__nft_module is not None:
             return self.__nft_module
 
-        module = NftModule(address, self.__get_client())
+        if old_module:
+            module = NftModuleV1(address, self.__get_client())
+        else:
+            module = NftModule(address, self.__get_client())
         self.__init_module(module)
         self.__nft_module = module
         return self.__nft_module
