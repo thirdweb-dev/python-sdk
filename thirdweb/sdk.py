@@ -10,6 +10,7 @@ from .modules.bundle import BundleModule
 from .modules.collection import CollectionModule
 from .modules.currency import CurrencyModule
 from .modules.market import MarketModule
+from .modules.marketplace import MarketplaceModule
 from .modules.nft import NftModule
 from .modules.pack import PackModule
 from .options import SdkOptions
@@ -120,17 +121,27 @@ class ThirdwebSdk(object):
         return self.__pack_module
 
     @set_default_account
-    def get_market_module(self, address: str) -> MarketModule:
+    def get_market_module(self, address: str, old: bool = True) -> MarketModule:
         """
-        Returns an instance of the market module
+        Returns an instance of the old market module
         """
         if self.__market_module is not None:
             return self.__market_module
 
-        module = MarketModule(address, self.__get_client())
+        if old:
+            module = MarketModule(address, self.__get_client())
+        else:
+            module = MarketplaceModule(address, self.__get_client())
         self.__init_module(module)
         self.__market_module = module
         return self.__market_module
+
+    @set_default_account
+    def get_marketplace_module(self, address: str) -> MarketplaceModule:
+        """
+        Returns an instance of the marketplace module
+        """
+        return self.get_market_module(address, old=False)
 
     @set_default_account
     def get_collection_module(self, address: str) -> CollectionModule:
