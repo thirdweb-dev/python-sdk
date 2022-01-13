@@ -4,7 +4,6 @@ Types for the market module.
 
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
-from typing import Optional
 from ..nft import NftMetadata
 from ..currency import CurrencyValue
 import datetime
@@ -23,6 +22,7 @@ class NewListing:
     quantity: int
     currencyContractAddress: str
     buyoutPricePerToken: int
+    listing_type: str = "NewDirectListing"
 
 
 @dataclass
@@ -39,6 +39,7 @@ class NewAuctionListing:
     currencyContractAddress: str
     buyoutPricePerToken: int
     reservePricePerToken: int
+    listing_type: str = "NewAuctionListing"
 
 
 @dataclass
@@ -63,33 +64,46 @@ class NewBid:
     price_per_token: int
 
 
-@dataclass_json
 @dataclass
-class MarketListing:
-    listingId: int
-    seller: str
-    assetContract: str
-    tokenId: int
-    quantity: int
-    currency: str
-    pricePerToken: int
-    saleStart: int
-    saleEnd: int
-    tokensPerBuyer: int
-    tokenType: int
-
-
 @dataclass_json
-@dataclass
-class Listing:
+class DirectListing:
     id: str
-    seller: str
-    token_contract: str
-    token_id: str
+    assetContractAddress: str
+    tokenId: int
+    asset: NftMetadata
+    startTimeInSeconds: int
+    secondsUntilEnd: int
     quantity: int
-    currency_contract: str
-    price_per_token: int
-    sale_start: datetime.datetime
-    sale_end: datetime.datetime
-    token_metadata: Optional[NftMetadata] = None
-    currency_metadata: Optional[CurrencyValue] = None
+    currencyContractAddress: str
+    buyoutCurrencyValuePerToken: CurrencyValue
+    buyoutPrice: int
+    sellerAddress: int
+    type: int
+
+
+@dataclass
+@dataclass_json
+class AuctionListing:
+    id: str
+    assetContractAddress: str
+    tokenId: int
+    asset: NftMetadata
+    startTimeInSeconds: int
+    secondsUntilEnd: int
+    quantity: int
+    currencyContractAddress: str
+    buyoutCurrencyValuePerToken: CurrencyValue
+    reservePrice: int
+    buyoutPrice: int
+    sellerAddress: int
+    type: int
+
+@dataclass
+@dataclass_json
+class Offer:
+  listingId: int
+  buyerAddress: str
+  quantityDesired: int
+  pricePerToken: int
+  currencyValue: CurrencyValue
+  currencyContractAddress: str  
