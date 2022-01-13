@@ -78,7 +78,7 @@ class DirectListing:
     buyoutCurrencyValuePerToken: CurrencyValue
     buyoutPrice: int
     sellerAddress: int
-    type: int
+    listing_type: int
 
 
 @dataclass
@@ -93,10 +93,11 @@ class AuctionListing:
     quantity: int
     currencyContractAddress: str
     buyoutCurrencyValuePerToken: CurrencyValue
+    reservePriceCurrencyValuePerToken: CurrencyValue
     reservePrice: int
     buyoutPrice: int
     sellerAddress: int
-    type: int
+    listing_type: int
 
 @dataclass
 @dataclass_json
