@@ -123,7 +123,8 @@ class ThirdwebSdk(object):
     @set_default_account
     def get_market_module(self, address: str, isv1: bool = True) -> MarketModule:
         """
-        Returns an instance of the old market module
+        .. deprecated:: 0.5.0
+            This property is deprecated. Use the `image` property instead
         """
         if self.__market_module is not None:
             return self.__market_module

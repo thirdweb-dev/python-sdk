@@ -21,7 +21,8 @@ from . import BaseModule
 
 class MarketModule(BaseModule):
     """
-    Interact with the Market module of the app.
+    .. deprecated:: 0.5.0
+        Use the new MarketplaceModule instead.
     """
 
     address: str
