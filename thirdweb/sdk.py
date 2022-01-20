@@ -121,14 +121,14 @@ class ThirdwebSdk(object):
         return self.__pack_module
 
     @set_default_account
-    def get_market_module(self, address: str, old: bool = True) -> MarketModule:
+    def get_market_module(self, address: str, isv1: bool = True) -> MarketModule:
         """
         Returns an instance of the old market module
         """
         if self.__market_module is not None:
             return self.__market_module
 
-        if old:
+        if isv1:
             module = MarketModule(address, self.__get_client())
         else:
             module = MarketplaceModule(address, self.__get_client())
