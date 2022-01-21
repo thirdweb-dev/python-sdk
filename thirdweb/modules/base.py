@@ -11,7 +11,7 @@ import json
 from ..abi.coin import Coin
 from ..abi.erc165 import ERC165
 from ..abi.market import Market
-from ..abi.nft import NFT
+from ..abi.nft import SignatureMint721 as NFT
 from ..abi.nft_collection import NFTCollection as NFTBundle
 from ..abi.pack import Pack
 from ..constants.erc_interfaces import InterfaceIdErc721, InterfaceIdErc1155

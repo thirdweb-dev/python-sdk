@@ -30,7 +30,13 @@ setup(
     ],
     packages=find_packages(),
     include_package_data=True,
-    install_requires=["dataclasses-json", "thirdweb-web3",
-                      "requests", "thirdweb-contract-wrappers", "web3"],
+    install_requires=[
+        "dataclasses-json",
+        "thirdweb-web3",
+        "requests",
+        "thirdweb-contract-wrappers",
+        "web3",
+        "deprecation"
+    ],
     py_modules=["thirdweb", "nftlabs"]
 )

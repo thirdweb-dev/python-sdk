@@ -1,4 +1,4 @@
-"""Generated wrapper for SignatureMint721 Solidity contract."""
+"""Generated wrapper for NFT Solidity contract."""
 
 # pylint: disable=too-many-arguments
 
@@ -25,16 +25,16 @@ from zero_ex.contract_wrappers.tx_params import TxParams
 
 # Try to import a custom validator class definition; if there isn't one,
 # declare one that we can instantiate for the default argument to the
-# constructor for SignatureMint721 below.
+# constructor for NFT below.
 try:
     # both mypy and pylint complain about what we're doing here, but this
     # works just fine, so their messages have been disabled here.
     from . import (  # type: ignore # pylint: disable=import-self
-        SignatureMint721Validator,
+        NFTValidator,
     )
 except ImportError:
 
-    class SignatureMint721Validator(Validator):  # type: ignore
+    class NFTValidator(Validator):  # type: ignore
         """No-op input validator."""
 
 
@@ -42,37 +42,6 @@ try:
     from .middleware import MIDDLEWARE  # type: ignore
 except ImportError:
     pass
-
-
-class ISignatureMint721MintRequest(TypedDict):
-    """Python representation of a tuple or struct.
-
-    Solidity compiler output does not include the names of structs that appear
-    in method definitions.  A tuple found in an ABI may have been written in
-    Solidity as a literal, anonymous tuple, or it may have been written as a
-    named `struct`:code:, but there is no way to tell from the compiler
-    output.  This class represents a tuple that appeared in a method
-    definition.  Its name is derived from a hash of that tuple's field names,
-    and every method whose ABI refers to a tuple with that same list of field
-    names will have a generated wrapper method that refers to this class.
-
-    Any members of type `bytes`:code: should be encoded as UTF-8, which can be
-    accomplished via `str.encode("utf_8")`:code:
-    """
-
-    to: str
-
-    uri: str
-
-    price: int
-
-    currency: str
-
-    validityStartTimestamp: int
-
-    validityEndTimestamp: int
-
-    uid: Union[bytes, str]
 
 
 class DefaultAdminRoleMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -163,6 +132,50 @@ class MinterRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
 
+class PauserRoleMethod(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the PAUSER_ROLE method."""
+
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+    ):
+        """Persist instance data."""
+        super().__init__(web3_or_provider, contract_address)
+        self._underlying_method = contract_function
+
+    def call(self, tx_params: Optional[TxParams] = None) -> Union[bytes, str]:
+        """Execute underlying contract method via eth_call.
+
+        :param tx_params: transaction parameters
+        :returns: the return value of the underlying method.
+        """
+        tx_params = super().normalize_tx_params(tx_params)
+        returned = self._underlying_method().call(tx_params.as_dict())
+        return Union[bytes, str](returned)
+
+    def send_transaction(
+        self, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
+        """Execute underlying contract method via eth_sendTransaction.
+
+        :param tx_params: transaction parameters
+        """
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().transact(tx_params.as_dict())
+
+    def build_transaction(self, tx_params: Optional[TxParams] = None) -> dict:
+        """Construct calldata to be used as input to the method."""
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().buildTransaction(tx_params.as_dict())
+
+    def estimate_gas(self, tx_params: Optional[TxParams] = None) -> int:
+        """Estimate gas consumption of method call."""
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().estimateGas(tx_params.as_dict())
+
+
 class TransferRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the TRANSFER_ROLE method."""
 
@@ -185,6 +198,50 @@ class TransferRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         returned = self._underlying_method().call(tx_params.as_dict())
         return Union[bytes, str](returned)
+
+    def send_transaction(
+        self, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
+        """Execute underlying contract method via eth_sendTransaction.
+
+        :param tx_params: transaction parameters
+        """
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().transact(tx_params.as_dict())
+
+    def build_transaction(self, tx_params: Optional[TxParams] = None) -> dict:
+        """Construct calldata to be used as input to the method."""
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().buildTransaction(tx_params.as_dict())
+
+    def estimate_gas(self, tx_params: Optional[TxParams] = None) -> int:
+        """Estimate gas consumption of method call."""
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().estimateGas(tx_params.as_dict())
+
+
+class ContractUri_Method(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the _contractURI method."""
+
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+    ):
+        """Persist instance data."""
+        super().__init__(web3_or_provider, contract_address)
+        self._underlying_method = contract_function
+
+    def call(self, tx_params: Optional[TxParams] = None) -> str:
+        """Execute underlying contract method via eth_call.
+
+        :param tx_params: transaction parameters
+        :returns: the return value of the underlying method.
+        """
+        tx_params = super().normalize_tx_params(tx_params)
+        returned = self._underlying_method().call(tx_params.as_dict())
+        return str(returned)
 
     def send_transaction(
         self, tx_params: Optional[TxParams] = None
@@ -462,94 +519,72 @@ class ContractUriMethod(ContractMethod):  # pylint: disable=invalid-name
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
 
-class DefaultSaleRecipientMethod(
-    ContractMethod
-):  # pylint: disable=invalid-name
-    """Various interfaces to the defaultSaleRecipient method."""
+class CreatorMethod(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the creator method."""
 
     def __init__(
         self,
         web3_or_provider: Union[Web3, BaseProvider],
         contract_address: str,
         contract_function: ContractFunction,
+        validator: Validator = None,
     ):
         """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address)
+        super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def call(self, tx_params: Optional[TxParams] = None) -> str:
+    def validate_and_normalize_inputs(self, index_0: int):
+        """Validate the inputs to the creator method."""
+        self.validator.assert_valid(
+            method_name="creator",
+            parameter_name="index_0",
+            argument_value=index_0,
+        )
+        # safeguard against fractional inputs
+        index_0 = int(index_0)
+        return index_0
+
+    def call(self, index_0: int, tx_params: Optional[TxParams] = None) -> str:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
+        (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method().call(tx_params.as_dict())
+        returned = self._underlying_method(index_0).call(tx_params.as_dict())
         return str(returned)
 
     def send_transaction(
-        self, tx_params: Optional[TxParams] = None
+        self, index_0: int, tx_params: Optional[TxParams] = None
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
+        (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().transact(tx_params.as_dict())
+        return self._underlying_method(index_0).transact(tx_params.as_dict())
 
-    def build_transaction(self, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self, index_0: int, tx_params: Optional[TxParams] = None
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
+        (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().buildTransaction(tx_params.as_dict())
+        return self._underlying_method(index_0).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self, index_0: int, tx_params: Optional[TxParams] = None
+    ) -> int:
         """Estimate gas consumption of method call."""
+        (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().estimateGas(tx_params.as_dict())
-
-
-class FeeBpsMethod(ContractMethod):  # pylint: disable=invalid-name
-    """Various interfaces to the feeBps method."""
-
-    def __init__(
-        self,
-        web3_or_provider: Union[Web3, BaseProvider],
-        contract_address: str,
-        contract_function: ContractFunction,
-    ):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address)
-        self._underlying_method = contract_function
-
-    def call(self, tx_params: Optional[TxParams] = None) -> int:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method().call(tx_params.as_dict())
-        return int(returned)
-
-    def send_transaction(
-        self, tx_params: Optional[TxParams] = None
-    ) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().transact(tx_params.as_dict())
-
-    def build_transaction(self, tx_params: Optional[TxParams] = None) -> dict:
-        """Construct calldata to be used as input to the method."""
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().buildTransaction(tx_params.as_dict())
-
-    def estimate_gas(self, tx_params: Optional[TxParams] = None) -> int:
-        """Estimate gas consumption of method call."""
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().estimateGas(tx_params.as_dict())
+        return self._underlying_method(index_0).estimateGas(
+            tx_params.as_dict()
+        )
 
 
 class GetApprovedMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1174,8 +1209,74 @@ class IsTrustedForwarderMethod(ContractMethod):  # pylint: disable=invalid-name
         )
 
 
-class MintToMethod(ContractMethod):  # pylint: disable=invalid-name
-    """Various interfaces to the mintTo method."""
+class MintMethod(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the mint method."""
+
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
+        """Persist instance data."""
+        super().__init__(web3_or_provider, contract_address, validator)
+        self._underlying_method = contract_function
+
+    def validate_and_normalize_inputs(self, index_0: str):
+        """Validate the inputs to the mint method."""
+        self.validator.assert_valid(
+            method_name="mint",
+            parameter_name="index_0",
+            argument_value=index_0,
+        )
+        index_0 = self.validate_and_checksum_address(index_0)
+        return index_0
+
+    def call(self, index_0: str, tx_params: Optional[TxParams] = None) -> None:
+        """Execute underlying contract method via eth_call.
+
+        :param tx_params: transaction parameters
+        :returns: the return value of the underlying method.
+        """
+        (index_0) = self.validate_and_normalize_inputs(index_0)
+        tx_params = super().normalize_tx_params(tx_params)
+        self._underlying_method(index_0).call(tx_params.as_dict())
+
+    def send_transaction(
+        self, index_0: str, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
+        """Execute underlying contract method via eth_sendTransaction.
+
+        :param tx_params: transaction parameters
+        """
+        (index_0) = self.validate_and_normalize_inputs(index_0)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(index_0).transact(tx_params.as_dict())
+
+    def build_transaction(
+        self, index_0: str, tx_params: Optional[TxParams] = None
+    ) -> dict:
+        """Construct calldata to be used as input to the method."""
+        (index_0) = self.validate_and_normalize_inputs(index_0)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(index_0).buildTransaction(
+            tx_params.as_dict()
+        )
+
+    def estimate_gas(
+        self, index_0: str, tx_params: Optional[TxParams] = None
+    ) -> int:
+        """Estimate gas consumption of method call."""
+        (index_0) = self.validate_and_normalize_inputs(index_0)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(index_0).estimateGas(
+            tx_params.as_dict()
+        )
+
+
+class MintNftMethod(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the mintNFT method."""
 
     def __init__(
         self,
@@ -1189,15 +1290,15 @@ class MintToMethod(ContractMethod):  # pylint: disable=invalid-name
         self._underlying_method = contract_function
 
     def validate_and_normalize_inputs(self, to: str, uri: str):
-        """Validate the inputs to the mintTo method."""
+        """Validate the inputs to the mintNFT method."""
         self.validator.assert_valid(
-            method_name="mintTo",
+            method_name="mintNFT",
             parameter_name="_to",
             argument_value=to,
         )
         to = self.validate_and_checksum_address(to)
         self.validator.assert_valid(
-            method_name="mintTo",
+            method_name="mintNFT",
             parameter_name="_uri",
             argument_value=uri,
         )
@@ -1205,7 +1306,7 @@ class MintToMethod(ContractMethod):  # pylint: disable=invalid-name
 
     def call(
         self, to: str, uri: str, tx_params: Optional[TxParams] = None
-    ) -> int:
+    ) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1213,8 +1314,7 @@ class MintToMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         (to, uri) = self.validate_and_normalize_inputs(to, uri)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(to, uri).call(tx_params.as_dict())
-        return int(returned)
+        self._underlying_method(to, uri).call(tx_params.as_dict())
 
     def send_transaction(
         self, to: str, uri: str, tx_params: Optional[TxParams] = None
@@ -1248,8 +1348,8 @@ class MintToMethod(ContractMethod):  # pylint: disable=invalid-name
         )
 
 
-class MintWithSignatureMethod(ContractMethod):  # pylint: disable=invalid-name
-    """Various interfaces to the mintWithSignature method."""
+class MintNftBatchMethod(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the mintNFTBatch method."""
 
     def __init__(
         self,
@@ -1262,155 +1362,63 @@ class MintWithSignatureMethod(ContractMethod):  # pylint: disable=invalid-name
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(
-        self, req: ISignatureMint721MintRequest, signature: Union[bytes, str]
-    ):
-        """Validate the inputs to the mintWithSignature method."""
+    def validate_and_normalize_inputs(self, to: str, uris: List[str]):
+        """Validate the inputs to the mintNFTBatch method."""
         self.validator.assert_valid(
-            method_name="mintWithSignature",
-            parameter_name="_req",
-            argument_value=req,
+            method_name="mintNFTBatch",
+            parameter_name="_to",
+            argument_value=to,
         )
+        to = self.validate_and_checksum_address(to)
         self.validator.assert_valid(
-            method_name="mintWithSignature",
-            parameter_name="_signature",
-            argument_value=signature,
+            method_name="mintNFTBatch",
+            parameter_name="_uris",
+            argument_value=uris,
         )
-        return (req, signature)
+        return (to, uris)
 
     def call(
-        self,
-        req: ISignatureMint721MintRequest,
-        signature: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
-    ) -> int:
+        self, to: str, uris: List[str], tx_params: Optional[TxParams] = None
+    ) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (req, signature) = self.validate_and_normalize_inputs(req, signature)
+        (to, uris) = self.validate_and_normalize_inputs(to, uris)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(req, signature).call(
-            tx_params.as_dict()
-        )
-        return int(returned)
+        self._underlying_method(to, uris).call(tx_params.as_dict())
 
     def send_transaction(
-        self,
-        req: ISignatureMint721MintRequest,
-        signature: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
+        self, to: str, uris: List[str], tx_params: Optional[TxParams] = None
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (req, signature) = self.validate_and_normalize_inputs(req, signature)
+        (to, uris) = self.validate_and_normalize_inputs(to, uris)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(req, signature).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(to, uris).transact(tx_params.as_dict())
 
     def build_transaction(
-        self,
-        req: ISignatureMint721MintRequest,
-        signature: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
+        self, to: str, uris: List[str], tx_params: Optional[TxParams] = None
     ) -> dict:
         """Construct calldata to be used as input to the method."""
-        (req, signature) = self.validate_and_normalize_inputs(req, signature)
+        (to, uris) = self.validate_and_normalize_inputs(to, uris)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(req, signature).buildTransaction(
+        return self._underlying_method(to, uris).buildTransaction(
             tx_params.as_dict()
         )
 
     def estimate_gas(
-        self,
-        req: ISignatureMint721MintRequest,
-        signature: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
+        self, to: str, uris: List[str], tx_params: Optional[TxParams] = None
     ) -> int:
         """Estimate gas consumption of method call."""
-        (req, signature) = self.validate_and_normalize_inputs(req, signature)
+        (to, uris) = self.validate_and_normalize_inputs(to, uris)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(req, signature).estimateGas(
+        return self._underlying_method(to, uris).estimateGas(
             tx_params.as_dict()
         )
-
-
-class MulticallMethod(ContractMethod):  # pylint: disable=invalid-name
-    """Various interfaces to the multicall method."""
-
-    def __init__(
-        self,
-        web3_or_provider: Union[Web3, BaseProvider],
-        contract_address: str,
-        contract_function: ContractFunction,
-        validator: Validator = None,
-    ):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
-        self._underlying_method = contract_function
-
-    def validate_and_normalize_inputs(self, data: List[Union[bytes, str]]):
-        """Validate the inputs to the multicall method."""
-        self.validator.assert_valid(
-            method_name="multicall",
-            parameter_name="data",
-            argument_value=data,
-        )
-        return data
-
-    def call(
-        self,
-        data: List[Union[bytes, str]],
-        tx_params: Optional[TxParams] = None,
-    ) -> List[Union[bytes, str]]:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        (data) = self.validate_and_normalize_inputs(data)
-        tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(data).call(tx_params.as_dict())
-        return [Union[bytes, str](element) for element in returned]
-
-    def send_transaction(
-        self,
-        data: List[Union[bytes, str]],
-        tx_params: Optional[TxParams] = None,
-    ) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        (data) = self.validate_and_normalize_inputs(data)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(data).transact(tx_params.as_dict())
-
-    def build_transaction(
-        self,
-        data: List[Union[bytes, str]],
-        tx_params: Optional[TxParams] = None,
-    ) -> dict:
-        """Construct calldata to be used as input to the method."""
-        (data) = self.validate_and_normalize_inputs(data)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(data).buildTransaction(
-            tx_params.as_dict()
-        )
-
-    def estimate_gas(
-        self,
-        data: List[Union[bytes, str]],
-        tx_params: Optional[TxParams] = None,
-    ) -> int:
-        """Estimate gas consumption of method call."""
-        (data) = self.validate_and_normalize_inputs(data)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(data).estimateGas(tx_params.as_dict())
 
 
 class NameMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1457,52 +1465,8 @@ class NameMethod(ContractMethod):  # pylint: disable=invalid-name
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
 
-class NativeTokenWrapperMethod(ContractMethod):  # pylint: disable=invalid-name
-    """Various interfaces to the nativeTokenWrapper method."""
-
-    def __init__(
-        self,
-        web3_or_provider: Union[Web3, BaseProvider],
-        contract_address: str,
-        contract_function: ContractFunction,
-    ):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address)
-        self._underlying_method = contract_function
-
-    def call(self, tx_params: Optional[TxParams] = None) -> str:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method().call(tx_params.as_dict())
-        return str(returned)
-
-    def send_transaction(
-        self, tx_params: Optional[TxParams] = None
-    ) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().transact(tx_params.as_dict())
-
-    def build_transaction(self, tx_params: Optional[TxParams] = None) -> dict:
-        """Construct calldata to be used as input to the method."""
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().buildTransaction(tx_params.as_dict())
-
-    def estimate_gas(self, tx_params: Optional[TxParams] = None) -> int:
-        """Estimate gas consumption of method call."""
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().estimateGas(tx_params.as_dict())
-
-
-class NextTokenIdToMintMethod(ContractMethod):  # pylint: disable=invalid-name
-    """Various interfaces to the nextTokenIdToMint method."""
+class NextTokenIdMethod(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the nextTokenId method."""
 
     def __init__(
         self,
@@ -1545,48 +1509,72 @@ class NextTokenIdToMintMethod(ContractMethod):  # pylint: disable=invalid-name
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
 
-class OwnerMethod(ContractMethod):  # pylint: disable=invalid-name
-    """Various interfaces to the owner method."""
+class NftUriMethod(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the nftURI method."""
 
     def __init__(
         self,
         web3_or_provider: Union[Web3, BaseProvider],
         contract_address: str,
         contract_function: ContractFunction,
+        validator: Validator = None,
     ):
         """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address)
+        super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def call(self, tx_params: Optional[TxParams] = None) -> str:
+    def validate_and_normalize_inputs(self, index_0: int):
+        """Validate the inputs to the nftURI method."""
+        self.validator.assert_valid(
+            method_name="nftURI",
+            parameter_name="index_0",
+            argument_value=index_0,
+        )
+        # safeguard against fractional inputs
+        index_0 = int(index_0)
+        return index_0
+
+    def call(self, index_0: int, tx_params: Optional[TxParams] = None) -> str:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
+        (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method().call(tx_params.as_dict())
+        returned = self._underlying_method(index_0).call(tx_params.as_dict())
         return str(returned)
 
     def send_transaction(
-        self, tx_params: Optional[TxParams] = None
+        self, index_0: int, tx_params: Optional[TxParams] = None
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
+        (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().transact(tx_params.as_dict())
+        return self._underlying_method(index_0).transact(tx_params.as_dict())
 
-    def build_transaction(self, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self, index_0: int, tx_params: Optional[TxParams] = None
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
+        (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().buildTransaction(tx_params.as_dict())
+        return self._underlying_method(index_0).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self, index_0: int, tx_params: Optional[TxParams] = None
+    ) -> int:
         """Estimate gas consumption of method call."""
+        (index_0) = self.validate_and_normalize_inputs(index_0)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().estimateGas(tx_params.as_dict())
+        return self._underlying_method(index_0).estimateGas(
+            tx_params.as_dict()
+        )
 
 
 class OwnerOfMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -1655,6 +1643,93 @@ class OwnerOfMethod(ContractMethod):  # pylint: disable=invalid-name
         return self._underlying_method(token_id).estimateGas(
             tx_params.as_dict()
         )
+
+
+class PauseMethod(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the pause method."""
+
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+    ):
+        """Persist instance data."""
+        super().__init__(web3_or_provider, contract_address)
+        self._underlying_method = contract_function
+
+    def call(self, tx_params: Optional[TxParams] = None) -> None:
+        """Execute underlying contract method via eth_call.
+
+        :param tx_params: transaction parameters
+        :returns: the return value of the underlying method.
+        """
+        tx_params = super().normalize_tx_params(tx_params)
+        self._underlying_method().call(tx_params.as_dict())
+
+    def send_transaction(
+        self, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
+        """Execute underlying contract method via eth_sendTransaction.
+
+        :param tx_params: transaction parameters
+        """
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().transact(tx_params.as_dict())
+
+    def build_transaction(self, tx_params: Optional[TxParams] = None) -> dict:
+        """Construct calldata to be used as input to the method."""
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().buildTransaction(tx_params.as_dict())
+
+    def estimate_gas(self, tx_params: Optional[TxParams] = None) -> int:
+        """Estimate gas consumption of method call."""
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().estimateGas(tx_params.as_dict())
+
+
+class PausedMethod(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the paused method."""
+
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+    ):
+        """Persist instance data."""
+        super().__init__(web3_or_provider, contract_address)
+        self._underlying_method = contract_function
+
+    def call(self, tx_params: Optional[TxParams] = None) -> bool:
+        """Execute underlying contract method via eth_call.
+
+        :param tx_params: transaction parameters
+        :returns: the return value of the underlying method.
+        """
+        tx_params = super().normalize_tx_params(tx_params)
+        returned = self._underlying_method().call(tx_params.as_dict())
+        return bool(returned)
+
+    def send_transaction(
+        self, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
+        """Execute underlying contract method via eth_sendTransaction.
+
+        :param tx_params: transaction parameters
+        """
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().transact(tx_params.as_dict())
+
+    def build_transaction(self, tx_params: Optional[TxParams] = None) -> dict:
+        """Construct calldata to be used as input to the method."""
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().buildTransaction(tx_params.as_dict())
+
+    def estimate_gas(self, tx_params: Optional[TxParams] = None) -> int:
+        """Estimate gas consumption of method call."""
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().estimateGas(tx_params.as_dict())
 
 
 class RenounceRoleMethod(ContractMethod):  # pylint: disable=invalid-name
@@ -2325,7 +2400,7 @@ class SetContractUriMethod(ContractMethod):  # pylint: disable=invalid-name
         """Validate the inputs to the setContractURI method."""
         self.validator.assert_valid(
             method_name="setContractURI",
-            parameter_name="_uri",
+            parameter_name="_URI",
             argument_value=uri,
         )
         return uri
@@ -2368,213 +2443,6 @@ class SetContractUriMethod(ContractMethod):  # pylint: disable=invalid-name
         (uri) = self.validate_and_normalize_inputs(uri)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(uri).estimateGas(tx_params.as_dict())
-
-
-class SetDefaultSaleRecipientMethod(
-    ContractMethod
-):  # pylint: disable=invalid-name
-    """Various interfaces to the setDefaultSaleRecipient method."""
-
-    def __init__(
-        self,
-        web3_or_provider: Union[Web3, BaseProvider],
-        contract_address: str,
-        contract_function: ContractFunction,
-        validator: Validator = None,
-    ):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
-        self._underlying_method = contract_function
-
-    def validate_and_normalize_inputs(self, sale_recipient: str):
-        """Validate the inputs to the setDefaultSaleRecipient method."""
-        self.validator.assert_valid(
-            method_name="setDefaultSaleRecipient",
-            parameter_name="_saleRecipient",
-            argument_value=sale_recipient,
-        )
-        sale_recipient = self.validate_and_checksum_address(sale_recipient)
-        return sale_recipient
-
-    def call(
-        self, sale_recipient: str, tx_params: Optional[TxParams] = None
-    ) -> None:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        (sale_recipient) = self.validate_and_normalize_inputs(sale_recipient)
-        tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(sale_recipient).call(tx_params.as_dict())
-
-    def send_transaction(
-        self, sale_recipient: str, tx_params: Optional[TxParams] = None
-    ) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        (sale_recipient) = self.validate_and_normalize_inputs(sale_recipient)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(sale_recipient).transact(
-            tx_params.as_dict()
-        )
-
-    def build_transaction(
-        self, sale_recipient: str, tx_params: Optional[TxParams] = None
-    ) -> dict:
-        """Construct calldata to be used as input to the method."""
-        (sale_recipient) = self.validate_and_normalize_inputs(sale_recipient)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(sale_recipient).buildTransaction(
-            tx_params.as_dict()
-        )
-
-    def estimate_gas(
-        self, sale_recipient: str, tx_params: Optional[TxParams] = None
-    ) -> int:
-        """Estimate gas consumption of method call."""
-        (sale_recipient) = self.validate_and_normalize_inputs(sale_recipient)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(sale_recipient).estimateGas(
-            tx_params.as_dict()
-        )
-
-
-class SetFeeBpsMethod(ContractMethod):  # pylint: disable=invalid-name
-    """Various interfaces to the setFeeBps method."""
-
-    def __init__(
-        self,
-        web3_or_provider: Union[Web3, BaseProvider],
-        contract_address: str,
-        contract_function: ContractFunction,
-        validator: Validator = None,
-    ):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
-        self._underlying_method = contract_function
-
-    def validate_and_normalize_inputs(self, fee_bps: int):
-        """Validate the inputs to the setFeeBps method."""
-        self.validator.assert_valid(
-            method_name="setFeeBps",
-            parameter_name="_feeBps",
-            argument_value=fee_bps,
-        )
-        # safeguard against fractional inputs
-        fee_bps = int(fee_bps)
-        return fee_bps
-
-    def call(self, fee_bps: int, tx_params: Optional[TxParams] = None) -> None:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        (fee_bps) = self.validate_and_normalize_inputs(fee_bps)
-        tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(fee_bps).call(tx_params.as_dict())
-
-    def send_transaction(
-        self, fee_bps: int, tx_params: Optional[TxParams] = None
-    ) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        (fee_bps) = self.validate_and_normalize_inputs(fee_bps)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(fee_bps).transact(tx_params.as_dict())
-
-    def build_transaction(
-        self, fee_bps: int, tx_params: Optional[TxParams] = None
-    ) -> dict:
-        """Construct calldata to be used as input to the method."""
-        (fee_bps) = self.validate_and_normalize_inputs(fee_bps)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(fee_bps).buildTransaction(
-            tx_params.as_dict()
-        )
-
-    def estimate_gas(
-        self, fee_bps: int, tx_params: Optional[TxParams] = None
-    ) -> int:
-        """Estimate gas consumption of method call."""
-        (fee_bps) = self.validate_and_normalize_inputs(fee_bps)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(fee_bps).estimateGas(
-            tx_params.as_dict()
-        )
-
-
-class SetOwnerMethod(ContractMethod):  # pylint: disable=invalid-name
-    """Various interfaces to the setOwner method."""
-
-    def __init__(
-        self,
-        web3_or_provider: Union[Web3, BaseProvider],
-        contract_address: str,
-        contract_function: ContractFunction,
-        validator: Validator = None,
-    ):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
-        self._underlying_method = contract_function
-
-    def validate_and_normalize_inputs(self, new_owner: str):
-        """Validate the inputs to the setOwner method."""
-        self.validator.assert_valid(
-            method_name="setOwner",
-            parameter_name="_newOwner",
-            argument_value=new_owner,
-        )
-        new_owner = self.validate_and_checksum_address(new_owner)
-        return new_owner
-
-    def call(
-        self, new_owner: str, tx_params: Optional[TxParams] = None
-    ) -> None:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        (new_owner) = self.validate_and_normalize_inputs(new_owner)
-        tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(new_owner).call(tx_params.as_dict())
-
-    def send_transaction(
-        self, new_owner: str, tx_params: Optional[TxParams] = None
-    ) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        (new_owner) = self.validate_and_normalize_inputs(new_owner)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(new_owner).transact(tx_params.as_dict())
-
-    def build_transaction(
-        self, new_owner: str, tx_params: Optional[TxParams] = None
-    ) -> dict:
-        """Construct calldata to be used as input to the method."""
-        (new_owner) = self.validate_and_normalize_inputs(new_owner)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(new_owner).buildTransaction(
-            tx_params.as_dict()
-        )
-
-    def estimate_gas(
-        self, new_owner: str, tx_params: Optional[TxParams] = None
-    ) -> int:
-        """Estimate gas consumption of method call."""
-        (new_owner) = self.validate_and_normalize_inputs(new_owner)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(new_owner).estimateGas(
-            tx_params.as_dict()
-        )
 
 
 class SetRestrictedTransferMethod(
@@ -3017,7 +2885,7 @@ class TokenUriMethod(ContractMethod):  # pylint: disable=invalid-name
         """Validate the inputs to the tokenURI method."""
         self.validator.assert_valid(
             method_name="tokenURI",
-            parameter_name="_tokenId",
+            parameter_name="tokenId",
             argument_value=token_id,
         )
         # safeguard against fractional inputs
@@ -3266,103 +3134,52 @@ class TransfersRestrictedMethod(
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
 
-class VerifyMethod(ContractMethod):  # pylint: disable=invalid-name
-    """Various interfaces to the verify method."""
+class UnpauseMethod(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the unpause method."""
 
     def __init__(
         self,
         web3_or_provider: Union[Web3, BaseProvider],
         contract_address: str,
         contract_function: ContractFunction,
-        validator: Validator = None,
     ):
         """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
+        super().__init__(web3_or_provider, contract_address)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(
-        self, req: ISignatureMint721MintRequest, signature: Union[bytes, str]
-    ):
-        """Validate the inputs to the verify method."""
-        self.validator.assert_valid(
-            method_name="verify",
-            parameter_name="_req",
-            argument_value=req,
-        )
-        self.validator.assert_valid(
-            method_name="verify",
-            parameter_name="_signature",
-            argument_value=signature,
-        )
-        return (req, signature)
-
-    def call(
-        self,
-        req: ISignatureMint721MintRequest,
-        signature: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
-    ) -> Tuple[bool, str]:
+    def call(self, tx_params: Optional[TxParams] = None) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (req, signature) = self.validate_and_normalize_inputs(req, signature)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(req, signature).call(
-            tx_params.as_dict()
-        )
-        return (
-            returned[0],
-            returned[1],
-        )
+        self._underlying_method().call(tx_params.as_dict())
 
     def send_transaction(
-        self,
-        req: ISignatureMint721MintRequest,
-        signature: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
+        self, tx_params: Optional[TxParams] = None
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (req, signature) = self.validate_and_normalize_inputs(req, signature)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(req, signature).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method().transact(tx_params.as_dict())
 
-    def build_transaction(
-        self,
-        req: ISignatureMint721MintRequest,
-        signature: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
-    ) -> dict:
+    def build_transaction(self, tx_params: Optional[TxParams] = None) -> dict:
         """Construct calldata to be used as input to the method."""
-        (req, signature) = self.validate_and_normalize_inputs(req, signature)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(req, signature).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method().buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self,
-        req: ISignatureMint721MintRequest,
-        signature: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
-    ) -> int:
+    def estimate_gas(self, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
-        (req, signature) = self.validate_and_normalize_inputs(req, signature)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(req, signature).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method().estimateGas(tx_params.as_dict())
 
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
-class SignatureMint721:
-    """Wrapper class for SignatureMint721 Solidity contract.
+class NFT:
+    """Wrapper class for NFT Solidity contract.
 
     All method parameters of type `bytes`:code: should be encoded as UTF-8,
     which can be accomplished via `str.encode("utf_8")`:code:.
@@ -3378,9 +3195,19 @@ class SignatureMint721:
     :class:`MinterRoleMethod`.
     """
 
+    pauser_role: PauserRoleMethod
+    """Constructor-initialized instance of
+    :class:`PauserRoleMethod`.
+    """
+
     transfer_role: TransferRoleMethod
     """Constructor-initialized instance of
     :class:`TransferRoleMethod`.
+    """
+
+    contract_uri_: ContractUri_Method
+    """Constructor-initialized instance of
+    :class:`ContractUri_Method`.
     """
 
     approve: ApproveMethod
@@ -3403,14 +3230,9 @@ class SignatureMint721:
     :class:`ContractUriMethod`.
     """
 
-    default_sale_recipient: DefaultSaleRecipientMethod
+    creator: CreatorMethod
     """Constructor-initialized instance of
-    :class:`DefaultSaleRecipientMethod`.
-    """
-
-    fee_bps: FeeBpsMethod
-    """Constructor-initialized instance of
-    :class:`FeeBpsMethod`.
+    :class:`CreatorMethod`.
     """
 
     get_approved: GetApprovedMethod
@@ -3453,19 +3275,19 @@ class SignatureMint721:
     :class:`IsTrustedForwarderMethod`.
     """
 
-    mint_to: MintToMethod
+    mint: MintMethod
     """Constructor-initialized instance of
-    :class:`MintToMethod`.
+    :class:`MintMethod`.
     """
 
-    mint_with_signature: MintWithSignatureMethod
+    mint_nft: MintNftMethod
     """Constructor-initialized instance of
-    :class:`MintWithSignatureMethod`.
+    :class:`MintNftMethod`.
     """
 
-    multicall: MulticallMethod
+    mint_nft_batch: MintNftBatchMethod
     """Constructor-initialized instance of
-    :class:`MulticallMethod`.
+    :class:`MintNftBatchMethod`.
     """
 
     name: NameMethod
@@ -3473,24 +3295,29 @@ class SignatureMint721:
     :class:`NameMethod`.
     """
 
-    native_token_wrapper: NativeTokenWrapperMethod
+    next_token_id: NextTokenIdMethod
     """Constructor-initialized instance of
-    :class:`NativeTokenWrapperMethod`.
+    :class:`NextTokenIdMethod`.
     """
 
-    next_token_id_to_mint: NextTokenIdToMintMethod
+    nft_uri: NftUriMethod
     """Constructor-initialized instance of
-    :class:`NextTokenIdToMintMethod`.
-    """
-
-    owner: OwnerMethod
-    """Constructor-initialized instance of
-    :class:`OwnerMethod`.
+    :class:`NftUriMethod`.
     """
 
     owner_of: OwnerOfMethod
     """Constructor-initialized instance of
     :class:`OwnerOfMethod`.
+    """
+
+    pause: PauseMethod
+    """Constructor-initialized instance of
+    :class:`PauseMethod`.
+    """
+
+    paused: PausedMethod
+    """Constructor-initialized instance of
+    :class:`PausedMethod`.
     """
 
     renounce_role: RenounceRoleMethod
@@ -3531,21 +3358,6 @@ class SignatureMint721:
     set_contract_uri: SetContractUriMethod
     """Constructor-initialized instance of
     :class:`SetContractUriMethod`.
-    """
-
-    set_default_sale_recipient: SetDefaultSaleRecipientMethod
-    """Constructor-initialized instance of
-    :class:`SetDefaultSaleRecipientMethod`.
-    """
-
-    set_fee_bps: SetFeeBpsMethod
-    """Constructor-initialized instance of
-    :class:`SetFeeBpsMethod`.
-    """
-
-    set_owner: SetOwnerMethod
-    """Constructor-initialized instance of
-    :class:`SetOwnerMethod`.
     """
 
     set_restricted_transfer: SetRestrictedTransferMethod
@@ -3598,16 +3410,16 @@ class SignatureMint721:
     :class:`TransfersRestrictedMethod`.
     """
 
-    verify: VerifyMethod
+    unpause: UnpauseMethod
     """Constructor-initialized instance of
-    :class:`VerifyMethod`.
+    :class:`UnpauseMethod`.
     """
 
     def __init__(
         self,
         web3_or_provider: Union[Web3, BaseProvider],
         contract_address: str,
-        validator: SignatureMint721Validator = None,
+        validator: NFTValidator = None,
     ):
         """Get an instance of wrapper for smart contract.
 
@@ -3621,9 +3433,7 @@ class SignatureMint721:
         self.contract_address = contract_address
 
         if not validator:
-            validator = SignatureMint721Validator(
-                web3_or_provider, contract_address
-            )
+            validator = NFTValidator(web3_or_provider, contract_address)
 
         web3 = None
         if isinstance(web3_or_provider, BaseProvider):
@@ -3657,8 +3467,7 @@ class SignatureMint721:
         self._web3_eth = web3.eth
 
         functions = self._web3_eth.contract(
-            address=to_checksum_address(contract_address),
-            abi=SignatureMint721.abi(),
+            address=to_checksum_address(contract_address), abi=NFT.abi()
         ).functions
 
         self.default_admin_role = DefaultAdminRoleMethod(
@@ -3669,8 +3478,16 @@ class SignatureMint721:
             web3_or_provider, contract_address, functions.MINTER_ROLE
         )
 
+        self.pauser_role = PauserRoleMethod(
+            web3_or_provider, contract_address, functions.PAUSER_ROLE
+        )
+
         self.transfer_role = TransferRoleMethod(
             web3_or_provider, contract_address, functions.TRANSFER_ROLE
+        )
+
+        self.contract_uri_ = ContractUri_Method(
+            web3_or_provider, contract_address, functions._contractURI
         )
 
         self.approve = ApproveMethod(
@@ -3689,12 +3506,8 @@ class SignatureMint721:
             web3_or_provider, contract_address, functions.contractURI
         )
 
-        self.default_sale_recipient = DefaultSaleRecipientMethod(
-            web3_or_provider, contract_address, functions.defaultSaleRecipient
-        )
-
-        self.fee_bps = FeeBpsMethod(
-            web3_or_provider, contract_address, functions.feeBps
+        self.creator = CreatorMethod(
+            web3_or_provider, contract_address, functions.creator, validator
         )
 
         self.get_approved = GetApprovedMethod(
@@ -3747,39 +3560,43 @@ class SignatureMint721:
             validator,
         )
 
-        self.mint_to = MintToMethod(
-            web3_or_provider, contract_address, functions.mintTo, validator
+        self.mint = MintMethod(
+            web3_or_provider, contract_address, functions.mint, validator
         )
 
-        self.mint_with_signature = MintWithSignatureMethod(
+        self.mint_nft = MintNftMethod(
+            web3_or_provider, contract_address, functions.mintNFT, validator
+        )
+
+        self.mint_nft_batch = MintNftBatchMethod(
             web3_or_provider,
             contract_address,
-            functions.mintWithSignature,
+            functions.mintNFTBatch,
             validator,
-        )
-
-        self.multicall = MulticallMethod(
-            web3_or_provider, contract_address, functions.multicall, validator
         )
 
         self.name = NameMethod(
             web3_or_provider, contract_address, functions.name
         )
 
-        self.native_token_wrapper = NativeTokenWrapperMethod(
-            web3_or_provider, contract_address, functions.nativeTokenWrapper
+        self.next_token_id = NextTokenIdMethod(
+            web3_or_provider, contract_address, functions.nextTokenId
         )
 
-        self.next_token_id_to_mint = NextTokenIdToMintMethod(
-            web3_or_provider, contract_address, functions.nextTokenIdToMint
-        )
-
-        self.owner = OwnerMethod(
-            web3_or_provider, contract_address, functions.owner
+        self.nft_uri = NftUriMethod(
+            web3_or_provider, contract_address, functions.nftURI, validator
         )
 
         self.owner_of = OwnerOfMethod(
             web3_or_provider, contract_address, functions.ownerOf, validator
+        )
+
+        self.pause = PauseMethod(
+            web3_or_provider, contract_address, functions.pause
+        )
+
+        self.paused = PausedMethod(
+            web3_or_provider, contract_address, functions.paused
         )
 
         self.renounce_role = RenounceRoleMethod(
@@ -3830,21 +3647,6 @@ class SignatureMint721:
             contract_address,
             functions.setContractURI,
             validator,
-        )
-
-        self.set_default_sale_recipient = SetDefaultSaleRecipientMethod(
-            web3_or_provider,
-            contract_address,
-            functions.setDefaultSaleRecipient,
-            validator,
-        )
-
-        self.set_fee_bps = SetFeeBpsMethod(
-            web3_or_provider, contract_address, functions.setFeeBps, validator
-        )
-
-        self.set_owner = SetOwnerMethod(
-            web3_or_provider, contract_address, functions.setOwner, validator
         )
 
         self.set_restricted_transfer = SetRestrictedTransferMethod(
@@ -3905,8 +3707,8 @@ class SignatureMint721:
             web3_or_provider, contract_address, functions.transfersRestricted
         )
 
-        self.verify = VerifyMethod(
-            web3_or_provider, contract_address, functions.verify, validator
+        self.unpause = UnpauseMethod(
+            web3_or_provider, contract_address, functions.unpause
         )
 
     def get_approval_event(
@@ -3920,7 +3722,7 @@ class SignatureMint721:
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
+                abi=NFT.abi(),
             )
             .events.Approval()
             .processReceipt(tx_receipt)
@@ -3937,78 +3739,60 @@ class SignatureMint721:
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
+                abi=NFT.abi(),
             )
             .events.ApprovalForAll()
             .processReceipt(tx_receipt)
         )
 
-    def get_mint_with_signature_event(
+    def get_minted_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
-        """Get log entry for MintWithSignature event.
+        """Get log entry for Minted event.
 
-        :param tx_hash: hash of transaction emitting MintWithSignature event
+        :param tx_hash: hash of transaction emitting Minted event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
+                abi=NFT.abi(),
             )
-            .events.MintWithSignature()
+            .events.Minted()
             .processReceipt(tx_receipt)
         )
 
-    def get_new_owner_event(
+    def get_minted_batch_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
-        """Get log entry for NewOwner event.
+        """Get log entry for MintedBatch event.
 
-        :param tx_hash: hash of transaction emitting NewOwner event
+        :param tx_hash: hash of transaction emitting MintedBatch event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
+                abi=NFT.abi(),
             )
-            .events.NewOwner()
+            .events.MintedBatch()
             .processReceipt(tx_receipt)
         )
 
-    def get_new_sale_recipient_event(
+    def get_paused_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
-        """Get log entry for NewSaleRecipient event.
+        """Get log entry for Paused event.
 
-        :param tx_hash: hash of transaction emitting NewSaleRecipient event
+        :param tx_hash: hash of transaction emitting Paused event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
+                abi=NFT.abi(),
             )
-            .events.NewSaleRecipient()
-            .processReceipt(tx_receipt)
-        )
-
-    def get_primary_sales_fee_updates_event(
-        self, tx_hash: Union[HexBytes, bytes]
-    ) -> Tuple[AttributeDict]:
-        """Get log entry for PrimarySalesFeeUpdates event.
-
-        :param tx_hash: hash of transaction emitting PrimarySalesFeeUpdates
-            event
-        """
-        tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return (
-            self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
-            )
-            .events.PrimarySalesFeeUpdates()
+            .events.Paused()
             .processReceipt(tx_receipt)
         )
 
@@ -4023,7 +3807,7 @@ class SignatureMint721:
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
+                abi=NFT.abi(),
             )
             .events.RoleAdminChanged()
             .processReceipt(tx_receipt)
@@ -4040,7 +3824,7 @@ class SignatureMint721:
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
+                abi=NFT.abi(),
             )
             .events.RoleGranted()
             .processReceipt(tx_receipt)
@@ -4057,7 +3841,7 @@ class SignatureMint721:
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
+                abi=NFT.abi(),
             )
             .events.RoleRevoked()
             .processReceipt(tx_receipt)
@@ -4074,26 +3858,9 @@ class SignatureMint721:
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
+                abi=NFT.abi(),
             )
             .events.RoyaltyUpdated()
-            .processReceipt(tx_receipt)
-        )
-
-    def get_token_minted_event(
-        self, tx_hash: Union[HexBytes, bytes]
-    ) -> Tuple[AttributeDict]:
-        """Get log entry for TokenMinted event.
-
-        :param tx_hash: hash of transaction emitting TokenMinted event
-        """
-        tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return (
-            self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
-            )
-            .events.TokenMinted()
             .processReceipt(tx_receipt)
         )
 
@@ -4108,26 +3875,26 @@ class SignatureMint721:
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
+                abi=NFT.abi(),
             )
             .events.Transfer()
             .processReceipt(tx_receipt)
         )
 
-    def get_transfers_restricted_event(
+    def get_unpaused_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
-        """Get log entry for TransfersRestricted event.
+        """Get log entry for Unpaused event.
 
-        :param tx_hash: hash of transaction emitting TransfersRestricted event
+        :param tx_hash: hash of transaction emitting Unpaused event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=SignatureMint721.abi(),
+                abi=NFT.abi(),
             )
-            .events.TransfersRestricted()
+            .events.Unpaused()
             .processReceipt(tx_receipt)
         )
 
@@ -4135,7 +3902,7 @@ class SignatureMint721:
     def abi():
         """Return the ABI to the underlying contract."""
         return json.loads(
-            '[{"inputs":[{"internalType":"string","name":"_name","type":"string"},{"internalType":"string","name":"_symbol","type":"string"},{"internalType":"string","name":"_contractURI","type":"string"},{"internalType":"address payable","name":"_controlCenter","type":"address"},{"internalType":"address","name":"_trustedForwarder","type":"address"},{"internalType":"address","name":"_nativeTokenWrapper","type":"address"},{"internalType":"address","name":"_saleRecipient","type":"address"},{"internalType":"uint128","name":"_royaltyBps","type":"uint128"},{"internalType":"uint128","name":"_feeBps","type":"uint128"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"approved","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":false,"internalType":"bool","name":"approved","type":"bool"}],"name":"ApprovalForAll","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"signer","type":"address"},{"indexed":true,"internalType":"address","name":"mintedTo","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenIdMinted","type":"uint256"},{"components":[{"internalType":"address","name":"to","type":"address"},{"internalType":"string","name":"uri","type":"string"},{"internalType":"uint256","name":"price","type":"uint256"},{"internalType":"address","name":"currency","type":"address"},{"internalType":"uint128","name":"validityStartTimestamp","type":"uint128"},{"internalType":"uint128","name":"validityEndTimestamp","type":"uint128"},{"internalType":"bytes32","name":"uid","type":"bytes32"}],"indexed":false,"internalType":"struct ISignatureMint721.MintRequest","name":"mintRequest","type":"tuple"}],"name":"MintWithSignature","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"prevOwner","type":"address"},{"indexed":false,"internalType":"address","name":"newOwner","type":"address"}],"name":"NewOwner","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"recipient","type":"address"}],"name":"NewSaleRecipient","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"newFeeBps","type":"uint256"}],"name":"PrimarySalesFeeUpdates","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"previousAdminRole","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"newAdminRole","type":"bytes32"}],"name":"RoleAdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleGranted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleRevoked","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"newRoyaltyBps","type":"uint256"}],"name":"RoyaltyUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"mintedTo","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenIdMinted","type":"uint256"},{"indexed":false,"internalType":"string","name":"uri","type":"string"}],"name":"TokenMinted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bool","name":"restricted","type":"bool"}],"name":"TransfersRestricted","type":"event"},{"inputs":[],"name":"DEFAULT_ADMIN_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MINTER_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"TRANSFER_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"approve","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"contractURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"defaultSaleRecipient","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"feeBps","outputs":[{"internalType":"uint120","name":"","type":"uint120"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"getApproved","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleAdmin","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"getRoleMember","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleMemberCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"grantRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"hasRole","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"operator","type":"address"}],"name":"isApprovedForAll","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"forwarder","type":"address"}],"name":"isTrustedForwarder","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"string","name":"_uri","type":"string"}],"name":"mintTo","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"to","type":"address"},{"internalType":"string","name":"uri","type":"string"},{"internalType":"uint256","name":"price","type":"uint256"},{"internalType":"address","name":"currency","type":"address"},{"internalType":"uint128","name":"validityStartTimestamp","type":"uint128"},{"internalType":"uint128","name":"validityEndTimestamp","type":"uint128"},{"internalType":"bytes32","name":"uid","type":"bytes32"}],"internalType":"struct ISignatureMint721.MintRequest","name":"_req","type":"tuple"},{"internalType":"bytes","name":"_signature","type":"bytes"}],"name":"mintWithSignature","outputs":[{"internalType":"uint256","name":"tokenIdMinted","type":"uint256"}],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"bytes[]","name":"data","type":"bytes[]"}],"name":"multicall","outputs":[{"internalType":"bytes[]","name":"results","type":"bytes[]"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nativeTokenWrapper","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextTokenIdToMint","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"renounceRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"revokeRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"royaltyBps","outputs":[{"internalType":"uint64","name":"","type":"uint64"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"index_0","type":"uint256"},{"internalType":"uint256","name":"salePrice","type":"uint256"}],"name":"royaltyInfo","outputs":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"royaltyAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"bytes","name":"_data","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"operator","type":"address"},{"internalType":"bool","name":"approved","type":"bool"}],"name":"setApprovalForAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_uri","type":"string"}],"name":"setContractURI","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_saleRecipient","type":"address"}],"name":"setDefaultSaleRecipient","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_feeBps","type":"uint256"}],"name":"setFeeBps","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newOwner","type":"address"}],"name":"setOwner","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bool","name":"_restrictedTransfer","type":"bool"}],"name":"setRestrictedTransfer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_royaltyBps","type":"uint256"}],"name":"setRoyaltyBps","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"index","type":"uint256"}],"name":"tokenByIndex","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"tokenOfOwnerByIndex","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"transferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"transfersRestricted","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"to","type":"address"},{"internalType":"string","name":"uri","type":"string"},{"internalType":"uint256","name":"price","type":"uint256"},{"internalType":"address","name":"currency","type":"address"},{"internalType":"uint128","name":"validityStartTimestamp","type":"uint128"},{"internalType":"uint128","name":"validityEndTimestamp","type":"uint128"},{"internalType":"bytes32","name":"uid","type":"bytes32"}],"internalType":"struct ISignatureMint721.MintRequest","name":"_req","type":"tuple"},{"internalType":"bytes","name":"_signature","type":"bytes"}],"name":"verify","outputs":[{"internalType":"bool","name":"","type":"bool"},{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}]'  # noqa: E501 (line-too-long)
+            '[{"inputs":[{"internalType":"address payable","name":"_controlCenter","type":"address"},{"internalType":"string","name":"_name","type":"string"},{"internalType":"string","name":"_symbol","type":"string"},{"internalType":"address","name":"_trustedForwarder","type":"address"},{"internalType":"string","name":"_uri","type":"string"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"approved","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":false,"internalType":"bool","name":"approved","type":"bool"}],"name":"ApprovalForAll","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"creator","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"tokenId","type":"uint256"},{"indexed":false,"internalType":"string","name":"tokenURI","type":"string"}],"name":"Minted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"creator","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256[]","name":"tokenIds","type":"uint256[]"},{"indexed":false,"internalType":"string[]","name":"tokenURI","type":"string[]"}],"name":"MintedBatch","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Paused","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"previousAdminRole","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"newAdminRole","type":"bytes32"}],"name":"RoleAdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleGranted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleRevoked","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"royaltyBps","type":"uint256"}],"name":"RoyaltyUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Unpaused","type":"event"},{"inputs":[],"name":"DEFAULT_ADMIN_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MINTER_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"PAUSER_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"TRANSFER_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"_contractURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"approve","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"contractURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"index_0","type":"uint256"}],"name":"creator","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"getApproved","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleAdmin","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"getRoleMember","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleMemberCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"grantRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"hasRole","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"operator","type":"address"}],"name":"isApprovedForAll","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"forwarder","type":"address"}],"name":"isTrustedForwarder","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"index_0","type":"address"}],"name":"mint","outputs":[],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"string","name":"_uri","type":"string"}],"name":"mintNFT","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_to","type":"address"},{"internalType":"string[]","name":"_uris","type":"string[]"}],"name":"mintNFTBatch","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextTokenId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"index_0","type":"uint256"}],"name":"nftURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"renounceRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"revokeRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"royaltyBps","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"index_0","type":"uint256"},{"internalType":"uint256","name":"salePrice","type":"uint256"}],"name":"royaltyInfo","outputs":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"royaltyAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"bytes","name":"_data","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"operator","type":"address"},{"internalType":"bool","name":"approved","type":"bool"}],"name":"setApprovalForAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_URI","type":"string"}],"name":"setContractURI","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bool","name":"_restrictedTransfer","type":"bool"}],"name":"setRestrictedTransfer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_royaltyBps","type":"uint256"}],"name":"setRoyaltyBps","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"index","type":"uint256"}],"name":"tokenByIndex","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"tokenOfOwnerByIndex","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"transferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"transfersRestricted","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"}]'  # noqa: E501 (line-too-long)
         )
 
 

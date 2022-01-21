@@ -85,7 +85,7 @@ Install the `abi-gen` cli tool and use it to compile abi wrappers like this:
 
 ```bash
 $ # assumes you have the nftlabs-protocols repo cloned in the parent directory
-$ abi-gen --language Python -o nftlabs/abi --abis ../nftlabs-protocols/abi/NFT.json
+$ abi-gen --language Python -o thirdweb/abi --abis ../nftlabs-protocols/abi/NFT.json
 ```
 
 Anytime there are ABI contract changes, you should regenerate the abi wrappers.

@@ -8,7 +8,7 @@ from thirdweb_web3 import Web3
 from ..abi.erc20 import ERC20
 from ..abi.erc1155 import ERC1155
 from ..abi.market import Market, MarketListing
-from ..abi.nft import NFT
+from ..abi.nft import SignatureMint721 as NFT
 from ..constants import ZeroAddress
 from ..errors import AssetNotFoundException, UnsupportedAssetException
 from ..modules.currency import CurrencyModule
