@@ -5,9 +5,8 @@ Interact with the Bundle module of the app. Previously `collection`.
 from typing import List
 from thirdweb_web3 import Web3
 from ..abi.erc20 import ERC20
-from ..abi.nft import NFT
+from ..abi.nft import SignatureMint721 as NFT
 from ..abi.nft_collection import NFTCollection as NFTBundle
-from ..constants import ZeroAddress
 from ..types.bundle import BundleMetadata, CreateBundleArg, MintBundleArg
 from ..types.metadata import Metadata
 from ..types.nft import NftMetadata

@@ -1,17 +1,23 @@
 """ Interact with the NFT module of the app"""
 import copy
+import json
 from typing import Dict, List
+import io
 
+import deprecation
 from thirdweb_web3 import Web3
 
-from ..abi.nft import SignatureMint721 as NFT
+from ..abi.nft_v1 import NFT
 from ..types.nft import MintArg
 from ..types.nft import NftMetadata as NftType
 from .base import BaseModule
 
 
+@deprecation.deprecated(deprecated_in="0.5.0", details="Use the NftModuleV2 module instead")
 class NftModule(BaseModule):
-    """ Interact with the NFT module of the app"""
+    """
+    Interact with the NFT module of the app
+    """
 
     address: str
     """
@@ -80,14 +86,14 @@ class NftModule(BaseModule):
         }
 
         uri = self.upload_metadata(meta)
-        tx = self.__abi_module.mint_to.build_transaction(
+        tx = self.__abi_module.mint_nft.build_transaction(
             to_address, uri, self.get_transact_opts()
         )
         receipt = self.execute_tx(tx)
-        result = self.__abi_module.get_token_minted_event(
-            receipt.transactionHash.hex()
+        result = self.__abi_module.get_minted_event(
+            tx_hash=receipt.transactionHash.hex()
         )
-        token_id = result[0]["args"]["tokenIdMinted"]
+        token_id = result[0]["args"]["tokenId"]
         return self.get(token_id)
 
     def total_supply(self) -> int:
@@ -124,6 +130,41 @@ class NftModule(BaseModule):
             raise Exception(
                 "Could not find NFT metadata, are you sure it exists?")
         return uri
+
+    def mint_batch(self, args: List[MintArg]):
+        """
+        :param args: the `name`, `description`, `image_uri`, `properties` of the token
+        :return: the metadata of the token
+
+        Mints a batch of tokens to the signer address
+        """
+        return self.mint_batch_to(self.get_signer_address(), args)
+
+    def mint_batch_to(self, to_address: str, args: List[MintArg]):
+        """
+        :param to_address: the address to mint the token to
+        :param args: the `name`, `description`, `image_uri`, `properties` of the token
+        :return: the metadata of the token
+
+        Mints a batch of tokens to the given address
+        """
+        uris = [self.upload_metadata({
+            'name': arg.name,
+            'description': arg.description,
+            'image': arg.image,
+            'properties': arg.properties if arg.properties is not None else {}
+        }) for arg in args]
+
+        tx = self.__abi_module.mint_nft_batch.build_transaction(
+            to_address, uris, self.get_transact_opts()
+        )
+
+        receipt = self.execute_tx(tx)
+        result = self.__abi_module.get_minted_batch_event(
+            tx_hash=receipt.transactionHash.hex()
+        )
+        token_ids = result[0]["args"]["tokenIds"]
+        return [self.get(i) for i in token_ids]
 
     def burn(self, token_id: int):
         """
@@ -183,7 +224,7 @@ class NftModule(BaseModule):
 
         Returns all the NFTs in the system
         """
-        max_id = self.__abi_module.next_token_id_to_mint.call()
+        max_id = self.__abi_module.next_token_id.call()
         return [self.get(i) for i in range(max_id)]
 
     def get_owned(self, address: str = "") -> List[NftType]:
@@ -290,9 +331,10 @@ class NftModule(BaseModule):
             )
         )
 
-    def get_with_owner(self, token_id: int):
+    def get_with_owner(self, token_id: int, owner: str):
         """
         :param token_id: The token id to fetch the NFT for
+        :param owner: The owner of the NFT
         :return: The NFT with the given token id and owner
 
         Returns the NFT with the given token id and owner

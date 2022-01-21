@@ -19,6 +19,7 @@ cytoolz==0.11.0
 dataclasses-json==0.5.6
 Deprecated==1.2.13
 docutils==0.17.1
+deprecation==2.1.0
 eth-abi==2.1.1
 eth-account==0.5.6
 eth-hash==0.3.2

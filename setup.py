@@ -15,12 +15,12 @@ if "PACKAGE_NAME" in environ:
 
 setup(
     name=package_name,
-    version="0.4.0",
+    version="0.5.0",
     description="Official Thirdweb sdk",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/nftlabs/nftlabs-sdk-python",
-    author="NFTLabs",
+    author="Thirdweb",
     author_email="sdk@thirdweb.com",
     license="MIT",
     classifiers=[
@@ -30,7 +30,13 @@ setup(
     ],
     packages=find_packages(),
     include_package_data=True,
-    install_requires=["dataclasses-json", "thirdweb-web3",
-                      "requests", "thirdweb-contract-wrappers", "web3"],
+    install_requires=[
+        "dataclasses-json",
+        "thirdweb-web3",
+        "requests",
+        "thirdweb-contract-wrappers",
+        "web3",
+        "deprecation"
+    ],
     py_modules=["thirdweb", "nftlabs"]
 )

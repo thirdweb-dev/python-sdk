@@ -12,6 +12,7 @@ from .modules.currency import CurrencyModule
 from .modules.market import MarketModule
 from .modules.marketplace import MarketplaceModule
 from .modules.nft import NftModule
+from .modules.nft_v1 import NftModule as NftModuleV1
 from .modules.pack import PackModule
 from .options import SdkOptions
 from .storage import IpfsStorage
@@ -86,7 +87,7 @@ class ThirdwebSdk(object):
         """
         Returns an instance of the currency module
         """
-        if self.__currency_module is not None:
+        if self.__currency_module is not None and self.__currency_module.address == address:
             return self.__currency_module
 
         module = CurrencyModule(address, self.__get_client())
@@ -95,14 +96,20 @@ class ThirdwebSdk(object):
         return self.__currency_module
 
     @set_default_account
-    def get_nft_module(self, address: str) -> NftModule:
+    def get_nft_module(self, address: str, is_v1: bool = False) -> NftModule:
         """
         Returns an instance of the nft module
+
+        :param address: The address of the contract
+        :param is_v1: Whether or not the module is a v1 module.
         """
-        if self.__nft_module is not None:
+        if self.__nft_module is not None and self.__nft_module.address == address:
             return self.__nft_module
 
-        module = NftModule(address, self.__get_client())
+        if is_v1:
+            module = NftModuleV1(address, self.__get_client())
+        else:
+            module = NftModule(address, self.__get_client())
         self.__init_module(module)
         self.__nft_module = module
         return self.__nft_module
@@ -112,7 +119,7 @@ class ThirdwebSdk(object):
         """
         Returns an instance of the pack module
         """
-        if self.__pack_module is not None:
+        if self.__pack_module is not None and self.__pack_module.address == address:
             return self.__pack_module
 
         module = PackModule(address, self.__get_client())
@@ -126,7 +133,7 @@ class ThirdwebSdk(object):
         .. deprecated:: 0.5.0
             This property is deprecated. Use the `image` property instead
         """
-        if self.__market_module is not None:
+        if self.__market_module is not None and self.__market_module.address == address:
             return self.__market_module
 
         if isv1:
@@ -153,7 +160,7 @@ class ThirdwebSdk(object):
 
     def get_bundle_module(self, address: str) -> BundleModule:
 
-        if self.__bundle_module is not None:
+        if self.__bundle_module is not None and self.__bundle_module.address == address:
             return self.__bundle_module
 
         module = BundleModule(address, self.__get_client())
