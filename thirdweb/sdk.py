@@ -86,7 +86,7 @@ class ThirdwebSdk(object):
         """
         Returns an instance of the currency module
         """
-        if self.__currency_module is not None:
+        if self.__currency_module is not None and self.__currency_module.address == address:
             return self.__currency_module
 
         module = CurrencyModule(address, self.__get_client())
@@ -102,7 +102,7 @@ class ThirdwebSdk(object):
         :param address: The address of the contract
         :param is_v1: Whether or not the module is a v1 module.
         """
-        if self.__nft_module is not None:
+        if self.__nft_module is not None and self.__nft_module.address == address:
             return self.__nft_module
 
         if is_v1:
@@ -118,7 +118,7 @@ class ThirdwebSdk(object):
         """
         Returns an instance of the pack module
         """
-        if self.__pack_module is not None:
+        if self.__pack_module is not None and self.__pack_module.address == address:
             return self.__pack_module
 
         module = PackModule(address, self.__get_client())
@@ -131,7 +131,7 @@ class ThirdwebSdk(object):
         """
         Returns an instance of the market module
         """
-        if self.__market_module is not None:
+        if self.__market_module is not None and self.__market_module.address == address:
             return self.__market_module
 
         module = MarketModule(address, self.__get_client())
@@ -148,7 +148,7 @@ class ThirdwebSdk(object):
 
     def get_bundle_module(self, address: str) -> BundleModule:
 
-        if self.__bundle_module is not None:
+        if self.__bundle_module is not None and self.__bundle_module.address == address:
             return self.__bundle_module
 
         module = BundleModule(address, self.__get_client())
