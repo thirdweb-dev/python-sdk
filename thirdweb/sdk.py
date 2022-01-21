@@ -95,14 +95,17 @@ class ThirdwebSdk(object):
         return self.__currency_module
 
     @set_default_account
-    def get_nft_module(self, address: str, old_module: bool = False) -> NftModule:
+    def get_nft_module(self, address: str, is_v1: bool = False) -> NftModule:
         """
         Returns an instance of the nft module
+
+        :param address: The address of the contract
+        :param is_v1: Whether or not the module is a v1 module.
         """
         if self.__nft_module is not None:
             return self.__nft_module
 
-        if old_module:
+        if is_v1:
             module = NftModuleV1(address, self.__get_client())
         else:
             module = NftModule(address, self.__get_client())
