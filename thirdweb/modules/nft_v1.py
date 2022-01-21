@@ -4,6 +4,7 @@ import json
 from typing import Dict, List
 import io
 
+import deprecation
 from thirdweb_web3 import Web3
 
 from ..abi.nft_v1 import NFT
@@ -12,8 +13,11 @@ from ..types.nft import NftMetadata as NftType
 from .base import BaseModule
 
 
+@deprecation.deprecated(deprecated_in="0.5.0", details="Use the NftModuleV2 module instead")
 class NftModule(BaseModule):
-    """ Interact with the NFT module of the app"""
+    """
+    Interact with the NFT module of the app
+    """
 
     address: str
     """
