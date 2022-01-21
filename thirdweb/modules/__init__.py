@@ -1,5 +1,5 @@
 """All Modules"""
-from .nft import *
+from .nft import NftModule as NftModuleV2
 from .nft_v1 import *
 from .nft_types import *
 from .currency import *
