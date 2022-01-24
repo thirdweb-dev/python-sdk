@@ -1,6 +1,7 @@
 """Types for the Currency Module."""
 
 import dataclasses
+from dataclasses_json import dataclass_json
 
 
 @dataclasses.dataclass
@@ -9,6 +10,13 @@ class Currency:
     name: str
     symbol: str
     decimals: int
+
+
+@dataclass_json
+@dataclasses.dataclass
+class TokenBatchMintArgs:
+    address: str
+    amount: int
 
 
 @dataclasses.dataclass

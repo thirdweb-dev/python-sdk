@@ -6,7 +6,7 @@ from thirdweb_web3 import Web3
 
 from ..abi.coin import Coin
 from ..abi.erc20 import ERC20
-from ..types.currency import Currency, CurrencyValue
+from ..types.currency import Currency, CurrencyValue, TokenBatchMintArgs
 from .base import BaseModule
 
 
@@ -126,6 +126,18 @@ class CurrencyModule(BaseModule):
             self.get_signer_address(), amount, self.get_transact_opts()
         ))
 
+    def mint_batch_to(self, values: list(TokenBatchMintArgs)):
+        """ 
+        :param values: The addresses and amounts to mint
+
+        Mints the given values to the given address
+
+        """
+        # TODO multicall
+        for tx in values:
+            self.mint_to(tx.address, tx.amount)
+        return
+
     def burn(self, amount: int):
         """ 
         :param amount: The amount to burn
@@ -150,6 +162,7 @@ class CurrencyModule(BaseModule):
         return self.execute_tx(self.__abi_module.burn_from.build_transaction(
             from_address, amount, self.get_transact_opts()
         ))
+
     def transfer(self, to_address: str, amount: int):
         """ 
         :param to_address: The address to transfer to
@@ -161,7 +174,7 @@ class CurrencyModule(BaseModule):
             raise RestrictedTransferError(self.address)
         return self.execute_tx(self.__abi_module.transfer.build_transaction(
             self.get_signer_address(), to_address, amount, self.get_transact_opts()
-        ))        
+        ))
 
     def transfer_from(self, from_address: str, to_address: str, amount: int):
         """ 
