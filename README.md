@@ -1,5 +1,7 @@
 # Thirdweb Python SDK
 
+Requires python 3.6 or above.
+
 PyPi package found [here](https://pypi.org/project/thirdweb-sdk).
 
 ## Deprecation Notices
