@@ -46,3 +46,37 @@ class NftMetadata:
 class BatchGeneratedSignature:
     payload: Any
     signature: str
+
+@dataclass_json
+@dataclass
+class MintRequestStructOutput:
+    to: str
+    price: int
+    currency: str
+    validity_start_timestamp: int
+    validity_end_timestamp: int
+    uid: str
+
+@dataclass_json
+@dataclass
+class SignaturePayload:
+  metadata: dict
+  to: str
+  price: int
+  currency_address: str
+  mint_start_time_epoch_seconds: int
+  mint_end_time_epoch_seconds: int
+  id: Optional[str] = None
+
+
+@dataclass_json
+@dataclass
+class NewSignaturePayload:
+  metadata: dict
+  to: str
+  price: int
+  currency_address: str
+  mint_start_time_epoch_seconds: int
+  mint_end_time_epoch_seconds: int
+  uri: str
+  id: Optional[str] = None
