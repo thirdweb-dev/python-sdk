@@ -1,6 +1,7 @@
 """ Interact with the NFT module of the app"""
 import copy
 from typing import Dict, List
+import json
 
 import web3
 from thirdweb.abi.erc20 import ERC20
@@ -8,10 +9,14 @@ from thirdweb.constants import NativeAddress, ZeroAddress
 
 from thirdweb_web3 import Web3
 
+from thirdweb.types.role import Role
+
 from ..abi.nft import SignatureMint721 as NFT
-from ..types.nft import MintArg
+from ..types.nft import BatchGeneratedSignature, MintArg
 from ..types.nft import NftMetadata as NftType
 from .base import BaseModule
+import uuid
+import binascii
 
 
 class NftModule(BaseModule):
@@ -294,10 +299,12 @@ class NftModule(BaseModule):
             )
         )
 
-    def _map_payload(req):
-        return
+    def __map_payload(req):
+        return MintRequestStructOutput(
 
-    def set_allowance(
+        )
+
+    def __set_allowance(
         self,
         value: int,
         currency_address: str
@@ -311,7 +318,8 @@ class NftModule(BaseModule):
             spender = self.address
             allownace = erc20.allowance(owner, spender)
             if allownace < value:
-                tx = erc20.increase_allowance.build_transaction(owner, value - allownace, params)
+                tx = erc20.increase_allowance.build_transaction(
+                    owner, value - allownace, params)
                 self.execute_tx(tx)
         return params
 
@@ -319,18 +327,76 @@ class NftModule(BaseModule):
         message = self._map_payload(req)
         overrides = self.get_transact_opts()
         self.set_allowance(req.price, req.currency_address)
-        tx =  self.__abi_module.mint_with_signature.build_transaction(message, signature, overrides)
+        tx = self.__abi_module.mint_with_signature.build_transaction(
+            message, signature, overrides)
         receipt = self.execute_tx(tx)
-        logs = self.__abi_module.get_mint_with_signature_event(receipt.transactionHash.hex())
+        logs = self.__abi_module.get_mint_with_signature_event(
+            receipt.transactionHash.hex())
         result = logs[0]['args']['tokenIdMinted']
         print(result)
-    
+
     def verify(self, mint_reqeust, signature: str) -> bool:
         message = self._map_payload(mint_reqeust)
         return self.__abi_module.verify.call(message, signature)[0]
-    
-    def generate_signature_batch(payloads):
-        
+
+    def generate_signature_batch(self, payloads):
+        def resolve_id(mint_request):
+            if not mint_request.id:
+                print("mint_request.id is empty, generating uuid-v4")
+                generated_id = uuid.uuid4().hex
+                return generated_id
+            else:
+                return binascii.hexlify(mint_request.id).decode()
+
+        if not self.get_signer_address() in self.get_role_members(Role.minter):
+            raise Exception("You are not a minter")
+        storage = self.get_storage()
+        metadata_uris = [storage.upload(payload.metadata)
+                         for payload in payloads]
+
+        def generate_sign(payload):
+            resolved_id = resolve_id(payload)
+            uri = storage.upload(payload.metadata)
+            payload.id = resolved_id
+            payload.uri = uri
+            chain_id = self.get_client().eth.chain_id
+            message = self._map_payload(payload)
+            message["uri"] = uri
+            message["uid"] = resolved_id
+            return BatchGeneratedSignature(payload=payload,
+                                           signature=self.get_client().eth.sign_typed_data(
+                                               {
+                                                   "name": "SignatureMint721",
+                                                   "version": "1",
+                                                   "chainId": chain_id,
+                                                   "verifyingContract": self.address,
+                                               },
+                                               {
+                                                   "MintRequest": [
+                                                       {"name": "to",
+                                                           "type": "address"},
+                                                       {"name": "uri",
+                                                           "type": "string"},
+                                                       {"name": "price",
+                                                           type: "uint256"},
+                                                       {"name": "currency",
+                                                           type: "address"},
+                                                       {"name": "validityStartTimestamp",
+                                                           type: "uint128"},
+                                                       {"name": "validityEndTimestamp",
+                                                           type: "uint128"},
+                                                       {"name": "uid",
+                                                           type: "bytes32"},
+                                                   ]
+                                               },
+                                               message
+                                           )
+                                           )
+        return [generate_sign(payload) for payload in payloads]
+
+    def generate_signature(self, mint_request):
+        return self.generate_signature_batch([mint_request])
+
     def get_with_owner(self, token_id: int):
         """
         :param token_id: The token id to fetch the NFT for

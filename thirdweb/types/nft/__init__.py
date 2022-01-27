@@ -3,9 +3,10 @@ Types for NFT module.
 """
 
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Any, Optional, Union
 from dataclasses_json import dataclass_json
 import io
+
 
 @dataclass
 class MintArg:
@@ -38,3 +39,10 @@ class NftMetadata:
     properties: Optional[Union[str, dict]] = None
     id: Optional[int] = None
     uri: Optional[str] = None
+
+
+@dataclass_json
+@dataclass
+class BatchGeneratedSignature:
+    payload: Any
+    signature: str
