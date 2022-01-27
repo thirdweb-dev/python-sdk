@@ -2,6 +2,10 @@
 import copy
 from typing import Dict, List
 
+import web3
+from thirdweb.abi.erc20 import ERC20
+from thirdweb.constants import NativeAddress, ZeroAddress
+
 from thirdweb_web3 import Web3
 
 from ..abi.nft import SignatureMint721 as NFT
@@ -290,6 +294,43 @@ class NftModule(BaseModule):
             )
         )
 
+    def _map_payload(req):
+        return
+
+    def set_allowance(
+        self,
+        value: int,
+        currency_address: str
+    ):
+        params = self.get_transact_opts()
+        if currency_address == ZeroAddress or currency_address == NativeAddress:
+            params["value"] = value
+        else:
+            erc20 = ERC20(self.get_client(), currency_address)
+            owner = self.get_signer_address()
+            spender = self.address
+            allownace = erc20.allowance(owner, spender)
+            if allownace < value:
+                tx = erc20.increase_allowance.build_transaction(owner, value - allownace, params)
+                self.execute_tx(tx)
+        return params
+
+    def mint_with_signature(self, req, signature):
+        message = self._map_payload(req)
+        overrides = self.get_transact_opts()
+        self.set_allowance(req.price, req.currency_address)
+        tx =  self.__abi_module.mint_with_signature.build_transaction(message, signature, overrides)
+        receipt = self.execute_tx(tx)
+        logs = self.__abi_module.get_mint_with_signature_event(receipt.transactionHash.hex())
+        result = logs[0]['args']['tokenIdMinted']
+        print(result)
+    
+    def verify(self, mint_reqeust, signature: str) -> bool:
+        message = self._map_payload(mint_reqeust)
+        return self.__abi_module.verify.call(message, signature)[0]
+    
+    def generate_signature_batch(payloads):
+        
     def get_with_owner(self, token_id: int):
         """
         :param token_id: The token id to fetch the NFT for
