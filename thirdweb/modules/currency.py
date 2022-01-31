@@ -150,6 +150,7 @@ class CurrencyModule(BaseModule):
         return self.execute_tx(self.__abi_module.burn_from.build_transaction(
             from_address, amount, self.get_transact_opts()
         ))
+
     def transfer(self, to_address: str, amount: int):
         """ 
         :param to_address: The address to transfer to
@@ -157,11 +158,11 @@ class CurrencyModule(BaseModule):
 
         Transfers the given amount from the current address
         """
-        if(self.__abi_module.is_restricted_transfer()):
+        if(self.__abi_module.is_restricted_transfer.call()):
             raise RestrictedTransferError(self.address)
         return self.execute_tx(self.__abi_module.transfer.build_transaction(
             self.get_signer_address(), to_address, amount, self.get_transact_opts()
-        ))        
+        ))
 
     def transfer_from(self, from_address: str, to_address: str, amount: int):
         """ 
