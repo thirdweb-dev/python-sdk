@@ -1,0 +1,273 @@
+{
+  "BundleModule": {
+    "name": "BundleModule",
+    "summary": "Create a collection of NFTs that lets you optionally mint multiple copies of each NFT.\n\n",
+    "remarks": null,
+    "examples": {
+      "python": "from thirdweb import ThirdwebSdk, SdkOptions\n\n# You can switch out this RPC url with any url you like\n\nsdk = ThirdwebSdk(SdkOptions(), 'https://rpc-mumbai.maticvigil.com')\nsdk.set_private_key(os.environ['PRIVATE_KEY'])\nbundle_module = sdk.get_bundle_module(\"{{module_address}}\")"
+    },
+    "methods": [
+      {
+        "name": "balanceOf",
+        "summary": "Get NFT Balance\n\n",
+        "remarks": "\n\nGet a wallets NFT balance (number of a specific NFT in this module owned by the wallet).\n\n",
+        "examples": {
+          "python": "# Address of the wallet to check NFT balance\naddress = \"{{wallet_address}\"\n\n# The token ID of the NFT you want to check the wallets balance of\ntoken_id = 0\n\nprint(bundle_module.balance_of(address, token_id))"
+        },
+        "signature": "balanceOf(address: string, tokenId: string): Promise<BigNumber>;"
+      },
+      {
+        "name": "burn",
+        "summary": "Burn NFT\n\n",
+        "remarks": "\n\nBurn an NFT, permanently taking it out of circulation and reducing the supply.\n\n",
+        "examples": {
+          "python": "# The token ID of the NFT you want to burn\ntoken= 0\n# The number of specified NFTs you want to burn\nburn_amount = 1\nbundle_module.burn(MintBundleArg(token_id=token, amount=burn_amount)) "
+        },
+        "signature": "burn(args: INFTBundleBatchArgs): Promise<TransactionReceipt>;"
+      },
+      {
+        "name": "createAndMint",
+        "summary": "Mint NFT\n\n",
+        "remarks": "\n\nMint an NFT with a specified supply.\n\n",
+        "examples": {
+          "python": "# Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nmetadata = {\n    \"name\": \"Cool NFT\",\n    \"description\": \"This is a cool NFT\",\n    \"image\" : \"https://example.com/cool.png\", # This can be an image url or file\n}\n\nmetadata_with_supply = {\n    \"metadata\": metadata,\n    \"supply\": 1, # The number of this NFT you want to mint\n}\nbundle_module.create_and_mint(metadata_with_supply)"
+        },
+        "signature": "createAndMint(metadataWithSupply: INFTBundleCreateArgs): Promise<BundleMetadata>;"
+      },
+      {
+        "name": "createAndMintBatch",
+        "summary": "Mint Many NFTs\n\n",
+        "remarks": "\n\nMint many different NFTs with specified supplies.\n\n",
+        "examples": {
+          "python": "\nmetadata_with_supply = [{\n    \"metadata\": {\n        \"name\": \"Cool NFT\",\n        \"description\": \"This is a cool NFT\",\n        \"image\": \"https://example.com/cool.png\",  # This can be an image url or file\n    },\n    \"supply\": 1,  # The number of this NFT you want to mint\n},\n    {\n    \"metadata\": {\n        \"name\": \"Cool NFT #2\",\n        \"description\": \"This is a cool NFT\",\n        \"image\": \"https://example.com/cool.png\",  # This can be an image url or file\n    },\n    \"supply\": 1,  # The number of this NFT you want to mint\n}]\nbundle_module.create_and_mint_batch(metadata_with_supply)"
+        },
+        "signature": "createAndMintBatch(metadataWithSupply: INFTBundleCreateArgs[]): Promise<BundleMetadata[]>;"
+      },
+      {
+        "name": "getAll",
+        "summary": "Get NFT Data\n\n",
+        "remarks": "\n\nGet data associated with NFTs in this module.\n\n",
+        "examples": {
+          "python": "# You can get every NFT in the module\nnfts = bundle_module.get_all()\nprint(nfts)\n\n# Or you can get optionally get the metadata of a specific NFT\ntoken_id = 0\nnfts = bundle_module.get(token_id)"
+        },
+        "signature": "getAll(address?: string): Promise<BundleMetadata[]>;"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer NFT\n\n",
+        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "python": "# Address of the wallet you want to send the NFT to\ntoAddress = \"0x...\"\n\n# The token ID of the NFT you want to send\ntokenId = \"0\"\n\n# The number of NFTs you want to send\namount = 1\n\nbundle_module.transfer(toAddress, tokenId, amount)"
+        },
+        "signature": "transfer(to: string, tokenId: string, amount: BigNumberish): Promise<TransactionReceipt>;"
+      },
+      {
+        "name": "transferBatchFrom",
+        "summary": "Transfer Many NFTs\n\n",
+        "remarks": "\n\nTransfer NFTs from the one wallet to another.\n\n",
+        "examples": {
+          "python": "\n# Address of the wallet to send the NFT from\n\nfromAddress = {{wallet_address}}\ntoAddress = \"0x...\"\n\n# The data of the NFTs you want to send\ndata = [{\n    \"tokenId\": 1,  # The token ID of the NFT you want to send\n    \"amount\": 1,  # The number of this NFT you want to send\n}, {\n    \"tokenId\": 2,\n    \"amount\": 1,\n}]\n\n# Note that the connected wallet must have approval to transfer the tokens of the fromAddress\nbundle_module.transfer_batch_from(fromAddress, toAddress, data)"
+        },
+        "signature": "transferBatchFrom(from: string, to: string, args: INFTBundleBatchArgs[], data?: BytesLike): Promise<TransactionReceipt>;"
+      }
+    ],
+    "signature": "export declare class BundleModule extends ModuleWithRoles<NFTBundleContract> implements ITransferable "
+  },
+  "NFTModule": {
+    "name": "NFTModule",
+    "summary": "Create a collection of one-of-one NFTs.\n\n",
+    "remarks": null,
+    "examples": {
+      "python": "from thirdweb import ThirdwebSdk, SdkOptions\n# You can switch out this RPC url with any other RPC url if your choice\n\nsdk = ThirdwebSdk(SdkOptions(), 'https://rpc-mumbai.maticvigil.com')\nsdk.set_private_key(os.environ['PRIVATE_KEY'])\nnft_module = sdk.get_nft_module(\"{{module_address}}\")"
+    },
+    "methods": [
+      {
+        "name": "balanceOf",
+        "summary": "Get NFT Balance\n\n",
+        "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this module owned by the wallet).\n\n",
+        "examples": {
+          "python": "# Address of the wallet to check NFT balance\naddress = {{wallet_address}}\n\nbalance = nft_module.balance_of(address)\nprint(balance)"
+        },
+        "signature": "balanceOf(address: string): Promise<BigNumber>;"
+      },
+      {
+        "name": "burn",
+        "summary": "Burn NFT\n\n",
+        "remarks": "\n\nBurn an NFT, permanently taking it out of circulation and reducing the supply.\n\n",
+        "examples": {
+          "python": "# The token ID of the NFT you want to burn\ntoken_id = 0\n\nnft_module.burn(token_id)"
+        },
+        "signature": "burn(tokenId: BigNumberish): Promise<TransactionReceipt>;"
+      },
+      {
+        "name": "getAll",
+        "summary": "Get All NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with every NFT in this module.\n\n",
+        "examples": {
+          "python": "nfts = nft_module.get_all()\nprint(nfts)"
+        },
+        "signature": "getAll(): Promise<NFTMetadata[]>;"
+      },
+      {
+        "name": "getOwned",
+        "summary": "Get Owned NFTs\n\n",
+        "remarks": "\n\nGet all the data associated with the NFTs owned by a specific wallet.\n\n",
+        "examples": {
+          "python": "# Address of the wallet to get the NFTs of\naddress = {{wallet_address}}\nprint(nft_module.get_owned())"
+        },
+        "signature": "getOwned(_address?: string): Promise<NFTMetadata[]>;"
+      },
+
+      {
+        "name": "mintTo",
+        "summary": "Mint NFT\n\n",
+        "remarks": "\n\nMint an NFT to a specified wallet.\n\n",
+        "examples": {
+          "python": "# Address of the wallet you want to mint the NFT to\nto_address = {{wallet_address}}\n\n# Custom metadata of the NFT, note that you can fully customize this metadata with other properties.\nmetadata = {\n    \"name\": \"Cool NFT\",\n    \"description\": \"This is a cool NFT\",\n    \"image\": \"https://example.com/cool-nft.png\",  # this can be a URL or a file\n}\n\nnft_module.mint_to(to_address, metadata)"
+        },
+        "signature": "mintTo(to: string, metadata: MetadataURIOrObject): Promise<NFTMetadata>;"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer NFT\n\n",
+        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "python": "# Address of the wallet you want to send the NFT to\nto_address = {{wallet_address}}\n\n# The token ID of the NFT you want to send\ntoken_id = 0\n\nnft_module.transfer(to_address, token_id)"
+        },
+        "signature": "transfer(to: string, tokenId: string): Promise<TransactionReceipt>;"
+      }
+    ],
+    "signature": "export declare class NFTModule extends ModuleWithRoles<SignatureMint721> implements ITransferable, ISignatureMinter "
+  },
+  "PackModule": {
+    "name": "PackModule",
+    "summary": "Create lootboxes of NFTs with rarity based open mechanics.\n\n",
+    "remarks": null,
+    "examples": {
+      "python": "from thirdweb import ThirdwebSdk, SdkOptions\n\n# You can switch out this RPC URL for your own.\nsdk = ThirdwebSdk(SdkOptions(), 'https://rpc-mumbai.maticvigil.com')\nsdk.set_private_key(os.environ['PRIVATE_KEY'])\npack_module = sdk.get_pack_module(\"{{module_address}}\")"
+    },
+    "methods": [
+      {
+        "name": "balanceOf",
+        "summary": "Get Pack Balance\n\n",
+        "remarks": "\n\nGet a wallets pack balance (number of a specific packs in this module owned by the wallet).\n\n",
+        "examples": {
+          "python": "# Address of the wallet to check pack balance\naddress = {{wallet_address}}\n# The token ID of the pack you want to check the wallets balance of\ntokenId = 0\n\nbalance = pack_module.balanceOf(address, tokenId)\nprint(balance)"
+        },
+        "signature": "balanceOf(address: string, tokenId: string): Promise<BigNumber>;"
+      },
+      {
+        "name": "create",
+        "summary": "Create Pack\n\n",
+        "remarks": "\n\nCreate a new pack with its own rewards.\n\n",
+        "examples": {
+          "python": "# Data to create the pack\npack = {\n    # The address of the contract that holds the rewards you want to include\n    \"assetContract\": \"0x...\",\n    # The metadata of the pack\n    \"metadata\": {\n        \"name\": \"Cool Pack\",\n        \"description\": \"This is a cool pack\",\n        \"image\": \"https://example.com/coolpack.png\",\n    },\n    # The NFTs you want to include in the pack\n    \"assets\": [\n        {\n            \"tokenId\": 0,  # The token ID of the asset you want to add\n            \"amount\": 1,  # The amount of the asset you want to add\n        }, {\n            \"tokenId\": 1,\n            \"amount\": 1,\n        }\n    ],\n}\n\npack_module.create(pack)"
+        },
+        "signature": "create(args: IPackCreateArgs): Promise<PackMetadata>;"
+      },
+      {
+        "name": "getAll",
+        "summary": "Get Pack Data\n\n",
+        "remarks": "\n\nGet data associated with every pack in this module.\n\n",
+        "examples": {
+          "python": "packs = pack_module.get_all()\nprint(packs)"
+        },
+        "signature": "getAll(): Promise<PackMetadata[]>;"
+      },
+      {
+        "name": "getNFTs",
+        "summary": "Get Pack Reward Data\n\n",
+        "remarks": "\n\nGet data associated with the rewards inside a specified pack\n\n",
+        "examples": {
+          "python": "# The pack ID of the pack whos rewards you want to get\npackId = 0\n\nnfts = pack_module.get_nfts(packId)\nprint(nfts)"
+        },
+        "signature": "getNFTs(packId: string): Promise<PackNFTMetadata[]>;"
+      },
+      {
+        "name": "open",
+        "summary": "Open Pack\n\n",
+        "remarks": "\n\nOpen a pack to burn it and obtain the reward asset inside.\n\n",
+        "examples": {
+          "python": "# The pack ID of the asset you want to buy\npackId = 0\nrewards =pack_module.open(packId)\nprint(rewards)"
+        },
+        "signature": "open(packId: string): Promise<NFTMetadata[]>;"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer Pack\n\n",
+        "remarks": "\n\nTransfer a pack from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "python": "# Address of the wallet you want to send the pack to\ntoAddress = \"0x...\"\n\n# The token ID of the pack you want to send\ntokenId = \"0\"\n\n# The number of packs you want to send\namount = 1\n\npack_module.transfer(toAddress, tokenId, amount);"
+        },
+        "signature": "transfer(to: string, tokenId: string, amount: BigNumber): Promise<void>;"
+      }
+    ],
+    "signature": "export declare class PackModule extends ModuleWithRoles<PackContract> implements ITransferable "
+  },
+  "TokenModule": {
+    "name": "TokenModule",
+    "summary": "Create a standard crypto token or crypto currency.\n\n",
+    "remarks": null,
+    "examples": {
+      "python": "from thirdweb import ThirdwebSdk, SdkOptions\n\n# You can switch out this RPC URL for your own.\nsdk = ThirdwebSdk(SdkOptions(), 'https://rpc-mumbai.maticvigil.com')\nsdk.set_private_key(os.environ['PRIVATE_KEY'])\ntoken_module = sdk.get_currency_module(\"{{module_address}}\")"
+    },
+    "methods": [
+      {
+        "name": "allowanceOf",
+        "summary": "Get Token Allowance\n\n",
+        "remarks": "\n\nGet the allowance of one wallet over another's funds - the allowance of a different address for a token is the amount of tokens that the wallet is allowed to spend on behalf of the connected wallet.\n\n",
+        "examples": {
+          "python": "# Address of the wallet who owns the funds\naddress = \"0x23302DA41ae4A69875321343D7ACA464a4E72DB2\"\n\n# Address of the wallet to check token allowance\notherAddress = \"0x...\"\n\nallowance = token_module.allowance_of(address, otherAddress)\nprint(allowance)"
+        },
+        "signature": "allowanceOf(owner: string, spender: string): Promise<BigNumber>;"
+      },
+      {
+        "name": "balanceOf",
+        "summary": "Get Token Balance\n\n",
+        "remarks": "\n\nGet a wallets token balance.\n\n",
+        "examples": {
+          "python": "# Address of the wallet to check token balance\naddress = \"0x23302DA41ae4A69875321343D7ACA464a4E72DB2\"\n\nbalance = token_module.balanceOf(address)\nprint(balance)"
+        },
+        "signature": "balanceOf(address: string): Promise<CurrencyValue>;"
+      },
+      {
+        "name": "burn",
+        "summary": "Burn Tokens\n\n",
+        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
+        "examples": {
+          "python": "# The amount of this token you want to burn\namount = 100\n\ntoken_module.burn(amount)"
+        },
+        "signature": "burn(amount: BigNumberish): Promise<TransactionReceipt>;"
+      },
+
+      {
+        "name": "mintTo",
+        "summary": "Mint Tokens\n\n",
+        "remarks": "\n\nMint tokens to a specified address\n\n",
+        "examples": {
+          "python": "# Address of the wallet you want to mint the tokens to\ntoAddress = {{wallet_address}}\n\n# The amount of this token you want to mint\namount = 1.5 * 10 ** 18\n\ntoken_module.mint_to(toAddress, amount)"
+        },
+        "signature": "mintTo(to: string, amount: BigNumberish): Promise<void>;"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer Tokens\n\n",
+        "remarks": "\n\nTransfer tokens from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "python": "# Address of the wallet you want to send the tokens to\ntoAddress = \"0x...\"\n\n# The amount of tokens you want to send\namount = 0\n\ntoken_module.transfer(toAddress, amount)"
+        },
+        "signature": "transfer(to: string, amount: BigNumberish): Promise<TransactionReceipt>;"
+      },
+      {
+        "name": "transferFrom",
+        "summary": "Transfer Tokens From Address\n\n",
+        "remarks": "\n\nTransfer tokens from one wallet to another\n\n",
+        "examples": {
+          "python": "# Address of the wallet sending the tokens\nfromAddress = {{wallet_address}}\n# Address of the wallet you want to send the tokens to\ntoAddress = \"0x...\"\n# The number of tokens you want to send\namount = 100\n\n# Note that the connected wallet must have approval to transfer the tokens of the fromAddress\ntoken_module.transfer_from(fromAddress, toAddress, amount)"
+        },
+        "signature": "transferFrom(from: string, to: string, amount: BigNumberish): Promise<TransactionReceipt>;"
+      }
+    ],
+    "signature": "export declare class TokenModule extends ModuleWithRoles<Coin> implements ITransferable "
+  }
+}
