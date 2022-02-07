@@ -1,21 +1,24 @@
 """ Interact with the NFT module of the app"""
 import copy
-from typing import Dict, List
+from typing import Dict, List, Union
 import json
+from uuid import uuid4
+from eth_account.messages import encode_structured_data
 
 import web3
 from thirdweb.abi.erc20 import ERC20
 from thirdweb.constants import NativeAddress, ZeroAddress
 
-from thirdweb_web3 import Web3
+from web3 import Web3
+from zero_ex.contract_wrappers import TxParams
 
 from thirdweb.types.role import Role
 
-from ..abi.nft import SignatureMint721 as NFT
+from ..abi.nft import SignatureMint721 as NFT, ISignatureMint721MintRequest
 from ..types.nft import BatchGeneratedSignature, MintArg, MintRequestStructOutput, NewSignaturePayload, SignaturePayload
 from ..types.nft import NftMetadata as NftType
 from .base import BaseModule
-import uuid
+
 import binascii
 
 
@@ -51,7 +54,7 @@ class NftModule(BaseModule):
         :param arg: the `MintArg` object
         :return: the metadata of the token
 
-        Mints a new token to the signer. 
+        Mints a new token to the signer.
         - Arguments passed: Note, a class is used -> MintArg(name, description, image_uri, properties)
         - Returns the `NftMetadata(name,description,image,properties,id,uri)`
         """
@@ -70,7 +73,7 @@ class NftModule(BaseModule):
 
         Mints a new token to an address
         - Arguments passed: `to_address` and a class -> `MintArg(name, description, image_uri, properties)`
-        - Returns the `NftMetadata(name,description,image,properties,id,uri)` 
+        - Returns the `NftMetadata(name,description,image,properties,id,uri)`
         """
         final_properties: Dict
         if arg.properties is None:
@@ -233,7 +236,7 @@ class NftModule(BaseModule):
 
         Returns balance of the given addressss
         - Use-case: Use this method if you don't want to use the connected wallet, but want to check another wallet.
-        - Dashboard: Project ➝ NFT Module ➝ Total amount of NFT's 
+        - Dashboard: Project ➝ NFT Module ➝ Total amount of NFT's
         """
         return self.__abi_module.balance_of.call(address)
 
@@ -299,41 +302,46 @@ class NftModule(BaseModule):
             )
         )
 
-    def __map_payload(req: SignaturePayload or NewSignaturePayload) -> MintRequestStructOutput:
-        return MintRequestStructOutput(
+    def __map_payload(self, req: Union[SignaturePayload, NewSignaturePayload]) -> ISignatureMint721MintRequest:
+        return ISignatureMint721MintRequest(
             to=req.to,
             price=req.price,
             currency=req.currency_address,
-            validity_end_timestamp=req.mint_end_time_epoch_seconds,
-            validity_start_timestamp=req.mint_start_time_epoch_seconds,
+            validityEndTimestamp=req.mint_end_time_epoch_seconds,
+            validityStartTimestamp=req.mint_start_time_epoch_seconds,
             uid=req.id,
+            uri=req.uri
         )
 
     def __set_allowance(
         self,
         value: int,
-        currency_address: str
+        currency_address: str,
+        overrides: TxParams,
     ):
         params = self.get_transact_opts()
         if currency_address == ZeroAddress or currency_address == NativeAddress:
-            params["value"] = value
+            overrides.value = value
         else:
             erc20 = ERC20(self.get_client(), currency_address)
             owner = self.get_signer_address()
             spender = self.address
-            allownace = erc20.allowance(owner, spender)
-            if allownace < value:
+            allowance = erc20.allowance.call(owner, spender)
+            if allowance < value:
                 tx = erc20.increase_allowance.build_transaction(
-                    owner, value - allownace, params)
+                    owner, value - allowance, params)
                 self.execute_tx(tx)
         return params
 
     def mint_with_signature(self, req: NewSignaturePayload, signature: str) -> int:
         message = self.__map_payload(req)
         overrides = self.get_transact_opts()
-        self.__set_allowance(req.price, req.currency_address)
-        tx = self.__abi_module.mint_with_signature.build_transaction(
-            message, signature, overrides)
+
+        self.__set_allowance(req.price, req.currency_address, overrides)
+
+        print("Minting NFT with signature", message)
+
+        tx = self.__abi_module.mint_with_signature.build_transaction(message, signature, overrides)
         receipt = self.execute_tx(tx)
         logs = self.__abi_module.get_mint_with_signature_event(
             receipt.transactionHash.hex())
@@ -345,59 +353,82 @@ class NftModule(BaseModule):
         return self.__abi_module.verify.call(message, signature)[0]
 
     def generate_signature_batch(self, payloads: list) -> list:
+        '''
+        Generates a batch of signatures that can be used for minting a number of NFTs
+
+        :param payloads: The payloads to generate the signature for
+        :return: The generated signature
+        '''
         def resolve_id(mint_request: NewSignaturePayload):
-            if not mint_request.id:
+            if mint_request.id is None:
                 print("mint_request.id is empty, generating uuid-v4")
-                generated_id = uuid.uuid4().hex
-                return generated_id
+                generated_id = uuid4().hex
+                return "0x" + binascii.hexlify(str.encode(generated_id)).decode()
             else:
-                return binascii.hexlify(mint_request.id).decode()
+                return "0x" + binascii.hexlify(str.encode(mint_request.id)).decode()
 
         if not self.get_signer_address() in self.get_role_members(Role.minter):
             raise Exception("You are not a minter")
-        storage = self.get_storage()
 
-        def generate_sign(payload: NewSignaturePayload):
+        def generate_signature(payload: NewSignaturePayload) -> BatchGeneratedSignature:
             resolved_id = resolve_id(payload)
-            uri = storage.upload(payload.metadata, self.address, self.get_signer_address())
+
+            uri = self.upload_metadata(payload.metadata)
             payload.id = resolved_id
             payload.uri = uri
             chain_id = self.get_client().eth.chain_id
             message = self.__map_payload(payload)
             message["uri"] = uri
             message["uid"] = resolved_id
-            return BatchGeneratedSignature(payload=payload,
-                                           signature=self.get_client().eth.sign_typed_data(
-                                               {
-                                                   "name": "SignatureMint721",
-                                                   "version": "1",
-                                                   "chainId": chain_id,
-                                                   "verifyingContract": self.address,
-                                               },
-                                               {
-                                                   "MintRequest": [
-                                                       {"name": "to",
-                                                           "type": "address"},
-                                                       {"name": "uri",
-                                                           "type": "string"},
-                                                       {"name": "price",
-                                                           type: "uint256"},
-                                                       {"name": "currency",
-                                                           type: "address"},
-                                                       {"name": "validityStartTimestamp",
-                                                           type: "uint128"},
-                                                       {"name": "validityEndTimestamp",
-                                                           type: "uint128"},
-                                                       {"name": "uid",
-                                                           type: "bytes32"},
-                                                   ]
-                                               },
-                                               message
-                                           )
-                                           )
-        return [generate_sign(payload) for payload in payloads]
+
+            print("message", message)
+            encode_message = {
+                    **message,
+                    "uid": str(message['uid'].encode('utf-8'))
+                }
+            encoded_message = encode_structured_data(text=json.dumps({
+                "types": {
+                    "MintRequest": [
+                        {"name": "to", "type": "address"},
+                        {"name": "uri", "type": "string"},
+                        {"name": "price", "type": "uint256"},
+                        {"name": "currency", "type": "address"},
+                        {"name": "validityStartTimestamp", "type": "uint128"},
+                        {"name": "validityEndTimestamp", "type": "uint128"},
+                        {"name": "uid", "type": "string"},
+                    ],
+                    "EIP712Domain": [
+                        {"name": "name", "type": "string"},
+                        {"name": "version", "type": "string"},
+                        {"name": "chainId", "type": "uint256"},
+                        {"name": "verifyingContract", "type": "address"}
+                    ]
+                },
+                "primaryType": "MintRequest",
+                "domain": {
+                    "name": "SignatureMint721",
+                    "version": "1",
+                    "chainId": chain_id,
+                    "verifyingContract": self.address
+                },
+                "message": encode_message
+            }))
+            print("encoded_message =", encoded_message)
+            return BatchGeneratedSignature(
+                payload=payload,
+                signature=self.get_client().eth.account.sign_message(
+                    encoded_message,
+                    self.get_private_key()
+               ).signature.hex())
+        return [generate_signature(payload) for payload in payloads]
 
     def generate_signature(self, mint_request: NewSignaturePayload):
+        '''
+        Generates a signature that can be used for minting an NFT
+
+        :param mint_request: The payload to generate the signature for
+        :return: The generated signature
+        '''
         return self.generate_signature_batch([mint_request])[0]
 
     def get_with_owner(self, token_id: int):
