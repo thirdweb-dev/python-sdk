@@ -60,23 +60,23 @@ class MintRequestStructOutput:
 @dataclass_json
 @dataclass
 class SignaturePayload:
-  metadata: dict
-  to: str
-  price: int
-  currency_address: str
-  mint_start_time_epoch_seconds: int
-  mint_end_time_epoch_seconds: int
-  id: Optional[str] = None
+    metadata: dict
+    to: str
+    price: int
+    currency_address: str
+    mint_start_time_epoch_seconds: int
+    mint_end_time_epoch_seconds: int
+    id: Optional[str] = None
 
 
 @dataclass_json
 @dataclass
 class NewSignaturePayload:
-  metadata: dict
-  to: str
-  price: int
-  currency_address: str
-  mint_start_time_epoch_seconds: int
-  mint_end_time_epoch_seconds: int
-  uri: str
-  id: Optional[str] = None
+    metadata: dict
+    mint_start_time_epoch_seconds: int
+    mint_end_time_epoch_seconds: int
+    uri: Optional[str] = None
+    price: int = 0
+    currency_address: str = "0x0000000000000000000000000000000000000000"
+    to: str = "0x0000000000000000000000000000000000000000"
+    id: Optional[str] = None
