@@ -4,16 +4,19 @@ from abc import ABC, abstractmethod
 from typing import Callable, Dict, List, Optional, Union, cast
 
 from eth_account.account import LocalAccount
-from thirdweb_web3 import Web3
-from thirdweb_web3.types import TxReceipt
+from web3 import Web3
+from web3.types import TxReceipt
 from zero_ex.contract_wrappers import TxParams
 import json
+
+from build.lib.thirdweb import ZeroAddress
 from ..abi.coin import Coin
 from ..abi.erc165 import ERC165
 from ..abi.market import Market
 from ..abi.nft import SignatureMint721 as NFT
 from ..abi.nft_collection import NFTCollection as NFTBundle
 from ..abi.pack import Pack
+from ..constants import NativeAddress
 from ..constants.erc_interfaces import InterfaceIdErc721, InterfaceIdErc1155
 from ..errors import NoSignerException
 import io
@@ -191,3 +194,7 @@ class BaseModule(ABC):
         except:
             pass
         return uri
+
+    def is_native_currency(self, address: str) -> bool:
+        return address.lower() == ZeroAddress or address.lower() == NativeAddress
+

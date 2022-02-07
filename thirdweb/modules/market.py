@@ -3,7 +3,7 @@ Interact with the Market module of the app.
 """
 from typing import List
 
-from thirdweb_web3 import Web3
+from web3 import Web3
 
 from ..abi.erc20 import ERC20
 from ..abi.erc1155 import ERC1155

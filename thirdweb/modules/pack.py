@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Dict, List
 from json import dumps
 
-from thirdweb_web3 import Web3
+from web3 import Web3
 from eth_abi import encode_abi
 
 
