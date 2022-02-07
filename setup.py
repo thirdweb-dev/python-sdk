@@ -32,7 +32,6 @@ setup(
     include_package_data=True,
     install_requires=[
         "dataclasses-json",
-        "thirdweb-web3",
         "requests",
         "thirdweb-contract-wrappers",
         "web3",
