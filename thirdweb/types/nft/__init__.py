@@ -5,7 +5,6 @@ Types for NFT module.
 from dataclasses import dataclass
 from typing import Any, Optional, Union
 from dataclasses_json import dataclass_json
-import io
 
 
 @dataclass
