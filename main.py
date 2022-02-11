@@ -1,13 +1,14 @@
 import os
+import time
+import math
 
-import nftlabs.options
-from nftlabs import NftlabsSdk
-from pprint import pprint
-from nftlabs.types.nft import MintArg
-from nftlabs.types import Role
+import thirdweb.options
+from thirdweb import ThirdwebSdk
+from thirdweb.types.nft import NewSignaturePayload
 
-options = nftlabs.options.SdkOptions()
-sdk = NftlabsSdk(options, "https://rpc-mumbai.maticvigil.com")
+
+options = thirdweb.options.SdkOptions()
+sdk = ThirdwebSdk(options, "https://rpc-mumbai.maticvigil.com")
 # sdk = NftlabsSdk(options, "https://polygon-rpc.com")
 sdk.set_private_key(os.getenv("PKEY"))
 #
@@ -43,5 +44,15 @@ sdk.set_private_key(os.getenv("PKEY"))
 
 # nft_module.grant_role(Role.admin, "0x26ec212ba1854F1a0c287e5B8E3e5463122EFb47")
 
-pack_module = sdk.get_pack_module("0x1E12bFfa725a6dC19530eccf059111524476EAc2")
-print(pack_module.get_all_role_members())
+nft_module = sdk.get_nft_module("0x3C977f3401580Ad0939A05631030545663a2eF3c")
+
+sig = nft_module.generate_signature(NewSignaturePayload(
+    metadata={"name": "Test 123", "description": "Some description"},
+    to="0x0000000000000000000000000000000000000000",
+    mint_start_time_epoch_seconds=0,
+    mint_end_time_epoch_seconds=math.floor(time.time()) + (60 * 24 * 365),
+))
+
+print(sig)
+
+minted = nft_module.mint_with_signature(req=sig.payload, signature=sig.signature)
