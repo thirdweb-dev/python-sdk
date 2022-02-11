@@ -395,7 +395,7 @@ class NftModule(BaseModule):
                         {"name": "currency", "type": "address"},
                         {"name": "validityStartTimestamp", "type": "uint128"},
                         {"name": "validityEndTimestamp", "type": "uint128"},
-                        {"name": "uid", "type": "string"},
+                        {"name": "uid", "type": "bytes32"},
                     ],
                     "EIP712Domain": [
                         {"name": "name", "type": "string"},
@@ -411,7 +411,7 @@ class NftModule(BaseModule):
                     "chainId": chain_id,
                     "verifyingContract": self.address
                 },
-                "message": encode_message
+                "message": message
             }))
             print("encoded_message =", encoded_message)
             return BatchGeneratedSignature(
