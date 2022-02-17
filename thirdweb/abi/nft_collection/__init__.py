@@ -14,10 +14,10 @@ from typing import (  # pylint: disable=unused-import
 from eth_utils import to_checksum_address
 from mypy_extensions import TypedDict  # pylint: disable=unused-import
 from hexbytes import HexBytes
-from web3 import Web3
-from web3.contract import ContractFunction
-from web3.datastructures import AttributeDict
-from web3.providers.base import BaseProvider
+from thirdweb_web3 import Web3
+from thirdweb_web3.contract import ContractFunction
+from thirdweb_web3.datastructures import AttributeDict
+from thirdweb_web3.providers.base import BaseProvider
 
 from zero_ex.contract_wrappers.bases import ContractMethod, Validator
 from zero_ex.contract_wrappers.tx_params import TxParams

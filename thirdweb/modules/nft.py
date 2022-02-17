@@ -9,7 +9,7 @@ import web3
 from thirdweb.abi.erc20 import ERC20
 from thirdweb.constants import NativeAddress, ZeroAddress
 
-from web3 import Web3
+from thirdweb_web3 import Web3
 from zero_ex.contract_wrappers import TxParams
 
 from thirdweb.types.role import Role
@@ -341,7 +341,8 @@ class NftModule(BaseModule):
 
         print("Minting NFT with signature", message)
 
-        tx = self.__abi_module.mint_with_signature.build_transaction(message, signature, overrides)
+        tx = self.__abi_module.mint_with_signature.build_transaction(
+            message, signature, overrides)
         receipt = self.execute_tx(tx)
         logs = self.__abi_module.get_mint_with_signature_event(
             receipt.transactionHash.hex())
@@ -383,9 +384,9 @@ class NftModule(BaseModule):
 
             print("message", message)
             encode_message = {
-                    **message,
-                    "uid": str(message['uid'].encode('utf-8'))
-                }
+                **message,
+                "uid": str(message['uid'].encode('utf-8'))
+            }
             encoded_message = encode_structured_data(text=json.dumps({
                 "types": {
                     "MintRequest": [
@@ -419,7 +420,7 @@ class NftModule(BaseModule):
                 signature=self.get_client().eth.account.sign_message(
                     encoded_message,
                     self.get_private_key()
-               ).signature.hex())
+                ).signature.hex())
         return [generate_signature(payload) for payload in payloads]
 
     def generate_signature(self, mint_request: NewSignaturePayload):

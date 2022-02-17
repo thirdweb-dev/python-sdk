@@ -2,7 +2,7 @@
 Interact with the Currency module of the app.
 """
 from thirdweb.errors import RestrictedTransferError
-from web3 import Web3
+from thirdweb_web3 import Web3
 
 from ..abi.coin import Coin
 from ..abi.erc20 import ERC20
