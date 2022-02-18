@@ -4,7 +4,7 @@ Interact with the Market module of the app.
 import time
 from typing import List
 from thirdweb import storage
-from thirdweb.constants.erc_interfaces import InterfaceIdErc165
+from thirdweb.constants.erc_interfaces import InterfaceIdErc721
 
 from thirdweb_web3 import Web3
 from ..abi.erc165 import ERC165
@@ -56,7 +56,7 @@ class MarketplaceModule(BaseModule):
         :param listing: The listing to create.
         :return: The listing id.
         """
-        self._handle_token_approval(
+        self.__handle_token_approval(
             listing.assetContractAddress, listing.tokenId, self.address)
 
         tx = self.__abi_module.create_listing.build_transaction(IMarketplaceListingParameters(
@@ -80,9 +80,9 @@ class MarketplaceModule(BaseModule):
         :param listing: The listing to create.
         :return: The listing id.
         """
-        self.validate_new_listing_param(listing)
+        self.__validate_new_listing_param(listing)
 
-        self._handle_token_approval(
+        self.__handle_token_approval(
             listing.assetContractAddress, listing.tokenId, self.address)
 
         tx = self.__abi_module.create_listing.build_transaction(IMarketplaceListingParameters(
@@ -107,7 +107,7 @@ class MarketplaceModule(BaseModule):
         except:
             raise AssetNotFoundException(offer.listing_id)
 
-        self.set_allowance(offer.price_per_token * offer.quantity_desired,
+        self.__set_allowance(offer.price_per_token * offer.quantity_desired,
                            offer.currency_contract_address, self.get_transact_opts())
         tx = self.__abi_module.offer.build_transaction(
             offer.listing_id, offer.quantity_desired, offer.currency_contract_address, offer.price_per_token)
@@ -116,7 +116,7 @@ class MarketplaceModule(BaseModule):
     def is_native_token(self, address: str):
         return (address == ZeroAddress) or (address == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
 
-    def set_allowance(self, amount: int, token_contract_address: str, opts: dict):
+    def __set_allowance(self, amount: int, token_contract_address: str, opts: dict):
         """
         Set the allowance of the module to the spender.
 
@@ -137,7 +137,7 @@ class MarketplaceModule(BaseModule):
         return opts
 
     def make_auction_listing_bid(self, bid: NewBid):
-        listing = self.validate_auction_listing(bid.listing_id)
+        listing = self.__validate_auction_listing(bid.listing_id)
 
         bid_buffer = self.get_bid_buffer_bps()
         winning_bid = self.get_winning_bid(bid.listing_id)
@@ -146,7 +146,7 @@ class MarketplaceModule(BaseModule):
                 winning_bid.pricePerToken, bid.price_per_token, bid_buffer)
             if not is_winning_bidder:
                 raise Exception("The bid price is not within the bid buffer")
-        self.set_allowance(bid.price_per_token * listing.quantity,
+        self.__set_allowance(bid.price_per_token * listing.quantity,
                            listing.currency_contract_address, self.get_transact_opts())
         tx = self.__abi_module.offer.build_transaction(
             bid.listing_id, listing.quantity, listing.currency_contract_address, bid.price_per_token)
@@ -170,7 +170,7 @@ class MarketplaceModule(BaseModule):
 
         if bid is None:
             return None
-        return self.map_offer(listing_id, bid)
+        return self.__map_offer(listing_id, bid)
 
     def get_direct_listing(self, listing_id: int):
         listing = self.__abi_module.listings.call(listing_id)
@@ -180,15 +180,15 @@ class MarketplaceModule(BaseModule):
             raise WrongListingTypeException(
                 listing_id, "Auction", "Direct")
 
-        return self.map_direct_listing(listing)
+        return self.__map_direct_listing(listing)
 
-    def map_direct_listing(self, listing):
+    def __map_direct_listing(self, listing):
         nftcontract = NftModule(listing[3], self.get_client())
         return DirectListing(listing[0], assetContractAddress=listing[2], tokenId=listing[3], asset=nftcontract.get(listing[3]), startTimeInSeconds=listing[4], secondsUntilEnd=listing[5], quantity=listing[6], currencyContractAddress=listing[7], buyoutCurrencyValuePerToken=CurrencyModule(listing[7], self.get_client).get_value(listing[8]), buyoutPrice=listing[9], sellerAddress=listing[1], listing_type=[11])
-        
-    def _handle_token_approval(self, asset: str, token_id: int, from_address: str):
+
+    def __handle_token_approval(self, asset: str, token_id: int, from_address: str):
         erc165 = ERC165(self.get_client, asset)
-        is_erc721 = erc165.supports_interface.call(InterfaceIdErc165)
+        is_erc721 = erc165.supports_interface.call(InterfaceIdErc721)
         if is_erc721:
             erc721 = NFT(self.get_client, asset)
             approved = erc721.is_approved_for_all.call(
@@ -209,10 +209,10 @@ class MarketplaceModule(BaseModule):
                     self.address, True)
                 self.execute_tx(tx)
 
-    def is_token_approved_for_marketplace(self, asset_contract: str, token_id: int, from_address: str):
+    def __is_token_approved_for_marketplace(self, asset_contract: str, token_id: int, from_address: str):
         try:
             erc165 = ERC165(self.get_client, asset_contract)
-            is_erc721 = erc165.supports_interface.call(InterfaceIdErc165)
+            is_erc721 = erc165.supports_interface.call(InterfaceIdErc721)
             if is_erc721:
                 erc721 = NFT(self.get_client, asset_contract)
                 approved = erc721.is_approved_for_all.call(
@@ -228,14 +228,14 @@ class MarketplaceModule(BaseModule):
             print("Failed to check if token is approved")
             return False
 
-    def is_still_valid_direct_listing(self, listing: DirectListing, quantity: int) -> bool:
-        approved = self.is_token_approved_for_marketplace(
+    def __is_still_valid_direct_listing(self, listing: DirectListing, quantity: int) -> bool:
+        approved = self.__is_token_approved_for_marketplace(
             listing.assetContractAddress, listing.tokenId, listing.sellerAddress)
         if not approved:
             return False
 
         erc165 = ERC165(self.get_client, listing.assetContractAddress)
-        is_erc721 = erc165.supports_interface.call(InterfaceIdErc165)
+        is_erc721 = erc165.supports_interface.call(InterfaceIdErc721)
         if is_erc721:
             erc721 = NFT(self.get_client, listing.assetContractAddress)
             return (erc721.owner_of.call(listing.tokenId).lower() == listing.sellerAddress.lower())
@@ -245,7 +245,7 @@ class MarketplaceModule(BaseModule):
                 listing.sellerAddress, listing.tokenId)
             return (balance >= listing.quantity)
 
-    def validate_new_listing_param(param: (NewListing or NewAuctionListing)):
+    def __validate_new_listing_param(param: (NewListing or NewAuctionListing)):
         if (param.assetContractAddress is None):
             raise Exception("Asset contract address is required")
         if (param.tokenId is None):
@@ -262,13 +262,13 @@ class MarketplaceModule(BaseModule):
             if (param.reservePricePerToken is None):
                 raise Exception("Buyout currency value is required")
 
-    def validate_direct_listing(self, listing_id: int):
+    def __validate_direct_listing(self, listing_id: int):
         return self.get_direct_listing(listing_id)
 
-    def validate_auction_listing(self, listing_id: int) -> AuctionListing:
+    def __validate_auction_listing(self, listing_id: int) -> AuctionListing:
         return self.get_auction_listing(listing_id)
 
-    def map_offer(self, listing_id: int, offer) -> Offer:
+    def __map_offer(self, listing_id: int, offer) -> Offer:
         return Offer(quantityDesired=offer[2],
                      pricePerToken=offer[4],
                      currencyContractAddress=offer[3],
@@ -279,11 +279,11 @@ class MarketplaceModule(BaseModule):
                      )
 
     def get_active_offer(self, listing_id: int, address: str) -> Offer:
-        self.validate_direct_listing(listing_id)
+        self.__validate_direct_listing(listing_id)
         offers = self.__abi_module.winning_bid.call(listing_id, address)
         if offers[1] == ZeroAddress:
             return None
-        return self.map_offer(listing_id, offers)
+        return self.__map_offer(listing_id, offers)
 
     def get_bid_buffer_bps(self):
         return self.__abi_module.bid_buffer_bps.call()
@@ -297,18 +297,18 @@ class MarketplaceModule(BaseModule):
         self.execute_tx(tx)
 
     def buyout_auction_listing(self, listing_id: int, from_address: str):
-        listing = self.validate_auction_listing(listing_id)
+        listing = self.__validate_auction_listing(listing_id)
         self.make_auction_listing_bid(
             NewBid(listing_id, listing.buyoutPricePerToken))
 
     def buyout_direct_listing(self, listing_id: int, quantity: str):
-        listing = self.validate_direct_listing(listing_id)
-        valid = self.is_still_valid_direct_listing(listing, quantity)
+        listing = self.__validate_direct_listing(listing_id)
+        valid = self.__is_still_valid_direct_listing(listing, quantity)
         if not valid:
             raise Exception(
                 "The asset on this listing has been moved from the listers wallet, this listing is now invalid")
         value = listing.buyoutPrice * quantity
-        self.set_allowance(value, listing.currencyContractAddress)
+        self.__set_allowance(value, listing.currencyContractAddress)
         tx = self.__abi_module.buy.build_transaction(listing_id, quantity)
         self.execute_tx(tx)
 
@@ -323,12 +323,12 @@ class MarketplaceModule(BaseModule):
         self.execute_tx(tx)
 
     def cancel_direct_listing(self, listing_id: int):
-        listing = self.validate_direct_listing(listing_id)
+        listing = self.__validate_direct_listing(listing_id)
         listing.quantity = 0
         self.update_direct_listing(listing)
 
     def cancel_auction_listing(self, listing_id: int):
-        listing = self.validate_auction_listing(listing_id)
+        listing = self.__validate_auction_listing(listing_id)
         listing.quantity = 0
         now = int(time.time())
         if now > listing.startTimeInSeconds:
@@ -340,7 +340,7 @@ class MarketplaceModule(BaseModule):
     def close_auction_listing(self, listing_id: int, close_for: str):
         if close_for is not None:
             close_for = self.get_signer_address()
-        listing = self.validate_auction_listing(listing_id)
+        listing = self.__validate_auction_listing(listing_id)
         try:
             tx = self.__abi_module.close_auction.build_transaction(
                 listing_id, close_for)
@@ -368,13 +368,13 @@ class MarketplaceModule(BaseModule):
         if not listing[0] == listing_id:
             raise ListingNotFoundException(listing_id)
         if listing[11] == 0:
-            return self.map_direct_listing(listing)
+            return self.__map_direct_listing(listing)
         elif listing[11] == 1:
-            return self.map_auction_listing(listing)
+            return self.__map_auction_listing(listing)
         else:
             raise Exception("Unkwown listing type : " + listing[11])
 
-    def map_auction_listing(self, listing):
+    def __map_auction_listing(self, listing):
         nftcontract = NftModule(listing[3], self.get_client())
         return AuctionListing(id=listing[0], assetContractAddress=listing[2], tokenId=listing[3], asset=nftcontract.get(listing[3]), startTimeInSeconds=listing[4], secondsUntilEnd=listing[5], quantity=listing[6], currencyContractAddress=listing[7], reservePrice=listing[8], buyoutCurrencyValuePerToken=CurrencyModule(listing[7], self.get_client).get_value(listing[9]), buyoutPrice=listing[9], sellerAddress=listing[1], listing_type=[11], reservePriceCurrencyValuePerToken=CurrencyModule(listing[7], self.get_client).get_value(listing[8]))
 
@@ -385,7 +385,7 @@ class MarketplaceModule(BaseModule):
             return None
         if listing.type == 1:
             return listing
-        valid = self.is_still_valid_direct_listing(listing)
+        valid = self.__is_still_valid_direct_listing(listing)
         if not valid:
             return None
         return listing

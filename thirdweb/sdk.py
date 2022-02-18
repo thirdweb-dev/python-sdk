@@ -131,7 +131,7 @@ class ThirdwebSdk(object):
     def get_market_module(self, address: str, isv1: bool = True) -> MarketModule:
         """
         .. deprecated:: 0.5.0
-            This property is deprecated. Use the `image` property instead
+            This property is deprecated. Use the `get_marketplace_module` method instead
         """
         if self.__market_module is not None and self.__market_module.address == address:
             return self.__market_module
