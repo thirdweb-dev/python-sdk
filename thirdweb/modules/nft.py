@@ -1,12 +1,10 @@
 """ Interact with the NFT module of the app"""
 import copy
 from typing import Dict, List, Union
-import json
 from uuid import uuid4
 
 from thirdweb_eth_account.messages import encode_structured_data
 
-import web3
 from thirdweb.abi.erc20 import ERC20
 from thirdweb.constants import NativeAddress, ZeroAddress
 
@@ -19,8 +17,6 @@ from ..abi.nft import SignatureMint721 as NFT, ISignatureMint721MintRequest
 from ..types.nft import BatchGeneratedSignature, MintArg, MintRequestStructOutput, NewSignaturePayload, SignaturePayload
 from ..types.nft import NftMetadata as NftType
 from .base import BaseModule
-
-import binascii
 
 
 class NftModule(BaseModule):
@@ -335,6 +331,13 @@ class NftModule(BaseModule):
         return params
 
     def mint_with_signature(self, req: NewSignaturePayload, signature: str) -> int:
+        """
+        Mint a dynamic NFT previously generated and signed
+
+        :param req: The NFT payload that was used when generating the signature
+        :param signature: the corresponding signature
+        :return: The generated signature
+        """
         message = self.__map_payload(req)
         overrides = self.get_transact_opts()
 

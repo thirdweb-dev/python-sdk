@@ -44,7 +44,7 @@ sdk.set_private_key(os.getenv("PKEY"))
 
 # nft_module.grant_role(Role.admin, "0x26ec212ba1854F1a0c287e5B8E3e5463122EFb47")
 
-nft_module = sdk.get_nft_module("0x3C977f3401580Ad0939A05631030545663a2eF3c")
+nft_module = sdk.get_nft_module("0xE06118102dfe18930DE60A9C16c90Eefa8020B54")
 
 sig = nft_module.generate_signature(NewSignaturePayload(
     metadata={"name": "Test 123", "description": "Some description"},
