@@ -3,7 +3,8 @@ import copy
 from typing import Dict, List, Union
 import json
 from uuid import uuid4
-from eth_account.messages import encode_structured_data
+
+from thirdweb_eth_account.messages import encode_structured_data
 
 import web3
 from thirdweb.abi.erc20 import ERC20
@@ -364,9 +365,9 @@ class NftModule(BaseModule):
             if mint_request.id is None:
                 print("mint_request.id is empty, generating uuid-v4")
                 generated_id = uuid4().hex
-                return "0x" + binascii.hexlify(str.encode(generated_id)).decode()
+                return str.encode(generated_id)
             else:
-                return "0x" + binascii.hexlify(str.encode(mint_request.id)).decode()
+                return str.encode(mint_request.id)
 
         if not self.get_signer_address() in self.get_role_members(Role.minter):
             raise Exception("You are not a minter")
@@ -383,11 +384,7 @@ class NftModule(BaseModule):
             message["uid"] = resolved_id
 
             print("message", message)
-            encode_message = {
-                **message,
-                "uid": str(message['uid'].encode('utf-8'))
-            }
-            encoded_message = encode_structured_data(text=json.dumps({
+            encoded_message = encode_structured_data({
                 "types": {
                     "MintRequest": [
                         {"name": "to", "type": "address"},
@@ -413,7 +410,7 @@ class NftModule(BaseModule):
                     "verifyingContract": self.address
                 },
                 "message": message
-            }))
+            })
             print("encoded_message =", encoded_message)
             return BatchGeneratedSignature(
                 payload=payload,
