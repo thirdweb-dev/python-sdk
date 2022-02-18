@@ -340,8 +340,6 @@ class NftModule(BaseModule):
 
         self.__set_allowance(req.price, req.currency_address, overrides)
 
-        print("Minting NFT with signature", message)
-
         tx = self.__abi_module.mint_with_signature.build_transaction(
             message, signature, overrides)
         receipt = self.execute_tx(tx)
@@ -355,15 +353,14 @@ class NftModule(BaseModule):
         return self.__abi_module.verify.call(message, signature)[0]
 
     def generate_signature_batch(self, payloads: list) -> list:
-        '''
+        """
         Generates a batch of signatures that can be used for minting a number of NFTs
 
         :param payloads: The payloads to generate the signature for
         :return: The generated signature
-        '''
+        """
         def resolve_id(mint_request: NewSignaturePayload):
             if mint_request.id is None:
-                print("mint_request.id is empty, generating uuid-v4")
                 generated_id = uuid4().hex
                 return str.encode(generated_id)
             else:
@@ -374,16 +371,14 @@ class NftModule(BaseModule):
 
         def generate_signature(payload: NewSignaturePayload) -> BatchGeneratedSignature:
             resolved_id = resolve_id(payload)
-
             uri = self.upload_metadata(payload.metadata)
+
             payload.id = resolved_id
             payload.uri = uri
+
             chain_id = self.get_client().eth.chain_id
             message = self.__map_payload(payload)
-            message["uri"] = uri
-            message["uid"] = resolved_id
 
-            print("message", message)
             encoded_message = encode_structured_data({
                 "types": {
                     "MintRequest": [
@@ -411,7 +406,6 @@ class NftModule(BaseModule):
                 },
                 "message": message
             })
-            print("encoded_message =", encoded_message)
             return BatchGeneratedSignature(
                 payload=payload,
                 signature=self.get_client().eth.account.sign_message(
@@ -421,12 +415,12 @@ class NftModule(BaseModule):
         return [generate_signature(payload) for payload in payloads]
 
     def generate_signature(self, mint_request: NewSignaturePayload):
-        '''
+        """
         Generates a signature that can be used for minting an NFT
 
         :param mint_request: The payload to generate the signature for
         :return: The generated signature
-        '''
+        """
         return self.generate_signature_batch([mint_request])[0]
 
     def get_with_owner(self, token_id: int):
