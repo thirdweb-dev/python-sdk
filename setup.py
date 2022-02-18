@@ -15,7 +15,7 @@ if "PACKAGE_NAME" in environ:
 
 setup(
     name=package_name,
-    version="0.5.0",
+    version="0.5.1",
     description="Official Thirdweb sdk",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -26,7 +26,7 @@ setup(
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
     ],
     packages=find_packages(),
     include_package_data=True,
@@ -34,8 +34,8 @@ setup(
         "dataclasses-json",
         "requests",
         "thirdweb-contract-wrappers",
-        "web3",
+        "thirdweb-web3",
         "deprecation"
     ],
-    py_modules=["thirdweb", "nftlabs"]
+    py_modules=["thirdweb"]
 )
