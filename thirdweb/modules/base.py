@@ -4,8 +4,8 @@ from abc import ABC, abstractmethod
 from typing import Callable, Dict, List, Optional, Union, cast
 
 from eth_account.account import LocalAccount
-from thirdweb_web3 import Web3
-from thirdweb_web3.types import TxReceipt
+from web3 import Web3
+from web3.types import TxReceipt
 from zero_ex.contract_wrappers import TxParams
 import json
 

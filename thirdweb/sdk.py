@@ -2,7 +2,7 @@ from functools import wraps
 from typing import Optional
 
 from eth_account.account import Account, LocalAccount
-from thirdweb_web3 import HTTPProvider, Web3
+from web3 import HTTPProvider, Web3
 from zero_ex.contract_wrappers import TxParams
 
 from .errors import NoSignerException

@@ -34,7 +34,7 @@ setup(
         "dataclasses-json",
         "requests",
         "thirdweb-contract-wrappers",
-        "thirdweb-web3",
+        "web3",
         "deprecation"
     ],
     py_modules=["thirdweb"]

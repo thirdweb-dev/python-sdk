@@ -8,7 +8,7 @@ from thirdweb_eth_account.messages import encode_structured_data
 from thirdweb.abi.erc20 import ERC20
 from thirdweb.constants import NativeAddress, ZeroAddress
 
-from thirdweb_web3 import Web3
+from web3 import Web3
 from zero_ex.contract_wrappers import TxParams
 
 from thirdweb.types.role import Role

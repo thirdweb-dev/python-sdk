@@ -68,7 +68,6 @@ snowballstemmer==2.2.0
 stringcase==1.2.0
 thirdweb-contract-wrappers==2.0.3
 thirdweb-eth-account==0.6.6
-thirdweb-web3==5.24.8
 toml==0.10.2
 tomli==1.2.3
 toolz==0.11.1
@@ -79,7 +78,7 @@ urllib3==1.26.7
 uuid==1.30
 varint==1.0.2
 watchdog==2.1.6
-web3==5.24.0
+web3==5.28.0
 websockets==9.1
 wrapt==1.13.1
 yarl==1.7.0

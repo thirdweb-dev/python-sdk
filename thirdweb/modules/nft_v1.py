@@ -5,7 +5,7 @@ from typing import Dict, List
 import io
 
 import deprecation
-from thirdweb_web3 import Web3
+from web3 import Web3
 
 from ..abi.nft_v1 import NFT
 from ..types.nft import MintArg
