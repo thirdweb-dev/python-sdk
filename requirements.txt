@@ -21,7 +21,7 @@ dataclasses-json==0.5.6
 Deprecated==1.2.13
 deprecation==2.1.0
 docutils==0.17.1
-eth-account==0.5.7
+eth-account==0.6.1
 ghp-import==2.0.2
 hexbytes==0.2.2
 idna==3.2
@@ -67,7 +67,6 @@ six==1.16.0
 snowballstemmer==2.2.0
 stringcase==1.2.0
 thirdweb-contract-wrappers==2.0.3
-thirdweb-eth-account==0.6.6
 toml==0.10.2
 tomli==1.2.3
 toolz==0.11.1

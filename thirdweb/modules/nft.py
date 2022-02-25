@@ -3,7 +3,7 @@ import copy
 from typing import Dict, List, Union
 from uuid import uuid4
 
-from thirdweb_eth_account.messages import encode_structured_data
+from eth_account.messages import encode_structured_data
 
 from thirdweb.abi.erc20 import ERC20
 from thirdweb.constants import NativeAddress, ZeroAddress
