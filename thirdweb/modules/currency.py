@@ -1,6 +1,7 @@
 """
 Interact with the Currency module of the app.
 """
+from thirdweb.constants import ZeroAddress
 from thirdweb.errors import RestrictedTransferError
 from thirdweb_web3 import Web3
 
@@ -150,6 +151,7 @@ class CurrencyModule(BaseModule):
         return self.execute_tx(self.__abi_module.burn_from.build_transaction(
             from_address, amount, self.get_transact_opts()
         ))
+
     def transfer(self, to_address: str, amount: int):
         """ 
         :param to_address: The address to transfer to
@@ -161,7 +163,7 @@ class CurrencyModule(BaseModule):
             raise RestrictedTransferError(self.address)
         return self.execute_tx(self.__abi_module.transfer.build_transaction(
             self.get_signer_address(), to_address, amount, self.get_transact_opts()
-        ))        
+        ))
 
     def transfer_from(self, from_address: str, to_address: str, amount: int):
         """ 
@@ -233,7 +235,7 @@ class CurrencyModule(BaseModule):
         """ 
         Gets the metadata of the given asset
         """
-        if asset_address.lower().startswith("0x0000000000000000000000000000000000000000"):
+        if asset_address.lower().startswith(ZeroAddress):
             return Currency(name="", symbol="", decimals=0)
 
         erc20_module = ERC20(self.get_client(), asset_address)

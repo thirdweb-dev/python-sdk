@@ -149,7 +149,7 @@ class ThirdwebSdk(object):
         """
         Returns an instance of the marketplace module
         """
-        return self.get_market_module(address, old=False)
+        return self.get_market_module(address, isv1=False)
 
     @set_default_account
     def get_collection_module(self, address: str) -> CollectionModule:

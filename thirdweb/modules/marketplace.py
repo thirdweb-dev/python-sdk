@@ -12,7 +12,7 @@ from ..abi.erc20 import ERC20
 from ..abi.erc1155 import ERC1155
 from ..abi.marketplace import IMarketplaceListingParameters, Marketplace, IMarketplaceListing
 from ..abi.nft import NFT
-from ..constants import ZeroAddress
+from ..constants import NativeAddress, ZeroAddress
 from ..errors import AssetNotFoundException, AuctionAlreadyStartedException, AuctionHasNotEndedException, UnsupportedAssetException, WrongListingTypeException, ListingNotFoundException
 from ..modules.currency import CurrencyModule
 from ..modules.nft import NftModule
@@ -34,7 +34,7 @@ class MarketplaceModule(BaseModule):
     Address of the market contract.
     """
     __abi_module: Marketplace
-    MAX_BPS: 1000
+    MAX_BPS: 10000
 
     def __init__(self, address: str, client: Web3, ):
         """
@@ -100,7 +100,7 @@ class MarketplaceModule(BaseModule):
         return receipt["logs"][0]["args"]["listingId"]
 
     def make_direct_listing_offer(self, offer: NewOffer):
-        if (offer.currency_contract_address == ZeroAddress or offer.currency_contract_address == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"):
+        if (offer.currency_contract_address == ZeroAddress or offer.currency_contract_address == NativeAddress):
             raise "You must use the wrapped native token address when making an offer with a native token"
         try:
             self.get_direct_listing(offer.listing_id)
@@ -108,13 +108,13 @@ class MarketplaceModule(BaseModule):
             raise AssetNotFoundException(offer.listing_id)
 
         self.__set_allowance(offer.price_per_token * offer.quantity_desired,
-                           offer.currency_contract_address, self.get_transact_opts())
+                             offer.currency_contract_address, self.get_transact_opts())
         tx = self.__abi_module.offer.build_transaction(
             offer.listing_id, offer.quantity_desired, offer.currency_contract_address, offer.price_per_token)
         receipt = self.execute_tx(tx)
 
     def is_native_token(self, address: str):
-        return (address == ZeroAddress) or (address == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+        return (address == ZeroAddress) or (address == NativeAddress)
 
     def __set_allowance(self, amount: int, token_contract_address: str, opts: dict):
         """
@@ -147,7 +147,7 @@ class MarketplaceModule(BaseModule):
             if not is_winning_bidder:
                 raise Exception("The bid price is not within the bid buffer")
         self.__set_allowance(bid.price_per_token * listing.quantity,
-                           listing.currency_contract_address, self.get_transact_opts())
+                             listing.currency_contract_address, self.get_transact_opts())
         tx = self.__abi_module.offer.build_transaction(
             bid.listing_id, listing.quantity, listing.currency_contract_address, bid.price_per_token)
         self.execute_tx(tx)
@@ -389,7 +389,6 @@ class MarketplaceModule(BaseModule):
         if not valid:
             return None
         return listing
-        i += 1
 
     def get_all_listings(self):
         i = 0
