@@ -159,7 +159,7 @@ class CurrencyModule(BaseModule):
 
         Transfers the given amount from the current address
         """
-        if(self.__abi_module.is_restricted_transfer()):
+        if(self.__abi_module.is_restricted_transfer.call()):
             raise RestrictedTransferError(self.address)
         return self.execute_tx(self.__abi_module.transfer.build_transaction(
             self.get_signer_address(), to_address, amount, self.get_transact_opts()
