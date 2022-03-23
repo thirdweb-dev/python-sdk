@@ -4,19 +4,25 @@ from thirdweb.constants.chains import ChainId
 from thirdweb.constants.rpc import CHAIN_ID_TO_RPC_URL
 from thirdweb.types.sdk import SDKOptions
 from eth_account.account import Account
-from web3 import Web3, HttpProvider, WebsocketProvider
+from web3 import Web3
+
 
 class ProviderHandler(object):
     """
     The provider handler is responsible for managing the connected provider and signer
     for any class including the read-only provider.
     """
-    
+
     __provider: Web3
     __signer: Optional[Account]
     __options: SDKOptions
 
-    def __init__(self, provider: Web3, signer: Optional[Account], options: SDKOptions = SDKOptions()):
+    def __init__(
+        self,
+        provider: Web3,
+        signer: Optional[Account],
+        options: SDKOptions = SDKOptions(),
+    ):
         """
         Initialize the provider handler.
 
@@ -28,20 +34,19 @@ class ProviderHandler(object):
         self.__signer = signer
         self.__options = options
 
-
     def update_provider(self, provider: Web3):
         """
         Update the active provider.
 
         :param provider: web3 provider instance to use for sending and receiving data
         """
-        
+
         self.__provider = provider
-    
+
     def update_signer(self, signer: Optional[Account]):
         """
         Update the active signer.
-        
+
         :param signer: optional account to use for signing transactions
         """
         self.__signer = signer
@@ -50,7 +55,7 @@ class ProviderHandler(object):
         """
         Check if there is no active signer.
         """
-        
+
         return self.__signer != None
 
     def get_signer(self) -> Optional[Account]:
@@ -69,26 +74,36 @@ class ProviderHandler(object):
         """
 
         return self.__provider
-    
+
     def __get_read_only_provider(self) -> Optional[Web3]:
         """
         Get a read only provider based on the read-only settings and specified provider.
         """
-        
+
         # First check if there is a read-only settings instance
-        if (self.__options.read_only_settings != None):
-            match = re.match(r"^(ws|http)s?:\/\/", self.__options.read_only_settings.rpc_url)
+        if self.__options.read_only_settings != None:
+            match = re.match(
+                r"^(ws|http)s?:\/\/", self.__options.read_only_settings.rpc_url
+            )
 
             # Check if the read only RPC URL is a valid URL (websocket or http/https)
             if match != None:
                 if "https://" in match.group() or "http://" in match.group():
-                    return Web3(HttpProvider(self.__options.read_only_settings_rpc_url))
+                    return Web3(
+                        Web3.HttpProvider(self.__options.read_only_settings_rpc_url)
+                    )
                 if "ws://" in match.group():
-                    return Web3(WebsocketProvider(self.__options.read_only_settings.rpc_url))
+                    return Web3(
+                        Web3.WebsocketProvider(
+                            self.__options.read_only_settings.rpc_url
+                        )
+                    )
 
             # Otherwise try to use a default provider using default public RPC URLs using the specified chain_id
             if self.__options.read_only_settings.chain_id != None:
-                default_provider = self.__get_default_provider(self.__options.read_only_settings.chain_id)
+                default_provider = self.__get_default_provider(
+                    self.__options.read_only_settings.chain_id
+                )
                 if default_provider != None:
                     return default_provider
 
@@ -101,7 +116,7 @@ class ProviderHandler(object):
 
         :param chain_id: the chain id to get the default provider for
         """
-        
+
         if chain_id in CHAIN_ID_TO_RPC_URL:
-            return Web3(HttpProvider(CHAIN_ID_TO_RPC_URL[chain_id]))
+            return Web3(Web3.HttpProvider(CHAIN_ID_TO_RPC_URL[chain_id]))
         return None
