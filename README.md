@@ -15,7 +15,7 @@ Use the [abi-gen](https://www.npmjs.com/package/@0x/abi-gen) package to create t
 $ npm install -g @0x/abi-gen
 ```
 
-Assuming you have the thirdweb contract ABIs in this directory at /abi, you can run the following command to generate an ABI.
+Assuming you have the thirdweb contract ABIs in this directory at `/abi`, you can run the following command to generate an ABI.
 
 ```bash
 $ abi-gen --language Python -o thirdweb/abi --abis abi/TokenERC721.json
