@@ -1,24 +1,3 @@
-# python venv
 .env
 
-**/__pycache__
-
-.idea
-
-# wheel build artifacts
-build/
-dist
-
-nftlabs_sdk.egg-info/
-nftlabs/.DS_Store
-nftlabs/modules/docs/*
-nftlabs/modules/.DS_Store
-.DS_Store
-x.sh
-examples/test.py
-
-**/*.pyc
-
-*.egg-info
-
-docs/site
+/abi
