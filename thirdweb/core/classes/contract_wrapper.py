@@ -1,8 +1,8 @@
 
-from thirdweb.core.classes.account_handler import AccountHandler
+from thirdweb.core.classes.provider_handler import ProviderHandler
 
 
-class ContractWrapper(AccountHandler):
+class ContractWrapper(ProviderHandler):
     
     def __init__(self):
         pass

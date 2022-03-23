@@ -7,7 +7,6 @@ authors = ["adam-maj <mr.adam.maj@gmail.com>"]
 [tool.poetry.dependencies]
 python = ">=3.8,<3.10"
 eth-brownie = "^1.18.1"
-web3 = "5.27.0"
 
 [tool.poetry.dev-dependencies]
 

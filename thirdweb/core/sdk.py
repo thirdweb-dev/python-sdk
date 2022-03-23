@@ -1,6 +1,6 @@
-from .classes.account_handler import AccountHandler
+from .classes.provider_handler import ProviderHandler
 
-class ThirdwebSDK(AccountHandler):
+class ThirdwebSDK(ProviderHandler):
     def __init__(self, network, options):
         pass
 
