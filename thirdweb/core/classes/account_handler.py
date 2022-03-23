@@ -2,7 +2,7 @@ from typing import Optional
 from thirdweb.types.sdk import SDKOptions
 from web3 import Web3, HttpProvider
 
-class RPCConnectionHandler(object):
+class AccountHandler(object):
     __provider: Web3
     __options: SDKOptions
 

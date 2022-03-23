@@ -1,6 +1,6 @@
-from .classes.rpc_connection_handler import RPCConnectionHandler
+from .classes.account_handler import AccountHandler
 
-class ThirdwebSDK(RPCConnectionHandler):
+class ThirdwebSDK(AccountHandler):
     def __init__(self, network, options):
         pass
 
