@@ -83,6 +83,9 @@ class ProviderHandler(object):
 
         return self.__provider
 
+    def get_options(self) -> SDKOptions:
+        return self.__options
+
     def __get_read_only_provider(self) -> Optional[Web3]:
         """
         Get a read only provider based on the read-only settings and specified provider.

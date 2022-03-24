@@ -11,10 +11,10 @@ class BaseContract:
     easy provider and signer switching across all contracts
     """
 
-    __contract_wrapper: ContractWrapper
+    _contract_wrapper: ContractWrapper
 
     def __init__(self, contract_wrapper: ContractWrapper):
-        self.__contract_wrapper = contract_wrapper
+        self._contract_wrapper = contract_wrapper
 
     def on_provider_updated(self, provider: Web3):
         """
@@ -23,7 +23,7 @@ class BaseContract:
         :param provider: web3 provider instance to use
         """
 
-        self.__contract_wrapper.update_provider(provider)
+        self._contract_wrapper.update_provider(provider)
 
     def on_signer_updated(self, signer: Optional[LocalAccount]):
         """
@@ -32,11 +32,11 @@ class BaseContract:
         :param signer: optional account to use for signing transactions
         """
 
-        self.__contract_wrapper.update_signer(signer)
+        self._contract_wrapper.update_signer(signer)
 
-    def get_address(self):
+    def get_address(self) -> str:
         """
         Get the address of the contract
         """
 
-        self.__contract_wrapper.__contract_abi.address
+        return self._contract_wrapper._contract_abi.contract_address

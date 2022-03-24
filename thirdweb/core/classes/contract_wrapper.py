@@ -16,7 +16,7 @@ class ContractWrapper(ProviderHandler):
     and exposed functions for interacting with the contract.
     """
 
-    __contract_abi: Union[TokenERC721, TokenERC1155, TokenERC20]
+    _contract_abi: Union[TokenERC721, TokenERC1155, TokenERC20]
 
     def __init__(
         self,
@@ -34,7 +34,7 @@ class ContractWrapper(ProviderHandler):
         """
 
         super().__init__(provider, signer, options)
-        self.__contract_abi = contract_abi
+        self._contract_abi = contract_abi
 
     def get_chain_id(self):
         """
@@ -75,7 +75,7 @@ class ContractWrapper(ProviderHandler):
             raise NoSignerException
 
         nonce = provider.eth.get_transaction_count(signer.address)
-        tx = getattr(self.__contract_abi, fn).build_transaction(*args)
+        tx = getattr(self._contract_abi, fn).build_transaction(*args)
         tx["nonce"] = nonce
         del tx["from"]
 

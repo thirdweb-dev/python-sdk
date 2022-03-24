@@ -31,27 +31,27 @@ class Token(ERC20):
     """
 
     def get_vote_balance(self) -> CurrencyValue:
-        return self.get_vote_balance_of(self.__contract_wrapper.get_signer_address())
+        return self.get_vote_balance_of(self._contract_wrapper.get_signer_address())
 
     def get_vote_balance_of(self, account: str) -> CurrencyValue:
-        return self.__get_value(self.__get_abi().get_votes.call(account))
+        return self._get_value(self._get_abi().get_votes.call(account))
 
     def get_delegation(self) -> str:
-        return self.get_delegation_of(self.__contract_wrapper.get_signer_address())
+        return self.get_delegation_of(self._contract_wrapper.get_signer_address())
 
     def get_delegation_of(self, account: str) -> str:
-        return self.__get_abi().delegates.call(account)
+        return self._get_abi().delegates.call(account)
 
     """
     WRITE FUNCTIONS
     """
 
     def mint(self, amount: int) -> TxReceipt:
-        return self.mint_to(self.__contract_wrapper.get_signer_address(), amount)
+        return self.mint_to(self._contract_wrapper.get_signer_address(), amount)
 
     def mint_to(self, to: str, amount: int) -> TxReceipt:
         amount_with_decimals = parse_units(amount, self.get().decimals)
-        return self.__contract_wrapper.send_transaction(
+        return self._contract_wrapper.send_transaction(
             "mintTo", [to, amount_with_decimals]
         )
 
@@ -60,4 +60,4 @@ class Token(ERC20):
         pass
 
     def delegate_to(self, delegatee_address: str) -> TxReceipt:
-        return self.__contract_wrapper.send_transaction("delegate", [delegatee_address])
+        return self._contract_wrapper.send_transaction("delegate", [delegatee_address])

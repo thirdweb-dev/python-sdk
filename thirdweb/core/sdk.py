@@ -38,7 +38,7 @@ class ThirdwebSDK(ProviderHandler):
             return self.__contract_cache[address]
 
         contract = contract_type(
-            self.__provider, address, self.__signer, self.__options
+            self.get_provider(), address, self.get_signer(), self.get_options()
         )
 
         self.__contract_cache[address] = contract

@@ -21,23 +21,23 @@ class ERC20(BaseContract):
 
     def get(self) -> Currency:
         return fetch_currency_metadata(
-            self.__contract_wrapper.get_provider(), self.get_address()
+            self._contract_wrapper.get_provider(), self.get_address()
         )
 
     def balance(self) -> CurrencyValue:
-        return self.balance_of(self.__contract_wrapper.get_signer_address())
+        return self.balance_of(self._contract_wrapper.get_signer_address())
 
     def balance_of(self, address: str) -> CurrencyValue:
-        return self.__get_value(self.__get_abi().balance_of.call(address))
+        return self._get_value(self._get_abi().balance_of.call(address))
 
     def total_supply(self) -> CurrencyValue:
-        return self.__get_value(self.__get_abi().total_supply.call())
+        return self._get_value(self._get_abi().total_supply.call())
 
     def allowance(self, spender: str) -> CurrencyValue:
-        return self.allowance_of(self.__contract_wrapper.get_signer_address(), spender)
+        return self.allowance_of(self._contract_wrapper.get_signer_address(), spender)
 
     def allowance_of(self, owner: str, spender: str) -> CurrencyValue:
-        return self.__get_value(self.__get_abi().allowance.call(owner, spender))
+        return self._get_value(self._get_abi().allowance.call(owner, spender))
 
     def is_transfer_restricted(self) -> bool:
         # TODO: Implement - Relies on ROLES
@@ -49,19 +49,19 @@ class ERC20(BaseContract):
 
     def transfer(self, to: str, amount: int) -> TxReceipt:
         amount_with_decimals = parse_units(amount, self.get().decimals)
-        return self.__contract_wrapper.send_transaction(
+        return self._contract_wrapper.send_transaction(
             "transfer", [to, amount_with_decimals]
         )
 
     def transfer_from(self, fr: str, to: str, amount: int) -> TxReceipt:
         amount_with_decimals = parse_units(amount, self.get().decimals)
-        return self.__contract_wrapper.send_transaction(
+        return self._contract_wrapper.send_transaction(
             "transferFrom", [fr, to, amount_with_decimals]
         )
 
     def set_allowance(self, spender: str, amount: int) -> TxReceipt:
         amount_with_decimals = parse_units(amount, self.get().decimals)
-        return self.__contract_wrapper.send_transaction(
+        return self._contract_wrapper.send_transaction(
             "approve", [spender, amount_with_decimals]
         )
 
@@ -71,11 +71,11 @@ class ERC20(BaseContract):
 
     def burn(self, amount: int) -> TxReceipt:
         amount_with_decimals = parse_units(amount, self.get().decimals)
-        return self.__contract_wrapper.send_transaction("burn", [amount_with_decimals])
+        return self._contract_wrapper.send_transaction("burn", [amount_with_decimals])
 
     def burn_from(self, holder: str, amount: int) -> TxReceipt:
         amount_with_decimals = parse_units(amount, self.get().decimals)
-        return self.__contract_wrapper.send_transaction(
+        return self._contract_wrapper.send_transaction(
             "burnFrom", [holder, amount_with_decimals]
         )
 
@@ -83,12 +83,12 @@ class ERC20(BaseContract):
     PRIVATE FUNCTIONS
     """
 
-    def __get_abi(self) -> TokenERC20:
-        return cast(TokenERC20, self.__contract_wrapper.__contract_abi)
+    def _get_abi(self) -> TokenERC20:
+        return cast(TokenERC20, self._contract_wrapper._contract_abi)
 
-    def __get_value(self, value: int) -> CurrencyValue:
+    def _get_value(self, value: int) -> CurrencyValue:
         return fetch_currency_value(
-            self.__contract_wrapper.get_provider(),
+            self._contract_wrapper.get_provider(),
             self.get_address(),
             value,
         )
