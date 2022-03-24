@@ -18,3 +18,18 @@ class CurrencyValue(Currency):
 class TokenAmount:
     to_address: str
     amount: int
+
+
+@dataclass
+class WrappedToken:
+    address: str
+    name: str
+    symbol: str
+
+
+@dataclass
+class NativeToken:
+    name: str
+    symbol: str
+    decimals: int
+    wrapped: WrappedToken
