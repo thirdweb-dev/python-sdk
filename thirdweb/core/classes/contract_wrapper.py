@@ -1,9 +1,9 @@
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from web3 import Web3
 from thirdweb.common.error import NoSignerException
 from thirdweb.core.classes.provider_handler import ProviderHandler
-from thirdweb.types.contract import ContractABI
+from thirdweb.abi import TokenERC721, TokenERC1155, TokenERC20
 from web3.eth import TxReceipt
 from eth_account.account import LocalAccount
 
@@ -11,11 +11,11 @@ from thirdweb.types.sdk import SDKOptions
 
 
 class ContractWrapper(ProviderHandler):
-    __contract_abi: ContractABI
+    __contract_abi: Union[TokenERC721, TokenERC1155, TokenERC20]
 
     def __init__(
         self,
-        contract_abi: ContractABI,
+        contract_abi: Union[TokenERC721, TokenERC1155, TokenERC20],
         provider: Web3,
         signer: Optional[LocalAccount],
         options: SDKOptions = SDKOptions(),

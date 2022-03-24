@@ -1,11 +1,10 @@
 from typing import Final, List, Optional, Union
-from thirdweb.abi.token_erc20 import TokenERC20
+from thirdweb.abi import TokenERC20
 from web3 import Web3
 from web3.eth import TxReceipt
 from eth_account.account import LocalAccount
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_20 import ERC20
-from thirdweb.types.contract import ContractABI
 from thirdweb.types.currency import CurrencyValue, TokenAmount
 
 from thirdweb.types.sdk import SDKOptions
@@ -23,7 +22,7 @@ class Token(ERC20):
         options: SDKOptions = SDKOptions(),
     ):
         abi = TokenERC20(provider, address)
-        contract_wrapper = ContractWrapper(ContractABI(abi), provider, signer, options)
+        contract_wrapper = ContractWrapper(abi, provider, signer, options)
         super().__init__(contract_wrapper)
 
     """

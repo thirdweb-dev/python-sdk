@@ -1,14 +1,13 @@
 from typing import List, Union
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
+from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.types.currency import Currency, CurrencyValue, TokenAmount
 from web3.eth import TxReceipt
 
 
-class ERC20(object):
-    __contract_wrapper: ContractWrapper
-
+class ERC20(BaseContract):
     def __init__(self, contract_wrapper: ContractWrapper):
-        self.__contract_wrapper = contract_wrapper
+        super().__init__(contract_wrapper)
 
     """
     READ FUNCTIONS
