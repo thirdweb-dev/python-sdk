@@ -1,5 +1,6 @@
 import re
 from typing import Optional
+
 from thirdweb.constants.chains import ChainId
 from thirdweb.constants.rpc import CHAIN_ID_TO_RPC_URL
 from thirdweb.types.sdk import SDKOptions
