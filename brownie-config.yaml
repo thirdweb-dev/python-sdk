@@ -1,7 +1,10 @@
 dependencies:
-  - OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.0`
+  - OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.1
+  - OpenZeppelin/openzeppelin-contracts@4.5.0
+  - smartcontractkit/chainlink@1.2.1
 compiler:
-  evm_version: 
   solc:
     remappings:
-      - '@openzeppelin/contracts-upgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.0/brownie'
+      - '@openzeppelin/contracts-upgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.1/contracts'
+      - '@openzeppelin/contracts=OpenZeppelin/openzeppelin-contracts@4.5.0/contracts'
+      - '@chainlink/contracts=smartcontractkit/chainlink@1.2.1/contracts'

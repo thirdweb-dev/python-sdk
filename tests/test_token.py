@@ -1,5 +1,7 @@
-from brownie import accounts, Split
+from brownie import accounts, Forwarder
 
 
-def deploy_token():
-    accounts[0].deploy(Split, "Test Token", "TST", 18, "1000000000000000000000000")
+def test_deploy_token():
+    accounts[0].deploy(Forwarder)
+
+    assert True
