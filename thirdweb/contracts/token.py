@@ -3,6 +3,7 @@ from thirdweb.abi import TokenERC20
 from web3 import Web3
 from web3.eth import TxReceipt
 from eth_account.account import LocalAccount
+from thirdweb.common.currency import parse_units
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_20 import ERC20
 from thirdweb.types.currency import CurrencyValue, TokenAmount
@@ -30,29 +31,33 @@ class Token(ERC20):
     """
 
     def get_vote_balance(self) -> CurrencyValue:
-        pass
+        return self.get_vote_balance_of(self.__contract_wrapper.get_signer_address())
 
-    def get_vote_balance_of(self, address: str) -> CurrencyValue:
-        pass
+    def get_vote_balance_of(self, account: str) -> CurrencyValue:
+        return self.__get_value(self.__get_abi().get_votes.call(account))
 
-    def get_delegate(self) -> str:
-        pass
+    def get_delegation(self) -> str:
+        return self.get_delegation_of(self.__contract_wrapper.get_signer_address())
 
-    def get_delegate_of(self, address: str) -> str:
-        pass
+    def get_delegation_of(self, account: str) -> str:
+        return self.__get_abi().delegates.call(account)
 
     """
     WRITE FUNCTIONS
     """
 
     def mint(self, amount: int) -> TxReceipt:
-        pass
+        return self.mint_to(self.__contract_wrapper.get_signer_address(), amount)
 
     def mint_to(self, to: str, amount: int) -> TxReceipt:
-        pass
+        amount_with_decimals = parse_units(amount, self.get().decimals)
+        return self.__contract_wrapper.send_transaction(
+            "mintTo", [to, amount_with_decimals]
+        )
 
     def mint_batch_to(self, args: List[TokenAmount]) -> TxReceipt:
+        # TODO: Implement - Relies on MULTICALL
         pass
 
-    def delegate_to(self, delegate_address: str) -> TxReceipt:
-        pass
+    def delegate_to(self, delegatee_address: str) -> TxReceipt:
+        return self.__contract_wrapper.send_transaction("delegate", [delegatee_address])
