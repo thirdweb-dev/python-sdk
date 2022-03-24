@@ -20,6 +20,14 @@ $ poetry shell
 $ poetry install
 ```
 
+### Running Tests
+
+Before running tests, make sure you've already run `poetry shell` and are in the poetry virutal environment with all dependencies installed. Once you have checked that this is the case, you can run the following:
+
+```bash
+$ poetry run brownie test
+```
+
 ### Code Style Setup
 
 Make sure you have `mypy`, `pylint`, and `black` installed:

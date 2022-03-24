@@ -4,5 +4,10 @@
 .vscode
 
 .mypy_cache
+.pytest_cache
 
 /abi
+/build
+/reports
+/contracts
+/interfaces

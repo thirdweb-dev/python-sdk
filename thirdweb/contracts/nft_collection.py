@@ -1,4 +1,3 @@
-class NFTCollection(object):
-
+class NFTCollection:
     def __init__(self):
         pass
