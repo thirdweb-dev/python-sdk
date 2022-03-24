@@ -11,6 +11,11 @@ from thirdweb.types.sdk import SDKOptions
 
 
 class ContractWrapper(ProviderHandler):
+    """
+    The contract wrapper wraps an instance of a specific thirdweb contract ABI
+    and exposed functions for interacting with the contract.
+    """
+
     __contract_abi: Union[TokenERC721, TokenERC1155, TokenERC20]
 
     def __init__(
@@ -20,6 +25,14 @@ class ContractWrapper(ProviderHandler):
         signer: Optional[LocalAccount],
         options: SDKOptions = SDKOptions(),
     ):
+        """
+        Initializes the contract wrapper.
+
+        :param contract_abi: ABI of the thirdweb contract to use
+        :param provider: web3 provider instance to use
+        :param signer: optional account to use for signing transactions
+        """
+
         super().__init__(provider, signer, options)
         self.__contract_abi = contract_abi
 

@@ -1,0 +1,7 @@
+dependencies:
+  - OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.0`
+compiler:
+  evm_version: 
+  solc:
+    remappings:
+      - '@openzeppelin/contracts-upgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.0/brownie'

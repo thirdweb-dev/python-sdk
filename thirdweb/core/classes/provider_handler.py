@@ -27,7 +27,7 @@ class ProviderHandler(object):
         """
         Initialize the provider handler.
 
-        :param provider: web3 provider instance to use for sending and receiving data
+        :param provider: web3 provider instance to use
         :param signer: optional account to use for signing transactions
         :param options: optional SDKOptions instance to specify read-only RPC URL and gas settings
         """
@@ -40,7 +40,7 @@ class ProviderHandler(object):
         """
         Update the active provider.
 
-        :param provider: web3 provider instance to use for sending and receiving data
+        :param provider: web3 provider instance to use
         """
 
         self.__provider = provider
