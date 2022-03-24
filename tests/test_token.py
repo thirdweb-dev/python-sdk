@@ -6,7 +6,7 @@ import pytest
 
 @pytest.mark.usefixtures("contracts")
 @pytest.mark.usefixtures("sdk")
-@pytest.fixture
+@pytest.fixture(scope="function")
 def token(contracts, sdk: ThirdwebSDK) -> Token:
     (_, _, thirdweb_fee) = contracts
     contract = accounts[0].deploy(TokenERC20, thirdweb_fee.address)
@@ -14,5 +14,33 @@ def token(contracts, sdk: ThirdwebSDK) -> Token:
     return token
 
 
-def test_get_token(token: Token):
-    assert token.get_address() is not None
+def test_mint_tokens(token: Token):
+    """
+    Should mint tokens
+    """
+
+    pass
+
+
+def test_transfer_tokens(token: Token):
+    """
+    Should mint tokens
+    """
+
+    pass
+
+
+def test_list_holders(token: Token):
+    """
+    Should list current holders
+    """
+
+    pass
+
+
+def test_burn_tokens(token: Token):
+    """
+    Should burn tokens
+    """
+
+    pass
