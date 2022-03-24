@@ -54,7 +54,8 @@ class ProviderHandler(object):
         self.__signer = signer
 
         if signer is not None:
-            self.__provider.eth.default_account = signer.address
+            provider = self.get_provider()
+            provider.eth.default_account = signer.address
 
     def is_read_only(self):
         """
@@ -114,7 +115,8 @@ class ProviderHandler(object):
                     return default_provider
 
         # Finally, if nothing else works, use the connected providers chain id to get a default provider
-        return self.__get_default_provider(ChainId(self.__provider.eth.chain_id))
+        provider = self.get_provider()
+        return self.__get_default_provider(ChainId(provider.eth.chain_id))
 
     def __get_default_provider(self, chain_id: ChainId) -> Optional[Web3]:
         """
