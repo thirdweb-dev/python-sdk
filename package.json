@@ -1,0 +1,12 @@
+{
+  "name": "python-sdk",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/thirdweb-dev/python-sdk.git",
+  "author": "adam-maj <mr.adam.maj@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "ganache-cli": "^6.12.2",
+    "hardhat": "^2.9.1"
+  }
+}
