@@ -1,4 +1,10 @@
-from typing import List, Union
+from typing import List, Union, cast
+from thirdweb.abi.token_erc20 import TokenERC20
+from thirdweb.common.currency import (
+    fetch_currency_metadata,
+    fetch_currency_value,
+    parse_units,
+)
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.types.currency import Currency, CurrencyValue, TokenAmount
@@ -14,44 +20,75 @@ class ERC20(BaseContract):
     """
 
     def get(self) -> Currency:
-        pass
+        return fetch_currency_metadata(
+            self.__contract_wrapper.get_provider(), self.get_address()
+        )
 
     def balance(self) -> CurrencyValue:
-        pass
+        return self.balance_of(self.__contract_wrapper.get_signer_address())
 
-    def balanceOf(self, address: str) -> CurrencyValue:
-        pass
+    def balance_of(self, address: str) -> CurrencyValue:
+        return self.__get_value(self.__get_abi().balance_of.call(address))
 
     def total_supply(self) -> CurrencyValue:
-        pass
+        return self.__get_value(self.__get_abi().total_supply.call())
 
     def allowance(self, spender: str) -> CurrencyValue:
-        pass
+        return self.allowance_of(self.__contract_wrapper.get_signer_address(), spender)
 
     def allowance_of(self, owner: str, spender: str) -> CurrencyValue:
-        pass
+        return self.__get_value(self.__get_abi().allowance.call(owner, spender))
 
     def is_transfer_restricted(self) -> bool:
+        # TODO: Implement - Relies on ROLES
         pass
 
     """
     WRITE FUNCTIONS
     """
 
-    def transfer(self, to: str, amount: Union[int, str]) -> TxReceipt:
-        pass
+    def transfer(self, to: str, amount: int) -> TxReceipt:
+        amount_with_decimals = parse_units(amount, self.get().decimals)
+        return self.__contract_wrapper.send_transaction(
+            "transfer", [to, amount_with_decimals]
+        )
 
-    def transfer_from(self, fr: str, to: str, amount: Union[int, str]) -> TxReceipt:
-        pass
+    def transfer_from(self, fr: str, to: str, amount: int) -> TxReceipt:
+        amount_with_decimals = parse_units(amount, self.get().decimals)
+        return self.__contract_wrapper.send_transaction(
+            "transferFrom", [fr, to, amount_with_decimals]
+        )
 
-    def set_allowance(self, spender: str, amount: Union[int, str]) -> TxReceipt:
-        pass
+    def set_allowance(self, spender: str, amount: int) -> TxReceipt:
+        amount_with_decimals = parse_units(amount, self.get().decimals)
+        return self.__contract_wrapper.send_transaction(
+            "approve", [spender, amount_with_decimals]
+        )
 
     def transfer_batch(self, args: List[TokenAmount]):
+        # TODO: Implement - relies on MULTICALL
         pass
 
-    def burn(self, amount: Union[int, str]) -> TxReceipt:
-        pass
+    def burn(self, amount: int) -> TxReceipt:
+        amount_with_decimals = parse_units(amount, self.get().decimals)
+        return self.__contract_wrapper.send_transaction("burn", [amount_with_decimals])
 
-    def burn_from(self, amount: Union[int, str]) -> TxReceipt:
-        pass
+    def burn_from(self, holder: str, amount: int) -> TxReceipt:
+        amount_with_decimals = parse_units(amount, self.get().decimals)
+        return self.__contract_wrapper.send_transaction(
+            "burnFrom", [holder, amount_with_decimals]
+        )
+
+    """
+    PRIVATE FUNCTIONS
+    """
+
+    def __get_abi(self) -> TokenERC20:
+        return cast(TokenERC20, self.__contract_wrapper.__contract_abi)
+
+    def __get_value(self, value: int) -> CurrencyValue:
+        return fetch_currency_value(
+            self.__contract_wrapper.get_provider(),
+            self.get_address(),
+            value,
+        )

@@ -3,7 +3,7 @@ from thirdweb.core.classes.provider_handler import ProviderHandler
 from thirdweb.contracts import Token, Edition, NFTCollection
 
 from eth_account.account import LocalAccount
-from typing import Any, Dict, Optional, Type, Union
+from typing import Any, Dict, Optional, Type, Union, cast
 from web3 import Web3
 
 from thirdweb.types.sdk import SDKOptions
@@ -20,20 +20,20 @@ class ThirdwebSDK(ProviderHandler):
     ):
         super().__init__(provider, signer, options)
 
-    def get_nft_collection(self, address: str):
-        return self.get_contract(address, NFTCollection)
+    def get_nft_collection(self, address: str) -> NFTCollection:
+        return cast(NFTCollection, self.get_contract(address, NFTCollection))
 
-    def get_edition(self, address: str):
-        return self.get_contract(address, Edition)
+    def get_edition(self, address: str) -> Edition:
+        return cast(Edition, self.get_contract(address, Edition))
 
     def get_token(self, address: str) -> Token:
-        return self.get_contract(address, Token)
+        return cast(Token, self.get_contract(address, Token))
 
     def get_contract(
         self,
         address: str,
         contract_type: Union[Type[NFTCollection], Type[Edition], Type[Token]],
-    ) -> Any:
+    ) -> Union[NFTCollection, Edition, Token]:
         if address in self.__contract_cache:
             return self.__contract_cache[address]
 

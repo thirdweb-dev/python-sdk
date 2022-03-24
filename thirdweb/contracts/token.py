@@ -45,10 +45,10 @@ class Token(ERC20):
     WRITE FUNCTIONS
     """
 
-    def mint(self, amount: Union[int, str]) -> TxReceipt:
+    def mint(self, amount: int) -> TxReceipt:
         pass
 
-    def mint_to(self, to: str, amount: Union[int, str]) -> TxReceipt:
+    def mint_to(self, to: str, amount: int) -> TxReceipt:
         pass
 
     def mint_batch_to(self, args: List[TokenAmount]) -> TxReceipt:
