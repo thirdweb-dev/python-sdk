@@ -1,17 +1,36 @@
 from thirdweb.contracts.token import Token
 from thirdweb.core.sdk import ThirdwebSDK
-from brownie import accounts, TokenERC20
 import pytest
+
+OTHER_ADDRESS = "0x9e31E40Dda94976A405D7BDe6c698DB60E95C87d"
 
 
 @pytest.mark.usefixtures("contracts")
 @pytest.mark.usefixtures("sdk")
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def token(contracts, sdk: ThirdwebSDK) -> Token:
-    (_, _, thirdweb_fee) = contracts
-    contract = accounts[0].deploy(TokenERC20, thirdweb_fee.address)
-    token = sdk.get_token(contract.address)
+    TOKEN_ADDRESS = contracts
+    token = sdk.get_token(TOKEN_ADDRESS)
     return token
+
+
+def test_token_provider(token: Token):
+    """
+    Should have correct provider and signer from SDK
+    """
+
+    assert token._contract_wrapper.get_provider() is not None
+    assert token._contract_wrapper.get_signer() is not None
+
+
+def test_get_metadata(token: Token):
+    """
+    Get token metadata
+    """
+
+    metadata = token.get()
+    assert metadata.name == "Vote Token"
+    assert metadata.decimals == 18
 
 
 def test_mint_tokens(token: Token):
@@ -19,7 +38,11 @@ def test_mint_tokens(token: Token):
     Should mint tokens
     """
 
-    pass
+    total_supply = token.total_supply()
+    token.mint(20)
+    new_supply = token.total_supply()
+
+    assert new_supply.display_value == total_supply.display_value + 20
 
 
 def test_transfer_tokens(token: Token):
@@ -27,20 +50,11 @@ def test_transfer_tokens(token: Token):
     Should mint tokens
     """
 
-    pass
+    current_balance = token.balance()
+    other_balance = token.balance_of(OTHER_ADDRESS)
+    token.transfer(OTHER_ADDRESS, 10)
+    new_balance = token.balance()
+    new_other_balance = token.balance_of(OTHER_ADDRESS)
 
-
-def test_list_holders(token: Token):
-    """
-    Should list current holders
-    """
-
-    pass
-
-
-def test_burn_tokens(token: Token):
-    """
-    Should burn tokens
-    """
-
-    pass
+    assert new_balance.display_value == current_balance.display_value - 10
+    assert new_other_balance.display_value == other_balance.display_value + 10

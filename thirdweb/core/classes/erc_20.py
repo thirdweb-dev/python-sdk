@@ -56,7 +56,7 @@ class ERC20(BaseContract):
     def transfer_from(self, fr: str, to: str, amount: int) -> TxReceipt:
         amount_with_decimals = parse_units(amount, self.get().decimals)
         return self._contract_wrapper.send_transaction(
-            "transferFrom", [fr, to, amount_with_decimals]
+            "transfer_from", [fr, to, amount_with_decimals]
         )
 
     def set_allowance(self, spender: str, amount: int) -> TxReceipt:
@@ -76,7 +76,7 @@ class ERC20(BaseContract):
     def burn_from(self, holder: str, amount: int) -> TxReceipt:
         amount_with_decimals = parse_units(amount, self.get().decimals)
         return self._contract_wrapper.send_transaction(
-            "burnFrom", [holder, amount_with_decimals]
+            "burn_from", [holder, amount_with_decimals]
         )
 
     """

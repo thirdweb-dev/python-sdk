@@ -52,7 +52,7 @@ class Token(ERC20):
     def mint_to(self, to: str, amount: int) -> TxReceipt:
         amount_with_decimals = parse_units(amount, self.get().decimals)
         return self._contract_wrapper.send_transaction(
-            "mintTo", [to, amount_with_decimals]
+            "mint_to", [to, amount_with_decimals]
         )
 
     def mint_batch_to(self, args: List[TokenAmount]) -> TxReceipt:

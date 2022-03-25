@@ -80,6 +80,6 @@ class ContractWrapper(ProviderHandler):
         del tx["from"]
 
         signed_tx = signer.sign_transaction(tx)
-        tx_hash = provider.eth.send_raw_transaction(signed_tx.raw_transaction)
+        tx_hash = provider.eth.send_raw_transaction(signed_tx.rawTransaction)
 
         return provider.eth.wait_for_transaction_receipt(tx_hash)
