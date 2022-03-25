@@ -17,3 +17,9 @@ class NFTMetadata:
 class NFTMetadataOwner:
     metadata: NFTMetadata
     owner: str
+
+
+@dataclass
+class EditionMetadata:
+    metadata: NFTMetadata
+    supply: int
