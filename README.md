@@ -18,6 +18,13 @@ Assuming you've installed and setup poetry, you can setup this repository with:
 ```bash
 $ poetry shell
 $ poetry install
+poetry run yarn global add ganache
+```
+
+Alternatively, if your system can run .sh files, you can set everything up by running the following bash script:
+
+```bash
+$ bash scripts/env/setup.sh
 ```
 
 ### Running Tests
@@ -75,5 +82,5 @@ $ abi-gen --language Python -o thirdweb/abi --abis abi/TokenERC721.json
 Alternatively, if your system can run .sh files, you can run the following to generate all ABIs at once (from your /abi folder):
 
 ```bash
-$ bash scripts/generate_abis.sh
+$ bash scripts/abi/generate.sh
 ```
