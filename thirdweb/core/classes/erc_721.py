@@ -1,4 +1,4 @@
-from typing import List, Optional, cast
+from typing import List, cast
 from thirdweb.abi import TokenERC721
 from thirdweb.common.error import NotFoundException
 from thirdweb.common.nft import fetch_token_metadata
@@ -6,7 +6,6 @@ from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.nft import NFTMetadata, NFTMetadataOwner, QueryAllParams
-from thirdweb.types.sdk import SDKOptions
 from web3.eth import TxReceipt
 
 

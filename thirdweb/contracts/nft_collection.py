@@ -7,7 +7,7 @@ from eth_account.account import LocalAccount
 from web3.eth import TxReceipt
 from web3 import Web3
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
-from thirdweb.types.nft import NFTMetadata
+from thirdweb.types.nft import NFTMetadataInput
 
 from thirdweb.types.sdk import SDKOptions
 from typing import Optional, List, Union
@@ -30,20 +30,20 @@ class NFTCollection(ERC721):
     WRITE FUNCTIONS
     """
 
-    def mint(self, metadata: Union[NFTMetadata, str]) -> TxReceipt:
+    def mint(self, metadata: Union[NFTMetadataInput, str]) -> TxReceipt:
         return self.mint_to(self._contract_wrapper.get_signer_address(), metadata)
 
-    def mint_to(self, to: str, metadata: Union[NFTMetadata, str]) -> TxReceipt:
+    def mint_to(self, to: str, metadata: Union[NFTMetadataInput, str]) -> TxReceipt:
         uri = upload_or_extract_uri(metadata, self._storage)
         return self._contract_wrapper.send_transaction("mint_to", [to, uri])
 
-    def mint_batch(self, metadatas: List[Union[NFTMetadata, str]]) -> TxReceipt:
+    def mint_batch(self, metadatas: List[Union[NFTMetadataInput, str]]) -> TxReceipt:
         return self.mint_batch_to(
             self._contract_wrapper.get_signer_address(), metadatas
         )
 
     def mint_batch_to(
-        self, to: str, metadatas: List[Union[NFTMetadata, str]]
+        self, to: str, metadatas: List[Union[NFTMetadataInput, str]]
     ) -> TxReceipt:
         # TODO: Implement - relies on MULTICALL
         raise NotImplementedError

@@ -83,6 +83,12 @@ class EditionMetadata:
 
 
 @dataclass
+class EditionMetadataInput:
+    metadata: Union[NFTMetadataInput, str]
+    supply: int
+
+
+@dataclass
 class EditionMetadataOwner(EditionMetadata):
     owner: str
     quantity_owned: int
