@@ -41,7 +41,7 @@ class ERC20(BaseContract):
 
     def is_transfer_restricted(self) -> bool:
         # TODO: Implement - Relies on ROLES
-        pass
+        raise NotImplementedError
 
     """
     WRITE FUNCTIONS
@@ -67,7 +67,7 @@ class ERC20(BaseContract):
 
     def transfer_batch(self, args: List[TokenAmount]):
         # TODO: Implement - relies on MULTICALL
-        pass
+        raise NotImplementedError
 
     def burn(self, amount: int) -> TxReceipt:
         amount_with_decimals = parse_units(amount, self.get().decimals)

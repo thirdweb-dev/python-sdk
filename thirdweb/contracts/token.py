@@ -57,7 +57,7 @@ class Token(ERC20):
 
     def mint_batch_to(self, args: List[TokenAmount]) -> TxReceipt:
         # TODO: Implement - Relies on MULTICALL
-        pass
+        raise NotImplementedError
 
     def delegate_to(self, delegatee_address: str) -> TxReceipt:
         return self._contract_wrapper.send_transaction("delegate", [delegatee_address])
