@@ -9,6 +9,8 @@ from thirdweb.core.sdk import ThirdwebSDK
 
 load_dotenv()
 
+# TODO: Switch to local deployment once DEPLOYER is setup
+
 
 @pytest.fixture(scope="session")
 def contracts():

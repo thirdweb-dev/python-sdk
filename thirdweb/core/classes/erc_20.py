@@ -80,7 +80,7 @@ class ERC20(BaseContract):
         )
 
     """
-    PRIVATE FUNCTIONS
+    PROTECTED FUNCTIONS
     """
 
     def _get_abi(self) -> TokenERC20:
