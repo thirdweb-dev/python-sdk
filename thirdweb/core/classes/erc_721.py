@@ -33,7 +33,7 @@ class ERC721(BaseContract):
     def get_all(
         self, query_params: QueryAllParams = QueryAllParams()
     ) -> List[NFTMetadataOwner]:
-        max_id = min(query_params.count, self.get_total_count())
+        max_id = min(query_params.start + query_params.count, self.get_total_count())
         return [self.get(token_id) for token_id in range(query_params.start, max_id)]
 
     def get_total_count(self) -> int:

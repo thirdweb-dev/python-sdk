@@ -83,6 +83,12 @@ class EditionMetadata:
 
 
 @dataclass
+class EditionMetadataOwner(EditionMetadata):
+    owner: str
+    quantity_owned: int
+
+
+@dataclass
 class QueryAllParams:
     start: int = 0
     count: int = 100
