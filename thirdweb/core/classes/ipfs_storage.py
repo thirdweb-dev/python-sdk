@@ -1,6 +1,6 @@
 import re
 from requests import get, Response, post
-from typing import Any, Dict, List, Text, TextIO, BinaryIO, Union, cast
+from typing import Any, Dict, List, TextIO, BinaryIO, Union, cast
 from thirdweb.common.error import FetchException, UploadException
 from thirdweb.constants.urls import (
     DEFAULT_IPFS_GATEWAY,
@@ -8,6 +8,7 @@ from thirdweb.constants.urls import (
     TW_IPFS_SERVER_URL,
 )
 from thirdweb.core.helpers.storage import (
+    replace_file_properties_with_hashes,
     replace_hash_with_gateway_url,
     resolve_gateway_url,
 )
@@ -107,7 +108,17 @@ class IpfsStorage:
         Uploads a list of metadata to IPFS and returns the hash.
         """
 
-        raise NotImplementedError
+        metadata_to_upload = self._batch_upload_properties(metadatas)
+        cid_with_filename = self._upload_batch_with_cid(
+            metadata_to_upload, file_start_number, contract_address, signer_address
+        )
+
+        base_uri = f"ipfs://{cid_with_filename.cid}"
+        metadata_uris = [
+            f"{base_uri}{filename}" for filename in cid_with_filename.filenames
+        ]
+
+        return UriWithMetadata(base_uri, metadata_uris)
 
     """
     PROTECTED FUNCTIONS
@@ -123,12 +134,39 @@ class IpfsStorage:
         return res
 
     def _batch_upload_properties(self, metadatas: List[Dict[str, Any]]):
-        raise NotImplementedError
+        file_lists = [
+            self._build_file_properties_map(metadata, []) for metadata in metadatas
+        ]
+        files_to_upload = [file for file_list in file_lists for file in file_list]
+
+        if len(files_to_upload) == 0:
+            return metadatas
+
+        cid_with_filename = self._upload_batch_with_cid(
+            cast(List[Union[TextIO, BinaryIO, str]], files_to_upload)
+        )
+
+        cids = []
+        for filename in cid_with_filename.filenames:
+            cids.append(f"{cid_with_filename.cid}{filename}")
+
+        final_metadata = replace_file_properties_with_hashes(metadatas, cids)
+        return final_metadata
 
     def _build_file_properties_map(
-        self, object: Dict[str, Any], files: List[Union[TextIO, BinaryIO]]
-    ) -> Union[TextIO, BinaryIO]:
-        raise NotImplementedError
+        self,
+        object: Union[Dict[str, Any], List[Any]],
+        files: List[Union[TextIO, BinaryIO]],
+    ) -> List[Union[TextIO, BinaryIO]]:
+        if isinstance(object, list):
+            [self._build_file_properties_map(item, files) for item in object]
+        else:
+            for val in object.values():
+                if isinstance(val, TextIO) or isinstance(val, BinaryIO):
+                    files.append(val)
+                elif isinstance(val, dict) or isinstance(val, list):
+                    self._build_file_properties_map(val, files)
+        return files
 
     def _upload_batch_with_cid(
         self,

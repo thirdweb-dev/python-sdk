@@ -1,10 +1,21 @@
-from typing import TypeVar, cast, Dict, Any, List
+from typing import TextIO, BinaryIO, TypeVar, cast, Dict, Any, List
 
 T = TypeVar("T")
 
 
 def replace_file_properties_with_hashes(object: Dict[str, Any], cids: List[str]):
-    pass
+    for key, val in object.items():
+        is_file = isinstance(val, TextIO) or isinstance(val, BinaryIO)
+        if isinstance(val, dict) and not is_file:
+            object[key] = replace_file_properties_with_hashes(val, cids)
+            continue
+
+        if not is_file:
+            continue
+
+        object[key] = f"ipfs://{cids.pop(0)}"
+
+    return object
 
 
 def replace_hash_with_gateway_url(
