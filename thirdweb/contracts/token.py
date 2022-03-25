@@ -6,6 +6,7 @@ from eth_account.account import LocalAccount
 from thirdweb.common.currency import parse_units
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_20 import ERC20
+from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.currency import CurrencyValue, TokenAmount
 
 from thirdweb.types.sdk import SDKOptions
@@ -19,12 +20,13 @@ class Token(ERC20):
         self,
         provider: Web3,
         address: str,
+        storage: IpfsStorage,
         signer: Optional[LocalAccount],
         options: SDKOptions = SDKOptions(),
     ):
         abi = TokenERC20(provider, address)
         contract_wrapper = ContractWrapper(abi, provider, signer, options)
-        super().__init__(contract_wrapper)
+        super().__init__(contract_wrapper, storage)
 
     """
     READ FUNCTIONS

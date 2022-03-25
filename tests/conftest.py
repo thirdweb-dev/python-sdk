@@ -1,1 +1,1 @@
-from fixtures.before import contracts, sdk
+from fixtures.before import sdk

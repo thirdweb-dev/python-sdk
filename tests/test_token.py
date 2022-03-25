@@ -1,15 +1,14 @@
-from thirdweb.contracts.token import Token
+from thirdweb.contracts import Token
 from thirdweb.core.sdk import ThirdwebSDK
 import pytest
 
 OTHER_ADDRESS = "0x9e31E40Dda94976A405D7BDe6c698DB60E95C87d"
+TOKEN_ADDRESS = "0xA53885ABB6F74EAd52078624D28B6b09BD668B83"
 
 
-@pytest.mark.usefixtures("contracts")
 @pytest.mark.usefixtures("sdk")
 @pytest.fixture()
-def token(contracts, sdk: ThirdwebSDK) -> Token:
-    TOKEN_ADDRESS = contracts
+def token(sdk: ThirdwebSDK) -> Token:
     token = sdk.get_token(TOKEN_ADDRESS)
     return token
 

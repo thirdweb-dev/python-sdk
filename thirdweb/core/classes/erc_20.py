@@ -7,13 +7,21 @@ from thirdweb.common.currency import (
 )
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.base_contract import BaseContract
+from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.currency import Currency, CurrencyValue, TokenAmount
 from web3.eth import TxReceipt
 
 
 class ERC20(BaseContract):
-    def __init__(self, contract_wrapper: ContractWrapper):
+    _storage: IpfsStorage
+
+    def __init__(
+        self,
+        contract_wrapper: ContractWrapper,
+        storage: IpfsStorage,
+    ):
         super().__init__(contract_wrapper)
+        self._storage = storage
 
     """
     READ FUNCTIONS
