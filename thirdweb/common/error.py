@@ -1,3 +1,8 @@
+class NotFoundException(Exception):
+    def __init__(self, indentifier: str):
+        super().__init__(f"NOT FOUND: Object with ID {indentifier} not found")
+
+
 class NoSignerException(Exception):
     def __init__(self):
         super().__init__(
