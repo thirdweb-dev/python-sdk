@@ -15,3 +15,12 @@ def test_sdk_initialization(sdk: ThirdwebSDK):
     assert provider.eth.chain_id == 80001
     assert signer is not None
     assert signer.address == "0xa05271523BD00593eb4CC6DCbDcbd045361a9a03"
+
+
+# test SDK provider switching
+
+# test SDK signer switching
+
+# test SDK contract caching
+
+# test SDK provider and signer switching on contract

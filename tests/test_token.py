@@ -58,3 +58,12 @@ def test_transfer_tokens(token: Token):
 
     assert new_balance.display_value == current_balance.display_value - 10
     assert new_other_balance.display_value == other_balance.display_value + 10
+
+
+# test vote functionality / delegations
+
+# test batch minting
+
+# test burning tokens
+
+# test allowance
