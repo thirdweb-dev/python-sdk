@@ -1,5 +1,7 @@
 from typing import Any, List, cast
 from thirdweb.abi import TokenERC1155
+from thirdweb.common.error import NotFoundException
+from thirdweb.common.nft import fetch_token_metadata
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
@@ -7,7 +9,6 @@ from thirdweb.types.nft import (
     EditionMetadata,
     EditionMetadataOwner,
     NFTMetadata,
-    NFTMetadataOwner,
     QueryAllParams,
 )
 from web3.eth import TxReceipt
@@ -104,4 +105,9 @@ class ERC1155(BaseContract):
         return cast(TokenERC1155, self._contract_wrapper._contract_abi)
 
     def _get_token_metadata(self, token_id: int) -> NFTMetadata:
-        pass
+        token_uri = self._get_abi().uri.call(token_id)
+
+        if not token_uri:
+            raise NotFoundException(str(token_id))
+
+        return fetch_token_metadata(token_id, token_uri, self._storage)

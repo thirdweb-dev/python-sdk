@@ -35,7 +35,7 @@ class Edition(ERC1155):
     def mint_to(self, to: str, metadata_with_supply: EditionMetadataInput) -> TxReceipt:
         uri = upload_or_extract_uri(metadata_with_supply.metadata, self._storage)
         return self._contract_wrapper.send_transaction(
-            "mint_to", [to, MAX_INT, uri, metadata_with_supply.supply]
+            "mint_to", [to, int(MAX_INT, 16), uri, metadata_with_supply.supply]
         )
 
     def mint_additional_supply(
