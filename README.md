@@ -18,7 +18,7 @@ Assuming you've installed and setup poetry, you can setup this repository with:
 ```bash
 $ poetry shell
 $ poetry install
-poetry run yarn global add ganache
+$ poetry run yarn global add ganache
 ```
 
 Alternatively, if your system can run .sh files, you can set everything up by running the following bash script:
@@ -31,19 +31,13 @@ $ bash scripts/env/setup.sh
 
 Before running tests, make sure you've already run `poetry shell` and are in the poetry virutal environment with all dependencies installed. 
 
-Next, install the javascript dependencies with:
-
-```bash
-$ yarn install
-```
-
 Once you have checked that this you have all the dependencies, you can run the following:
 
 ```bash
 $ poetry run brownie test
 ```
 
-Currently (only temporary), since contract deployers are not yet setup in this SDK, the testing relies on contracts on testnets deployed through the thirdweb dashboard.
+Currently (only temporary), since contract deployers are not yet setup in this SDK, the testing relies on contracts on testnets deployed through the thirdweb dashboard. The testing setup is configured to use the `mumbai` network currently, but this can be changed to any network by chaing the RPC URL used in `tests/fixtures/before.py`.
 
 To properly setup testing, you'll need to add your private key to the `.env` file as follows:
 
@@ -55,13 +49,9 @@ And then switch the test cases to use your own contract addresses for the `NFT_C
 
 ### Code Style Setup
 
-Make sure you have `mypy`, `pylint`, and `black` installed:
+Make sure you have `mypy`, `pylint`, and `black` installed (all included in the dev dependencies with `poetry install`.
 
-```bash
-$ pip install mypy pylint black
-```
-
-Alternatively, if you're working in VSCode, there a few steps to get everything working with the poetry .venv:
+If you're working in VSCode, there a few steps to get everything working with the poetry .venv:
 
 1. To setup poetry virtual environment inside your VSCode so it gets recognized as part of your project (import for linters), you can take the following steps from this [stack overflow answer](https://stackoverflow.com/questions/59882884/vscode-doesnt-show-poetry-virtualenvs-in-select-interpreter-option). You need to run `poetry config virtualenvs.in-project true` and then make sure you delete/create a new poetry env.
 2. In `.vscode/settings.json`, you should have the following:
