@@ -43,6 +43,16 @@ Once you have checked that this you have all the dependencies, you can run the f
 $ poetry run brownie test
 ```
 
+Currently (only temporary), since contract deployers are not yet setup in this SDK, the testing relies on contracts on testnets deployed through the thirdweb dashboard.
+
+To properly setup testing, you'll need to add your private key to the `.env` file as follows:
+
+```.env
+PRIVATE_KEY=...
+```
+
+And then switch the test cases to use your own contract addresses for the `NFT_COLLECTION_ADDRESS`, `EDITION_ADDRESS`, and `TOKEN_ADDRESS` variables in `tests/test_nft_collection.py`, `tests/test_edition.py`, and `tests/test_token.py` files respectively.
+
 ### Code Style Setup
 
 Make sure you have `mypy`, `pylint`, and `black` installed:
