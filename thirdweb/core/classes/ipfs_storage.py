@@ -1,4 +1,5 @@
 import re
+import json
 from requests import get, Response, post
 from typing import Any, Dict, List, TextIO, BinaryIO, Union, cast
 from thirdweb.common.error import FetchException, UploadException
@@ -19,7 +20,7 @@ class IpfsStorage:
     _gateway_url: str
 
     def __init__(self, gateway_url=DEFAULT_IPFS_GATEWAY):
-        self._gateway_url = re.sub(r"\/$", "", gateway_url)
+        self._gateway_url = re.sub(r"\/$", "", gateway_url) + "/"
 
     def get(self, hash: str) -> Dict[str, Any]:
         """
@@ -40,13 +41,15 @@ class IpfsStorage:
 
         res = get(
             f"{TW_IPFS_SERVER_URL}/grant",
-            headers={"X-App-Name": f"CONSOLE-PYTHON-SDK-{contract_address}"},
+            headers={
+                "X-App-Name": f"CONSOLE-PYTHON-SDK-0x522B1fE8BDF70fB0c3a4931aCB94fBa6C232c74f"
+            },
         )
 
         if not res.ok:
             raise FetchException("Failed to upload token")
 
-        return res.json()
+        return res.text
 
     def upload(
         self,
@@ -63,7 +66,7 @@ class IpfsStorage:
 
     def upload_batch(
         self,
-        files: List[Union[TextIO, BinaryIO, str]],
+        files: List[Union[TextIO, BinaryIO, str, Dict[str, Any]]],
         file_start_number: int = 0,
         contract_address: str = "",
         signer_address: str = "",
@@ -113,7 +116,7 @@ class IpfsStorage:
             metadata_to_upload, file_start_number, contract_address, signer_address
         )
 
-        base_uri = f"ipfs://{cid_with_filename.cid}"
+        base_uri = f"ipfs://{cid_with_filename.cid}/"
         metadata_uris = [
             f"{base_uri}{filename}" for filename in cid_with_filename.filenames
         ]
@@ -143,7 +146,7 @@ class IpfsStorage:
             return metadatas
 
         cid_with_filename = self._upload_batch_with_cid(
-            cast(List[Union[TextIO, BinaryIO, str]], files_to_upload)
+            cast(List[Union[TextIO, BinaryIO, str, Dict[str, Any]]], files_to_upload)
         )
 
         cids = []
@@ -170,12 +173,13 @@ class IpfsStorage:
 
     def _upload_batch_with_cid(
         self,
-        files: List[Union[TextIO, BinaryIO, str]],
+        files: List[Union[TextIO, BinaryIO, str, Dict[str, Any]]],
         file_start_number: int = 0,
         contract_address: str = "",
         signer_address: str = "",
     ) -> CidWithFileName:
         token = self.get_upload_token(contract_address)
+
         metadata = {
             "name": f"CONSOLE-PYTHON-SDK-{contract_address}",
             "keyvalues": {
@@ -190,19 +194,24 @@ class IpfsStorage:
 
         for i, file in enumerate(files):
             file_name = f"{file_start_number + i}"
-            file_data: Union[bytes, str] = cast(str, file)
+            file_data = cast(Union[str, Dict[str, Any]], file)
 
-            if not isinstance(file, str):
+            if not isinstance(file, str) and not isinstance(file, dict):
                 file_name = file.name
-                file_data = file.read()
+                file_data = cast(Any, file.read())
+            elif isinstance(file, dict):
+                file_data = json.dumps(file)
 
             file_names.append(file_name)
-            form.append(file_data)
+            form.append(("file", (f"files/{file_name}", file_data)))
 
-        data = {"form": form, "pinataMetadata": metadata}
+        # form.append(("pinataMetadata", metadata))
+
+        print(f"FORM: {form}")
+
         res = post(
             PINATA_IPFS_URL,
-            json=data,
+            files=form,
             headers={
                 "Authorization": f"Bearer {token}",
             },
@@ -210,6 +219,6 @@ class IpfsStorage:
         body = res.json()
 
         if not res.ok:
-            raise UploadException("Failed to upload files to IPFS")
+            raise UploadException(f"Failed to upload files to IPFS. {res.json()}")
 
         return CidWithFileName(body["IpfsHash"], file_names)

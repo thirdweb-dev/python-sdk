@@ -46,4 +46,4 @@ def resolve_gateway_url(ipfs_hash: T, scheme: str, gateway_url: str) -> T:
     if not isinstance(ipfs_hash, str):
         return ipfs_hash
 
-    return cast(T, cast(str, ipfs_hash).lower().replace(scheme, gateway_url))
+    return cast(T, cast(str, ipfs_hash).replace(scheme, gateway_url))

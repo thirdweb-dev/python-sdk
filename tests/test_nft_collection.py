@@ -2,8 +2,10 @@ from thirdweb.contracts import NFTCollection
 from thirdweb.core.sdk import ThirdwebSDK
 import pytest
 
+from thirdweb.types.nft import NFTMetadataInput
+
 OTHER_ADDRESS = "0x9e31E40Dda94976A405D7BDe6c698DB60E95C87d"
-NFT_COLLECTION_ADDRESS = "0x522B1fE8BDF70fB0c3a4931aCB94fBa6C232c74f"
+NFT_COLLECTION_ADDRESS = "0xED8121008B1aD8327297Afa820041a5B3523f3E7"
 
 
 @pytest.mark.usefixtures("sdk")
@@ -13,6 +15,28 @@ def nft_collection(sdk: ThirdwebSDK) -> NFTCollection:
     return nft_collection
 
 
-def test_nft_collection_provider(nft_collection: NFTCollection):
+def test_provider(nft_collection: NFTCollection):
     assert nft_collection._contract_wrapper.get_provider() is not None
     assert nft_collection._contract_wrapper.get_signer() is not None
+
+
+def test_mint(nft_collection: NFTCollection):
+    balance = nft_collection.balance()
+
+    nft_collection.mint(
+        NFTMetadataInput.from_json(
+            {"name": "Python SDK NFT", "description": "Minted with the python SDK!"}
+        )
+    )
+
+    token_id = nft_collection.get_total_count() - 1
+    metadata = nft_collection.get(token_id).metadata
+
+    assert metadata.name == "Python SDK NFT"
+    assert metadata.description == "Minted with the python SDK!"
+    assert nft_collection.balance() == balance + 1
+
+
+def test_burn(nft_collection: NFTCollection):
+    token_id = nft_collection.get_total_count() - 1
+    nft_collection.burn(token_id)
