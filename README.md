@@ -16,7 +16,7 @@ the web3 and eth-account python packages, which you can get with:
 $ pip install web3 eth-account
 ```
 
-### Instantiate the SDK
+### Instantiating the SDK
 
 Once you have all the necessary dependencies, you can follow the following setup steps to get started with the SDK:
 
@@ -49,6 +49,22 @@ If you wanted to use the SDK with a signer above, make sure to include your PRIV
 
 ```
 PRIVATE_KEY=your-private-key-here
+```
+
+### Working With Contracts
+
+Once you instantiate the SDK, you can use it to access your thirdweb contracts. You can use the SDK's contract getter functions like `get_token`, `get_edition`, and `get_nft_collection` to get the respective SDK contract instances. To use an NFT Collection contract for example, you can do the following.
+
+```python
+# Add your NFT Collection contract address here
+NFT_COLLECTION_ADDRESS = "0x.."
+
+# And you can instantiate your contract with just one line
+nft_collection = sdk.get_nft_collection(NFT_COLLECTION_ADDRESS)
+
+# Now you can use any of the SDK contract functions
+balance = nft_collection.balance()
+nft_collection.mint(NFTMetadataInput.from_json({ name: "Cool NFT", description: "Minted with the Python SDK!" }))
 ```
 
 ## Development Environment
