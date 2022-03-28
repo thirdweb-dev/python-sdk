@@ -28,26 +28,72 @@ class ERC20(BaseContract):
     """
 
     def get(self) -> Currency:
+        """
+        Get the token metadata including name, symbol, decimals, etc.
+
+        :returns: token metadata
+        """
+
         return fetch_currency_metadata(
             self._contract_wrapper.get_provider(), self.get_address()
         )
 
     def balance(self) -> CurrencyValue:
+        """
+        Get the token balance of the connected wallet.
+
+        :returns: balance of the connected wallet
+        """
+
         return self.balance_of(self._contract_wrapper.get_signer_address())
 
     def balance_of(self, address: str) -> CurrencyValue:
+        """
+        Get the balance of the specified wallet
+
+        :param address: wallet address to check the balance of
+        :returns: balance of the specified wallet
+        """
+
         return self._get_value(self._get_abi().balance_of.call(address))
 
     def total_supply(self) -> CurrencyValue:
+        """
+        Get the total minted supply of the token.
+
+        :returns: total minted supply of the token
+        """
+
         return self._get_value(self._get_abi().total_supply.call())
 
     def allowance(self, spender: str) -> CurrencyValue:
+        """
+        Get a specific spenders allowance of this token for the connected wallet.
+
+        :param spender: wallet address to check the allowance of
+        :returns: allowance of the connected wallet
+        """
+
         return self.allowance_of(self._contract_wrapper.get_signer_address(), spender)
 
     def allowance_of(self, owner: str, spender: str) -> CurrencyValue:
+        """
+        Get the allowance of the specified spender for a specified owner.
+
+        :param owner: wallet address whose assets will be spent
+        :param spender: wallet address to check the allowance of
+        :returns: allowance of the specified spender for the specified owner
+        """
+
         return self._get_value(self._get_abi().allowance.call(owner, spender))
 
     def is_transfer_restricted(self) -> bool:
+        """
+        Check whether transfer is restricted for tokens in this module.
+
+        :returns: True if transfer is restricted, False otherwise
+        """
+
         # TODO: Implement - Relies on ROLES
         raise NotImplementedError
 
@@ -56,32 +102,79 @@ class ERC20(BaseContract):
     """
 
     def transfer(self, to: str, amount: int) -> TxReceipt:
+        """
+        Transfer a specified amount of tokens from the connected wallet to a specified address.
+
+        :param to: wallet address to transfer the tokens to
+        :param amount: amount of tokens to transfer
+        :returns: transaction receipt of the transfer
+        """
+
         amount_with_decimals = parse_units(amount, self.get().decimals)
         return self._contract_wrapper.send_transaction(
             "transfer", [to, amount_with_decimals]
         )
 
     def transfer_from(self, fr: str, to: str, amount: int) -> TxReceipt:
+        """
+        Transfer a specified amount of tokens from one specified address to another.
+
+        :param fr: wallet address to transfer the tokens from
+        :param to: wallet address to transfer the tokens to
+        :param amount: amount of tokens to transfer
+        :returns: transaction receipt of the transfer
+        """
+
         amount_with_decimals = parse_units(amount, self.get().decimals)
         return self._contract_wrapper.send_transaction(
             "transfer_from", [fr, to, amount_with_decimals]
         )
 
     def set_allowance(self, spender: str, amount: int) -> TxReceipt:
+        """
+        Sets the allowance of the specified wallet over the connected wallets funds to
+        a specified amount.
+
+        :param spender: wallet address to set the allowance of
+        :param amount: amount to set the allowance to
+        :returns: transaction receipt of the allowance set
+        """
+
         amount_with_decimals = parse_units(amount, self.get().decimals)
         return self._contract_wrapper.send_transaction(
             "approve", [spender, amount_with_decimals]
         )
 
     def transfer_batch(self, args: List[TokenAmount]):
-        # TODO: Implement - relies on MULTICALL
+        """
+        Transfer tokens from the connected wallet to many wallets.
+
+        :param args: list of token amounts and addressed to transfer to
+        :returns: transaction receipt of the transfers
+        """
+
         raise NotImplementedError
 
     def burn(self, amount: int) -> TxReceipt:
+        """
+        Burn a specified amount of tokens from the connected wallet.
+
+        :param amount: amount of tokens to burn
+        :returns: transaction receipt of the burn
+        """
+
         amount_with_decimals = parse_units(amount, self.get().decimals)
         return self._contract_wrapper.send_transaction("burn", [amount_with_decimals])
 
     def burn_from(self, holder: str, amount: int) -> TxReceipt:
+        """
+        Burn a specified amount of tokens from a specified wallet.
+
+        :param holder: wallet address to burn the tokens from
+        :param amount: amount of tokens to burn
+        :returns: transaction receipt of the burn
+        """
+
         amount_with_decimals = parse_units(amount, self.get().decimals)
         return self._contract_wrapper.send_transaction(
             "burn_from", [holder, amount_with_decimals]

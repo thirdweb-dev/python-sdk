@@ -83,3 +83,12 @@ class ContractWrapper(ProviderHandler):
         tx_hash = provider.eth.send_raw_transaction(signed_tx.rawTransaction)
 
         return provider.eth.wait_for_transaction_receipt(tx_hash)
+
+    def multi_call(self, encoded: List[str]) -> TxReceipt:
+        """
+        Execute a multicall and return the result.
+
+        :param encoded: list of encoded function calls to execute
+        """
+
+        return self.send_transaction("multicall", [encoded])
