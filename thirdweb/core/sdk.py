@@ -21,19 +21,73 @@ class ThirdwebSDK(ProviderHandler):
         options: SDKOptions = SDKOptions(),
         storage: IpfsStorage = IpfsStorage(),
     ):
+        """
+        Initialize the thirdweb SDK.
+
+        :param provider: web3 provider instance to use for getting on-chain data
+        :param signer: signer to use for sending transactions
+        :param options: optional SDK configuration options
+        :param storage: optional IPFS storage instance to use for storing data
+        """
+
         super().__init__(provider, signer, options)
         self.__storage = storage
 
     def get_nft_collection(self, address: str) -> NFTCollection:
-        return cast(NFTCollection, self.get_contract(address, NFTCollection))
+        """
+        Returns an NFT Collection contract SDK instance
+
+        :param address: address of the NFT Collection contract
+        :returns: NFT Collection contract SDK instance
+        """
+
+        return cast(NFTCollection, self._get_contract(address, NFTCollection))
 
     def get_edition(self, address: str) -> Edition:
-        return cast(Edition, self.get_contract(address, Edition))
+        """
+        Returns an Edition contract SDK instance
+
+        :param address: address of the Edition contract
+        :returns: Edition contract SDK instance
+        """
+
+        return cast(Edition, self._get_contract(address, Edition))
 
     def get_token(self, address: str) -> Token:
-        return cast(Token, self.get_contract(address, Token))
+        """
+        Returns a Token contract SDK instance
 
-    def get_contract(
+        :param address: address of the Token contract
+        :returns: Token contract SDK instance
+        """
+
+        return cast(Token, self._get_contract(address, Token))
+
+    def update_provider(self, provider: Web3):
+        """
+        Update the provider instance used by the SDK.
+
+        :param provider: web3 provider instance to use for getting on-chain data
+        """
+
+        super().update_provider(provider)
+
+        for contract in self.__contract_cache.values():
+            contract.on_provider_updated(provider)
+
+    def update_signer(self, signer: Optional[LocalAccount]):
+        """
+        Update the signer instance used by the SDK.
+
+        :param signer: signer to use for sending transactions
+        """
+
+        super().update_signer(signer)
+
+        for contract in self.__contract_cache.values():
+            contract.on_signer_updated(signer)
+
+    def _get_contract(
         self,
         address: str,
         contract_type: Union[Type[NFTCollection], Type[Edition], Type[Token]],
@@ -51,15 +105,3 @@ class ThirdwebSDK(ProviderHandler):
 
         self.__contract_cache[address] = contract
         return contract
-
-    def update_provider(self, provider: Web3):
-        super().update_provider(provider)
-
-        for contract in self.__contract_cache.values():
-            contract.on_provider_updated(provider)
-
-    def update_signer(self, signer: Optional[LocalAccount]):
-        super().update_signer(signer)
-
-        for contract in self.__contract_cache.values():
-            contract.on_signer_updated(signer)
