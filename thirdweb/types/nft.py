@@ -4,6 +4,21 @@ from typing import Any, Dict, NewType, Optional, Union
 
 @dataclass
 class NFTMetadataInput:
+    """
+    The metadata of an NFT to mint
+
+    You can use the NFTMetadataInput.from_json(json) method to create
+    an instance of this class from a dictionary.
+
+    :param name: The name of the NFT
+    :param description: The optional description of the NFT
+    :param image: The optional image of the NFT
+    :param external_url: The optional external URL of the NFT
+    :param animation_url: The optional animation URL of the NFT
+    :param background_color: The optional background color of the NFT
+    :param properties: The optional properties of the NFT
+    """
+
     name: str
     description: Optional[str]
     image: Optional[str]
@@ -84,6 +99,13 @@ class EditionMetadata:
 
 @dataclass
 class EditionMetadataInput:
+    """
+    The metadata of an edition NFT to mint
+
+    :param metadata: The metadata of the edition NFT
+    :param supply: The supply of the edition NFT
+    """
+
     metadata: Union[NFTMetadataInput, str]
     supply: int
 
