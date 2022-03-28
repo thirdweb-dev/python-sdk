@@ -7,7 +7,53 @@ The thirdweb SDK for Python.
 $ pip install thirdweb-sdk
 ```
 
-## Repository Info
+## Getting Started
+
+To start using this SDK, you need to pass in a provider configuration, and optionally a signer if you want to send transactions. To do this, you'll need
+the web3 and eth-account python packages, which you can get with:
+
+```bash
+$ pip install web3 eth-account
+```
+
+### Instantiate the SDK
+
+Once you have all the necessary dependencies, you can follow the following setup steps to get started with the SDK:
+
+```python
+from thirdweb import ThirdwebSDK
+from eth_account import Account
+from dotenv import load_dotenv
+from web3 import Web3
+
+# Load environment variables into this file
+load_dotenv()
+
+# This PRIVATE KEY is coming from your environment variables. Make sure to never put it in a tracked file or share it with anyone.
+PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
+
+# Add your own RPC URL here or use a public one
+RPC_URL = "https://rpc-mumbai.maticvigil.com"
+
+# Instantiate a new provider to pass into the SDK
+provider = Web3(Web3.HTTPProvider(RPC_URL))
+
+# Optionally, instantiate a new signer to pass into the SDK
+signer = Account.from_key(PRIVATE_KEY)
+
+# Finally, you can create a new instance of the SDK to use
+sdk = ThirdwebSDK(provider, signer)
+```
+
+If you wanted to use the SDK with a signer above, make sure to include your PRIVATE_KEY in your `.env` file, and make sure this file is NOT tracked in any repository (make sure to add it to your `.gitignore` file). Adding your private key to your `.env` would look like the following:
+
+```
+PRIVATE_KEY=your-private-key-here
+```
+
+## Development Environment
+
+In this section, we'll go over the steps to get started with running the Python SDK repository locally and contributing to the code. If you aren't interested in contributing to the thirdweb Python SDK, you can ignore this section.
 
 ### Poetry Environment Setup
 
