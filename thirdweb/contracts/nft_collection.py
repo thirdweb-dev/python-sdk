@@ -31,13 +31,35 @@ class NFTCollection(ERC721):
     """
 
     def mint(self, metadata: Union[NFTMetadataInput, str]) -> TxReceipt:
+        """
+        Mint a new NFT to the connected wallet
+
+        :param metadata: metadata of the NFT to mint
+        :returns: transaction receipt of the mint
+        """
+
         return self.mint_to(self._contract_wrapper.get_signer_address(), metadata)
 
     def mint_to(self, to: str, metadata: Union[NFTMetadataInput, str]) -> TxReceipt:
+        """
+        Mint a new NFT to the specified wallet
+
+        :param to: wallet address to mint the NFT to
+        :param metadata: metadata of the NFT to mint
+        :returns: transaction receipt of the mint
+        """
+
         uri = upload_or_extract_uri(metadata, self._storage)
         return self._contract_wrapper.send_transaction("mint_to", [to, uri])
 
     def mint_batch(self, metadatas: List[Union[NFTMetadataInput, str]]) -> TxReceipt:
+        """
+        Mint a batch of new NFTs to the connected wallet
+
+        :param metadatas: list of metadata of the NFTs to mint
+        :returns: transaction receipt of the mint
+        """
+
         return self.mint_batch_to(
             self._contract_wrapper.get_signer_address(), metadatas
         )
@@ -45,5 +67,13 @@ class NFTCollection(ERC721):
     def mint_batch_to(
         self, to: str, metadatas: List[Union[NFTMetadataInput, str]]
     ) -> TxReceipt:
+        """
+        Mint a batch of new NFTs to the specified wallet
+
+        :param to: wallet address to mint the NFTs to
+        :param metadatas: list of metadata of the NFTs to mint
+        :returns: transaction receipt of the mint
+        """
+
         # TODO: Implement - relies on MULTICALL
         raise NotImplementedError

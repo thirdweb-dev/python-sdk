@@ -25,6 +25,13 @@ class ERC721(BaseContract):
     """
 
     def get(self, token_id: int) -> NFTMetadataOwner:
+        """
+        Get metadata for a token
+
+        :param token_id: token ID of the token to get the metadata for
+        :return: the metadata for the token and its owner
+        """
+
         owner = self.owner_of(token_id)
         metadata = self._get_token_metadata(token_id)
         return NFTMetadataOwner(metadata, owner)
@@ -32,13 +39,32 @@ class ERC721(BaseContract):
     def get_all(
         self, query_params: QueryAllParams = QueryAllParams()
     ) -> List[NFTMetadataOwner]:
+        """
+        Get the metadata of all tokens in the contract
+
+        :param query_params: optionally define a QueryAllParams instance to narrow the metadata query to specific tokens
+        :return: the metadata of all tokens in the contract
+        """
+
         max_id = min(query_params.start + query_params.count, self.get_total_count())
         return [self.get(token_id) for token_id in range(query_params.start, max_id)]
 
     def get_total_count(self) -> int:
+        """
+        Get the total number of NFTs minted by this contract
+
+        :return: the total number of NFTs minted by this contract
+        """
+
         return self._get_abi().next_token_id_to_mint.call()
 
     def get_owned(self, address: str = "") -> List[NFTMetadataOwner]:
+        """
+        Get the metadata of all tokens owned by a specific address
+
+        :param address: the address to get the metadata for
+        :return: the metadata of all tokens owned by the address
+        """
         owner = address if address else self._contract_wrapper.get_signer_address()
         balance = self._get_abi().balance_of.call(owner)
         token_ids = [
@@ -48,28 +74,65 @@ class ERC721(BaseContract):
         return [self.get(token_id) for token_id in token_ids]
 
     def owner_of(self, token_id: int) -> str:
+        """
+        Get the owner of a token
+
+        :param token_id: the token ID of the token to get the owner of
+        :return: the owner of the token
+        """
         return self._get_abi().owner_of.call(token_id)
 
     def total_supply(
         self,
     ) -> int:
+        """
+        Get the total number of tokens in the contract
+
+        :return: the total number of tokens in the contract
+        """
         return self._get_abi().next_token_id_to_mint.call()
 
     def balance(
         self,
     ) -> int:
+        """
+        Get the token balance of the connected wallet
+
+        :return: the token balance of the connected wallet
+        """
+
         return self.balance_of(self._contract_wrapper.get_signer_address())
 
     def balance_of(self, address: str) -> int:
+        """
+        Get the token balance of a specific address
+
+        :param address: the address to get the token balance of
+        """
+
         return self._get_abi().balance_of.call(address)
 
     def is_transfer_restricted(
         self,
     ) -> bool:
+        """
+        Check if the contract is restricted to transfers only by admins
+
+        :return: True if the contract is restricted to transfers only by admins, False otherwise
+        """
+
         # TODO: Implement - Relies on ROLES
         raise NotImplementedError
 
     def is_approved(self, address: str, operator: str) -> bool:
+        """
+        Check whether an operator address is approved for all operations of a specific addresses assets
+
+        :param address: the address whose assets are to be checked
+        :param operator: the address of the operator to check
+        :return: True if the operator is approved for all operations of the assets, False otherwise
+        """
+
         return self._get_abi().is_approved_for_all.call(address, operator)
 
     """
@@ -77,15 +140,38 @@ class ERC721(BaseContract):
     """
 
     def transfer(self, to: str, token_id: int) -> TxReceipt:
+        """
+        Transfer a specified token from the connected wallet to a specified address.
+
+        :param to: wallet address to transfer the tokens to
+        :param token_id: the specific token ID to transfer
+        :returns: transaction receipt of the transfer
+        """
+
         fr = self._contract_wrapper.get_signer_address()
         return self._contract_wrapper.send_transaction(
             "safeTransferFrom(address,address,uint256)", [fr, to, token_id]
         )
 
     def burn(self, token_id: int) -> TxReceipt:
+        """
+        Burn a specified token from the connected wallet.
+
+        :param token_id: token ID of the token to burn
+        :returns: transaction receipt of the burn
+        """
+
         return self._contract_wrapper.send_transaction("burn", [token_id])
 
     def set_approval_for_all(self, operator: str, approved: bool) -> TxReceipt:
+        """
+        Set the approval of an operator for all operations of a specific address's assets
+
+        :param operator: the address of the operator to set the approval for
+        :param approved: the address whos assets the operator is approved to manage
+        :returns: transaction receipt of the approval setting
+        """
+
         return self._contract_wrapper.send_transaction(
             "setApprovalForAll", [operator, approved]
         )
