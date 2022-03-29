@@ -2,6 +2,8 @@ from typing import Dict
 from thirdweb.types.currency import NativeToken, WrappedToken
 from thirdweb.constants.chains import ChainId
 
+ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
+
 NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 
 NATIVE_TOKENS: Dict[ChainId, NativeToken] = {

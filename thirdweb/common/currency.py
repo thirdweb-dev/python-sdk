@@ -3,10 +3,10 @@ from thirdweb.types.currency import Currency, CurrencyValue
 from thirdweb.abi import TokenERC20
 from thirdweb.constants.currency import (
     NATIVE_TOKEN_ADDRESS,
+    ZERO_ADDRESS,
     get_native_token_by_chain_id,
 )
 
-from brownie import ZERO_ADDRESS
 from web3 import Web3
 
 
