@@ -2,6 +2,7 @@
 .venv
 .DS_Store
 .vscode
+.idea
 
 .mypy_cache
 .pytest_cache
