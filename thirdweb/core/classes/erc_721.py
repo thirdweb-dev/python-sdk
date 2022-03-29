@@ -150,7 +150,7 @@ class ERC721(BaseContract):
 
         fr = self._contract_wrapper.get_signer_address()
         return self._contract_wrapper.send_transaction(
-            "safeTransferFrom(address,address,uint256)", [fr, to, token_id]
+            "safe_transfer_from1", [fr, to, token_id]
         )
 
     def burn(self, token_id: int) -> TxReceipt:
@@ -173,7 +173,7 @@ class ERC721(BaseContract):
         """
 
         return self._contract_wrapper.send_transaction(
-            "setApprovalForAll", [operator, approved]
+            "set_approval_for_all", [operator, approved]
         )
 
     """

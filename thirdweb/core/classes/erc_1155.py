@@ -1,4 +1,4 @@
-from typing import Any, List, cast
+from typing import Any, List, Union, cast
 from thirdweb.abi import TokenERC1155
 from thirdweb.common.error import NotFoundException
 from thirdweb.common.nft import fetch_token_metadata
@@ -140,7 +140,7 @@ class ERC1155(BaseContract):
     """
 
     def transfer(
-        self, to: str, token_id: int, amount: int, data: Any = [0]
+        self, to: str, token_id: int, amount: int, data: Union[bytes, str] = b"0"
     ) -> TxReceipt:
         """
         Transfer a specified token from the connected wallet to a specified address.
@@ -153,7 +153,8 @@ class ERC1155(BaseContract):
 
         fr = self._contract_wrapper.get_signer_address()
         return self._contract_wrapper.send_transaction(
-            "safe_transfer_from", [fr, to, token_id, amount, data]
+            "safe_transfer_from",
+            [fr, to, token_id, amount, data],
         )
 
     def burn(self, token_id: int, amount: int) -> TxReceipt:

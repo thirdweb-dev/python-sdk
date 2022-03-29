@@ -39,4 +39,16 @@ def test_mint(nft_collection: NFTCollection):
 
 def test_burn(nft_collection: NFTCollection):
     token_id = nft_collection.get_total_count() - 1
+    nft_collection.mint(NFTMetadataInput.from_json({"name": "Python SDK NFT"}))
+
     nft_collection.burn(token_id)
+
+
+def test_transfer(nft_collection: NFTCollection):
+    my_balance = nft_collection.balance()
+    other_balance = nft_collection.balance_of(OTHER_ADDRESS)
+
+    token_id = nft_collection.get_total_count() - 1
+    nft_collection.mint(NFTMetadataInput.from_json({"name": "Python SDK NFT"}))
+
+    nft_collection.transfer(OTHER_ADDRESS, token_id)
