@@ -1,8 +1,13 @@
+from io import IOBase
 import re
 import json
 from requests import get, Response, post
-from typing import Any, Dict, List, TextIO, BinaryIO, Union, cast
-from thirdweb.common.error import FetchException, UploadException
+from typing import Any, Dict, List, Sequence, TextIO, BinaryIO, Union, cast
+from thirdweb.common.error import (
+    DuplicateFileNameException,
+    FetchException,
+    UploadException,
+)
 from thirdweb.constants.urls import (
     DEFAULT_IPFS_GATEWAY,
     PINATA_IPFS_URL,
@@ -42,7 +47,7 @@ class IpfsStorage:
         res = get(
             f"{TW_IPFS_SERVER_URL}/grant",
             headers={
-                "X-App-Name": f"CONSOLE-PYTHON-SDK-0x522B1fE8BDF70fB0c3a4931aCB94fBa6C232c74f"
+                "X-App-Name": f"CONSOLE-PYTHON-SDK-{contract_address}",
             },
         )
 
@@ -66,7 +71,7 @@ class IpfsStorage:
 
     def upload_batch(
         self,
-        files: List[Union[TextIO, BinaryIO, str, Dict[str, Any]]],
+        files: Sequence[Union[TextIO, BinaryIO, str, Dict[str, Any]]],
         file_start_number: int = 0,
         contract_address: str = "",
         signer_address: str = "",
@@ -102,7 +107,7 @@ class IpfsStorage:
 
     def upload_metadata_batch(
         self,
-        metadatas: List[Dict[str, Any]],
+        metadatas: Sequence[Dict[str, Any]],
         file_start_number: int = 0,
         contract_address: str = "",
         signer_address: str = "",
@@ -136,7 +141,7 @@ class IpfsStorage:
 
         return res
 
-    def _batch_upload_properties(self, metadatas: List[Dict[str, Any]]):
+    def _batch_upload_properties(self, metadatas: Sequence[Dict[str, Any]]):
         file_lists = [
             self._build_file_properties_map(metadata, []) for metadata in metadatas
         ]
@@ -151,7 +156,7 @@ class IpfsStorage:
 
         cids = []
         for filename in cid_with_filename.filenames:
-            cids.append(f"{cid_with_filename.cid}{filename}")
+            cids.append(f"{cid_with_filename.cid}/{filename}")
 
         final_metadata = replace_file_properties_with_hashes(metadatas, cids)
         return final_metadata
@@ -159,25 +164,26 @@ class IpfsStorage:
     def _build_file_properties_map(
         self,
         object: Union[Dict[str, Any], List[Any]],
-        files: List[Union[TextIO, BinaryIO]],
-    ) -> List[Union[TextIO, BinaryIO]]:
+        files: List[IOBase],
+    ) -> List[IOBase]:
         if isinstance(object, list):
             [self._build_file_properties_map(item, files) for item in object]
         else:
             for val in object.values():
-                if isinstance(val, TextIO) or isinstance(val, BinaryIO):
-                    files.append(val)
+                if isinstance(val, IOBase):
+                    files.append(cast(IOBase, val))
                 elif isinstance(val, dict) or isinstance(val, list):
                     self._build_file_properties_map(val, files)
         return files
 
     def _upload_batch_with_cid(
         self,
-        files: List[Union[TextIO, BinaryIO, str, Dict[str, Any]]],
+        files: Sequence[Union[TextIO, BinaryIO, str, Dict[str, Any]]],
         file_start_number: int = 0,
         contract_address: str = "",
         signer_address: str = "",
     ) -> CidWithFileName:
+
         token = self.get_upload_token(contract_address)
 
         metadata = {
@@ -197,17 +203,29 @@ class IpfsStorage:
             file_data = cast(Union[str, Dict[str, Any]], file)
 
             if not isinstance(file, str) and not isinstance(file, dict):
-                file_name = file.name
-                file_data = cast(Any, file.read())
-            elif isinstance(file, dict):
+                if file.name:
+                    extensions = file.name.split(".")
+                    extension = extensions[-1]
+                    file_name = f"{file_start_number + i}.{extension}"
+            elif (
+                isinstance(file, dict)
+                and "name" in file
+                and file["name"] is not None
+                and "data" in file
+                and file["data"] is not None
+            ):
+                file_name = file["name"]
+                file_data = file["data"]
+            else:
                 file_data = json.dumps(file)
+
+            if file_name in file_names:
+                raise DuplicateFileNameException(file_name)
 
             file_names.append(file_name)
             form.append(("file", (f"files/{file_name}", file_data)))
 
         # form.append(("pinataMetadata", metadata))
-
-        print(f"FORM: {form}")
 
         res = post(
             PINATA_IPFS_URL,

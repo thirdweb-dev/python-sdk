@@ -1,19 +1,34 @@
-from typing import TextIO, BinaryIO, TypeVar, cast, Dict, Any, List
+from io import IOBase
+from typing import TypeVar, Union, cast, Dict, Any, List
 
 T = TypeVar("T")
 
 
-def replace_file_properties_with_hashes(object: Dict[str, Any], cids: List[str]):
-    for key, val in object.items():
-        is_file = isinstance(val, TextIO) or isinstance(val, BinaryIO)
-        if isinstance(val, dict) and not is_file:
-            object[key] = replace_file_properties_with_hashes(val, cids)
-            continue
+def replace_file_properties_with_hashes(
+    object: Union[Dict[str, Any], List[Any]], cids: List[str]
+):
+    if isinstance(object, dict):
+        for key, val in object.items():
+            is_file = isinstance(val, IOBase)
+            if isinstance(val, dict) and not is_file:
+                object[key] = replace_file_properties_with_hashes(val, cids)
+                continue
 
-        if not is_file:
-            continue
+            if not is_file:
+                continue
 
-        object[key] = f"ipfs://{cids.pop(0)}"
+            object[key] = f"ipfs://{cids.pop(0)}"
+    elif isinstance(object, list):
+        for index, item in enumerate(object):
+            is_file = isinstance(item, IOBase)
+            if isinstance(item, dict) and not is_file:
+                item = replace_file_properties_with_hashes(item, cids)
+                continue
+
+            if not is_file:
+                continue
+
+            item[index] = f"ipfs://{cids.pop(0)}"
 
     return object
 

@@ -36,3 +36,8 @@ class RestrictedTransferException(Exception):
         super().__init__(
             f"Failed to transfer asset, transfer is restricted for asset {asset_address}"
         )
+
+
+class DuplicateFileNameException(Exception):
+    def __init__(self, filename: str):
+        super().__init__(f"File with name {filename} already exists")
