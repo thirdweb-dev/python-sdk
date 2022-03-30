@@ -9,12 +9,7 @@ $ pip install thirdweb-sdk
 
 ## Getting Started
 
-To start using this SDK, you need to pass in a provider configuration, and optionally a signer if you want to send transactions. To do this, you'll need
-the web3 and eth-account python packages, which you can get with:
-
-```bash
-$ pip install web3 eth-account
-```
+To start using this SDK, you need to pass in a provider configuration, and optionally a signer if you want to send transactions.
 
 ### Instantiating the SDK
 

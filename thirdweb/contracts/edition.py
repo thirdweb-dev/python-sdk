@@ -1,4 +1,5 @@
 from thirdweb.common.nft import upload_or_extract_uri
+from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_1155 import ERC1155
 from thirdweb.abi import TokenERC1155
@@ -13,8 +14,13 @@ from thirdweb.types.nft import EditionMetadataInput
 from thirdweb.types.sdk import SDKOptions
 from typing import Optional, List
 
+from thirdweb.types.settings.metadata import EditionContractMetadata
+
 
 class Edition(ERC1155):
+    schema = EditionContractMetadata
+    metadata: ContractMetadata[EditionContractMetadata]
+
     def __init__(
         self,
         provider: Web3,
@@ -26,6 +32,8 @@ class Edition(ERC1155):
         abi = TokenERC1155(provider, address)
         contract_wrapper = ContractWrapper(abi, provider, signer, options)
         super().__init__(contract_wrapper, storage)
+
+        self.metadata = ContractMetadata(contract_wrapper, storage)
 
     def mint(self, metadata_with_supply: EditionMetadataInput) -> TxReceipt:
         """
