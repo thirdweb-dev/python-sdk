@@ -5,7 +5,8 @@ name = "thirdweb-sdk"
 packages = [
   {include = "thirdweb"},
 ]
-version = "2.0.0-a3"
+readme = "README.md"
+version = "2.0.0-a7"
 
 [tool.poetry.dependencies]
 dacite = "^1.6.0"

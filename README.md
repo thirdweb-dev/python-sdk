@@ -4,7 +4,7 @@ The thirdweb SDK for Python. Currently supports Mainnet, Rinkeby, Goerli, Polygo
 ## Installation
 
 ```bash
-$ pip install thirdweb-sdk
+$ pip install thirdweb-sdk==2.0.0a7
 ```
 
 ## Getting Started
@@ -52,6 +52,9 @@ PRIVATE_KEY=your-private-key-here
 Once you instantiate the SDK, you can use it to access your thirdweb contracts. You can use the SDK's contract getter functions like `get_token`, `get_edition`, and `get_nft_collection` to get the respective SDK contract instances. To use an NFT Collection contract for example, you can do the following.
 
 ```python
+# Add this import at the top of your file
+from thirdweb.types.nft import NFTMetadataInput
+
 # Add your NFT Collection contract address here
 NFT_COLLECTION_ADDRESS = "0x.."
 
