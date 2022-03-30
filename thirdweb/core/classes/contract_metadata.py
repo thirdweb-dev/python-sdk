@@ -12,9 +12,12 @@ class ContractMetadata(Generic[Schema]):
     _schema: Schema
     _storage: IpfsStorage
 
-    def __init__(self, contract_wrapper: ContractWrapper, storage: IpfsStorage):
+    def __init__(
+        self, contract_wrapper: ContractWrapper, storage: IpfsStorage, schema: Schema
+    ):
         self._contract_wrapper = contract_wrapper
         self._storage = storage
+        self._schema = schema
 
     def get(self) -> Schema:
         uri = self._contract_wrapper._contract_abi.contract_uri.call()

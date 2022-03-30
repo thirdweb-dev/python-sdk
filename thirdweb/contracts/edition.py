@@ -33,7 +33,7 @@ class Edition(ERC1155):
         contract_wrapper = ContractWrapper(abi, provider, signer, options)
         super().__init__(contract_wrapper, storage)
 
-        self.metadata = ContractMetadata(contract_wrapper, storage)
+        self.metadata = ContractMetadata(contract_wrapper, storage, self.schema)
 
     def mint(self, metadata_with_supply: EditionMetadataInput) -> TxReceipt:
         """

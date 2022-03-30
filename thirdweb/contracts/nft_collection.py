@@ -32,7 +32,7 @@ class NFTCollection(ERC721):
         contract_wrapper = ContractWrapper(abi, provider, signer, options)
         super().__init__(contract_wrapper, storage)
 
-        self.metadata = ContractMetadata(contract_wrapper, storage)
+        self.metadata = ContractMetadata(contract_wrapper, storage, self.schema)
 
     """
     WRITE FUNCTIONS

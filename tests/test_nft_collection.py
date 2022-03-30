@@ -3,6 +3,7 @@ from thirdweb.core.sdk import ThirdwebSDK
 import pytest
 
 from thirdweb.types.nft import NFTMetadataInput
+from thirdweb.types.settings.metadata import NFTCollectionContractMetadata
 
 OTHER_ADDRESS = "0x9e31E40Dda94976A405D7BDe6c698DB60E95C87d"
 NFT_COLLECTION_ADDRESS = "0xED8121008B1aD8327297Afa820041a5B3523f3E7"
@@ -52,3 +53,13 @@ def test_transfer(nft_collection: NFTCollection):
     nft_collection.mint(NFTMetadataInput.from_json({"name": "Python SDK NFT"}))
 
     nft_collection.transfer(OTHER_ADDRESS, token_id)
+
+
+# def test_metadata(nft_collection: NFTCollection):
+#     nft_collection.metadata.set(
+#         NFTCollectionContractMetadata.from_json({"name": "Python SDK Contract"})
+#     )
+
+#     metadata = nft_collection.metadata.get()
+
+#     assert metadata.to_json()["name"] == "Python SDK Contract"

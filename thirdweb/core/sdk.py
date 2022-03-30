@@ -17,7 +17,7 @@ class ThirdwebSDK(ProviderHandler):
     def __init__(
         self,
         provider: Web3,
-        signer: Optional[LocalAccount],
+        signer: Optional[LocalAccount] = None,
         options: SDKOptions = SDKOptions(),
         storage: IpfsStorage = IpfsStorage(),
     ):

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import dataclasses
 from typing import Any, BinaryIO, Dict, List, Optional, TextIO, Union
 from thirdweb.constants.currency import ZERO_ADDRESS
 from dacite import from_dict
@@ -10,6 +11,10 @@ class ContractMetadata:
     description: Optional[str] = None
     image: Optional[Union[str, TextIO, BinaryIO]] = None
     external_link: Optional[str] = None
+
+    @staticmethod
+    def from_json(json: Dict[str, Any]) -> "ContractMetadata":
+        return from_dict(ContractMetadata, json)
 
     def to_json(self) -> Dict[str, Any]:
         return self.__dict__
@@ -39,7 +44,7 @@ class ContractSymbol:
 
 @dataclass
 class ContractTrustedForwarder:
-    trusted_forwardesr: List[str] = []
+    trusted_forwarders: List[str] = dataclasses.field(default_factory=list)
 
 
 @dataclass
@@ -51,8 +56,9 @@ class NFTCollectionContractMetadata(
     ContractPrimarySale,
     ContractTrustedForwarder,
 ):
-    def from_json(self, json: Dict[str, Any]) -> "NFTCollectionContractMetadata":
-        return from_dict(data_class=NFTCollectionContractMetadata, data=json)
+    @staticmethod
+    def from_json(json: Dict[str, Any]) -> "NFTCollectionContractMetadata":
+        return from_dict(NFTCollectionContractMetadata, json)
 
 
 @dataclass
@@ -63,13 +69,15 @@ class EditionContractMetadata(
     ContractPrimarySale,
     ContractTrustedForwarder,
 ):
-    def from_json(self, json: Dict[str, Any]) -> "EditionContractMetadata":
-        return from_dict(data_class=EditionContractMetadata, data=json)
+    @staticmethod
+    def from_json(json: Dict[str, Any]) -> "EditionContractMetadata":
+        return from_dict(EditionContractMetadata, json)
 
 
 @dataclass
 class TokenContractMetadata(
     ContractMetadata, ContractSymbol, ContractPrimarySale, ContractTrustedForwarder
 ):
-    def from_json(self, json: Dict[str, Any]) -> "TokenContractMetadata":
-        return from_dict(data_class=TokenContractMetadata, data=json)
+    @staticmethod
+    def from_json(json: Dict[str, Any]) -> "TokenContractMetadata":
+        return from_dict(TokenContractMetadata, json)
