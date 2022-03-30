@@ -45,6 +45,8 @@ class ProviderHandler(object):
         """
 
         self.__provider = provider
+
+        self.__provider.middleware_onion.clear()
         self.__provider.middleware_onion.inject(geth_poa_middleware, layer=0)
 
     def update_signer(self, signer: Optional[LocalAccount] = None):
