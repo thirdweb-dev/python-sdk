@@ -20,6 +20,7 @@ from thirdweb import ThirdwebSDK
 from eth_account import Account
 from dotenv import load_dotenv
 from web3 import Web3
+from web3.middleware import geth_poa_middleware
 import os
 
 # Load environment variables into this file
@@ -33,6 +34,7 @@ RPC_URL = "https://rpc-mumbai.maticvigil.com"
 
 # Instantiate a new provider to pass into the SDK
 provider = Web3(Web3.HTTPProvider(RPC_URL))
+provider.middleware_onion.inject(geth_poa_middleware, layer=0)
 
 # Optionally, instantiate a new signer to pass into the SDK
 signer = Account.from_key(PRIVATE_KEY)
