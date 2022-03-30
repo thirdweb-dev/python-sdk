@@ -1,3 +1,4 @@
+from abc import ABC
 from io import IOBase
 import re
 import json
@@ -21,7 +22,7 @@ from thirdweb.core.helpers.storage import (
 from thirdweb.types.storage import CidWithFileName, UriWithMetadata
 
 
-class IpfsStorage:
+class IpfsStorage(ABC):
     _gateway_url: str
 
     def __init__(self, gateway_url=DEFAULT_IPFS_GATEWAY):

@@ -5,7 +5,7 @@ name = "thirdweb-sdk"
 packages = [
   {include = "thirdweb"},
 ]
-version = "2.0.0"
+version = "2.0.0-beta.3"
 
 [tool.poetry.dependencies]
 0x-contract-wrappers = "^2.0.0"
