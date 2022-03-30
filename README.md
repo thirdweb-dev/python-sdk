@@ -13,13 +13,14 @@ To start using this SDK, you need to pass in a provider configuration, and optio
 
 ### Instantiating the SDK
 
-Once you have all the necessary dependencies, you can follow the following setup steps to get started with the SDK:
+Once you have all the necessary dependencies, you can follow the following setup steps to get started with the SDK (if you want to use your private key as displayed below, make sure to run `pip install dotenv` as well):
 
 ```python
 from thirdweb import ThirdwebSDK
 from eth_account import Account
 from dotenv import load_dotenv
 from web3 import Web3
+import os
 
 # Load environment variables into this file
 load_dotenv()
