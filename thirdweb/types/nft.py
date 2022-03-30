@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Dict, NewType, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 
 @dataclass
@@ -20,12 +20,12 @@ class NFTMetadataInput:
     """
 
     name: str
-    description: Optional[str]
-    image: Optional[str]
-    external_url: Optional[str]
-    animation_url: Optional[str]
-    background_color: Optional[str]
-    properties: Optional[Dict[str, Any]]
+    description: Optional[str] = None
+    image: Optional[str] = None
+    external_url: Optional[str] = None
+    animation_url: Optional[str] = None
+    background_color: Optional[str] = None
+    properties: Optional[Dict[str, Any]] = None
 
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "NFTMetadataInput":
@@ -63,12 +63,12 @@ class NFTMetadata:
     id: int
     uri: str
     name: str
-    description: Optional[str]
-    image: Optional[str]
-    external_url: Optional[str]
-    animation_url: Optional[str]
-    background_color: Optional[str]
-    properties: Optional[Dict[Any, Any]]
+    description: Optional[str] = None
+    image: Optional[str] = None
+    external_url: Optional[str] = None
+    animation_url: Optional[str] = None
+    background_color: Optional[str] = None
+    properties: Optional[Dict[Any, Any]] = None
 
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "NFTMetadata":

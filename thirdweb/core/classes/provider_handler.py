@@ -5,6 +5,7 @@ from thirdweb.constants.chains import ChainId
 from thirdweb.constants.rpc import CHAIN_ID_TO_RPC_URL
 from thirdweb.types.sdk import SDKOptions
 from eth_account.account import LocalAccount
+from web3.middleware import geth_poa_middleware
 from web3 import Web3
 
 
@@ -21,7 +22,7 @@ class ProviderHandler(object):
     def __init__(
         self,
         provider: Web3,
-        signer: Optional[LocalAccount],
+        signer: Optional[LocalAccount] = None,
         options: SDKOptions = SDKOptions(),
     ):
         """
@@ -44,8 +45,9 @@ class ProviderHandler(object):
         """
 
         self.__provider = provider
+        self.__provider.middleware_onion.inject(geth_poa_middleware, layer=0)
 
-    def update_signer(self, signer: Optional[LocalAccount]):
+    def update_signer(self, signer: Optional[LocalAccount] = None):
         """
         Update the active signer.
 

@@ -26,7 +26,7 @@ class Edition(ERC1155):
         provider: Web3,
         address: str,
         storage: IpfsStorage,
-        signer: Optional[LocalAccount],
+        signer: Optional[LocalAccount] = None,
         options: SDKOptions = SDKOptions(),
     ):
         abi = TokenERC1155(provider, address)

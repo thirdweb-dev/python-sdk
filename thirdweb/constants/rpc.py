@@ -8,5 +8,5 @@ CHAIN_ID_TO_RPC_URL = {
     ChainId.POLYGON: "https://polygon-rpc.com/",
     ChainId.AVALANCHE: "https://api.avax.network/ext/bc/C/rpc",
     ChainId.MUMBAI: "https://rpc-mumbai.maticvigil.com",
-    ChainId.FANTOM: "https://rpc.fantom.network",
+    ChainId.FANTOM: "https://rpc.ftm.tools/",
 }
