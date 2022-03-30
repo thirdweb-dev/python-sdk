@@ -21,7 +21,7 @@ class ProviderHandler(object):
     def __init__(
         self,
         provider: Web3,
-        signer: Optional[LocalAccount],
+        signer: Optional[LocalAccount] = None,
         options: SDKOptions = SDKOptions(),
     ):
         """
@@ -45,7 +45,7 @@ class ProviderHandler(object):
 
         self.__provider = provider
 
-    def update_signer(self, signer: Optional[LocalAccount]):
+    def update_signer(self, signer: Optional[LocalAccount] = None):
         """
         Update the active signer.
 

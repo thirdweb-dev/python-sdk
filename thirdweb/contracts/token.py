@@ -26,7 +26,7 @@ class Token(ERC20):
         provider: Web3,
         address: str,
         storage: IpfsStorage,
-        signer: Optional[LocalAccount],
+        signer: Optional[LocalAccount] = None,
         options: SDKOptions = SDKOptions(),
     ):
         abi = TokenERC20(provider, address)

@@ -25,7 +25,7 @@ class BaseContract:
 
         self._contract_wrapper.update_provider(provider)
 
-    def on_signer_updated(self, signer: Optional[LocalAccount]):
+    def on_signer_updated(self, signer: Optional[LocalAccount] = None):
         """
         Updates the contract signer when the SDK signer is updated
 

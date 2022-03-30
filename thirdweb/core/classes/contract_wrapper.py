@@ -22,7 +22,7 @@ class ContractWrapper(ProviderHandler):
         self,
         contract_abi: Union[TokenERC721, TokenERC1155, TokenERC20],
         provider: Web3,
-        signer: Optional[LocalAccount],
+        signer: Optional[LocalAccount] = None,
         options: SDKOptions = SDKOptions(),
     ):
         """

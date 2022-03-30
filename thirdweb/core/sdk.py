@@ -75,7 +75,7 @@ class ThirdwebSDK(ProviderHandler):
         for contract in self.__contract_cache.values():
             contract.on_provider_updated(provider)
 
-    def update_signer(self, signer: Optional[LocalAccount]):
+    def update_signer(self, signer: Optional[LocalAccount] = None):
         """
         Update the signer instance used by the SDK.
 
