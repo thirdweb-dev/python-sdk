@@ -13,7 +13,7 @@ To start using this SDK, you need to pass in a provider configuration, and optio
 
 ### Instantiating the SDK
 
-Once you have all the necessary dependencies, you can follow the following setup steps to get started with the SDK (if you want to use your private key as displayed below, make sure to run `pip install dotenv` as well):
+Once you have all the necessary dependencies, you can follow the following setup steps to get started with the SDK (if you want to use your private key as displayed below, make sure to run `pip install python-dotenv` as well):
 
 ```python
 from thirdweb import ThirdwebSDK
@@ -60,7 +60,7 @@ nft_collection = sdk.get_nft_collection(NFT_COLLECTION_ADDRESS)
 
 # Now you can use any of the SDK contract functions
 balance = nft_collection.balance()
-nft_collection.mint(NFTMetadataInput.from_json({ name: "Cool NFT", description: "Minted with the Python SDK!" }))
+nft_collection.mint(NFTMetadataInput.from_json({ "name": "Cool NFT", "description": "Minted with the Python SDK!" }))
 ```
 
 ## Development Environment
