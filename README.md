@@ -1,6 +1,6 @@
 # Thirdweb Python SDK
 
-The thirdweb SDK for Python.
+The thirdweb SDK for Python. Currently supports Mainnet, Rinkeby, Goerli, Polygon, and Mumbai.
 ## Installation
 
 ```bash
