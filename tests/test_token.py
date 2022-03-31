@@ -1,15 +1,15 @@
 from thirdweb.contracts import Token
 from thirdweb.core.sdk import ThirdwebSDK
+from brownie import accounts
 import pytest
 
-OTHER_ADDRESS = "0x9e31E40Dda94976A405D7BDe6c698DB60E95C87d"
-TOKEN_ADDRESS = "0xA53885ABB6F74EAd52078624D28B6b09BD668B83"
+from thirdweb.types.settings.metadata import TokenContractMetadata
 
 
-@pytest.mark.usefixtures("sdk")
+@pytest.mark.usefixtures("sdk", "token_address")
 @pytest.fixture()
-def token(sdk: ThirdwebSDK) -> Token:
-    token = sdk.get_token(TOKEN_ADDRESS)
+def token(sdk: ThirdwebSDK, token_address: str) -> Token:
+    token = sdk.get_token(token_address)
     return token
 
 
@@ -22,14 +22,17 @@ def test_token_provider(token: Token):
     assert token._contract_wrapper.get_signer() is not None
 
 
-def test_get_metadata(token: Token):
+def test_metadata(token: Token):
     """
     Get token metadata
     """
 
-    metadata = token.get()
-    assert metadata.name == "Vote Token"
-    assert metadata.decimals == 18
+    token.metadata.set(TokenContractMetadata(name="Test Token", symbol="TST"))
+
+    metadata = token.metadata.get()
+
+    assert metadata.name == "Test Token"
+    assert metadata.symbol == "TST"
 
 
 def test_mint_tokens(token: Token):
@@ -50,10 +53,10 @@ def test_transfer_tokens(token: Token):
     """
 
     current_balance = token.balance()
-    other_balance = token.balance_of(OTHER_ADDRESS)
-    token.transfer(OTHER_ADDRESS, 10)
+    other_balance = token.balance_of(accounts[1].address)
+    token.transfer(accounts[1].address, 10)
     new_balance = token.balance()
-    new_other_balance = token.balance_of(OTHER_ADDRESS)
+    new_other_balance = token.balance_of(accounts[1].address)
 
     assert new_balance.display_value == current_balance.display_value - 10
     assert new_other_balance.display_value == other_balance.display_value + 10
