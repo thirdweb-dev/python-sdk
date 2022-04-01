@@ -5,6 +5,7 @@ from thirdweb.core.classes.erc_721 import ERC721
 from thirdweb.abi import TokenERC721
 
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
+from thirdweb.types.contract import ContractType
 from thirdweb.types.nft import NFTMetadataInput
 from eth_account.account import LocalAccount
 from web3.eth import TxReceipt
@@ -17,7 +18,7 @@ from thirdweb.types.settings.metadata import NFTCollectionContractMetadata
 
 
 class NFTCollection(ERC721):
-    contract_type: Final[str] = "nft-collection"
+    contract_type: Final[ContractType] = ContractType.NFT_COLLECTION
 
     schema = NFTCollectionContractMetadata
     metadata: ContractMetadata[NFTCollectionContractMetadata]

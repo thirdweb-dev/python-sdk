@@ -8,6 +8,7 @@ from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_20 import ERC20
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
+from thirdweb.types.contract import ContractType
 from thirdweb.types.currency import CurrencyValue, TokenAmount
 
 from thirdweb.types.sdk import SDKOptions
@@ -15,7 +16,7 @@ from thirdweb.types.settings.metadata import TokenContractMetadata
 
 
 class Token(ERC20):
-    contract_type: Final[str] = "token"
+    contract_type: Final[ContractType] = ContractType.TOKEN
     contract_roles: Final[List[str]] = ["admin", "minter", "transfer"]
 
     schema = TokenContractMetadata

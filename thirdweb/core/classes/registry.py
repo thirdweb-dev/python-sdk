@@ -1,4 +1,4 @@
-from typing import Optional, cast
+from typing import List, Optional, cast
 from brownie import ZERO_ADDRESS
 from eth_utils import is_address
 from web3 import Web3
@@ -19,7 +19,7 @@ class ContractRegistry(ContractWrapper):
         abi = TWRegistry(provider, registry_address)
         super().__init__(abi, provider, signer, options)
 
-    def get_contract_addresses(self, address: str):
+    def get_contract_addresses(self, address: str) -> List[str]:
         """
         Get all the contract addresses registered for a given address.
 

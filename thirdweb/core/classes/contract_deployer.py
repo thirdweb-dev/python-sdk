@@ -13,6 +13,8 @@ class ContractDeployer(ProviderHandler):
     __factory: ContractFactory
     __registry: ContractRegistry
 
+    _storage: IpfsStorage
+
     def __init__(
         self,
         provider: Web3,
@@ -20,5 +22,5 @@ class ContractDeployer(ProviderHandler):
         options: SDKOptions = SDKOptions(),
         storage: IpfsStorage = IpfsStorage(),
     ):
-        self.__factory = ContractFactory(provider, signer, options, storage)
-        self.__registry = ContractRegistry(provider, signer, options, storage)
+        super().__init__(provider, signer, options)
+        self._storage = storage

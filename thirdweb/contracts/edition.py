@@ -9,6 +9,7 @@ from web3.constants import MAX_INT
 from web3.eth import TxReceipt
 from web3 import Web3
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
+from thirdweb.types.contract import ContractType
 
 from thirdweb.types.nft import EditionMetadataInput
 from thirdweb.types.sdk import SDKOptions
@@ -18,7 +19,7 @@ from thirdweb.types.settings.metadata import EditionContractMetadata
 
 
 class Edition(ERC1155):
-    contract_type: Final[str] = "edition"
+    contract_type: Final[ContractType] = ContractType.EDITION
 
     schema = EditionContractMetadata
     metadata: ContractMetadata[EditionContractMetadata]

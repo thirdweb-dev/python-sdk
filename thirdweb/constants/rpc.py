@@ -9,4 +9,5 @@ CHAIN_ID_TO_RPC_URL = {
     ChainId.AVALANCHE: "https://api.avax.network/ext/bc/C/rpc",
     ChainId.MUMBAI: "https://rpc-mumbai.maticvigil.com",
     ChainId.FANTOM: "https://rpc.ftm.tools/",
+    ChainId.LOCALHOST: "http://localhost:8545",
 }

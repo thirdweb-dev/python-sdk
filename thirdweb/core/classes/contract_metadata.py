@@ -1,4 +1,7 @@
-from typing import Any, Dict, Generic, TypeVar
+from typing import Any, Dict, Generic, TypeVar, Union, cast
+from thirdweb.abi.token_erc1155 import TokenERC1155
+from thirdweb.abi.token_erc20 import TokenERC20
+from thirdweb.abi.token_erc721 import TokenERC721
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.settings.metadata import ContractMetadata as TContractMetadata
@@ -20,7 +23,11 @@ class ContractMetadata(Generic[Schema]):
         self._schema = schema
 
     def get(self) -> Schema:
-        uri = self._contract_wrapper._contract_abi.contract_uri.call()
+        abi = cast(
+            Union[TokenERC20, TokenERC721, TokenERC1155],
+            self._contract_wrapper._contract_abi,
+        )
+        uri = abi.contract_uri.call()
         data = self._storage.get(uri)
         return self._schema.from_json(data)
 
