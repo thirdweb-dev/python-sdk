@@ -1,22 +1,24 @@
-from thirdweb.common.nft import upload_or_extract_uri
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
+from thirdweb.common.nft import upload_or_extract_uri
 from thirdweb.core.classes.erc_721 import ERC721
 from thirdweb.abi import TokenERC721
 
+from thirdweb.core.classes.ipfs_storage import IpfsStorage
+from thirdweb.types.nft import NFTMetadataInput
 from eth_account.account import LocalAccount
 from web3.eth import TxReceipt
 from web3 import Web3
-from thirdweb.core.classes.ipfs_storage import IpfsStorage
-from thirdweb.types.nft import NFTMetadataInput
 
 from thirdweb.types.sdk import SDKOptions
-from typing import Optional, List, Union
+from typing import Final, Optional, List, Union
 
 from thirdweb.types.settings.metadata import NFTCollectionContractMetadata
 
 
 class NFTCollection(ERC721):
+    contract_type: Final[str] = "nft-collection"
+
     schema = NFTCollectionContractMetadata
     metadata: ContractMetadata[NFTCollectionContractMetadata]
 

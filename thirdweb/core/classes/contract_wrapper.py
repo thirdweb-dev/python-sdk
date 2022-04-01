@@ -1,6 +1,7 @@
 from typing import Any, List, Optional, Union
 
 from web3 import Web3
+from thirdweb.abi import TWFactory, TWRegistry
 from thirdweb.common.error import NoSignerException
 from thirdweb.core.classes.provider_handler import ProviderHandler
 from thirdweb.abi import TokenERC721, TokenERC1155, TokenERC20
@@ -16,11 +17,13 @@ class ContractWrapper(ProviderHandler):
     and exposed functions for interacting with the contract.
     """
 
-    _contract_abi: Union[TokenERC721, TokenERC1155, TokenERC20]
+    _contract_abi: Union[TokenERC721, TokenERC1155, TokenERC20, TWRegistry, TWFactory]
 
     def __init__(
         self,
-        contract_abi: Union[TokenERC721, TokenERC1155, TokenERC20],
+        contract_abi: Union[
+            TokenERC721, TokenERC1155, TokenERC20, TWRegistry, TWFactory
+        ],
         provider: Web3,
         signer: Optional[LocalAccount] = None,
         options: SDKOptions = SDKOptions(),

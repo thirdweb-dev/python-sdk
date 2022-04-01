@@ -12,12 +12,14 @@ from thirdweb.core.classes.ipfs_storage import IpfsStorage
 
 from thirdweb.types.nft import EditionMetadataInput
 from thirdweb.types.sdk import SDKOptions
-from typing import Optional, List
+from typing import Final, Optional, List
 
 from thirdweb.types.settings.metadata import EditionContractMetadata
 
 
 class Edition(ERC1155):
+    contract_type: Final[str] = "edition"
+
     schema = EditionContractMetadata
     metadata: ContractMetadata[EditionContractMetadata]
 
