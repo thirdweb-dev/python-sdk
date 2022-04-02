@@ -7,7 +7,11 @@ from thirdweb.constants.addresses import (
 )
 from thirdweb.constants.chains import ChainId
 from thirdweb.contracts import NFTCollection, Edition, Token
-from thirdweb.contracts.maps import CONTRACTS_MAP, REMOTE_CONTRACT_NAME
+from thirdweb.contracts.maps import (
+    CONTRACT_BYTECODE,
+    CONTRACTS_MAP,
+    REMOTE_CONTRACT_NAME,
+)
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from eth_account.account import LocalAccount
 
@@ -38,8 +42,6 @@ class ContractFactory(ContractWrapper):
 
     def deploy(self, contract_type: ContractType, contract_metadata: Dict[str, Any]):
         contract = CONTRACTS_MAP[contract_type]
-        schema = contract.schema
-        contract_factory = contract.contract_factory
 
         contract_uri = self._storage.upload_metadata(
             contract_metadata,
@@ -47,10 +49,21 @@ class ContractFactory(ContractWrapper):
             self.get_signer_address(),
         )
 
+        interface = self.get_provider().eth.contract(
+            address=None,
+            abi=contract._get_abi(),
+            bytecode=CONTRACT_BYTECODE[contract_type],
+        )
+
         # TODO: Use contract factory to encode function for "initialize"
         # with get_deploy_arguments()
 
-        encoded_function = []
+        deploy_arguments = self.get_deploy_arguments(
+            contract_type, contract_metadata, contract_uri
+        )
+        encoded_function = interface.encodeABI(
+            fn_name="initialize", args=deploy_arguments
+        )
 
         contract_name = REMOTE_CONTRACT_NAME[contract_type]
         encoded_type = contract_name.encode("utf-8")

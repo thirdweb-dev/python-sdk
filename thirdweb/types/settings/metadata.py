@@ -64,6 +64,7 @@ class NFTCollectionContractMetadata(
 @dataclass
 class EditionContractMetadata(
     ContractMetadata,
+    ContractSymbol,
     ContractRoyalty,
     ContractPlatformFee,
     ContractPrimarySale,
