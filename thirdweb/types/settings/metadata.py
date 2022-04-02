@@ -76,7 +76,11 @@ class EditionContractMetadata(
 
 @dataclass
 class TokenContractMetadata(
-    ContractMetadata, ContractSymbol, ContractPrimarySale, ContractTrustedForwarder
+    ContractMetadata,
+    ContractSymbol,
+    ContractPrimarySale,
+    ContractTrustedForwarder,
+    ContractPlatformFee,
 ):
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "TokenContractMetadata":
