@@ -1,1 +1,1 @@
-TOKEN_ERC20_BYTECODE = 
+bytecode = 

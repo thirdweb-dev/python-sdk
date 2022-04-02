@@ -114,8 +114,11 @@ class Token(ERC20):
         :returns: transaction receipt of the mint
         """
 
-        # TODO: Implement - Relies on MULTICALL
-        raise NotImplementedError
+        encoded = []
+        interface = self._contract_wrapper.get_contract_interface()
+        for arg in args:
+            encoded.append(interface.encodeABI("mint_to", [arg.address, arg.amount]))
+        return self._contract_wrapper.multi_call(encoded)
 
     def delegate_to(self, delegatee_address: str) -> TxReceipt:
         """

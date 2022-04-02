@@ -1,6 +1,6 @@
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
-from thirdweb.common.nft import upload_or_extract_uri
+from thirdweb.common.nft import upload_or_extract_uri, upload_or_extract_uris
 from thirdweb.core.classes.erc_721 import ERC721
 from thirdweb.abi import TokenERC721
 
@@ -86,5 +86,11 @@ class NFTCollection(ERC721):
         :returns: transaction receipt of the mint
         """
 
-        # TODO: Implement - relies on MULTICALL
-        raise NotImplementedError
+        uris = upload_or_extract_uris(metadatas, self._storage)
+
+        encoded = []
+        interface = self._contract_wrapper.get_contract_interface()
+        for uri in uris:
+            encoded.append(interface.encodeABI("mint_to", [to, uri]))
+
+        return self._contract_wrapper.multi_call(encoded)

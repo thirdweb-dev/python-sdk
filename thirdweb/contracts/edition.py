@@ -1,4 +1,5 @@
-from thirdweb.common.nft import upload_or_extract_uri
+from distutils.command.upload import upload
+from thirdweb.common.nft import upload_or_extract_uri, upload_or_extract_uris
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_1155 import ERC1155
@@ -121,5 +122,17 @@ class Edition(ERC1155):
         :returns: transaction receipt of the mint
         """
 
-        # TODO: Implement - relies on MULTICALL
-        raise NotImplementedError
+        metadatas = [a.metadata for a in metadatas_with_supply]
+        supplies = [a.supply for a in metadatas_with_supply]
+        uris = upload_or_extract_uris(metadatas, self._storage)
+
+        encoded = []
+        interface = self._contract_wrapper.get_contract_interface()
+        for index, uri in enumerate(uris):
+            encoded.append(
+                interface.encodeABI(
+                    "mint_to", [to, int(MAX_INT, 16), uri, supplies[index]]
+                )
+            )
+
+        return self._contract_wrapper.multi_call(encoded)

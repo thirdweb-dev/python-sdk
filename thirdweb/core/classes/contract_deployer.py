@@ -1,11 +1,14 @@
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from web3 import Web3
 from eth_account.account import LocalAccount
+from thirdweb.constants.addresses import get_contract_address_by_chain_id
+from thirdweb.constants.chains import ChainId
 from thirdweb.core.classes.factory import ContractFactory
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.provider_handler import ProviderHandler
 from thirdweb.core.classes.registry import ContractRegistry
+from thirdweb.types.contract import ContractType
 from thirdweb.types.sdk import SDKOptions
 
 
@@ -24,3 +27,50 @@ class ContractDeployer(ProviderHandler):
     ):
         super().__init__(provider, signer, options)
         self._storage = storage
+
+    def deploy_nft_collection(self, metadata: Dict[str, Any]):
+        self.deploy_contract(ContractType.NFT_COLLECTION, metadata)
+
+    def deploy_edition(self, metadata: Dict[str, Any]):
+        self.deploy_contract(ContractType.EDITION, metadata)
+
+    def deploy_token(self, metadata: Dict[str, Any]):
+        self.deploy_contract(ContractType.TOKEN, metadata)
+
+    def deploy_contract(
+        self, contract_type: ContractType, contract_metadata: Dict[str, Any]
+    ):
+        factory = self._get_factory()
+        factory.deploy(contract_type, contract_metadata)
+
+    def _get_registry(self) -> ContractRegistry:
+        if isinstance(self.__registry, ContractRegistry):
+            return self.__registry
+
+        chain_id = ChainId(self.get_provider().eth.chain_id)
+        registry_address = get_contract_address_by_chain_id(chain_id, "tw_registry")
+
+        self.__registry = ContractRegistry(
+            registry_address,
+            self.get_provider(),
+            self.get_options(),
+        )
+
+        return self.__registry
+
+    def _get_factory(self) -> ContractFactory:
+        if isinstance(self.__factory, ContractFactory):
+            return self.__factory
+
+        chain_id = ChainId(self.get_provider().eth.chain_id)
+        factory_address = get_contract_address_by_chain_id(chain_id, "tw_factory")
+
+        self.__factory = ContractFactory(
+            factory_address,
+            self.get_provider(),
+            self.get_signer(),
+            self.get_options(),
+            self._storage,
+        )
+
+        return self.__factory

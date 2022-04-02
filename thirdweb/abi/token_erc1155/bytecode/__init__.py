@@ -1,1 +1,1 @@
-TOKEN_ERC1155_BYTECODE = 
+bytecode = 

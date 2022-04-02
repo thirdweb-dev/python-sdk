@@ -49,11 +49,7 @@ class ContractFactory(ContractWrapper):
             self.get_signer_address(),
         )
 
-        interface = self.get_provider().eth.contract(
-            address=None,
-            abi=contract._get_abi(),
-            bytecode=CONTRACT_BYTECODE[contract_type],
-        )
+        interface = self.get_contract_interface()
 
         # TODO: Use contract factory to encode function for "initialize"
         # with get_deploy_arguments()
@@ -61,9 +57,7 @@ class ContractFactory(ContractWrapper):
         deploy_arguments = self.get_deploy_arguments(
             contract_type, contract_metadata, contract_uri
         )
-        encoded_function = interface.encodeABI(
-            fn_name="initialize", args=deploy_arguments
-        )
+        encoded_function = interface.encodeABI("initialize", deploy_arguments)
 
         contract_name = REMOTE_CONTRACT_NAME[contract_type]
         encoded_type = contract_name.encode("utf-8")

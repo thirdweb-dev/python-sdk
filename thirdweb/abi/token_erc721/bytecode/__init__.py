@@ -1,1 +1,1 @@
-TOKEN_ERC721_BYTECODE = 
+bytecode = 

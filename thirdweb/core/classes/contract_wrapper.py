@@ -1,6 +1,7 @@
 from typing import Any, List, Optional, Union
 
 from web3 import Web3
+from web3.contract import Contract
 from thirdweb.abi import TWFactory, TWRegistry
 from thirdweb.common.error import NoSignerException
 from thirdweb.core.classes.provider_handler import ProviderHandler
@@ -62,6 +63,19 @@ class ContractWrapper(ProviderHandler):
             raise NoSignerException
 
         return signer.address
+
+    def get_contract_interface(self) -> Contract:
+        """
+        Get the contract interface of the contract wrapper.
+
+        :returns: contract interface of the contract wrapper
+        """
+
+        return self.get_provider().eth.contract(
+            address=self._contract_abi.contract_address,
+            abi=self._contract_abi.abi,
+            # bytecode=CONTRACT_BYTECODE[contract_type],
+        )
 
     def send_transaction(self, fn: str, args: List[Any]) -> TxReceipt:
         """
