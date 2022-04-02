@@ -13,7 +13,7 @@ CONTRACTS_MAP: Dict[ContractType, Union[NFTCollection, Edition, Token]] = {
     Token.contract_type: Token,  # type: ignore
 }
 
-CONTRACT_BYTECODE: Dict[ContractType, Any] = {
+CONTRACT_BYTECODE: Dict[ContractType, str] = {
     NFTCollection.contract_type: TOKEN_ERC721_BYTECODE,
     Edition.contract_type: TOKEN_ERC1155_BYTECODE,
     Token.contract_type: TOKEN_ERC20_BYTECODE,
