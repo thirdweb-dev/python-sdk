@@ -4,10 +4,13 @@ from web3 import Web3
 from web3.contract import Contract
 from thirdweb.abi import TWFactory, TWRegistry
 from thirdweb.common.error import NoSignerException
+
+from thirdweb.contracts.maps import CONTRACT_BYTECODE
 from thirdweb.core.classes.provider_handler import ProviderHandler
 from thirdweb.abi import TokenERC721, TokenERC1155, TokenERC20
 from web3.eth import TxReceipt
 from eth_account.account import LocalAccount
+from thirdweb.types.contract import ContractType
 
 from thirdweb.types.sdk import SDKOptions
 
@@ -64,7 +67,7 @@ class ContractWrapper(ProviderHandler):
 
         return signer.address
 
-    def get_contract_interface(self) -> Contract:
+    def get_contract_interface(self, contract_type: ContractType) -> Contract:
         """
         Get the contract interface of the contract wrapper.
 
@@ -74,7 +77,7 @@ class ContractWrapper(ProviderHandler):
         return self.get_provider().eth.contract(
             address=self._contract_abi.contract_address,
             abi=self._contract_abi.abi,
-            # bytecode=CONTRACT_BYTECODE[contract_type],
+            bytecode=CONTRACT_BYTECODE[contract_type],
         )
 
     def send_transaction(self, fn: str, args: List[Any]) -> TxReceipt:

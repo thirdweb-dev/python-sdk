@@ -89,7 +89,9 @@ class NFTCollection(ERC721):
         uris = upload_or_extract_uris(metadatas, self._storage)
 
         encoded = []
-        interface = self._contract_wrapper.get_contract_interface()
+        interface = self._contract_wrapper.get_contract_interface(
+            ContractType.NFT_COLLECTION
+        )
         for uri in uris:
             encoded.append(interface.encodeABI("mint_to", [to, uri]))
 

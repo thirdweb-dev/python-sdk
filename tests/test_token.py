@@ -8,7 +8,15 @@ from thirdweb.types.settings.metadata import TokenContractMetadata
 
 @pytest.mark.usefixtures("sdk", "token_address")
 @pytest.fixture()
-def token(sdk: ThirdwebSDK, token_address: str) -> Token:
+def token(sdk: ThirdwebSDK) -> Token:
+    token_address = sdk.deployer.deploy_token(
+        {
+            "name": "Test Token",
+            "symbol": "TST",
+            "description": "Test token from tests",
+            "primary_sale_recipient": accounts[0].address,
+        }
+    )
     token = sdk.get_token(token_address)
     return token
 

@@ -28,23 +28,23 @@ class ContractDeployer(ProviderHandler):
         super().__init__(provider, signer, options)
         self._storage = storage
 
-    def deploy_nft_collection(self, metadata: Dict[str, Any]):
-        self.deploy_contract(ContractType.NFT_COLLECTION, metadata)
+    def deploy_nft_collection(self, metadata: Dict[str, Any]) -> str:
+        return self.deploy_contract(ContractType.NFT_COLLECTION, metadata)
 
-    def deploy_edition(self, metadata: Dict[str, Any]):
-        self.deploy_contract(ContractType.EDITION, metadata)
+    def deploy_edition(self, metadata: Dict[str, Any]) -> str:
+        return self.deploy_contract(ContractType.EDITION, metadata)
 
-    def deploy_token(self, metadata: Dict[str, Any]):
-        self.deploy_contract(ContractType.TOKEN, metadata)
+    def deploy_token(self, metadata: Dict[str, Any]) -> str:
+        return self.deploy_contract(ContractType.TOKEN, metadata)
 
     def deploy_contract(
         self, contract_type: ContractType, contract_metadata: Dict[str, Any]
-    ):
+    ) -> str:
         factory = self._get_factory()
-        factory.deploy(contract_type, contract_metadata)
+        return factory.deploy(contract_type, contract_metadata)
 
     def _get_registry(self) -> ContractRegistry:
-        if isinstance(self.__registry, ContractRegistry):
+        if hasattr(self, "__registry"):
             return self.__registry
 
         chain_id = ChainId(self.get_provider().eth.chain_id)
@@ -53,13 +53,14 @@ class ContractDeployer(ProviderHandler):
         self.__registry = ContractRegistry(
             registry_address,
             self.get_provider(),
+            self.get_signer(),
             self.get_options(),
         )
 
         return self.__registry
 
     def _get_factory(self) -> ContractFactory:
-        if isinstance(self.__factory, ContractFactory):
+        if hasattr(self, "__factory"):
             return self.__factory
 
         chain_id = ChainId(self.get_provider().eth.chain_id)

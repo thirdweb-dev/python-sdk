@@ -127,7 +127,7 @@ class Edition(ERC1155):
         uris = upload_or_extract_uris(metadatas, self._storage)
 
         encoded = []
-        interface = self._contract_wrapper.get_contract_interface()
+        interface = self._contract_wrapper.get_contract_interface(ContractType.EDITION)
         for index, uri in enumerate(uris):
             encoded.append(
                 interface.encodeABI(

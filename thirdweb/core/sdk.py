@@ -1,4 +1,5 @@
 from thirdweb.core.classes.base_contract import BaseContract
+from thirdweb.core.classes.contract_deployer import ContractDeployer
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.provider_handler import ProviderHandler
 from thirdweb.contracts import Token, Edition, NFTCollection
@@ -13,6 +14,8 @@ from thirdweb.types.sdk import SDKOptions
 class ThirdwebSDK(ProviderHandler):
     __contract_cache: Dict[str, Union[NFTCollection, Edition, Token]] = {}
     __storage: IpfsStorage
+
+    deployer: ContractDeployer
 
     def __init__(
         self,
@@ -32,6 +35,7 @@ class ThirdwebSDK(ProviderHandler):
 
         super().__init__(provider, signer, options)
         self.__storage = storage
+        self.deployer = ContractDeployer(provider, signer, options, storage)
 
     def get_nft_collection(self, address: str) -> NFTCollection:
         """

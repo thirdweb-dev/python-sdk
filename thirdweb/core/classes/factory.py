@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, cast
 from web3 import Web3
 from thirdweb.abi.t_w_factory import TWFactory
 from thirdweb.constants.addresses import (
@@ -8,7 +8,6 @@ from thirdweb.constants.addresses import (
 from thirdweb.constants.chains import ChainId
 from thirdweb.contracts import NFTCollection, Edition, Token
 from thirdweb.contracts.maps import (
-    CONTRACT_BYTECODE,
     CONTRACTS_MAP,
     REMOTE_CONTRACT_NAME,
 )
@@ -40,7 +39,9 @@ class ContractFactory(ContractWrapper):
         super().__init__(abi, provider, signer, options)
         self._storage = storage
 
-    def deploy(self, contract_type: ContractType, contract_metadata: Dict[str, Any]):
+    def deploy(
+        self, contract_type: ContractType, contract_metadata: Dict[str, Any]
+    ) -> str:
         contract = CONTRACTS_MAP[contract_type]
 
         contract_uri = self._storage.upload_metadata(
@@ -49,7 +50,7 @@ class ContractFactory(ContractWrapper):
             self.get_signer_address(),
         )
 
-        interface = self.get_contract_interface()
+        interface = self.get_contract_interface(contract_type)
 
         # TODO: Use contract factory to encode function for "initialize"
         # with get_deploy_arguments()
@@ -62,7 +63,13 @@ class ContractFactory(ContractWrapper):
         contract_name = REMOTE_CONTRACT_NAME[contract_type]
         encoded_type = contract_name.encode("utf-8")
 
-        self.send_transaction("deploy_proxy", [encoded_type, encoded_function])
+        receipt = self.send_transaction(
+            "deploy_proxy", [encoded_type, encoded_function]
+        )
+
+        events = interface.events.ProxyDeployed().processReceipt(receipt)
+
+        return events[0].args["proxy_address"]
 
     def get_deploy_arguments(
         self,
