@@ -67,7 +67,7 @@ class ContractWrapper(ProviderHandler):
 
         return signer.address
 
-    def get_contract_interface(self, contract_type: ContractType) -> Contract:
+    def get_contract_interface(self) -> Contract:
         """
         Get the contract interface of the contract wrapper.
 
