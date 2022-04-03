@@ -20,6 +20,8 @@ from thirdweb.types.settings.metadata import EditionContractMetadata
 
 
 class Edition(ERC1155):
+    _abi_type = TokenERC1155
+    
     contract_type: Final[ContractType] = ContractType.EDITION
 
     schema = EditionContractMetadata
@@ -131,7 +133,7 @@ class Edition(ERC1155):
         for index, uri in enumerate(uris):
             encoded.append(
                 interface.encodeABI(
-                    "mint_to", [to, int(MAX_INT, 16), uri, supplies[index]]
+                    "mintTo", [to, int(MAX_INT, 16), uri, supplies[index]]
                 )
             )
 

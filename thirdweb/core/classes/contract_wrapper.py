@@ -1,11 +1,11 @@
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, cast
+from eth_typing import Address
 
 from web3 import Web3
 from web3.contract import Contract
 from thirdweb.abi import TWFactory, TWRegistry
 from thirdweb.common.error import NoSignerException
 
-from thirdweb.contracts.maps import CONTRACT_BYTECODE
 from thirdweb.core.classes.provider_handler import ProviderHandler
 from thirdweb.abi import TokenERC721, TokenERC1155, TokenERC20
 from web3.eth import TxReceipt
@@ -75,9 +75,8 @@ class ContractWrapper(ProviderHandler):
         """
 
         return self.get_provider().eth.contract(
-            address=self._contract_abi.contract_address,
-            abi=self._contract_abi.abi,
-            bytecode=CONTRACT_BYTECODE[contract_type],
+            address=cast(Address, self._contract_abi.contract_address),
+            abi=self._contract_abi.abi(),
         )
 
     def send_transaction(self, fn: str, args: List[Any]) -> TxReceipt:

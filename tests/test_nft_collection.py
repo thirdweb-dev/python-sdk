@@ -1,3 +1,4 @@
+from brownie import accounts
 from thirdweb.contracts import NFTCollection
 from thirdweb.core.sdk import ThirdwebSDK
 import pytest
@@ -6,13 +7,13 @@ from thirdweb.types.nft import NFTMetadataInput
 from thirdweb.types.settings.metadata import NFTCollectionContractMetadata
 
 OTHER_ADDRESS = "0x9e31E40Dda94976A405D7BDe6c698DB60E95C87d"
-NFT_COLLECTION_ADDRESS = "0xED8121008B1aD8327297Afa820041a5B3523f3E7"
+NFT_COLLECTION_ADDRESS = "0x83FcE9255793F5f7DE9Fb4998a6100d5C81C1FE1"
 
 
-@pytest.mark.usefixtures("sdk")
+@pytest.mark.usefixtures("sdk_mumbai")
 @pytest.fixture()
-def nft_collection(sdk: ThirdwebSDK) -> NFTCollection:
-    nft_collection = sdk.get_nft_collection(NFT_COLLECTION_ADDRESS)
+def nft_collection(sdk_mumbai: ThirdwebSDK) -> NFTCollection:
+    nft_collection = sdk_mumbai.get_nft_collection(NFT_COLLECTION_ADDRESS)
     return nft_collection
 
 
@@ -53,6 +54,26 @@ def test_transfer(nft_collection: NFTCollection):
     nft_collection.mint(NFTMetadataInput.from_json({"name": "Python SDK NFT"}))
 
     nft_collection.transfer(OTHER_ADDRESS, token_id)
+
+
+def test_batch_mint_to(nft_collection: NFTCollection):
+    nft_collection.mint_batch_to(
+        accounts[1].address,
+        [
+            NFTMetadataInput.from_json(
+                {
+                    "name": "Python SDK NFT 1",
+                    "description": "Minted with the python SDK!",
+                }
+            ),
+            NFTMetadataInput.from_json(
+                {
+                    "name": "Python SDK NFT 2",
+                    "description": "Minted with the python SDK!",
+                }
+            ),
+        ],
+    )
 
 
 # def test_metadata(nft_collection: NFTCollection):

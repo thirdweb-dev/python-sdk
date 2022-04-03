@@ -4,4 +4,5 @@ from fixtures.deploy import (
     nft_collection_address,
     edition_address,
 )
-from fixtures.sdk_local import sdk
+from fixtures.sdk_local import sdk_local as sdk
+from fixtures.sdk_mumbai import sdk_mumbai

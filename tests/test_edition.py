@@ -8,10 +8,10 @@ OTHER_ADDRESS = "0x9e31E40Dda94976A405D7BDe6c698DB60E95C87d"
 EDITION_ADDRESS = "0x1df918F9181dbc00DBFd164028FdB97a03F2de69"
 
 
-@pytest.mark.usefixtures("sdk")
+@pytest.mark.usefixtures("sdk_mumbai")
 @pytest.fixture()
-def edition(sdk: ThirdwebSDK) -> Edition:
-    edition = sdk.get_edition(EDITION_ADDRESS)
+def edition(sdk_mumbai: ThirdwebSDK) -> Edition:
+    edition = sdk_mumbai.get_edition(EDITION_ADDRESS)
     return edition
 
 

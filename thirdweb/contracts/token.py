@@ -16,6 +16,8 @@ from thirdweb.types.settings.metadata import TokenContractMetadata
 
 
 class Token(ERC20):
+    _abi_type = TokenERC20
+
     contract_type: Final[ContractType] = ContractType.TOKEN
     contract_roles: Final[List[str]] = ["admin", "minter", "transfer"]
 
@@ -117,7 +119,7 @@ class Token(ERC20):
         encoded = []
         interface = self._contract_wrapper.get_contract_interface(ContractType.TOKEN)
         for arg in args:
-            encoded.append(interface.encodeABI("mint_to", [arg.address, arg.amount]))
+            encoded.append(interface.encodeABI("mintTo", [arg.to_address, arg.amount]))
         return self._contract_wrapper.multi_call(encoded)
 
     def delegate_to(self, delegatee_address: str) -> TxReceipt:

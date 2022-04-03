@@ -1,4 +1,5 @@
 from typing import Dict, List, Optional, Any, cast
+from eth_typing import Address
 from web3 import Web3
 from thirdweb.abi.t_w_factory import TWFactory
 from thirdweb.constants.addresses import (
@@ -42,34 +43,41 @@ class ContractFactory(ContractWrapper):
     def deploy(
         self, contract_type: ContractType, contract_metadata: Dict[str, Any]
     ) -> str:
-        contract = CONTRACTS_MAP[contract_type]
-
+        # First, we upload the contract metadata to IPFS
         contract_uri = self._storage.upload_metadata(
             contract_metadata,
             self._contract_abi.contract_address,
             self.get_signer_address(),
         )
 
-        interface = self.get_contract_interface(contract_type)
+        # Then, we get setup the contract interface for the contract we want to deploy
+        contract = CONTRACTS_MAP[contract_type]
+        interface = self.get_provider().eth.contract(
+            address=cast(Address, self._contract_abi.contract_address),
+            abi=contract._abi_type.abi(),
+        )
 
-        # TODO: Use contract factory to encode function for "initialize"
-        # with get_deploy_arguments()
-
+        # Next, we encode all the initialize function arguments and pass them to the proxy deploy
         deploy_arguments = self.get_deploy_arguments(
             contract_type, contract_metadata, contract_uri
         )
         encoded_function = interface.encodeABI("initialize", deploy_arguments)
-
         contract_name = REMOTE_CONTRACT_NAME[contract_type]
         encoded_type = contract_name.encode("utf-8")
-
         receipt = self.send_transaction(
             "deploy_proxy", [encoded_type, encoded_function]
         )
 
-        events = interface.events.ProxyDeployed().processReceipt(receipt)
+        # Finally, we filter for the ProxyDeployed event and return the contract address
+        hash = receipt.get("transactionHash")
+        if hash is None:
+            raise Exception("No transaction hash found")
 
-        return events[0].args["proxy_address"]
+        events = cast(TWFactory, self._contract_abi).get_proxy_deployed_event(hash)
+        if len(events) == 0 or events[0].get("event") != "ProxyDeployed":
+            raise Exception("No proxy deployed event found")
+
+        return cast(Any, events[0].get("args")).get("implementation")
 
     def get_deploy_arguments(
         self,

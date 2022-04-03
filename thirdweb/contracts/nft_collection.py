@@ -18,6 +18,8 @@ from thirdweb.types.settings.metadata import NFTCollectionContractMetadata
 
 
 class NFTCollection(ERC721):
+    _abi_type = TokenERC721
+
     contract_type: Final[ContractType] = ContractType.NFT_COLLECTION
 
     schema = NFTCollectionContractMetadata
@@ -93,6 +95,6 @@ class NFTCollection(ERC721):
             ContractType.NFT_COLLECTION
         )
         for uri in uris:
-            encoded.append(interface.encodeABI("mint_to", [to, uri]))
+            encoded.append(interface.encodeABI("mintTo", [to, uri]))
 
         return self._contract_wrapper.multi_call(encoded)

@@ -6,7 +6,7 @@ from thirdweb.core.sdk import ThirdwebSDK
 
 
 @pytest.fixture(scope="session")
-def sdk():
+def sdk_local():
     provider = Web3(Web3.HTTPProvider("http://localhost:8545"))
     signer = accounts[0]
 
