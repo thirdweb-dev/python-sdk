@@ -1,4 +1,8 @@
+from typing import cast
+from thirdweb.abi.t_w_registry import TWRegistry
 from thirdweb.contracts import Token
+from thirdweb.core.classes.factory import ContractFactory
+from thirdweb.core.classes.registry import ContractRegistry
 from thirdweb.core.sdk import ThirdwebSDK
 from brownie import accounts
 import pytest
@@ -6,10 +10,17 @@ import pytest
 from thirdweb.types.settings.metadata import TokenContractMetadata
 
 
-@pytest.mark.usefixtures("sdk_mumbai", "token_address")
+@pytest.mark.usefixtures("sdk", "contract_addresses")
 @pytest.fixture()
-def token(sdk_mumbai: ThirdwebSDK) -> Token:
-    token_address = sdk_mumbai.deployer.deploy_token(
+def token(sdk: ThirdwebSDK, contract_addresses) -> Token:
+    factory = cast(ContractFactory, sdk.deployer._get_factory())
+    registry = cast(ContractRegistry, sdk.deployer._get_registry())
+
+    factory.send_transaction("add_implementation", [contract_addresses.token])
+    operator_role = registry._contract_abi.operator_role.call()  # type: ignore
+    registry.send_transaction("grant_role", [operator_role, contract_addresses.factory])
+
+    token_address = sdk.deployer.deploy_token(
         {
             "name": "Test Token",
             "symbol": "TST",
@@ -17,17 +28,8 @@ def token(sdk_mumbai: ThirdwebSDK) -> Token:
             "primary_sale_recipient": accounts[0].address,
         }
     )
-    token = sdk_mumbai.get_token(token_address)
+    token = sdk.get_token(token_address)
     return token
-
-
-def test_token_provider(token: Token):
-    """
-    Should have correct provider and signer from SDK
-    """
-
-    assert token._contract_wrapper.get_provider() is not None
-    assert token._contract_wrapper.get_signer() is not None
 
 
 # def test_metadata(token: Token):

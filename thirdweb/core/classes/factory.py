@@ -1,5 +1,6 @@
 from typing import Dict, List, Optional, Any, cast
 from eth_typing import Address
+from eth_utils import encode_hex
 from web3 import Web3
 from thirdweb.abi.t_w_factory import TWFactory
 from thirdweb.constants.addresses import (
@@ -61,9 +62,12 @@ class ContractFactory(ContractWrapper):
         deploy_arguments = self.get_deploy_arguments(
             contract_type, contract_metadata, contract_uri
         )
+
         encoded_function = interface.encodeABI("initialize", deploy_arguments)
         contract_name = REMOTE_CONTRACT_NAME[contract_type]
-        encoded_type = contract_name.encode("utf-8")
+        encoded_type = encode_hex(contract_name).ljust(66, "0")
+        print("T: ", encoded_type)
+        print("FN: ", encoded_function)
         receipt = self.send_transaction(
             "deploy_proxy", [encoded_type, encoded_function]
         )

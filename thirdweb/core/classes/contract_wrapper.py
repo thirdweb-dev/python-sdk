@@ -11,6 +11,7 @@ from thirdweb.abi import TokenERC721, TokenERC1155, TokenERC20
 from web3.eth import TxReceipt
 from eth_account.account import LocalAccount
 from thirdweb.types.contract import ContractType
+from zero_ex.contract_wrappers.tx_params import TxParams
 
 from thirdweb.types.sdk import SDKOptions
 
@@ -94,8 +95,11 @@ class ContractWrapper(ProviderHandler):
             raise NoSignerException
 
         nonce = provider.eth.get_transaction_count(signer.address)
-        tx = getattr(self._contract_abi, fn).build_transaction(*args)
+        tx = getattr(self._contract_abi, fn).build_transaction(
+            *args, tx_params=TxParams(gas_price=provider.eth.gas_price)
+        )
         tx["nonce"] = nonce
+
         del tx["from"]
 
         signed_tx = signer.sign_transaction(tx)

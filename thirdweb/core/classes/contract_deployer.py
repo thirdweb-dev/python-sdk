@@ -44,8 +44,10 @@ class ContractDeployer(ProviderHandler):
         return factory.deploy(contract_type, contract_metadata)
 
     def _get_registry(self) -> ContractRegistry:
-        if hasattr(self, "__registry"):
+        try:
             return self.__registry
+        except:
+            pass
 
         chain_id = ChainId(self.get_provider().eth.chain_id)
         registry_address = get_contract_address_by_chain_id(chain_id, "tw_registry")
@@ -60,8 +62,10 @@ class ContractDeployer(ProviderHandler):
         return self.__registry
 
     def _get_factory(self) -> ContractFactory:
-        if hasattr(self, "__factory"):
+        try:
             return self.__factory
+        except:
+            pass
 
         chain_id = ChainId(self.get_provider().eth.chain_id)
         factory_address = get_contract_address_by_chain_id(chain_id, "tw_factory")
@@ -75,3 +79,9 @@ class ContractDeployer(ProviderHandler):
         )
 
         return self.__factory
+
+    def _set_registry(self, registry: ContractRegistry):
+        self.__registry = registry
+
+    def _set_factory(self, factory: ContractFactory):
+        self.__factory = factory

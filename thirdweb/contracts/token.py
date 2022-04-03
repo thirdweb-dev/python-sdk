@@ -117,7 +117,7 @@ class Token(ERC20):
         """
 
         encoded = []
-        interface = self._contract_wrapper.get_contract_interface(ContractType.TOKEN)
+        interface = self._contract_wrapper.get_contract_interface()
         for arg in args:
             encoded.append(interface.encodeABI("mintTo", [arg.to_address, arg.amount]))
         return self._contract_wrapper.multi_call(encoded)

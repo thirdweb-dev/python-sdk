@@ -6,7 +6,8 @@ class ChainId(Enum):
     RINKEBY = 4
     GOERLI = 5
     POLYGON = 137
-    LOCALHOST = 1337
     FANTOM = 250
-    MUMBAI = 80001
+    LOCALHOST = 1337
+    HARDHAT = 31337
     AVALANCHE = 43114
+    MUMBAI = 80001

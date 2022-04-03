@@ -10,4 +10,5 @@ CHAIN_ID_TO_RPC_URL = {
     ChainId.MUMBAI: "https://rpc-mumbai.maticvigil.com",
     ChainId.FANTOM: "https://rpc.ftm.tools/",
     ChainId.LOCALHOST: "http://localhost:8545",
+    ChainId.HARDHAT: "http://localhost:8545",
 }

@@ -21,7 +21,7 @@ from thirdweb.types.settings.metadata import EditionContractMetadata
 
 class Edition(ERC1155):
     _abi_type = TokenERC1155
-    
+
     contract_type: Final[ContractType] = ContractType.EDITION
 
     schema = EditionContractMetadata
@@ -129,7 +129,7 @@ class Edition(ERC1155):
         uris = upload_or_extract_uris(metadatas, self._storage)
 
         encoded = []
-        interface = self._contract_wrapper.get_contract_interface(ContractType.EDITION)
+        interface = self._contract_wrapper.get_contract_interface()
         for index, uri in enumerate(uris):
             encoded.append(
                 interface.encodeABI(

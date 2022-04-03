@@ -49,6 +49,11 @@ CONTRACT_ADDRESSES: Dict[ChainId, Dict[str, str]] = {
         "tw_factory": TWFACTORY_ADDRESS,
         "tw_registry": TWREGISTRY_ADDRESS,
     },
+    ChainId.HARDHAT: {
+        "biconomy_forwarder": ZERO_ADDRESS,
+        "tw_factory": TWFACTORY_ADDRESS,
+        "tw_registry": TWREGISTRY_ADDRESS,
+    },
 }
 
 
