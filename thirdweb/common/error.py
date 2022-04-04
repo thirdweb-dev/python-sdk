@@ -41,3 +41,8 @@ class RestrictedTransferException(Exception):
 class DuplicateFileNameException(Exception):
     def __init__(self, filename: str):
         super().__init__(f"File with name {filename} already exists")
+
+
+class RoleException(Exception):
+    def __init__(self, message: str):
+        super().__init__(f"ROLE ERROR: {message}")

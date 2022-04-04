@@ -23,16 +23,28 @@ class ContractMetadata(Generic[Schema]):
         self._schema = schema
 
     def get(self) -> Schema:
+        """
+        Get the metadata associated with this contract.
+
+        :returns: metadata associated with this contract
+        """
+
         abi = cast(
             Union[TokenERC20, TokenERC721, TokenERC1155],
             self._contract_wrapper._contract_abi,
         )
         uri = abi.contract_uri.call()
-        print("URI: ", uri)
         data = self._storage.get(uri)
         return self._schema.from_json(data)
 
     def set(self, metadata: Schema) -> TxReceipt:
+        """
+        Set the metadata associated with this contract.
+
+        :param metadata: metadata to set
+        :returns: transaction receipt of setting the metadata
+        """
+
         uri = self._parse_and_upload_metadata(metadata.to_json())
         return self._contract_wrapper.send_transaction("set_contract_uri", [uri])
 

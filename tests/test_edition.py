@@ -1,5 +1,6 @@
 from brownie import accounts
 from thirdweb.constants.currency import ZERO_ADDRESS
+from thirdweb.constants.role import Role
 from thirdweb.contracts import Edition
 from thirdweb.core.sdk import ThirdwebSDK
 import pytest
@@ -59,3 +60,22 @@ def test_transfer(edition: Edition):
 
     assert edition.balance_of(accounts[0].address, 0) == other_balance + 50
     assert edition.balance(0) == my_balance - 50
+
+
+def test_roles(edition: Edition):
+    address = edition._contract_wrapper.get_signer_address()
+
+    assert address in edition.roles.get_all()[Role.ADMIN]
+    assert address in edition.roles.get_all()[Role.MINTER]
+
+    edition.roles.grant(Role.ADMIN, accounts[0].address)
+    edition.roles.grant(Role.MINTER, accounts[0].address)
+
+    assert accounts[0].address in edition.roles.get_all()[Role.ADMIN]
+    assert accounts[0].address in edition.roles.get_all()[Role.MINTER]
+
+    edition.roles.revoke(Role.ADMIN, accounts[0].address)
+    edition.roles.revoke(Role.MINTER, address)
+
+    assert accounts[0].address not in edition.roles.get_all()[Role.ADMIN]
+    assert address not in edition.roles.get_all()[Role.MINTER]

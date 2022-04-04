@@ -1,10 +1,12 @@
-from typing import Final, List, Optional, Union
+from typing import Final, List, Optional
 from thirdweb.abi import TokenERC20
 from web3 import Web3
 from web3.eth import TxReceipt
 from eth_account.account import LocalAccount
 from thirdweb.common.currency import parse_units
+from thirdweb.constants.role import Role
 from thirdweb.core.classes.contract_metadata import ContractMetadata
+from thirdweb.core.classes.contract_roles import ContractRoles
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_20 import ERC20
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
@@ -19,10 +21,11 @@ class Token(ERC20):
     _abi_type = TokenERC20
 
     contract_type: Final[ContractType] = ContractType.TOKEN
-    contract_roles: Final[List[str]] = ["admin", "minter", "transfer"]
+    contract_roles: Final[List[Role]] = [Role.ADMIN, Role.MINTER, Role.TRANSFER]
 
     schema = TokenContractMetadata
     metadata: ContractMetadata[TokenContractMetadata]
+    roles: ContractRoles
 
     def __init__(
         self,
@@ -37,6 +40,7 @@ class Token(ERC20):
         super().__init__(contract_wrapper, storage)
 
         self.metadata = ContractMetadata(contract_wrapper, storage, self.schema)
+        self.roles = ContractRoles(contract_wrapper, self.contract_roles)
 
     """
     READ FUNCTIONS

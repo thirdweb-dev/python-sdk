@@ -10,7 +10,6 @@ from thirdweb.core.classes.provider_handler import ProviderHandler
 from thirdweb.abi import TokenERC721, TokenERC1155, TokenERC20
 from web3.eth import TxReceipt
 from eth_account.account import LocalAccount
-from thirdweb.types.contract import ContractType
 from zero_ex.contract_wrappers.tx_params import TxParams
 
 from thirdweb.types.sdk import SDKOptions
@@ -44,7 +43,7 @@ class ContractWrapper(ProviderHandler):
         super().__init__(provider, signer, options)
         self._contract_abi = contract_abi
 
-    def get_chain_id(self):
+    def get_chain_id(self) -> int:
         """
         Get the chain ID of the active provider
 
@@ -54,7 +53,7 @@ class ContractWrapper(ProviderHandler):
         provider = self.get_provider()
         return provider.eth.chain_id
 
-    def get_signer_address(self):
+    def get_signer_address(self) -> str:
         """
         Get the address of the active signer
 
