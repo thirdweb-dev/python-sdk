@@ -10,6 +10,7 @@ from brownie import (
     TokenERC721,
     TokenERC1155,
 )
+from brownie.network import priority_fee
 from eth_account import Account
 import pytest
 import os
@@ -30,10 +31,11 @@ class ContractAddresses:
 
 @pytest.fixture(scope="session")
 def contract_addresses():
+    priority_fee("1 gwei")
     accounts.add(os.environ.get("PRIVATE_KEY"))
     address = Account.from_key(os.environ.get("PRIVATE_KEY")).address
     account = accounts.at(address)
-    accounts[0].transfer(account, 10000000000000000)
+    accounts[0].transfer(account, accounts[0].balance().__truediv__(2))
 
     trusted_forwarder = account.deploy(Forwarder)
     trusted_forwarder_address = trusted_forwarder.address

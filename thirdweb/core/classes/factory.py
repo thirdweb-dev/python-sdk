@@ -81,7 +81,7 @@ class ContractFactory(ContractWrapper):
         if len(events) == 0 or events[0].get("event") != "ProxyDeployed":
             raise Exception("No proxy deployed event found")
 
-        address = cast(Any, events[0].get("args")).get("implementation")
+        address = cast(Any, events[0].get("args")).get("proxy")
         print("ADDRESS: ", address)
         return address
 
@@ -145,5 +145,6 @@ class ContractFactory(ContractWrapper):
             biconomy_forwarder_address = CONTRACT_ADDRESSES[chain_id][
                 "biconomy_forwarder"
             ]
+            # TODO make sure to filter out address zero here
             return [OZ_DEFENDER_FORWARDER_ADDRESS, biconomy_forwarder_address]
         return [OZ_DEFENDER_FORWARDER_ADDRESS]

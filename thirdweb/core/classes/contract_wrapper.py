@@ -100,6 +100,7 @@ class ContractWrapper(ProviderHandler):
         )
         tx["nonce"] = nonce
 
+        # TODO why do we need to do this? (joaquim)
         del tx["from"]
 
         signed_tx = signer.sign_transaction(tx)
