@@ -82,7 +82,6 @@ class ContractFactory(ContractWrapper):
             raise Exception("No proxy deployed event found")
 
         address = cast(Any, events[0].get("args")).get("proxy")
-        print("ADDRESS: ", address)
         return address
 
     def get_deploy_arguments(
@@ -104,6 +103,7 @@ class ContractFactory(ContractWrapper):
                 contract_uri,
                 trusted_forwarders,
                 metadata.primary_sale_recipient,
+                metadata.fee_recipient,
                 metadata.seller_fee_basis_points,
                 metadata.platform_fee_basis_points,
                 metadata.platform_fee_recipient,
@@ -118,6 +118,7 @@ class ContractFactory(ContractWrapper):
                 contract_uri,
                 trusted_forwarders,
                 metadata.primary_sale_recipient,
+                metadata.fee_recipient,
                 metadata.seller_fee_basis_points,
                 metadata.platform_fee_basis_points,
                 metadata.platform_fee_recipient,

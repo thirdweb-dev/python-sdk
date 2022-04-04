@@ -1,64 +1,74 @@
-from brownie import accounts
+from thirdweb.constants.currency import ZERO_ADDRESS
+from thirdweb.types.nft import NFTMetadataInput
 from thirdweb.contracts import NFTCollection
 from thirdweb.core.sdk import ThirdwebSDK
+from brownie import accounts
 import pytest
 
-from thirdweb.types.nft import NFTMetadataInput
-from thirdweb.types.settings.metadata import NFTCollectionContractMetadata
 
-OTHER_ADDRESS = "0x9e31E40Dda94976A405D7BDe6c698DB60E95C87d"
-NFT_COLLECTION_ADDRESS = "0x83FcE9255793F5f7DE9Fb4998a6100d5C81C1FE1"
-
-
-@pytest.mark.usefixtures("sdk_mumbai")
-@pytest.fixture()
-def nft_collection(sdk_mumbai: ThirdwebSDK) -> NFTCollection:
-    nft_collection = sdk_mumbai.get_nft_collection(NFT_COLLECTION_ADDRESS)
+@pytest.mark.usefixtures("sdk")
+@pytest.fixture(scope="function")
+def nft_collection(sdk: ThirdwebSDK) -> NFTCollection:
+    nft_collection_address = sdk.deployer.deploy_nft_collection(
+        {
+            "name": "SDK NFT Collection",
+            "primary_sale_recipient": ZERO_ADDRESS,
+            "seller_fee_basis_points": 10000,
+            "fee_recipient": ZERO_ADDRESS,
+            "platform_fee_basis_points": 10,
+            "platform_fee_recipient": ZERO_ADDRESS,
+        }
+    )
+    nft_collection = sdk.get_nft_collection(nft_collection_address)
     return nft_collection
 
 
-def test_provider(nft_collection: NFTCollection):
-    assert nft_collection._contract_wrapper.get_provider() is not None
-    assert nft_collection._contract_wrapper.get_signer() is not None
-
-
 def test_mint(nft_collection: NFTCollection):
-    balance = nft_collection.balance()
-
     nft_collection.mint(
         NFTMetadataInput.from_json(
             {"name": "Python SDK NFT", "description": "Minted with the python SDK!"}
         )
     )
 
-    token_id = nft_collection.get_total_count() - 1
-    metadata = nft_collection.get(token_id).metadata
+    metadata = nft_collection.get(0).metadata
 
     assert metadata.name == "Python SDK NFT"
     assert metadata.description == "Minted with the python SDK!"
-    assert nft_collection.balance() == balance + 1
+    assert nft_collection.balance() == 1
 
 
 def test_burn(nft_collection: NFTCollection):
-    token_id = nft_collection.get_total_count() - 1
     nft_collection.mint(NFTMetadataInput.from_json({"name": "Python SDK NFT"}))
+    nft = nft_collection.get(0)
 
-    nft_collection.burn(token_id)
+    assert nft_collection.total_supply() == 1
+    assert nft.metadata.name == "Python SDK NFT"
+    assert nft.owner == nft_collection._contract_wrapper.get_signer_address()
+
+    nft_collection.burn(0)
+
+    try:
+        nft_collection.get(0)
+        assert False
+    except:
+        assert True
 
 
 def test_transfer(nft_collection: NFTCollection):
-    my_balance = nft_collection.balance()
-    other_balance = nft_collection.balance_of(OTHER_ADDRESS)
-
-    token_id = nft_collection.get_total_count() - 1
     nft_collection.mint(NFTMetadataInput.from_json({"name": "Python SDK NFT"}))
 
-    nft_collection.transfer(OTHER_ADDRESS, token_id)
+    assert nft_collection.balance() == 1
+    assert nft_collection.balance_of(accounts[0].address) == 0
+
+    nft_collection.transfer(accounts[0].address, 0)
+
+    assert nft_collection.balance() == 0
+    assert nft_collection.balance_of(accounts[0].address) == 1
 
 
 def test_batch_mint_to(nft_collection: NFTCollection):
     nft_collection.mint_batch_to(
-        accounts[1].address,
+        accounts[0].address,
         [
             NFTMetadataInput.from_json(
                 {
@@ -75,12 +85,13 @@ def test_batch_mint_to(nft_collection: NFTCollection):
         ],
     )
 
+    nft_1 = nft_collection.get(0)
+    nft_2 = nft_collection.get(1)
 
-# def test_metadata(nft_collection: NFTCollection):
-#     nft_collection.metadata.set(
-#         NFTCollectionContractMetadata.from_json({"name": "Python SDK Contract"})
-#     )
+    assert nft_1.owner == accounts[0].address
+    assert nft_2.owner == accounts[0].address
 
-#     metadata = nft_collection.metadata.get()
-
-#     assert metadata.to_json()["name"] == "Python SDK Contract"
+    assert nft_1.metadata.name == "Python SDK NFT 1"
+    assert nft_2.metadata.name == "Python SDK NFT 2"
+    assert nft_1.metadata.description == "Minted with the python SDK!"
+    assert nft_2.metadata.description == "Minted with the python SDK!"

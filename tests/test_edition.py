@@ -1,23 +1,28 @@
+from brownie import accounts
+from thirdweb.constants.currency import ZERO_ADDRESS
 from thirdweb.contracts import Edition
 from thirdweb.core.sdk import ThirdwebSDK
 import pytest
 
-from thirdweb.types.nft import EditionMetadata, EditionMetadataInput, NFTMetadataInput
-
-OTHER_ADDRESS = "0x9e31E40Dda94976A405D7BDe6c698DB60E95C87d"
-EDITION_ADDRESS = "0x1df918F9181dbc00DBFd164028FdB97a03F2de69"
+from thirdweb.types.nft import EditionMetadataInput, NFTMetadataInput
 
 
-@pytest.mark.usefixtures("sdk_mumbai")
+@pytest.mark.usefixtures("sdk")
 @pytest.fixture()
-def edition(sdk_mumbai: ThirdwebSDK) -> Edition:
-    edition = sdk_mumbai.get_edition(EDITION_ADDRESS)
+def edition(sdk: ThirdwebSDK) -> Edition:
+    edition_address = sdk.deployer.deploy_edition(
+        {
+            "name": "SDK Edition",
+            "symbol": "SDK",
+            "primary_sale_recipient": ZERO_ADDRESS,
+            "seller_fee_basis_points": 1000,
+            "fee_recipient": ZERO_ADDRESS,
+            "platform_fee_basis_points": 10,
+            "platform_fee_recipient": ZERO_ADDRESS,
+        }
+    )
+    edition = sdk.get_edition(edition_address)
     return edition
-
-
-def test_edition_provider(edition: Edition):
-    assert edition._contract_wrapper.get_provider() is not None
-    assert edition._contract_wrapper.get_signer() is not None
 
 
 def test_mint(edition: Edition):
@@ -30,16 +35,14 @@ def test_mint(edition: Edition):
         )
     )
 
-    token_id = edition.get_total_count() - 1
-    metadata = edition.get(token_id).metadata
+    metadata = edition.get(0).metadata
 
     assert metadata.name == "Python SDK NFT"
     assert metadata.description == "Minted with the python SDK!"
+    assert edition.balance(0) == 100
 
 
 def test_transfer(edition: Edition):
-    token_id = edition.get_total_count()
-
     edition.mint(
         EditionMetadataInput(
             NFTMetadataInput.from_json(
@@ -49,10 +52,10 @@ def test_transfer(edition: Edition):
         )
     )
 
-    my_balance = edition.balance(token_id)
-    other_balance = edition.balance_of(OTHER_ADDRESS, token_id)
+    my_balance = edition.balance(0)
+    other_balance = edition.balance_of(accounts[0].address, 0)
 
-    edition.transfer(OTHER_ADDRESS, token_id, 50)
+    edition.transfer(accounts[0].address, 0, 50)
 
-    assert edition.balance_of(OTHER_ADDRESS, token_id) == other_balance + 50
-    assert edition.balance(token_id) == my_balance - 50
+    assert edition.balance_of(accounts[0].address, 0) == other_balance + 50
+    assert edition.balance(0) == my_balance - 50
