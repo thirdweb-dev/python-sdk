@@ -2,7 +2,10 @@ from distutils.command.upload import upload
 from thirdweb.common.nft import upload_or_extract_uri, upload_or_extract_uris
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.contract_metadata import ContractMetadata
+from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
 from thirdweb.core.classes.contract_roles import ContractRoles
+from thirdweb.core.classes.contract_royalty import ContractRoyalty
+from thirdweb.core.classes.contract_sales import ContractPrimarySale
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_1155 import ERC1155
 from thirdweb.abi import TokenERC1155
@@ -28,8 +31,11 @@ class Edition(ERC1155):
     contract_roles: Final[List[Role]] = [Role.ADMIN, Role.MINTER, Role.TRANSFER]
 
     schema = EditionContractMetadata
-    metadata: ContractMetadata[EditionContractMetadata]
+    metadata: ContractMetadata[TokenERC1155, EditionContractMetadata]
     roles: ContractRoles
+    primary_sale: ContractPrimarySale[TokenERC1155]
+    platform_fee: ContractPlatformFee[TokenERC1155]
+    royalty: ContractRoyalty[TokenERC1155]
 
     def __init__(
         self,
@@ -45,6 +51,9 @@ class Edition(ERC1155):
 
         self.metadata = ContractMetadata(contract_wrapper, storage, self.schema)
         self.roles = ContractRoles(contract_wrapper, self.contract_roles)
+        self.primary_sale = ContractPrimarySale(contract_wrapper)
+        self.platform_fee = ContractPlatformFee(contract_wrapper)
+        self.royalty = ContractRoyalty(contract_wrapper, self.metadata)
 
     def mint(self, metadata_with_supply: EditionMetadataInput) -> TxReceipt:
         """

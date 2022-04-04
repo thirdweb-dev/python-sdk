@@ -1,4 +1,4 @@
-from typing import List, Union, cast
+from typing import List, cast
 from thirdweb.abi.token_erc20 import TokenERC20
 from thirdweb.common.currency import (
     fetch_currency_metadata,

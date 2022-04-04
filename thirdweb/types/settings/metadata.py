@@ -6,55 +6,55 @@ from dacite import from_dict
 
 
 @dataclass
-class ContractMetadata:
+class ContractMetadataSchema:
     name: str = ""
     description: Optional[str] = None
     image: Optional[Union[str, TextIO, BinaryIO]] = None
     external_link: Optional[str] = None
 
     @staticmethod
-    def from_json(json: Dict[str, Any]) -> "ContractMetadata":
-        return from_dict(ContractMetadata, json)
+    def from_json(json: Dict[str, Any]) -> "ContractMetadataSchema":
+        return from_dict(ContractMetadataSchema, json)
 
     def to_json(self) -> Dict[str, Any]:
         return self.__dict__
 
 
 @dataclass
-class ContractRoyalty:
+class ContractRoyaltySchema:
     seller_fee_basis_points: int = 0
     fee_recipient: str = ZERO_ADDRESS
 
 
 @dataclass
-class ContractPrimarySale:
+class ContractPrimarySaleSchema:
     primary_sale_recipient: str = ZERO_ADDRESS
 
 
 @dataclass
-class ContractPlatformFee:
+class ContractPlatformFeeSchema:
     platform_fee_basis_points: int = 0
     platform_fee_recipient: str = ZERO_ADDRESS
 
 
 @dataclass
-class ContractSymbol:
+class ContractSymbolSchema:
     symbol: str = ""
 
 
 @dataclass
-class ContractTrustedForwarder:
+class ContractTrustedForwarderSchema:
     trusted_forwarders: List[str] = dataclasses.field(default_factory=list)
 
 
 @dataclass
 class NFTCollectionContractMetadata(
-    ContractMetadata,
-    ContractRoyalty,
-    ContractSymbol,
-    ContractPlatformFee,
-    ContractPrimarySale,
-    ContractTrustedForwarder,
+    ContractMetadataSchema,
+    ContractRoyaltySchema,
+    ContractSymbolSchema,
+    ContractPlatformFeeSchema,
+    ContractPrimarySaleSchema,
+    ContractTrustedForwarderSchema,
 ):
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "NFTCollectionContractMetadata":
@@ -63,12 +63,12 @@ class NFTCollectionContractMetadata(
 
 @dataclass
 class EditionContractMetadata(
-    ContractMetadata,
-    ContractSymbol,
-    ContractRoyalty,
-    ContractPlatformFee,
-    ContractPrimarySale,
-    ContractTrustedForwarder,
+    ContractMetadataSchema,
+    ContractSymbolSchema,
+    ContractRoyaltySchema,
+    ContractPlatformFeeSchema,
+    ContractPrimarySaleSchema,
+    ContractTrustedForwarderSchema,
 ):
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "EditionContractMetadata":
@@ -77,11 +77,11 @@ class EditionContractMetadata(
 
 @dataclass
 class TokenContractMetadata(
-    ContractMetadata,
-    ContractSymbol,
-    ContractPrimarySale,
-    ContractTrustedForwarder,
-    ContractPlatformFee,
+    ContractMetadataSchema,
+    ContractSymbolSchema,
+    ContractPrimarySaleSchema,
+    ContractTrustedForwarderSchema,
+    ContractPlatformFeeSchema,
 ):
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "TokenContractMetadata":

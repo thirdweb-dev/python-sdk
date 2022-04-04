@@ -1,43 +1,38 @@
-from typing import Any, Dict, Generic, TypeVar, Union, cast
-from thirdweb.abi.token_erc1155 import TokenERC1155
-from thirdweb.abi.token_erc20 import TokenERC20
-from thirdweb.abi.token_erc721 import TokenERC721
+from typing import Any, Dict, Generic
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
-from thirdweb.types.settings.metadata import ContractMetadata as TContractMetadata
+from thirdweb.types.contract import TContractSchema, TMetadataABI
 from web3.eth import TxReceipt
 
-Schema = TypeVar("Schema", bound=TContractMetadata)
 
-
-class ContractMetadata(Generic[Schema]):
-    _contract_wrapper: ContractWrapper
-    _schema: Schema
+class ContractMetadata(Generic[TMetadataABI, TContractSchema]):
+    _contract_wrapper: ContractWrapper[TMetadataABI]
+    _schema: TContractSchema
     _storage: IpfsStorage
 
     def __init__(
-        self, contract_wrapper: ContractWrapper, storage: IpfsStorage, schema: Schema
+        self,
+        contract_wrapper: ContractWrapper[TMetadataABI],
+        storage: IpfsStorage,
+        schema: TContractSchema,
     ):
         self._contract_wrapper = contract_wrapper
         self._storage = storage
         self._schema = schema
 
-    def get(self) -> Schema:
+    def get(self) -> TContractSchema:
         """
         Get the metadata associated with this contract.
 
         :returns: metadata associated with this contract
         """
 
-        abi = cast(
-            Union[TokenERC20, TokenERC721, TokenERC1155],
-            self._contract_wrapper._contract_abi,
-        )
+        abi = self._contract_wrapper._contract_abi
         uri = abi.contract_uri.call()
         data = self._storage.get(uri)
         return self._schema.from_json(data)
 
-    def set(self, metadata: Schema) -> TxReceipt:
+    def set(self, metadata: TContractSchema) -> TxReceipt:
         """
         Set the metadata associated with this contract.
 

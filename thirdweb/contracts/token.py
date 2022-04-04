@@ -6,6 +6,7 @@ from eth_account.account import LocalAccount
 from thirdweb.common.currency import parse_units
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.contract_metadata import ContractMetadata
+from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
 from thirdweb.core.classes.contract_roles import ContractRoles
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_20 import ERC20
@@ -24,8 +25,9 @@ class Token(ERC20):
     contract_roles: Final[List[Role]] = [Role.ADMIN, Role.MINTER, Role.TRANSFER]
 
     schema = TokenContractMetadata
-    metadata: ContractMetadata[TokenContractMetadata]
+    metadata: ContractMetadata[TokenERC20, TokenContractMetadata]
     roles: ContractRoles
+    platform_fee: ContractPlatformFee
 
     def __init__(
         self,
@@ -41,6 +43,7 @@ class Token(ERC20):
 
         self.metadata = ContractMetadata(contract_wrapper, storage, self.schema)
         self.roles = ContractRoles(contract_wrapper, self.contract_roles)
+        self.platform_fee = ContractPlatformFee(contract_wrapper)
 
     """
     READ FUNCTIONS

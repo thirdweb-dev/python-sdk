@@ -1,6 +1,9 @@
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.contract_metadata import ContractMetadata
+from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
 from thirdweb.core.classes.contract_roles import ContractRoles
+from thirdweb.core.classes.contract_royalty import ContractRoyalty
+from thirdweb.core.classes.contract_sales import ContractPrimarySale
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.common.nft import upload_or_extract_uri, upload_or_extract_uris
 from thirdweb.core.classes.erc_721 import ERC721
@@ -26,8 +29,11 @@ class NFTCollection(ERC721):
     contract_roles: Final[List[Role]] = [Role.ADMIN, Role.MINTER, Role.TRANSFER]
 
     schema = NFTCollectionContractMetadata
-    metadata: ContractMetadata[NFTCollectionContractMetadata]
+    metadata: ContractMetadata[TokenERC721, NFTCollectionContractMetadata]
     roles: ContractRoles
+    primary_sale: ContractPrimarySale[TokenERC721]
+    platform_fee: ContractPlatformFee[TokenERC721]
+    royalty: ContractRoyalty[TokenERC721]
 
     def __init__(
         self,
@@ -43,6 +49,9 @@ class NFTCollection(ERC721):
 
         self.metadata = ContractMetadata(contract_wrapper, storage, self.schema)
         self.roles = ContractRoles(contract_wrapper, self.contract_roles)
+        self.primary_sale = ContractPrimarySale(contract_wrapper)
+        self.platform_fee = ContractPlatformFee(contract_wrapper)
+        self.royalty = ContractRoyalty(contract_wrapper, self.metadata)
 
     """
     WRITE FUNCTIONS

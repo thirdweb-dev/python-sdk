@@ -1,19 +1,20 @@
-from typing import Optional
+from typing import Generic, Optional
 from web3 import Web3
 from eth_account.account import LocalAccount
 
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
+from thirdweb.types.contract import TContractABI
 
 
-class BaseContract:
+class BaseContract(Generic[TContractABI]):
     """
     Base contract class to define usage of the contract wrapper and enable
     easy provider and signer switching across all contracts
     """
 
-    _contract_wrapper: ContractWrapper
+    _contract_wrapper: ContractWrapper[TContractABI]
 
-    def __init__(self, contract_wrapper: ContractWrapper):
+    def __init__(self, contract_wrapper: ContractWrapper[TContractABI]):
         self._contract_wrapper = contract_wrapper
 
     def on_provider_updated(self, provider: Web3):
