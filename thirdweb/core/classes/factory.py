@@ -63,11 +63,11 @@ class ContractFactory(ContractWrapper):
             contract_type, contract_metadata, contract_uri
         )
 
-        encoded_function = interface.encodeABI("initialize", deploy_arguments)
+        encoded_function = interface.encodeABI(
+            fn_name="initialize", args=deploy_arguments
+        )
         contract_name = REMOTE_CONTRACT_NAME[contract_type]
         encoded_type = encode_hex(contract_name).ljust(66, "0")
-        print("T: ", encoded_type)
-        print("FN: ", encoded_function)
         receipt = self.send_transaction(
             "deploy_proxy", [encoded_type, encoded_function]
         )
@@ -81,7 +81,9 @@ class ContractFactory(ContractWrapper):
         if len(events) == 0 or events[0].get("event") != "ProxyDeployed":
             raise Exception("No proxy deployed event found")
 
-        return cast(Any, events[0].get("args")).get("implementation")
+        address = cast(Any, events[0].get("args")).get("implementation")
+        print("ADDRESS: ", address)
+        return address
 
     def get_deploy_arguments(
         self,

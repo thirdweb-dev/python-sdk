@@ -28,6 +28,7 @@ class ContractMetadata(Generic[Schema]):
             self._contract_wrapper._contract_abi,
         )
         uri = abi.contract_uri.call()
+        print("URI: ", uri)
         data = self._storage.get(uri)
         return self._schema.from_json(data)
 

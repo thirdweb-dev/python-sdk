@@ -37,6 +37,15 @@ def sdk_local(contract_addresses):
     )
     sdk.deployer._set_registry(registry)
 
+    # Grant factory operator role on registry
+    operator_role = registry._contract_abi.operator_role.call()  # type: ignore
+    registry.send_transaction("grant_role", [operator_role, contract_addresses.factory])
+
+    # Add deployed contract implementatinos to factory
+    factory.send_transaction("add_implementation", [contract_addresses.nft_collection])
+    factory.send_transaction("add_implementation", [contract_addresses.edition])
+    factory.send_transaction("add_implementation", [contract_addresses.token])
+
     return sdk
 
 

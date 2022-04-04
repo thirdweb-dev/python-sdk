@@ -10,21 +10,15 @@ import pytest
 from thirdweb.types.settings.metadata import TokenContractMetadata
 
 
-@pytest.mark.usefixtures("sdk", "contract_addresses")
+@pytest.mark.usefixtures("sdk")
 @pytest.fixture()
-def token(sdk: ThirdwebSDK, contract_addresses) -> Token:
-    factory = cast(ContractFactory, sdk.deployer._get_factory())
-    registry = cast(ContractRegistry, sdk.deployer._get_registry())
-
-    factory.send_transaction("add_implementation", [contract_addresses.token])
-    operator_role = registry._contract_abi.operator_role.call()  # type: ignore
-    registry.send_transaction("grant_role", [operator_role, contract_addresses.factory])
-
+def token(sdk: ThirdwebSDK) -> Token:
     token_address = sdk.deployer.deploy_token(
         {
-            "name": "Test Token",
-            "symbol": "TST",
-            "description": "Test token from tests",
+            "name": "Testing token from SDK",
+            "symbol": "TEST",
+            "description": "Test contract from tests",
+            "image": "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
             "primary_sale_recipient": accounts[0].address,
         }
     )
@@ -36,8 +30,6 @@ def token(sdk: ThirdwebSDK, contract_addresses) -> Token:
 #     """
 #     Get token metadata
 #     """
-
-#     token.metadata.set(TokenContractMetadata(name="Test Token", symbol="TST"))
 
 #     metadata = token.metadata.get()
 
