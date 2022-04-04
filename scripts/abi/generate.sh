@@ -1,5 +1,13 @@
 # This script will generate python ABIs from the /abi directory
 
+# TWRegistry
+abi-gen --language Python -o thirdweb/abi --abis abi/TWRegistry.json
+
+
+# TW Factory
+abi-gen --language Python -o thirdweb/abi --abis abi/TWFactory.json
+
+
 # Token
 abi-gen --language Python -o thirdweb/abi --abis abi/TokenERC20.json
 
@@ -12,9 +20,6 @@ abi-gen --language Python -o thirdweb/abi --abis abi/TokenERC721.json
 abi-gen --language Python -o thirdweb/abi --abis abi/TokenERC1155.json
 
 
-# TWRegistry
-abi-gen --language Python -o thirdweb/abi --abis abi/TWRegistry.json
-sed -i '' "s/Union[bytes, str](returned)/cast(Union[bytes, str], (returned))/g" thirdweb/abi/t_w_registry/__init__.py
+# Marketplace
+abi-gen --language Python -o thirdweb/abi --abis abi/Marketplace.json
 
-# TW Factory
-abi-gen --language Python -o thirdweb/abi --abis abi/TWFactory.json

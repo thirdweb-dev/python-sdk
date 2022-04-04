@@ -1,12 +1,21 @@
 from enum import Enum
 from typing import TypeVar, Union
-from thirdweb.abi import TokenERC20, TokenERC721, TokenERC1155, TWRegistry, TWFactory
+from thirdweb.abi import (
+    TokenERC20,
+    TokenERC721,
+    TokenERC1155,
+    Marketplace,
+    TWRegistry,
+    TWFactory,
+)
 from thirdweb.types.settings.metadata import ContractMetadataSchema
 
 
 TContractABI = TypeVar(
     "TContractABI",
-    bound=Union[TokenERC721, TokenERC1155, TokenERC20, TWRegistry, TWFactory],
+    bound=Union[
+        TokenERC721, TokenERC1155, TokenERC20, Marketplace, TWRegistry, TWFactory
+    ],
 )
 
 TPrimarySaleABI = TypeVar(
@@ -20,11 +29,7 @@ TPrimarySaleABI = TypeVar(
 
 TPlatformFeeABI = TypeVar(
     "TPlatformFeeABI",
-    bound=Union[
-        TokenERC721,
-        TokenERC1155,
-        TokenERC20,
-    ],
+    bound=Union[TokenERC721, TokenERC1155, TokenERC20, Marketplace],
 )
 
 TRoyaltyABI = TypeVar(
@@ -41,6 +46,7 @@ TMetadataABI = TypeVar(
         TokenERC721,
         TokenERC1155,
         TokenERC20,
+        Marketplace,
     ],
 )
 
@@ -51,3 +57,4 @@ class ContractType(Enum):
     NFT_COLLECTION = "nft-collection"
     EDITION = "edition"
     TOKEN = "token"
+    MARKETPLACE = "marketplace"
