@@ -46,6 +46,22 @@ class NewAuctionListing:
 
 
 @dataclass
+class ContractListing:
+    listing_id: int
+    token_owner: str
+    asset_contract: str
+    token_id: int
+    start_time: int
+    end_time: int
+    quantity: int
+    currency: str
+    reserve_price_per_token: int
+    buyout_price_per_token: int
+    token_type: int
+    listing_type: int
+
+
+@dataclass
 class DirectListing:
     id: str
     asset_contract_address: str

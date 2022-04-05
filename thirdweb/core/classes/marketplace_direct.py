@@ -63,5 +63,7 @@ class MarketplaceDirect(BaseContract):
     def _map_listing(self, listing) -> DirectListing:
         pass
 
-    def _is_still_valid_listing(self, listing: DirectListing, quantity: int) -> bool:
+    def _is_still_valid_listing(
+        self, listing: DirectListing, quantity: Optional[int] = None
+    ) -> bool:
         pass

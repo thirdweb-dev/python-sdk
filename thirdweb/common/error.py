@@ -46,3 +46,27 @@ class DuplicateFileNameException(Exception):
 class RoleException(Exception):
     def __init__(self, message: str):
         super().__init__(f"ROLE ERROR: {message}")
+
+
+class WrongListingTypeException(Exception):
+    def __init__(self, listing_id: int, listing_type: str, expected_type: str):
+        super().__init__(
+            f"The listing type of {str(listing_id)} is not valid : {listing_type}, expected {expected_type}."
+        )
+
+
+class AuctionAlreadyStartedException(Exception):
+    def __init__(self, listing_id: int):
+        super().__init__(
+            f"The auction of listing {str(listing_id)} has already started."
+        )
+
+
+class AuctionHasNotEndedException(Exception):
+    def __init__(self, listing_id: int):
+        super().__init__(f"The auction of listing {str(listing_id)} has not ended yet.")
+
+
+class ListingNotFoundException(Exception):
+    def __init__(self, listing_id: int):
+        super().__init__(f"The listing {str(listing_id)} has not been found.")

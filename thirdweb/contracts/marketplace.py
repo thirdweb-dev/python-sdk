@@ -1,5 +1,14 @@
+from time import time
+from brownie import ZERO_ADDRESS
+from thirdweb.common.error import ListingNotFoundException
 from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
-from thirdweb.types.marketplace import AuctionListing, DirectListing
+from thirdweb.types.marketplace import (
+    AuctionListing,
+    ContractListing,
+    DirectListing,
+    ListingType,
+    MarketplaceFilter,
+)
 from thirdweb.types.settings.metadata import MarketplaceContractMetadata
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_roles import ContractRoles
@@ -11,14 +20,14 @@ from thirdweb.core.classes.marketplace_direct import MarketplaceDirect
 from thirdweb.types.contract import ContractType
 from eth_account.account import LocalAccount
 from thirdweb.types.sdk import SDKOptions
-from thirdweb.constants.role import Role
-from typing import Final, List, Optional, Union
+from thirdweb.constants.role import Role, get_role_hash
+from typing import Any, Final, List, Optional, Union, cast
 from thirdweb.abi import Marketplace as MarketplaceABI
 from web3.eth import TxReceipt
 from web3 import Web3
 
 
-class Marketplace(BaseContract):
+class Marketplace(BaseContract[MarketplaceABI]):
     _abi_type: MarketplaceABI
     _storage: IpfsStorage
 
@@ -54,54 +63,184 @@ class Marketplace(BaseContract):
     """
 
     def get_listing(self, listing_id: int) -> Union[DirectListing, AuctionListing]:
-        pass
+        listing_args = self._contract_wrapper._contract_abi.listings.call(listing_id)
+        listing = ContractListing(*listing_args)
+
+        if listing.asset_contract == ZERO_ADDRESS:
+            raise ListingNotFoundException(listing_id)
+
+        if listing.listing_type == ListingType.AUCTION:
+            return self.auction._map_listing(listing)
+        if listing.listing_type == ListingType.DIRECT:
+            return self.direct._map_listing(listing)
+
+        raise Exception(f"Unkown listing type {listing.listing_type}")
 
     def get_active_listings(self) -> List[Union[DirectListing, AuctionListing]]:
-        pass
+        raw_listings = self._get_all_listings_no_filter()
 
-    def get_all_listings(self) -> List[Union[DirectListing, AuctionListing]]:
-        pass
+        listings: List[Union[DirectListing, AuctionListing]] = []
+        for listing in raw_listings:
+            if listing.type == ListingType.AUCTION and cast(
+                AuctionListing, listing
+            ).end_time_in_epoch_seconds > int(time()):
+                listings.append(self.auction._map_listing(listing))
+            elif listing.type == ListingType.DIRECT and listing.quantity > 0:
+                listings.append(self.direct._map_listing(listing))
+
+        return listings
+
+    def get_all_listings(
+        self, filter: MarketplaceFilter
+    ) -> List[Union[DirectListing, AuctionListing]]:
+        raw_listings = self._get_all_listings_no_filter()
+
+        if filter:
+            if filter.seller:
+                raw_listings = [
+                    listing
+                    for listing in raw_listings
+                    if listing.seller_address == filter.seller
+                ]
+            if filter.token_contract:
+                if filter.token_id:
+                    raw_listings = [
+                        listing
+                        for listing in raw_listings
+                        if listing.asset_contract_address == filter.token_contract
+                        and listing.token_id == filter.token_id
+                    ]
+                else:
+                    raw_listings = [
+                        listing
+                        for listing in raw_listings
+                        if listing.asset_contract_address == filter.token_contract
+                    ]
+
+            max_id = min(filter.start + filter.count, self.get_total_count())
+            raw_listings = [raw_listings[i] for i in range(filter.start, max_id)]
+
+        return [listing for listing in raw_listings if listing is not None]
 
     get_all = get_all_listings
 
     def get_total_count(self) -> int:
-        pass
+        return self._contract_wrapper._contract_abi.total_listings.call()
 
     def is_restricted_to_lister_role_only(self) -> bool:
-        pass
+        anyone_can_list = self._contract_wrapper._contract_abi.has_role.call(
+            get_role_hash(Role.LISTER), ZERO_ADDRESS
+        )
+        return not anyone_can_list
 
     def get_bid_buffer_bps(self) -> int:
-        pass
+        return self._contract_wrapper._contract_abi.bid_buffer_bps.call()
 
     def get_time_buffer_in_seconds(self) -> int:
-        pass
+        return self._contract_wrapper._contract_abi.time_buffer.call()
 
     """
     WRITE FUNCTIONS
     """
 
     def buyout_listing(
-        self, listing_id: int, quantity_desired: int, receiver: Optional[str] = None
+        self,
+        listing_id: int,
+        quantity_desired: Optional[int] = None,
+        receiver: Optional[str] = None,
     ) -> TxReceipt:
-        pass
+        raw_listing = self._contract_wrapper._contract_abi.listings.call(listing_id)
+        listing = ContractListing(*raw_listing)
+
+        if listing.listing_id != listing_id:
+            raise ListingNotFoundException(listing_id)
+
+        if listing.listing_type == ListingType.DIRECT:
+            if quantity_desired is None:
+                raise Exception("quantity_desired is required for direct listings")
+
+            return self.direct.buyout_listing(listing_id, quantity_desired, receiver)
+        elif listing.listing_type == ListingType.AUCTION:
+            return self.auction.buyout_listing(listing_id)
+
+        raise Exception(f"Unkown listing type {listing.listing_type}")
 
     def set_bid_buffer_bps(self, buffer_bps: int) -> TxReceipt:
-        pass
+        self.roles.verify([Role.ADMIN], self._contract_wrapper.get_signer_address())
+
+        time_buffer = self.get_time_buffer_in_seconds()
+        return self._contract_wrapper.send_transaction(
+            "set_auction_buffers", [time_buffer, buffer_bps]
+        )
 
     def set_time_buffer_in_seconds(self, buffer_in_seconds: int) -> TxReceipt:
-        pass
+        self.roles.verify([Role.ADMIN], self._contract_wrapper.get_signer_address())
+
+        bid_buffer_bps = self.get_bid_buffer_bps()
+        return self._contract_wrapper.send_transaction(
+            "set_auction_buffers", [buffer_in_seconds, bid_buffer_bps]
+        )
 
     def allow_listing_from_specific_asset_only(
         self, contract_address: str
     ) -> TxReceipt:
-        pass
+        encoded = []
+        interface = self._contract_wrapper.get_contract_interface()
+        members = self.roles.get(Role.ASSET)
+
+        if ZERO_ADDRESS in members:
+            encoded.append(
+                interface.encodeABI(
+                    "revoke_role", [get_role_hash(Role.ASSET), ZERO_ADDRESS]
+                )
+            )
+
+        encoded.append(
+            interface.encodeABI(
+                "grant_role", [get_role_hash(Role.ASSET), contract_address]
+            )
+        )
+
+        return self._contract_wrapper.multi_call(encoded)
 
     def allow_listing_from_any_asset(self) -> TxReceipt:
-        pass
+        encoded = []
+        interface = self._contract_wrapper.get_contract_interface()
+        members = self.roles.get(Role.ASSET)
+
+        for member in members:
+            encoded.append(
+                interface.encodeABI("revoke_role", [get_role_hash(Role.ASSET), member])
+            )
+
+        encoded.append(
+            interface.encodeABI("grant_role", [get_role_hash(Role.ASSET), ZERO_ADDRESS])
+        )
+
+        return self._contract_wrapper.multi_call(encoded)
 
     """
     INTERNAL FUNCTIONS
     """
 
-    def _get_all_listings_no_filter(self) -> List[Union[DirectListing, AuctionListing]]:
-        pass
+    def _get_all_listings_no_filter(
+        self,
+    ) -> List[Union[DirectListing, AuctionListing]]:
+        total_listings = self._contract_wrapper._contract_abi.total_listings.call()
+
+        listings = []
+        for i in range(total_listings):
+            try:
+                listing = self.get_listing(i)
+
+                if listing.type == ListingType.AUCTION:
+                    listings.append(listing)
+
+                valid = self.direct._is_still_valid_listing(cast(Any, listing))
+
+                if valid:
+                    listings.append(listing)
+            except:
+                pass
+
+        return [listing for listing in listings if listing is not None]

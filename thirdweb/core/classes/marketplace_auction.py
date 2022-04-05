@@ -23,7 +23,7 @@ class MarketplaceAuction(BaseContract):
     def get_winning_bid(self, listing_id: int) -> Optional[Offer]:
         pass
 
-    def get_winner(listing_id) -> str:
+    def get_winner(self, listing_id) -> str:
         pass
 
     """
