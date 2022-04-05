@@ -63,7 +63,7 @@ class ContractListing:
 
 @dataclass
 class DirectListing:
-    id: str
+    id: int
     asset_contract_address: str
     token_id: int
     asset: NFTMetadata
@@ -72,13 +72,14 @@ class DirectListing:
     quantity: int
     currency_contract_address: str
     buyout_currency_value_per_token: CurrencyValue
+    buyout_price: int
     seller_address: str
     type = ListingType.DIRECT
 
 
 @dataclass
 class AuctionListing:
-    id: str
+    id: int
     asset_contract_address: str
     token_id: int
     asset: NFTMetadata
@@ -91,6 +92,15 @@ class AuctionListing:
     reserve_price_currency_value_per_token: CurrencyValue
     seller_address: str
     type = ListingType.AUCTION
+
+
+@dataclass
+class ContractOffer:
+    listing_id: int
+    offeror: str
+    quantity_wanted: int
+    currency: str
+    price_per_token: int
 
 
 @dataclass

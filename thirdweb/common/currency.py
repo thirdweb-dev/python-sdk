@@ -1,6 +1,8 @@
+from typing import Any
 from thirdweb.constants.chains import ChainId
+from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.types.currency import Currency, CurrencyValue
-from thirdweb.abi import TokenERC20
+from thirdweb.abi import TokenERC20, IERC20
 from thirdweb.constants.currency import (
     NATIVE_TOKEN_ADDRESS,
     ZERO_ADDRESS,
@@ -51,3 +53,49 @@ def normalize_price_value(
 ) -> int:
     metadata = fetch_currency_metadata(provider, currency_address)
     return parse_units(input_price, metadata.decimals)
+
+
+def set_erc20_allowance(
+    contract_to_approve: ContractWrapper,
+    value: int,
+    currency_address: str,
+    overrides: Any,
+):
+    if is_native_token(currency_address):
+        overrides["value"] = value
+    else:
+        signer = contract_to_approve.get_signer()
+        provider = contract_to_approve.get_provider()
+
+        abi = IERC20(provider, currency_address)
+        erc20 = ContractWrapper[IERC20](abi, provider, signer)
+
+        owner = contract_to_approve.get_signer_address()
+        spender = contract_to_approve._contract_abi.contract_address
+        allowance = erc20._contract_abi.allowance.call(owner, spender)
+
+        if allowance < value:
+            erc20.send_transaction("approve", [spender, value])
+
+        return overrides
+
+
+def approve_erc20_allowance(
+    contract_to_approve: ContractWrapper,
+    currency_address: str,
+    price: int,
+    quantity: int,
+):
+    signer = contract_to_approve.get_signer()
+    provider = contract_to_approve.get_provider()
+
+    abi = IERC20(provider, currency_address)
+    erc20 = ContractWrapper[IERC20](abi, provider, signer)
+
+    owner = contract_to_approve.get_signer_address()
+    spender = contract_to_approve._contract_abi.contract_address
+    allowance = erc20._contract_abi.allowance.call(owner, spender)
+    total_price = price * quantity
+
+    if allowance < total_price:
+        erc20.send_transaction("approve", [spender, allowance + total_price])

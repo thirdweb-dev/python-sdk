@@ -9,3 +9,5 @@ poetry install
 # Make sure ganache is installed globally as it is a dependency of brownie
 poetry run yarn global add ganache
 poetry run yarn add hardhat
+
+bash scripts/abi/generate.sh

@@ -23,3 +23,8 @@ abi-gen --language Python -o thirdweb/abi --abis abi/TokenERC1155.json
 # Marketplace
 abi-gen --language Python -o thirdweb/abi --abis abi/Marketplace.json
 
+# ERC165, IERC721, IERC1155
+abi-gen --language Python -o thirdweb/abi --abis abi/ERC165.json
+abi-gen --language Python -o thirdweb/abi --abis abi/IERC20.json
+abi-gen --language Python -o thirdweb/abi --abis abi/IERC721.json
+abi-gen --language Python -o thirdweb/abi --abis abi/IERC1155.json

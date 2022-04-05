@@ -69,4 +69,4 @@ class AuctionHasNotEndedException(Exception):
 
 class ListingNotFoundException(Exception):
     def __init__(self, listing_id: int):
-        super().__init__(f"The listing {str(listing_id)} has not been found.")
+        super().__init__(f"Error getting the listing with ID {str(listing_id)}.")

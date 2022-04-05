@@ -1,12 +1,15 @@
 from enum import Enum
 from typing import TypeVar, Union
 from thirdweb.abi import (
+    TWRegistry,
+    TWFactory,
     TokenERC20,
     TokenERC721,
     TokenERC1155,
     Marketplace,
-    TWRegistry,
-    TWFactory,
+    IERC20,
+    IERC721,
+    IERC1155,
 )
 from thirdweb.types.settings.metadata import ContractMetadataSchema
 
@@ -14,7 +17,15 @@ from thirdweb.types.settings.metadata import ContractMetadataSchema
 TContractABI = TypeVar(
     "TContractABI",
     bound=Union[
-        TokenERC721, TokenERC1155, TokenERC20, Marketplace, TWRegistry, TWFactory
+        TokenERC721,
+        TokenERC1155,
+        TokenERC20,
+        Marketplace,
+        IERC20,
+        IERC721,
+        IERC1155,
+        TWRegistry,
+        TWFactory,
     ],
 )
 
