@@ -13,6 +13,7 @@ from thirdweb.contracts.maps import (
     CONTRACTS_MAP,
     REMOTE_CONTRACT_NAME,
 )
+from thirdweb.contracts.marketplace import Marketplace
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from eth_account.account import LocalAccount
 
@@ -21,6 +22,7 @@ from thirdweb.types.contract import ContractType
 from thirdweb.types.sdk import SDKOptions
 from thirdweb.types.settings.metadata import (
     EditionContractMetadata,
+    MarketplaceContractMetadata,
     NFTCollectionContractMetadata,
     TokenContractMetadata,
 )
@@ -133,6 +135,16 @@ class ContractFactory(ContractWrapper):
                 contract_uri,
                 trusted_forwarders,
                 metadata.primary_sale_recipient,
+                metadata.platform_fee_recipient,
+                metadata.platform_fee_basis_points,
+            ]
+        if contract_type == Marketplace.contract_type:
+            metadata = MarketplaceContractMetadata.from_json(contract_metadata)
+
+            return [
+                self.get_signer_address(),
+                contract_uri,
+                trusted_forwarders,
                 metadata.platform_fee_recipient,
                 metadata.platform_fee_basis_points,
             ]

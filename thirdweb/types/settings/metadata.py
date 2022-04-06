@@ -89,7 +89,7 @@ class TokenContractMetadata(
 
 
 @dataclass
-class MarketplaceContractMetadata(ContractMetadataSchema):
+class MarketplaceContractMetadata(ContractMetadataSchema, ContractPlatformFeeSchema):
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "MarketplaceContractMetadata":
         return from_dict(MarketplaceContractMetadata, json)

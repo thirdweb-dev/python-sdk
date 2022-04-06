@@ -1,3 +1,4 @@
+from thirdweb.contracts import Marketplace
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.contract_deployer import ContractDeployer
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
@@ -12,7 +13,7 @@ from thirdweb.types.sdk import SDKOptions
 
 
 class ThirdwebSDK(ProviderHandler):
-    __contract_cache: Dict[str, Union[NFTCollection, Edition, Token]] = {}
+    __contract_cache: Dict[str, Union[NFTCollection, Edition, Token, Marketplace]] = {}
     __storage: IpfsStorage
 
     deployer: ContractDeployer
@@ -67,6 +68,16 @@ class ThirdwebSDK(ProviderHandler):
 
         return cast(Token, self._get_contract(address, Token))
 
+    def get_marketplace(self, address: str) -> Marketplace:
+        """
+        Returns a Marketplace contract SDK instance
+
+        :param address: address of the Marketplace contract
+        :returns: Marketplace contract SDK instance
+        """
+
+        return cast(Marketplace, self._get_contract(address, Marketplace))
+
     def update_provider(self, provider: Web3):
         """
         Update the provider instance used by the SDK.
@@ -94,8 +105,10 @@ class ThirdwebSDK(ProviderHandler):
     def _get_contract(
         self,
         address: str,
-        contract_type: Union[Type[NFTCollection], Type[Edition], Type[Token]],
-    ) -> Union[NFTCollection, Edition, Token]:
+        contract_type: Union[
+            Type[NFTCollection], Type[Edition], Type[Token], Type[Marketplace]
+        ],
+    ) -> Union[NFTCollection, Edition, Token, Marketplace]:
         if address in self.__contract_cache:
             return self.__contract_cache[address]
 

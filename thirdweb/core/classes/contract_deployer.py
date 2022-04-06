@@ -37,6 +37,9 @@ class ContractDeployer(ProviderHandler):
     def deploy_token(self, metadata: Dict[str, Any]) -> str:
         return self.deploy_contract(ContractType.TOKEN, metadata)
 
+    def deploy_marketplace(self, metadata: Dict[str, Any]) -> str:
+        return self.deploy_contract(ContractType.MARKETPLACE, metadata)
+
     def deploy_contract(
         self, contract_type: ContractType, contract_metadata: Dict[str, Any]
     ) -> str:

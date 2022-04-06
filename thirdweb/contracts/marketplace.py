@@ -1,6 +1,6 @@
 from time import time
-from brownie import ZERO_ADDRESS
 from thirdweb.common.error import ListingNotFoundException
+from thirdweb.constants.currency import ZERO_ADDRESS
 from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
 from thirdweb.types.marketplace import (
     AuctionListing,
