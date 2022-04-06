@@ -86,6 +86,7 @@ class AuctionListing:
     start_time_in_epoch_seconds: int
     end_time_in_epoch_seconds: int
     quantity: int
+    currency_contract_address: str
     reserve_price: int
     buyout_price: int
     buyout_currency_value_per_token: CurrencyValue
