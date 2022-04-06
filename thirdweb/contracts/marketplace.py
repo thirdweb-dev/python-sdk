@@ -28,7 +28,7 @@ from web3 import Web3
 
 
 class Marketplace(BaseContract[MarketplaceABI]):
-    _abi_type: MarketplaceABI
+    _abi_type = MarketplaceABI
     _storage: IpfsStorage
 
     contract_type: Final[ContractType] = ContractType.MARKETPLACE
@@ -84,18 +84,18 @@ class Marketplace(BaseContract[MarketplaceABI]):
             if listing.type == ListingType.AUCTION and cast(
                 AuctionListing, listing
             ).end_time_in_epoch_seconds > int(time()):
-                listings.append(self.auction._map_listing(listing))
+                listings.append(listing)
             elif listing.type == ListingType.DIRECT and listing.quantity > 0:
-                listings.append(self.direct._map_listing(listing))
+                listings.append(listing)
 
         return listings
 
     def get_all_listings(
-        self, filter: MarketplaceFilter
+        self, filter: MarketplaceFilter = None
     ) -> List[Union[DirectListing, AuctionListing]]:
         raw_listings = self._get_all_listings_no_filter()
 
-        if filter:
+        if filter is not None:
             if filter.seller:
                 raw_listings = [
                     listing

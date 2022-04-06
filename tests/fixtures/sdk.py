@@ -1,10 +1,9 @@
+from thirdweb.core.classes.registry import ContractRegistry
 from thirdweb.core.classes.factory import ContractFactory
 from web3.middleware import geth_poa_middleware
-from thirdweb.core.classes.registry import ContractRegistry
 from thirdweb.core.sdk import ThirdwebSDK
 from eth_account import Account
 from dotenv import load_dotenv
-from brownie import accounts
 from web3 import Web3
 import pytest
 import os
@@ -45,6 +44,7 @@ def sdk_local(contract_addresses):
     factory.send_transaction("add_implementation", [contract_addresses.nft_collection])
     factory.send_transaction("add_implementation", [contract_addresses.edition])
     factory.send_transaction("add_implementation", [contract_addresses.token])
+    factory.send_transaction("add_implementation", [contract_addresses.marketplace])
 
     return sdk
 
