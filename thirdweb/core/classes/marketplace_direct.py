@@ -1,5 +1,5 @@
 from re import M
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 
 from brownie import ZERO_ADDRESS
 from eth_utils import is_address
@@ -7,6 +7,7 @@ from thirdweb.abi import Marketplace
 from thirdweb.abi.erc165 import ERC165
 from thirdweb.abi.ierc1155 import IERC1155
 from thirdweb.abi.ierc721 import IERC721
+from thirdweb.abi.marketplace import IMarketplaceListingParameters
 from thirdweb.common.currency import (
     fetch_currency_value,
     is_native_token,
@@ -83,7 +84,7 @@ class MarketplaceDirect(BaseContract[Marketplace]):
     WRITE FUNCTIONS
     """
 
-    def create_listing(self, listing: NewDirectListing) -> TxReceipt:
+    def create_listing(self, listing: NewDirectListing) -> int:
         validate_new_listing_param(listing)
 
         handle_token_approval(
@@ -101,21 +102,27 @@ class MarketplaceDirect(BaseContract[Marketplace]):
             listing.currency_contract_address,
         )
 
-        return self._contract_wrapper.send_transaction(
+        receipt = self._contract_wrapper.send_transaction(
             "create_listing",
             [
-                {
-                    "asset_contract": listing.asset_contract_address,
-                    "token_id": listing.token_id,
-                    "buyout_price_per_token": normalized_price_per_token,
-                    "currency_to_accept": listing.currency_contract_address,
-                    "quantity_to_list": listing.quantity,
-                    "reserve_price_per_token": normalized_price_per_token,
-                    "seconds_until_end_time": listing.listing_duration_in_seconds,
-                    "start_time": listing.start_time_in_seconds,
-                }
+                IMarketplaceListingParameters(
+                    assetContract=listing.asset_contract_address,
+                    tokenId=listing.token_id,
+                    startTime=listing.start_time_in_seconds,
+                    secondsUntilEndTime=listing.listing_duration_in_seconds,
+                    quantityToList=listing.quantity,
+                    currencyToAccept=listing.currency_contract_address,
+                    reservePricePerToken=normalized_price_per_token,
+                    buyoutPricePerToken=normalized_price_per_token,
+                    listingType=0,
+                )
             ],
         )
+
+        print("RECEIPT: ", receipt)
+
+        events = self._contract_wrapper.get_events("ListingAdded", receipt)
+        return cast(Any, events[0].get("args")).get("listingId")
 
     def make_offer(
         self,

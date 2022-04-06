@@ -9,18 +9,18 @@ import pytest
 @pytest.mark.usefixtures("sdk")
 @pytest.fixture(scope="function")
 def nft_collection(sdk: ThirdwebSDK) -> NFTCollection:
-    nft_collection_address = sdk.deployer.deploy_nft_collection(
-        {
-            "name": "SDK NFT Collection",
-            "primary_sale_recipient": ZERO_ADDRESS,
-            "seller_fee_basis_points": 10000,
-            "fee_recipient": ZERO_ADDRESS,
-            "platform_fee_basis_points": 10,
-            "platform_fee_recipient": ZERO_ADDRESS,
-        }
+    return sdk.get_nft_collection(
+        sdk.deployer.deploy_nft_collection(
+            {
+                "name": "SDK NFT Collection",
+                "primary_sale_recipient": ZERO_ADDRESS,
+                "seller_fee_basis_points": 10000,
+                "fee_recipient": ZERO_ADDRESS,
+                "platform_fee_basis_points": 10,
+                "platform_fee_recipient": ZERO_ADDRESS,
+            }
+        )
     )
-    nft_collection = sdk.get_nft_collection(nft_collection_address)
-    return nft_collection
 
 
 def test_mint(nft_collection: NFTCollection):

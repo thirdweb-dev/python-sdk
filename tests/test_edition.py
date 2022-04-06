@@ -11,19 +11,19 @@ from thirdweb.types.nft import EditionMetadataInput, NFTMetadataInput
 @pytest.mark.usefixtures("sdk")
 @pytest.fixture()
 def edition(sdk: ThirdwebSDK) -> Edition:
-    edition_address = sdk.deployer.deploy_edition(
-        {
-            "name": "SDK Edition",
-            "symbol": "SDK",
-            "primary_sale_recipient": ZERO_ADDRESS,
-            "seller_fee_basis_points": 1000,
-            "fee_recipient": ZERO_ADDRESS,
-            "platform_fee_basis_points": 10,
-            "platform_fee_recipient": ZERO_ADDRESS,
-        }
+    return sdk.get_edition(
+        sdk.deployer.deploy_edition(
+            {
+                "name": "SDK Edition",
+                "symbol": "SDK",
+                "primary_sale_recipient": ZERO_ADDRESS,
+                "seller_fee_basis_points": 1000,
+                "fee_recipient": ZERO_ADDRESS,
+                "platform_fee_basis_points": 10,
+                "platform_fee_recipient": ZERO_ADDRESS,
+            }
+        )
     )
-    edition = sdk.get_edition(edition_address)
-    return edition
 
 
 def test_mint(edition: Edition):

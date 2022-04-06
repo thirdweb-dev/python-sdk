@@ -1,6 +1,7 @@
 from time import time
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 from thirdweb.abi import Marketplace
+from thirdweb.abi.marketplace import IMarketplaceListingParameters
 from thirdweb.common.currency import (
     fetch_currency_metadata,
     fetch_currency_value,
@@ -92,7 +93,7 @@ class MarketplaceAuction(BaseContract[Marketplace]):
     WRITE FUNCTIONS
     """
 
-    def create_listing(self, listing: NewAuctionListing) -> TxReceipt:
+    def create_listing(self, listing: NewAuctionListing) -> int:
         validate_new_listing_param(listing)
 
         handle_token_approval(
@@ -116,22 +117,25 @@ class MarketplaceAuction(BaseContract[Marketplace]):
             listing.currency_contract_address,
         )
 
-        return self._contract_wrapper.send_transaction(
+        receipt = self._contract_wrapper.send_transaction(
             "create_listings",
             [
-                {
-                    "asset_contract": listing.asset_contract_address,
-                    "token_id": listing.token_id,
-                    "buyout_price_per_token": normalized_price_per_token,
-                    "currency_to_accept": listing.currency_contract_address,
-                    "listing_type": ListingType.AUCTION,
-                    "quantity_to_list": listing.quantity,
-                    "reserve_price_per_token": normalized_reserve_price,
-                    "seconds_until_end_time": listing.listing_duration_in_seconds,
-                    "start_time": listing.start_time_in_seconds,
-                }
+                (
+                    listing.asset_contract_address,
+                    listing.token_id,
+                    listing.start_time_in_seconds,
+                    listing.listing_duration_in_seconds,
+                    listing.quantity,
+                    listing.currency_contract_address,
+                    normalized_reserve_price,
+                    normalized_price_per_token,
+                    cast(int, ListingType.DIRECT),
+                )
             ],
         )
+
+        events = self._contract_wrapper.get_events("ListingAdded", receipt)
+        return cast(Any, events[0].get("args")).get("listingId")
 
     def buyout_listing(self, listing_id: int) -> TxReceipt:
         listing = self._validate_listing(listing_id)

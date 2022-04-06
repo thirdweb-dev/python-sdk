@@ -1,7 +1,8 @@
-from typing import Any, Generic, List, Optional, cast
+from typing import Any, Generic, Tuple, List, Optional, cast
 from eth_typing import Address
 
 from web3 import Web3
+from web3.datastructures import AttributeDict
 from web3.contract import Contract
 from thirdweb.common.error import NoSignerException
 
@@ -75,6 +76,16 @@ class ContractWrapper(Generic[TContractABI], ProviderHandler):
             address=cast(Address, self._contract_abi.contract_address),
             abi=self._contract_abi.abi(),
         )
+
+    def get_events(self, event: str, receipt: TxReceipt) -> Tuple[AttributeDict]:
+        """
+        Get the events from a transaction receipt.
+
+        :param event: name of the event to get
+        :param receipt: transaction receipt to get the events from
+        """
+
+        return self.get_contract_interface().events[event]().processReceipt(receipt)
 
     def send_transaction(self, fn: str, args: List[Any]) -> TxReceipt:
         """

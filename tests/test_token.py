@@ -10,15 +10,15 @@ import pytest
 @pytest.mark.usefixtures("sdk")
 @pytest.fixture(scope="function")
 def token(sdk: ThirdwebSDK) -> Token:
-    token_address = sdk.deployer.deploy_token(
-        {
-            "name": "SDK Token",
-            "symbol": "SDK",
-            "primary_sale_recipient": ZERO_ADDRESS,
-        }
+    return sdk.get_token(
+        sdk.deployer.deploy_token(
+            {
+                "name": "SDK Token",
+                "symbol": "SDK",
+                "primary_sale_recipient": ZERO_ADDRESS,
+            }
+        )
     )
-    token = sdk.get_token(token_address)
-    return token
 
 
 def test_metadata(token: Token):
