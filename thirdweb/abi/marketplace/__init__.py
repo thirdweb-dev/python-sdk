@@ -910,7 +910,6 @@ class CreateListingMethod(ContractMethod):  # pylint: disable=invalid-name
         """Construct calldata to be used as input to the method."""
         (params) = self.validate_and_normalize_inputs(params)
         tx_params = super().normalize_tx_params(tx_params)
-        print("PARAMS: ", params)
         return self._underlying_method(params).buildTransaction(tx_params.as_dict())
 
     def estimate_gas(

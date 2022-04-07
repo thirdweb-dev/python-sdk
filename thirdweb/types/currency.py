@@ -1,4 +1,8 @@
 from dataclasses import dataclass
+from typing import NewType
+
+Price = float
+PriceWei = int
 
 
 @dataclass
@@ -10,8 +14,8 @@ class Currency:
 
 @dataclass
 class CurrencyValue(Currency):
-    value: int
-    display_value: int
+    value: PriceWei
+    display_value: Price
 
 
 @dataclass

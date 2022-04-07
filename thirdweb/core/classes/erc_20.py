@@ -8,7 +8,13 @@ from thirdweb.common.currency import (
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
-from thirdweb.types.currency import Currency, CurrencyValue, TokenAmount
+from thirdweb.types.currency import (
+    Currency,
+    CurrencyValue,
+    Price,
+    PriceWei,
+    TokenAmount,
+)
 from web3.eth import TxReceipt
 
 
@@ -101,7 +107,7 @@ class ERC20(BaseContract):
     WRITE FUNCTIONS
     """
 
-    def transfer(self, to: str, amount: int) -> TxReceipt:
+    def transfer(self, to: str, amount: Price) -> TxReceipt:
         """
         Transfer a specified amount of tokens from the connected wallet to a specified address.
 
@@ -115,7 +121,7 @@ class ERC20(BaseContract):
             "transfer", [to, amount_with_decimals]
         )
 
-    def transfer_from(self, fr: str, to: str, amount: int) -> TxReceipt:
+    def transfer_from(self, fr: str, to: str, amount: Price) -> TxReceipt:
         """
         Transfer a specified amount of tokens from one specified address to another.
 
@@ -130,7 +136,7 @@ class ERC20(BaseContract):
             "transfer_from", [fr, to, amount_with_decimals]
         )
 
-    def set_allowance(self, spender: str, amount: int) -> TxReceipt:
+    def set_allowance(self, spender: str, amount: Price) -> TxReceipt:
         """
         Sets the allowance of the specified wallet over the connected wallets funds to
         a specified amount.
@@ -155,7 +161,7 @@ class ERC20(BaseContract):
 
         raise NotImplementedError
 
-    def burn(self, amount: int) -> TxReceipt:
+    def burn(self, amount: Price) -> TxReceipt:
         """
         Burn a specified amount of tokens from the connected wallet.
 
@@ -166,7 +172,7 @@ class ERC20(BaseContract):
         amount_with_decimals = parse_units(amount, self.get().decimals)
         return self._contract_wrapper.send_transaction("burn", [amount_with_decimals])
 
-    def burn_from(self, holder: str, amount: int) -> TxReceipt:
+    def burn_from(self, holder: str, amount: Price) -> TxReceipt:
         """
         Burn a specified amount of tokens from a specified wallet.
 
@@ -187,7 +193,7 @@ class ERC20(BaseContract):
     def _get_abi(self) -> TokenERC20:
         return cast(TokenERC20, self._contract_wrapper._contract_abi)
 
-    def _get_value(self, value: int) -> CurrencyValue:
+    def _get_value(self, value: PriceWei) -> CurrencyValue:
         return fetch_currency_value(
             self._contract_wrapper.get_provider(),
             self.get_address(),

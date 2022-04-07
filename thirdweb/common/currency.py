@@ -1,7 +1,7 @@
 from typing import Any
 from thirdweb.constants.chains import ChainId
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
-from thirdweb.types.currency import Currency, CurrencyValue
+from thirdweb.types.currency import Currency, CurrencyValue, Price, PriceWei
 from thirdweb.abi import TokenERC20, IERC20
 from thirdweb.constants.currency import (
     NATIVE_TOKEN_ADDRESS,
@@ -19,12 +19,12 @@ def is_native_token(token_address: str) -> bool:
     )
 
 
-def parse_units(value: int, decimals: int) -> int:
-    return value * (10**decimals)
+def parse_units(token_value: Price, decimals: int) -> PriceWei:
+    return int(token_value * (10**decimals))
 
 
-def format_units(value: int, decimals: int) -> int:
-    return value / (10**decimals)
+def format_units(wei_value: PriceWei, decimals: int) -> Price:
+    return wei_value / (10**decimals)
 
 
 def fetch_currency_metadata(provider: Web3, asset: str) -> Currency:
@@ -37,7 +37,7 @@ def fetch_currency_metadata(provider: Web3, asset: str) -> Currency:
     return Currency(abi.name.call(), abi.symbol.call(), abi.decimals.call())
 
 
-def fetch_currency_value(provider: Web3, asset: str, price: int) -> CurrencyValue:
+def fetch_currency_value(provider: Web3, asset: str, price: PriceWei) -> CurrencyValue:
     metadata = fetch_currency_metadata(provider, asset)
     return CurrencyValue(
         metadata.name,
@@ -49,8 +49,8 @@ def fetch_currency_value(provider: Web3, asset: str, price: int) -> CurrencyValu
 
 
 def normalize_price_value(
-    provider: Web3, input_price: int, currency_address: str
-) -> int:
+    provider: Web3, input_price: Price, currency_address: str
+) -> PriceWei:
     metadata = fetch_currency_metadata(provider, currency_address)
     return parse_units(input_price, metadata.decimals)
 
@@ -83,7 +83,7 @@ def set_erc20_allowance(
 def approve_erc20_allowance(
     contract_to_approve: ContractWrapper,
     currency_address: str,
-    price: int,
+    price: PriceWei,
     quantity: int,
 ):
     signer = contract_to_approve.get_signer()

@@ -25,6 +25,7 @@ from thirdweb.constants.currency import ZERO_ADDRESS
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
+from thirdweb.types.currency import Price
 from thirdweb.types.marketplace import (
     AuctionListing,
     ContractListing,
@@ -54,7 +55,7 @@ class MarketplaceAuction(BaseContract[Marketplace]):
         if listing.listing_id != listing_id:
             raise ListingNotFoundException(listing_id)
 
-        if listing.listing_type != ListingType.AUCTION:
+        if ListingType(listing.listing_type) != ListingType.AUCTION:
             raise WrongListingTypeException(
                 listing_id,
                 "Auction",
@@ -118,19 +119,19 @@ class MarketplaceAuction(BaseContract[Marketplace]):
         )
 
         receipt = self._contract_wrapper.send_transaction(
-            "create_listings",
+            "create_listing",
             [
-                (
-                    listing.asset_contract_address,
-                    listing.token_id,
-                    listing.start_time_in_seconds,
-                    listing.listing_duration_in_seconds,
-                    listing.quantity,
-                    listing.currency_contract_address,
-                    normalized_reserve_price,
-                    normalized_price_per_token,
-                    cast(int, ListingType.DIRECT),
-                )
+                IMarketplaceListingParameters(
+                    assetContract=listing.asset_contract_address,
+                    tokenId=listing.token_id,
+                    startTime=listing.start_time_in_seconds,
+                    secondsUntilEndTime=listing.listing_duration_in_seconds,
+                    quantityToList=listing.quantity,
+                    currencyToAccept=listing.currency_contract_address,
+                    reservePricePerToken=normalized_reserve_price,
+                    buyoutPricePerToken=normalized_price_per_token,
+                    listingType=1,
+                ),
             ],
         )
 
@@ -148,7 +149,7 @@ class MarketplaceAuction(BaseContract[Marketplace]):
             listing_id, format_units(listing.buyout_price, currency_metadata.decimals)
         )
 
-    def make_bid(self, listing_id: int, price_per_token: int) -> TxReceipt:
+    def make_bid(self, listing_id: int, price_per_token: Price) -> TxReceipt:
         listing = self._validate_listing(listing_id)
         normalized_price = normalize_price_value(
             self._contract_wrapper.get_provider(),

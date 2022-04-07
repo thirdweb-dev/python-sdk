@@ -69,9 +69,9 @@ class Marketplace(BaseContract[MarketplaceABI]):
         if listing.asset_contract == ZERO_ADDRESS:
             raise ListingNotFoundException(listing_id)
 
-        if listing.listing_type == ListingType.AUCTION:
+        if ListingType(listing.listing_type) == ListingType.AUCTION:
             return self.auction._map_listing(listing)
-        if listing.listing_type == ListingType.DIRECT:
+        if ListingType(listing.listing_type) == ListingType.DIRECT:
             return self.direct._map_listing(listing)
 
         raise Exception(f"Unkown listing type {listing.listing_type}")
@@ -81,11 +81,13 @@ class Marketplace(BaseContract[MarketplaceABI]):
 
         listings: List[Union[DirectListing, AuctionListing]] = []
         for listing in raw_listings:
-            if listing.type == ListingType.AUCTION and cast(
+            if ListingType(listing.type) == ListingType.AUCTION and cast(
                 AuctionListing, listing
             ).end_time_in_epoch_seconds > int(time()):
                 listings.append(listing)
-            elif listing.type == ListingType.DIRECT and listing.quantity > 0:
+            elif (
+                ListingType(listing.type) == ListingType.DIRECT and listing.quantity > 0
+            ):
                 listings.append(listing)
 
         return listings
@@ -155,12 +157,12 @@ class Marketplace(BaseContract[MarketplaceABI]):
         if listing.listing_id != listing_id:
             raise ListingNotFoundException(listing_id)
 
-        if listing.listing_type == ListingType.DIRECT:
+        if ListingType(listing.listing_type) == ListingType.DIRECT:
             if quantity_desired is None:
                 raise Exception("quantity_desired is required for direct listings")
 
             return self.direct.buyout_listing(listing_id, quantity_desired, receiver)
-        elif listing.listing_type == ListingType.AUCTION:
+        elif ListingType(listing.listing_type) == ListingType.AUCTION:
             return self.auction.buyout_listing(listing_id)
 
         raise Exception(f"Unkown listing type {listing.listing_type}")
@@ -233,13 +235,13 @@ class Marketplace(BaseContract[MarketplaceABI]):
             try:
                 listing = self.get_listing(i)
 
-                if listing.type == ListingType.AUCTION:
+                if ListingType(listing.type) == ListingType.AUCTION:
                     listings.append(listing)
+                else:
+                    valid = self.direct._is_still_valid_listing(cast(Any, listing))
 
-                valid = self.direct._is_still_valid_listing(cast(Any, listing))
-
-                if valid:
-                    listings.append(listing)
+                    if valid:
+                        listings.append(listing)
             except:
                 pass
 

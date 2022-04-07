@@ -5,6 +5,7 @@ from thirdweb.constants.contract import INTERFACE_ID_IERC1155, INTERFACE_ID_IERC
 from eth_account.account import LocalAccount
 from web3 import Web3
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
+from thirdweb.types.currency import Price, PriceWei
 
 from thirdweb.types.marketplace import (
     ContractOffer,
@@ -126,6 +127,8 @@ def map_offer(provider: Web3, listing_id: int, offer: ContractOffer) -> Offer:
     )
 
 
-def is_winning_bid(winning_price: int, new_bid_price: int, bid_buffer: int) -> bool:
+def is_winning_bid(
+    winning_price: PriceWei, new_bid_price: PriceWei, bid_buffer: int
+) -> bool:
     buffer = ((new_bid_price - winning_price) * MAX_BPS) / winning_price
     return buffer >= bid_buffer

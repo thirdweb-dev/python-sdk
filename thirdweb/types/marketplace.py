@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
-from thirdweb.types.currency import CurrencyValue
+from thirdweb.types.currency import CurrencyValue, Price, PriceWei
 
 from thirdweb.types.nft import NFTMetadata
 
@@ -55,8 +55,8 @@ class ContractListing:
     end_time: int
     quantity: int
     currency: str
-    reserve_price_per_token: int
-    buyout_price_per_token: int
+    reserve_price_per_token: PriceWei
+    buyout_price_per_token: PriceWei
     token_type: int
     listing_type: int
 
@@ -72,7 +72,7 @@ class DirectListing:
     quantity: int
     currency_contract_address: str
     buyout_currency_value_per_token: CurrencyValue
-    buyout_price: int
+    buyout_price: PriceWei
     seller_address: str
     type = ListingType.DIRECT
 
@@ -87,8 +87,8 @@ class AuctionListing:
     end_time_in_epoch_seconds: int
     quantity: int
     currency_contract_address: str
-    reserve_price: int
-    buyout_price: int
+    reserve_price: PriceWei
+    buyout_price: PriceWei
     buyout_currency_value_per_token: CurrencyValue
     reserve_price_currency_value_per_token: CurrencyValue
     seller_address: str
@@ -101,7 +101,7 @@ class ContractOffer:
     offeror: str
     quantity_wanted: int
     currency: str
-    price_per_token: int
+    price_per_token: PriceWei
 
 
 @dataclass
@@ -109,6 +109,6 @@ class Offer:
     listing_id: int
     buyer_address: str
     quantity_desired: int
-    price_per_token: int
+    price_per_token: PriceWei
     currency_value: CurrencyValue
     currency_contract_address: str

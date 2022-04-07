@@ -1,4 +1,3 @@
-from importlib.metadata import metadata
 from time import time
 from thirdweb.core.sdk import ThirdwebSDK
 from thirdweb.contracts import Marketplace, NFTCollection, Edition, Token
@@ -154,7 +153,7 @@ def test_listings(
     assert listing_id == 0
 
     listing_id = create_auction_listing(
-        marketplace, token.get_address(), nft_collection.get_address(), 0
+        marketplace, token.get_address(), nft_collection.get_address(), 1
     )
 
     assert listing_id == 1

@@ -26,6 +26,7 @@ from thirdweb.constants.contract import INTERFACE_ID_IERC1155, INTERFACE_ID_IERC
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
+from thirdweb.types.currency import Price
 from thirdweb.types.marketplace import (
     ContractListing,
     ContractOffer,
@@ -55,7 +56,7 @@ class MarketplaceDirect(BaseContract[Marketplace]):
         if listing.asset_contract == ZERO_ADDRESS:
             raise ListingNotFoundException(listing_id)
 
-        if listing.listing_type != ListingType.DIRECT:
+        if ListingType(listing.listing_type) != ListingType.DIRECT:
             raise WrongListingTypeException(
                 listing_id,
                 "Auction",
@@ -115,11 +116,9 @@ class MarketplaceDirect(BaseContract[Marketplace]):
                     reservePricePerToken=normalized_price_per_token,
                     buyoutPricePerToken=normalized_price_per_token,
                     listingType=0,
-                )
+                ),
             ],
         )
-
-        print("RECEIPT: ", receipt)
 
         events = self._contract_wrapper.get_events("ListingAdded", receipt)
         return cast(Any, events[0].get("args")).get("listingId")
@@ -129,7 +128,7 @@ class MarketplaceDirect(BaseContract[Marketplace]):
         listing_id: int,
         quantity_desired: int,
         currency_contract_address: str,
-        price_per_token: int,
+        price_per_token: Price,
     ) -> TxReceipt:
         if is_native_token(currency_contract_address):
             raise Exception(

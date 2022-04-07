@@ -12,7 +12,7 @@ from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_20 import ERC20
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
-from thirdweb.types.currency import CurrencyValue, TokenAmount
+from thirdweb.types.currency import CurrencyValue, Price, TokenAmount
 
 from thirdweb.types.sdk import SDKOptions
 from thirdweb.types.settings.metadata import TokenContractMetadata
@@ -91,7 +91,7 @@ class Token(ERC20):
     WRITE FUNCTIONS
     """
 
-    def mint(self, amount: int) -> TxReceipt:
+    def mint(self, amount: Price) -> TxReceipt:
         """
         Mint tokens to the connected wallet.
 
@@ -101,7 +101,7 @@ class Token(ERC20):
 
         return self.mint_to(self._contract_wrapper.get_signer_address(), amount)
 
-    def mint_to(self, to: str, amount: int) -> TxReceipt:
+    def mint_to(self, to: str, amount: Price) -> TxReceipt:
         """
         Mint tokens to a specified wallet.
 
