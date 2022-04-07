@@ -24,11 +24,14 @@ def nft_collection(sdk: ThirdwebSDK) -> NFTCollection:
 
 
 def test_mint(nft_collection: NFTCollection):
-    nft_collection.mint(
+    result = nft_collection.mint(
         NFTMetadataInput.from_json(
             {"name": "Python SDK NFT", "description": "Minted with the python SDK!"}
         )
     )
+
+    assert result.id == 0
+    assert result.data.metadata.name == "Python SDK NFT"
 
     metadata = nft_collection.get(0).metadata
 
@@ -67,7 +70,7 @@ def test_transfer(nft_collection: NFTCollection):
 
 
 def test_batch_mint_to(nft_collection: NFTCollection):
-    nft_collection.mint_batch_to(
+    results = nft_collection.mint_batch_to(
         accounts[0].address,
         [
             NFTMetadataInput.from_json(
@@ -84,6 +87,10 @@ def test_batch_mint_to(nft_collection: NFTCollection):
             ),
         ],
     )
+
+    assert len(results) == 2
+    assert results[0].id == 0
+    assert results[0].data.metadata.name == "Python SDK NFT 1"
 
     nft_1 = nft_collection.get(0)
     nft_2 = nft_collection.get(1)

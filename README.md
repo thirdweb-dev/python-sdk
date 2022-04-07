@@ -11,9 +11,7 @@ $ pip install thirdweb-sdk==2.0.0a10
 
 To start using this SDK, you need to pass in a provider configuration, and optionally a signer if you want to send transactions.
 
-
 > :warning: Never commit private keys to file tracking history, or your account could be compromised. Make sure to add `.env` to your `.gitignore` file.
-
 ### Instantiating the SDK
 
 Once you have all the necessary dependencies, you can follow the following setup steps to get started with the SDK (if you want to use your private key as displayed below, make sure to run `pip install python-dotenv` as well):

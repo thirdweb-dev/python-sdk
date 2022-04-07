@@ -11,15 +11,15 @@ from thirdweb.abi import TokenERC721
 
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
-from thirdweb.types.nft import NFTMetadataInput
+from thirdweb.types.nft import NFTMetadataInput, NFTMetadataOwner
 from eth_account.account import LocalAccount
-from web3.eth import TxReceipt
 from web3 import Web3
 
 from thirdweb.types.sdk import SDKOptions
 from typing import Final, Optional, List, Union
 
 from thirdweb.types.settings.metadata import NFTCollectionContractMetadata
+from thirdweb.types.tx import TxResultWithId
 
 
 class NFTCollection(ERC721):
@@ -57,34 +57,48 @@ class NFTCollection(ERC721):
     WRITE FUNCTIONS
     """
 
-    def mint(self, metadata: Union[NFTMetadataInput, str]) -> TxReceipt:
+    def mint(
+        self, metadata: Union[NFTMetadataInput, str]
+    ) -> TxResultWithId[NFTMetadataOwner]:
         """
         Mint a new NFT to the connected wallet
 
         :param metadata: metadata of the NFT to mint
-        :returns: transaction receipt of the mint
+        :returns: receipt, id, and metadata for the mint
         """
 
         return self.mint_to(self._contract_wrapper.get_signer_address(), metadata)
 
-    def mint_to(self, to: str, metadata: Union[NFTMetadataInput, str]) -> TxReceipt:
+    def mint_to(
+        self, to: str, metadata: Union[NFTMetadataInput, str]
+    ) -> TxResultWithId[NFTMetadataOwner]:
         """
         Mint a new NFT to the specified wallet
 
         :param to: wallet address to mint the NFT to
         :param metadata: metadata of the NFT to mint
-        :returns: transaction receipt of the mint
+        :returns: receipt, id, and metadata for the mint
         """
 
         uri = upload_or_extract_uri(metadata, self._storage)
-        return self._contract_wrapper.send_transaction("mint_to", [to, uri])
+        receipt = self._contract_wrapper.send_transaction("mint_to", [to, uri])
+        events = self._contract_wrapper.get_events("TokensMinted", receipt)
 
-    def mint_batch(self, metadatas: List[Union[NFTMetadataInput, str]]) -> TxReceipt:
+        if len(events) == 0:
+            raise Exception("No TokensMinted event found")
+
+        id = events[0].get("args").get("tokenIdMinted")  # type: ignore
+
+        return TxResultWithId(receipt, id=id, data=self.get(id))
+
+    def mint_batch(
+        self, metadatas: List[Union[NFTMetadataInput, str]]
+    ) -> List[TxResultWithId[NFTMetadataOwner]]:
         """
         Mint a batch of new NFTs to the connected wallet
 
         :param metadatas: list of metadata of the NFTs to mint
-        :returns: transaction receipt of the mint
+        :returns: receipts, ids, and metadatas for each mint
         """
 
         return self.mint_batch_to(
@@ -93,13 +107,13 @@ class NFTCollection(ERC721):
 
     def mint_batch_to(
         self, to: str, metadatas: List[Union[NFTMetadataInput, str]]
-    ) -> TxReceipt:
+    ) -> List[TxResultWithId[NFTMetadataOwner]]:
         """
         Mint a batch of new NFTs to the specified wallet
 
         :param to: wallet address to mint the NFTs to
         :param metadatas: list of metadata of the NFTs to mint
-        :returns: transaction receipt of the mint
+        :returns: receipts, ids, and metadatas for each mint
         """
 
         uris = upload_or_extract_uris(metadatas, self._storage)
@@ -109,4 +123,15 @@ class NFTCollection(ERC721):
         for uri in uris:
             encoded.append(interface.encodeABI("mintTo", [to, uri]))
 
-        return self._contract_wrapper.multi_call(encoded)
+        receipt = self._contract_wrapper.multi_call(encoded)
+        events = self._contract_wrapper.get_events("TokensMinted", receipt)
+
+        if len(events) == 0 or len(events) < len(metadatas):
+            raise Exception("No TokensMinted event found, minting failed")
+
+        results = []
+        for event in events:
+            id = event.get("args").get("tokenIdMinted")  # type: ignore
+            results.append(TxResultWithId(receipt, id=id, data=self.get(id)))
+
+        return results

@@ -27,7 +27,7 @@ def edition(sdk: ThirdwebSDK) -> Edition:
 
 
 def test_mint(edition: Edition):
-    edition.mint(
+    result = edition.mint(
         EditionMetadataInput(
             NFTMetadataInput.from_json(
                 {"name": "Python SDK NFT", "description": "Minted with the python SDK!"}
@@ -35,6 +35,9 @@ def test_mint(edition: Edition):
             100,
         )
     )
+
+    assert result.id == 0
+    assert result.data.metadata.name == "Python SDK NFT"
 
     metadata = edition.get(0).metadata
 
