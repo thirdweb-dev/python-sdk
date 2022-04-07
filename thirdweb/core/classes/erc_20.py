@@ -20,7 +20,7 @@ from thirdweb.types.currency import (
 from web3.eth import TxReceipt
 
 
-class ERC20(BaseContract):
+class ERC20(BaseContract[TokenERC20]):
     _storage: IpfsStorage
 
     def __init__(
@@ -63,7 +63,9 @@ class ERC20(BaseContract):
         :returns: balance of the specified wallet
         """
 
-        return self._get_value(self._get_abi().balance_of.call(address))
+        return self._get_value(
+            self._contract_wrapper._contract_abi.balance_of.call(address)
+        )
 
     def total_supply(self) -> CurrencyValue:
         """
@@ -72,7 +74,7 @@ class ERC20(BaseContract):
         :returns: total minted supply of the token
         """
 
-        return self._get_value(self._get_abi().total_supply.call())
+        return self._get_value(self._contract_wrapper._contract_abi.total_supply.call())
 
     def allowance(self, spender: str) -> CurrencyValue:
         """
@@ -93,7 +95,9 @@ class ERC20(BaseContract):
         :returns: allowance of the specified spender for the specified owner
         """
 
-        return self._get_value(self._get_abi().allowance.call(owner, spender))
+        return self._get_value(
+            self._contract_wrapper._contract_abi.allowance.call(owner, spender)
+        )
 
     def is_transfer_restricted(self) -> bool:
         """
@@ -102,7 +106,7 @@ class ERC20(BaseContract):
         :returns: True if transfer is restricted, False otherwise
         """
 
-        anyone_can_transfer = self._get_abi().has_role.call(
+        anyone_can_transfer = self._contract_wrapper._contract_abi.has_role.call(
             get_role_hash(Role.TRANSFER), ZERO_ADDRESS
         )
 
@@ -203,9 +207,6 @@ class ERC20(BaseContract):
     """
     PROTECTED FUNCTIONS
     """
-
-    def _get_abi(self) -> TokenERC20:
-        return cast(TokenERC20, self._contract_wrapper._contract_abi)
 
     def _get_value(self, value: PriceWei) -> CurrencyValue:
         return fetch_currency_value(

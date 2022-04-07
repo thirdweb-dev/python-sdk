@@ -16,7 +16,7 @@ from thirdweb.types.nft import (
 from web3.eth import TxReceipt
 
 
-class ERC1155(BaseContract):
+class ERC1155(BaseContract[TokenERC1155]):
     _storage: IpfsStorage
 
     def __init__(
@@ -38,7 +38,7 @@ class ERC1155(BaseContract):
         :param token_id: token ID to check the metadata for
         :return: Metadata for the token
         """
-        supply = self._get_abi().total_supply.call(token_id)
+        supply = self._contract_wrapper._contract_abi.total_supply.call(token_id)
         metadata = self._get_token_metadata(token_id)
         return EditionMetadata(metadata, supply)
 
@@ -60,7 +60,7 @@ class ERC1155(BaseContract):
         :return: total number of tokens on the contract
         """
 
-        return self._get_abi().next_token_id_to_mint.call()
+        return self._contract_wrapper._contract_abi.next_token_id_to_mint.call()
 
     def get_owned(self, address: str = "") -> List[EditionMetadataOwner]:
         """
@@ -71,8 +71,8 @@ class ERC1155(BaseContract):
         """
 
         owner = address if address else self._contract_wrapper.get_signer_address()
-        max_id = self._get_abi().next_token_id_to_mint.call()
-        balances = self._get_abi().balance_of_batch.call(
+        max_id = self._contract_wrapper._contract_abi.next_token_id_to_mint.call()
+        balances = self._contract_wrapper._contract_abi.balance_of_batch.call(
             [owner for i in range(max_id)],
             [id for id in range(max_id)],
         )
@@ -93,7 +93,7 @@ class ERC1155(BaseContract):
         :return: total number of tokens on the contract
         """
 
-        return self._get_abi().total_supply.call(token_id)
+        return self._contract_wrapper._contract_abi.total_supply.call(token_id)
 
     def balance(self, token_id: int) -> int:
         """
@@ -114,7 +114,7 @@ class ERC1155(BaseContract):
         :return: balance of the token
         """
 
-        return self._get_abi().balance_of.call(address, token_id)
+        return self._contract_wrapper._contract_abi.balance_of.call(address, token_id)
 
     def is_transfer_restricted(self) -> bool:
         """
@@ -123,7 +123,7 @@ class ERC1155(BaseContract):
         :return: True if the contract is restricted, False otherwise
         """
 
-        anyone_can_transfer = self._get_abi().has_role.call(
+        anyone_can_transfer = self._contract_wrapper._contract_abi.has_role.call(
             get_role_hash(Role.TRANSFER), ZERO_ADDRESS
         )
 
@@ -138,7 +138,9 @@ class ERC1155(BaseContract):
         :return: True if the operator is approved, False otherwise
         """
 
-        return self._get_abi().is_approved_for_all.call(address, operator)
+        return self._contract_wrapper._contract_abi.is_approved_for_all.call(
+            address, operator
+        )
 
     """
     WRITE FUNCTIONS
@@ -191,11 +193,8 @@ class ERC1155(BaseContract):
     PRIVATE FUNCTIONS
     """
 
-    def _get_abi(self) -> TokenERC1155:
-        return cast(TokenERC1155, self._contract_wrapper._contract_abi)
-
     def _get_token_metadata(self, token_id: int) -> NFTMetadata:
-        token_uri = self._get_abi().uri.call(token_id)
+        token_uri = self._contract_wrapper._contract_abi.uri.call(token_id)
 
         if not token_uri:
             raise NotFoundException(str(token_id))
