@@ -21,7 +21,7 @@ class CurrencyValue(Currency):
 @dataclass
 class TokenAmount:
     to_address: str
-    amount: int
+    amount: Price
 
 
 @dataclass

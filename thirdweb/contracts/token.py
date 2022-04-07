@@ -126,7 +126,12 @@ class Token(ERC20):
         encoded = []
         interface = self._contract_wrapper.get_contract_interface()
         for arg in args:
-            encoded.append(interface.encodeABI("mintTo", [arg.to_address, arg.amount]))
+            encoded.append(
+                interface.encodeABI(
+                    "mintTo",
+                    [arg.to_address, parse_units(arg.amount, self.get().decimals)],
+                )
+            )
         return self._contract_wrapper.multi_call(encoded)
 
     def delegate_to(self, delegatee_address: str) -> TxReceipt:

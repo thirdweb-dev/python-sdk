@@ -142,6 +142,7 @@ def create_auction_listing(
 
 
 def test_listings(
+    sdk: ThirdwebSDK,
     marketplace: Marketplace,
     nft_collection: NFTCollection,
     token: Token,
@@ -158,12 +159,18 @@ def test_listings(
 
     assert listing_id == 1
 
-    listings = marketplace.get_all()
-
-    assert len(listings) == 2
+    assert len(marketplace.get_all()) == 2
 
     listing_1 = marketplace.direct.get_listing(0)
     listing_2 = marketplace.auction.get_listing(1)
 
     assert listing_1.buyout_currency_value_per_token.display_value == 0.1
     assert listing_2.reserve_price_currency_value_per_token.display_value == 0.05
+
+    assert len(marketplace.get_active_listings()) == 2
+    assert nft_collection.owner_of(0) == sdk.get_signer().address  # type: ignore
+
+    marketplace.buyout_listing(0, quantity_desired=1, receiver=accounts[0].address)
+
+    assert len(marketplace.get_active_listings()) == 1
+    assert nft_collection.owner_of(0) == accounts[0].address
