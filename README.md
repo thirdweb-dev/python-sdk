@@ -11,6 +11,10 @@ $ pip install thirdweb-sdk==2.0.0a10
 
 To start using this SDK, you need to pass in a provider configuration, and optionally a signer if you want to send transactions.
 
+
+| :no_entry_sign: CAUTION: if you decide to use private keys with the SDK, do NOT commit them to any file tracking history like git, or your account could be compromised. Make sure that your `.env` file is ignored in the `.gitignore` file. |
+| --- |
+
 ### Instantiating the SDK
 
 Once you have all the necessary dependencies, you can follow the following setup steps to get started with the SDK (if you want to use your private key as displayed below, make sure to run `pip install python-dotenv` as well):
@@ -49,7 +53,7 @@ PRIVATE_KEY=your-private-key-here
 
 ### Working With Contracts
 
-Once you instantiate the SDK, you can use it to access your thirdweb contracts. You can use the SDK's contract getter functions like `get_token`, `get_edition`, and `get_nft_collection` to get the respective SDK contract instances. To use an NFT Collection contract for example, you can do the following.
+Once you instantiate the SDK, you can use it to access your thirdweb contracts. You can use the SDK's contract getter functions like `get_token`, `get_edition`, `get_nft_collection`, and `get_marketplace` to get the respective SDK contract instances. To use an NFT Collection contract for example, you can do the following.
 
 ```python
 # Add this import at the top of your file
@@ -80,6 +84,7 @@ Assuming you've installed and setup poetry, you can setup this repository with:
 $ poetry shell
 $ poetry install
 $ poetry run yarn global add ganache
+$ poetry run yarn add hardhat
 ```
 
 Alternatively, if your system can run .sh files, you can set everything up by running the following bash script:
@@ -95,18 +100,14 @@ Before running tests, make sure you've already run `poetry shell` and are in the
 Once you have checked that this you have all the dependencies, you can run the following:
 
 ```bash
-$ poetry run brownie test
+$ poetry run brownie test --network hardhat
 ```
 
-Currently (only temporary), since contract deployers are not yet setup in this SDK, the testing relies on contracts on testnets deployed through the thirdweb dashboard. The testing setup is configured to use the `mumbai` network currently, but this can be changed to any network by chaing the RPC URL used in `tests/fixtures/before.py`.
-
-To properly setup testing, you'll need to add your private key to the `.env` file as follows:
+To properly setup testing, you'll also need to add your private key to the `.env` file as follows (do NOT use a private key of one of your actual wallets):
 
 ```.env
 PRIVATE_KEY=...
 ```
-
-And then switch the test cases to use your own contract addresses for the `NFT_COLLECTION_ADDRESS`, `EDITION_ADDRESS`, and `TOKEN_ADDRESS` variables in `tests/test_nft_collection.py`, `tests/test_edition.py`, and `tests/test_token.py` files respectively.
 
 ### Code Style Setup
 
