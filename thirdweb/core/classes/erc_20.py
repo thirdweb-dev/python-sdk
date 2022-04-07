@@ -5,6 +5,8 @@ from thirdweb.common.currency import (
     fetch_currency_value,
     parse_units,
 )
+from thirdweb.constants.currency import ZERO_ADDRESS
+from thirdweb.constants.role import Role, get_role_hash
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
@@ -100,8 +102,11 @@ class ERC20(BaseContract):
         :returns: True if transfer is restricted, False otherwise
         """
 
-        # TODO: Implement - Relies on ROLES
-        raise NotImplementedError
+        anyone_can_transfer = self._get_abi().has_role.call(
+            get_role_hash(Role.TRANSFER), ZERO_ADDRESS
+        )
+
+        return not anyone_can_transfer
 
     """
     WRITE FUNCTIONS
@@ -159,7 +164,16 @@ class ERC20(BaseContract):
         :returns: transaction receipt of the transfers
         """
 
-        raise NotImplementedError
+        encoded = []
+        interface = self._contract_wrapper.get_contract_interface()
+
+        for arg in args:
+            amount_with_decimals = self.normalize_amount(arg.amount)
+            encoded.append(
+                interface.encodeABI("transfer", [arg.to_address, amount_with_decimals])
+            )
+
+        return self._contract_wrapper.multi_call(encoded)
 
     def burn(self, amount: Price) -> TxReceipt:
         """
@@ -199,3 +213,7 @@ class ERC20(BaseContract):
             self.get_address(),
             value,
         )
+
+    def normalize_amount(self, amount: Price) -> PriceWei:
+        decimals = self.get().decimals
+        return parse_units(amount, decimals)

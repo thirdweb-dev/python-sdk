@@ -2,6 +2,8 @@ from typing import Any, List, Union, cast
 from thirdweb.abi import TokenERC1155
 from thirdweb.common.error import NotFoundException
 from thirdweb.common.nft import fetch_token_metadata
+from thirdweb.constants.currency import ZERO_ADDRESS
+from thirdweb.constants.role import Role, get_role_hash
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
@@ -121,8 +123,11 @@ class ERC1155(BaseContract):
         :return: True if the contract is restricted, False otherwise
         """
 
-        # TODO: Implement - Relies on ROLES
-        raise NotImplementedError
+        anyone_can_transfer = self._get_abi().has_role.call(
+            get_role_hash(Role.TRANSFER), ZERO_ADDRESS
+        )
+
+        return not anyone_can_transfer
 
     def is_approved(self, address: str, operator: str) -> bool:
         """
