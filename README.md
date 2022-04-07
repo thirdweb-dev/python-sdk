@@ -12,7 +12,7 @@ $ pip install thirdweb-sdk==2.0.0a10
 To start using this SDK, you need to pass in a provider configuration, and optionally a signer if you want to send transactions.
 
 
-> :warning: CAUTION: if you decide to use private keys with the SDK, do NOT commit them to any file tracking history like git, or your account could be compromised. Make sure that your `.env` file is ignored in the `.gitignore` file. 
+> :warning: Never commit private keys to file tracking history, or your account could be compromised. Make sure to add `.env` to your `.gitignore` file.
 
 ### Instantiating the SDK
 
