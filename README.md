@@ -12,8 +12,7 @@ $ pip install thirdweb-sdk==2.0.0a10
 To start using this SDK, you need to pass in a provider configuration, and optionally a signer if you want to send transactions.
 
 
-| :no_entry_sign: CAUTION: if you decide to use private keys with the SDK, do NOT commit them to any file tracking history like git, or your account could be compromised. Make sure that your `.env` file is ignored in the `.gitignore` file. |
-| --- |
+> :warning: CAUTION: if you decide to use private keys with the SDK, do NOT commit them to any file tracking history like git, or your account could be compromised. Make sure that your `.env` file is ignored in the `.gitignore` file. 
 
 ### Instantiating the SDK
 
@@ -135,13 +134,7 @@ Use the [abi-gen](https://www.npmjs.com/package/@0x/abi-gen) package to create t
 $ npm install -g @0x/abi-gen
 ```
 
-Assuming you have the thirdweb contract ABIs in this directory at `/abi`, you can run the following command to generate an ABI.
-
-```bash
-$ abi-gen --language Python -o thirdweb/abi --abis abi/TokenERC721.json
-```
-
-Alternatively, if your system can run .sh files, you can run the following to generate all ABIs at once (from your /abi folder):
+Assuming you have the thirdweb contract ABIs in this directory at `/abi`, you can run the following command to generate the necessary ABIs.
 
 ```bash
 $ bash scripts/abi/generate.sh
