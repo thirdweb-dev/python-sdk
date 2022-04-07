@@ -8,6 +8,7 @@ from thirdweb.constants.addresses import (
     OZ_DEFENDER_FORWARDER_ADDRESS,
 )
 from thirdweb.constants.chains import ChainId
+from thirdweb.constants.currency import ZERO_ADDRESS
 from thirdweb.contracts import NFTCollection, Edition, Token
 from thirdweb.contracts.maps import (
     CONTRACTS_MAP,
@@ -158,6 +159,7 @@ class ContractFactory(ContractWrapper):
             biconomy_forwarder_address = CONTRACT_ADDRESSES[chain_id][
                 "biconomy_forwarder"
             ]
-            # TODO make sure to filter out address zero here
-            return [OZ_DEFENDER_FORWARDER_ADDRESS, biconomy_forwarder_address]
+
+            if biconomy_forwarder_address != ZERO_ADDRESS:
+                return [OZ_DEFENDER_FORWARDER_ADDRESS, biconomy_forwarder_address]
         return [OZ_DEFENDER_FORWARDER_ADDRESS]

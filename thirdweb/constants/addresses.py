@@ -1,7 +1,6 @@
 from typing import Dict
-
-from brownie import ZERO_ADDRESS
 from thirdweb.constants.chains import ChainId
+from thirdweb.constants.currency import ZERO_ADDRESS
 
 
 OZ_DEFENDER_FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81"

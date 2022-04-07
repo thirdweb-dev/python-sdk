@@ -1,7 +1,6 @@
 from re import M
 from typing import Any, Dict, Optional, cast
 
-from brownie import ZERO_ADDRESS
 from eth_utils import is_address
 from thirdweb.abi import Marketplace
 from thirdweb.abi.erc165 import ERC165
@@ -23,6 +22,7 @@ from thirdweb.common.marketplace import (
 )
 from thirdweb.common.nft import fetch_token_metadata_for_contract
 from thirdweb.constants.contract import INTERFACE_ID_IERC1155, INTERFACE_ID_IERC721
+from thirdweb.constants.currency import ZERO_ADDRESS
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage

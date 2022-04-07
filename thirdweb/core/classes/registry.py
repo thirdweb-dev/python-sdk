@@ -1,8 +1,8 @@
 from typing import List, Optional, cast
-from brownie import ZERO_ADDRESS
 from eth_utils import is_address
 from web3 import Web3
 from eth_account.account import LocalAccount
+from thirdweb.constants.currency import ZERO_ADDRESS
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.abi import TWRegistry
 from thirdweb.types.sdk import SDKOptions
