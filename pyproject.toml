@@ -6,7 +6,7 @@ packages = [
   {include = "thirdweb"},
 ]
 readme = "README.md"
-version = "2.0.0-a11"
+version = "2.0.0"
 
 [tool.poetry.dependencies]
 dacite = "^1.6.0"
