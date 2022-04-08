@@ -4,7 +4,7 @@ The thirdweb SDK for Python. Currently supports Mainnet, Rinkeby, Goerli, Polygo
 ## Installation
 
 ```bash
-$ pip install thirdweb-sdk==2.0.0a10
+pip install thirdweb-sdk==2.0.0a10
 ```
 
 ## Getting Started
