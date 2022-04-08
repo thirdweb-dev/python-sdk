@@ -80,7 +80,7 @@ nft_collection = sdk.get_nft_collection(NFT_COLLECTION_ADDRESS)
 
 # Now you can use any of the SDK contract functions
 balance = nft_collection.balance()
-nft_collection.mint(NFTMetadataInput.from_json({ "name": "Cool NFT", "description": "Minted with the Python SDK!" }))
+nft_collection.mint(NFTMetadataInput(name="Cool NFT", description="Minted with the Python SDK!"))
 ```
 
 ## Development Environment
