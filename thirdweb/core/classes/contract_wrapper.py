@@ -5,6 +5,7 @@ from web3 import Web3
 from web3.datastructures import AttributeDict
 from web3.contract import Contract
 from thirdweb.common.error import NoSignerException
+from web3._utils.events import EventLogErrorFlags
 
 from thirdweb.core.classes.provider_handler import ProviderHandler
 from web3.eth import TxReceipt
@@ -85,7 +86,11 @@ class ContractWrapper(Generic[TContractABI], ProviderHandler):
         :param receipt: transaction receipt to get the events from
         """
 
-        return self.get_contract_interface().events[event]().processReceipt(receipt)
+        return (
+            self.get_contract_interface()
+            .events[event]()
+            .processReceipt(receipt, errors=EventLogErrorFlags.Discard)
+        )
 
     def send_transaction(self, fn: str, args: List[Any]) -> TxReceipt:
         """

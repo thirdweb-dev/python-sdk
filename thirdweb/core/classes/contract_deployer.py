@@ -10,6 +10,12 @@ from thirdweb.core.classes.provider_handler import ProviderHandler
 from thirdweb.core.classes.registry import ContractRegistry
 from thirdweb.types.contract import ContractType
 from thirdweb.types.sdk import SDKOptions
+from thirdweb.types.settings.metadata import (
+    EditionContractMetadata,
+    MarketplaceContractMetadata,
+    NFTCollectionContractMetadata,
+    TokenContractMetadata,
+)
 
 
 class ContractDeployer(ProviderHandler):
@@ -28,17 +34,17 @@ class ContractDeployer(ProviderHandler):
         super().__init__(provider, signer, options)
         self._storage = storage
 
-    def deploy_nft_collection(self, metadata: Dict[str, Any]) -> str:
-        return self.deploy_contract(ContractType.NFT_COLLECTION, metadata)
+    def deploy_nft_collection(self, metadata: NFTCollectionContractMetadata) -> str:
+        return self.deploy_contract(ContractType.NFT_COLLECTION, metadata.to_json())
 
-    def deploy_edition(self, metadata: Dict[str, Any]) -> str:
-        return self.deploy_contract(ContractType.EDITION, metadata)
+    def deploy_edition(self, metadata: EditionContractMetadata) -> str:
+        return self.deploy_contract(ContractType.EDITION, metadata.to_json())
 
-    def deploy_token(self, metadata: Dict[str, Any]) -> str:
-        return self.deploy_contract(ContractType.TOKEN, metadata)
+    def deploy_token(self, metadata: TokenContractMetadata) -> str:
+        return self.deploy_contract(ContractType.TOKEN, metadata.to_json())
 
-    def deploy_marketplace(self, metadata: Dict[str, Any]) -> str:
-        return self.deploy_contract(ContractType.MARKETPLACE, metadata)
+    def deploy_marketplace(self, metadata: MarketplaceContractMetadata) -> str:
+        return self.deploy_contract(ContractType.MARKETPLACE, metadata.to_json())
 
     def deploy_contract(
         self, contract_type: ContractType, contract_metadata: Dict[str, Any]

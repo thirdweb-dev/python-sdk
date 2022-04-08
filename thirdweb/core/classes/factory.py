@@ -29,7 +29,7 @@ from thirdweb.types.settings.metadata import (
 )
 
 
-class ContractFactory(ContractWrapper):
+class ContractFactory(ContractWrapper[TWFactory]):
     _storage: IpfsStorage
 
     def __init__(
@@ -75,12 +75,7 @@ class ContractFactory(ContractWrapper):
             "deploy_proxy", [encoded_type, encoded_function]
         )
 
-        # Finally, we filter for the ProxyDeployed event and return the contract address
-        hash = receipt.get("transactionHash")
-        if hash is None:
-            raise Exception("No transaction hash found")
-
-        events = cast(TWFactory, self._contract_abi).get_proxy_deployed_event(hash)
+        events = self.get_events("ProxyDeployed", receipt)
         if len(events) == 0 or events[0].get("event") != "ProxyDeployed":
             raise Exception("No proxy deployed event found")
 

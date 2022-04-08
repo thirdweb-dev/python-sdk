@@ -14,7 +14,23 @@ To start using this SDK, you need to pass in a provider configuration, and optio
 > :warning: Never commit private keys to file tracking history, or your account could be compromised. Make sure to add `.env` to your `.gitignore` file.
 ### Instantiating the SDK
 
-Once you have all the necessary dependencies, you can follow the following setup steps to get started with the SDK (if you want to use your private key as displayed below, make sure to run `pip install python-dotenv` as well):
+Once you have all the necessary dependencies, you can follow the following setup steps to get started with the SDK read-only functions:
+
+```python
+from thirdweb import ThirdwebSDK
+from web3 import Web3
+
+# Add your own RPC URL here or use a public one
+RPC_URL = "https://rpc-mumbai.maticvigil.com"
+
+# Instantiate a new provider to pass into the SDK
+provider = Web3(Web3.HTTPProvider(RPC_URL))
+
+# Finally, you can create a new instance of the SDK to use
+sdk = ThirdwebSDK(provider)
+```
+
+Meanwhile, if you want to use write functions as well and connect a signer, you can use the following setup (if you want to use your private key as displayed below, make sure to run `pip install python-dotenv` as well):
 
 ```python
 from thirdweb import ThirdwebSDK

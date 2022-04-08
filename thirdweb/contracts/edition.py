@@ -91,7 +91,7 @@ class Edition(ERC1155):
 
         id = events[0].get("args").get("tokenIdMinted")  # type: ignore
 
-        return TxResultWithId(receipt, id=id, data=self.get(id))
+        return TxResultWithId(receipt, id=id, data=lambda: self.get(id))
 
     def mint_additional_supply(
         self, token_id: int, additional_supply: int
@@ -124,7 +124,7 @@ class Edition(ERC1155):
         receipt = self._contract_wrapper.send_transaction(
             "mint_to", [to, token_id, metadata.uri, additional_supply]
         )
-        return TxResultWithId(receipt, id=token_id, data=self.get(token_id))
+        return TxResultWithId(receipt, id=token_id, data=lambda: self.get(token_id))
 
     def mint_batch(
         self, metadatas_with_supply: List[EditionMetadataInput]
@@ -173,6 +173,6 @@ class Edition(ERC1155):
         results = []
         for event in events:
             id = event.get("args").get("tokenIdMinted")  # type: ignore
-            results.append(TxResultWithId(receipt, id=id, data=self.get(id)))
+            results.append(TxResultWithId(receipt, id=id, data=lambda: self.get(id)))
 
         return results

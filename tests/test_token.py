@@ -6,17 +6,19 @@ from thirdweb.contracts import Token
 from brownie import accounts
 import pytest
 
+from thirdweb.types.settings.metadata import TokenContractMetadata
+
 
 @pytest.mark.usefixtures("sdk")
 @pytest.fixture(scope="function")
 def token(sdk: ThirdwebSDK) -> Token:
     return sdk.get_token(
         sdk.deployer.deploy_token(
-            {
-                "name": "SDK Token",
-                "symbol": "SDK",
-                "primary_sale_recipient": ZERO_ADDRESS,
-            }
+            TokenContractMetadata(
+                name="SDK Token",
+                symbol="SDK",
+                primary_sale_recipient=ZERO_ADDRESS,
+            )
         )
     )
 

@@ -6,6 +6,7 @@ from thirdweb.core.sdk import ThirdwebSDK
 import pytest
 
 from thirdweb.types.nft import EditionMetadataInput, NFTMetadataInput
+from thirdweb.types.settings.metadata import EditionContractMetadata
 
 
 @pytest.mark.usefixtures("sdk")
@@ -13,15 +14,14 @@ from thirdweb.types.nft import EditionMetadataInput, NFTMetadataInput
 def edition(sdk: ThirdwebSDK) -> Edition:
     return sdk.get_edition(
         sdk.deployer.deploy_edition(
-            {
-                "name": "SDK Edition",
-                "symbol": "SDK",
-                "primary_sale_recipient": ZERO_ADDRESS,
-                "seller_fee_basis_points": 1000,
-                "fee_recipient": ZERO_ADDRESS,
-                "platform_fee_basis_points": 10,
-                "platform_fee_recipient": ZERO_ADDRESS,
-            }
+            EditionContractMetadata(
+                name="SDK Edition",
+                symbol="SDK",
+                primary_sale_recipient=ZERO_ADDRESS,
+                fee_recipient=ZERO_ADDRESS,
+                platform_fee_basis_points=10,
+                platform_fee_recipient=ZERO_ADDRESS,
+            )
         )
     )
 
@@ -37,7 +37,7 @@ def test_mint(edition: Edition):
     )
 
     assert result.id == 0
-    assert result.data.metadata.name == "Python SDK NFT"
+    assert result.data().metadata.name == "Python SDK NFT"
 
     metadata = edition.get(0).metadata
 

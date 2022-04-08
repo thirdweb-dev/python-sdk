@@ -7,6 +7,12 @@ from thirdweb.types.currency import TokenAmount
 from thirdweb.types.marketplace import NewAuctionListing, NewDirectListing
 
 from thirdweb.types.nft import EditionMetadataInput, NFTMetadataInput
+from thirdweb.types.settings.metadata import (
+    EditionContractMetadata,
+    MarketplaceContractMetadata,
+    NFTCollectionContractMetadata,
+    TokenContractMetadata,
+)
 
 
 @pytest.mark.usefixtures("sdk")
@@ -14,10 +20,10 @@ from thirdweb.types.nft import EditionMetadataInput, NFTMetadataInput
 def marketplace(sdk: ThirdwebSDK) -> Marketplace:
     return sdk.get_marketplace(
         sdk.deployer.deploy_marketplace(
-            {
-                "name": "Test Marketplace",
-                "seller_fee_basis_points": 0,
-            }
+            MarketplaceContractMetadata(
+                name="Test Marketplace",
+                platform_fee_basis_points=0,
+            )
         )
     )
 
@@ -27,12 +33,12 @@ def marketplace(sdk: ThirdwebSDK) -> Marketplace:
 def nft_collection(sdk: ThirdwebSDK) -> NFTCollection:
     nft_collection = sdk.get_nft_collection(
         sdk.deployer.deploy_nft_collection(
-            {
-                "name": "Test NFT",
-                "seller_fee_basis_points": 200,
-                "fee_recipient": sdk.get_signer().address,  # type: ignore
-                "primary_sale_recipient": sdk.get_signer().address,  # type: ignore
-            }
+            NFTCollectionContractMetadata(
+                name="Test NFT",
+                seller_fee_basis_points=200,
+                fee_recipient=sdk.get_signer().address,  # type: ignore
+                primary_sale_recipient=sdk.get_signer().address,  # type: ignore
+            )
         )
     )
 
@@ -53,11 +59,11 @@ def nft_collection(sdk: ThirdwebSDK) -> NFTCollection:
 def edition(sdk: ThirdwebSDK) -> Edition:
     edition = sdk.get_edition(
         sdk.deployer.deploy_edition(
-            {
-                "name": "Test Edition",
-                "seller_fee_basis_points": 100,
-                "primary_sale_recipient": sdk.get_signer().address,  # type: ignore
-            }
+            EditionContractMetadata(
+                name="Test Edition",
+                seller_fee_basis_points=100,
+                primary_sale_recipient=sdk.get_signer().address,  # type: ignore
+            )
         )
     )
 
@@ -80,11 +86,11 @@ def edition(sdk: ThirdwebSDK) -> Edition:
 def token(sdk: ThirdwebSDK) -> Token:
     token = sdk.get_token(
         sdk.deployer.deploy_token(
-            {
-                "name": "Test Token",
-                "symbol": "TEST",
-                "primary_sale_recipient": sdk.get_signer().address,  # type: ignore
-            }
+            TokenContractMetadata(
+                name="Test Token",
+                symbol="TEST",
+                primary_sale_recipient=sdk.get_signer().address,  # type: ignore
+            )
         )
     )
 

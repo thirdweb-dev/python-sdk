@@ -89,7 +89,7 @@ class NFTCollection(ERC721):
 
         id = events[0].get("args").get("tokenIdMinted")  # type: ignore
 
-        return TxResultWithId(receipt, id=id, data=self.get(id))
+        return TxResultWithId(receipt, id=id, data=lambda: self.get(id))
 
     def mint_batch(
         self, metadatas: List[Union[NFTMetadataInput, str]]
@@ -132,6 +132,6 @@ class NFTCollection(ERC721):
         results = []
         for event in events:
             id = event.get("args").get("tokenIdMinted")  # type: ignore
-            results.append(TxResultWithId(receipt, id=id, data=self.get(id)))
+            results.append(TxResultWithId(receipt, id=id, data=lambda: self.get(id)))
 
         return results

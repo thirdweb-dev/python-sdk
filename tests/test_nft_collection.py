@@ -5,20 +5,22 @@ from thirdweb.core.sdk import ThirdwebSDK
 from brownie import accounts
 import pytest
 
+from thirdweb.types.settings.metadata import NFTCollectionContractMetadata
+
 
 @pytest.mark.usefixtures("sdk")
 @pytest.fixture(scope="function")
 def nft_collection(sdk: ThirdwebSDK) -> NFTCollection:
     return sdk.get_nft_collection(
         sdk.deployer.deploy_nft_collection(
-            {
-                "name": "SDK NFT Collection",
-                "primary_sale_recipient": ZERO_ADDRESS,
-                "seller_fee_basis_points": 10000,
-                "fee_recipient": ZERO_ADDRESS,
-                "platform_fee_basis_points": 10,
-                "platform_fee_recipient": ZERO_ADDRESS,
-            }
+            NFTCollectionContractMetadata(
+                name="SDK NFT Collection",
+                primary_sale_recipient=ZERO_ADDRESS,
+                seller_fee_basis_points=10000,
+                fee_recipient=ZERO_ADDRESS,
+                platform_fee_basis_points=10,
+                platform_fee_recipient=ZERO_ADDRESS,
+            )
         )
     )
 
@@ -31,7 +33,7 @@ def test_mint(nft_collection: NFTCollection):
     )
 
     assert result.id == 0
-    assert result.data.metadata.name == "Python SDK NFT"
+    assert result.data().metadata.name == "Python SDK NFT"
 
     metadata = nft_collection.get(0).metadata
 
@@ -89,8 +91,6 @@ def test_batch_mint_to(nft_collection: NFTCollection):
     )
 
     assert len(results) == 2
-    assert results[0].id == 0
-    assert results[0].data.metadata.name == "Python SDK NFT 1"
 
     nft_1 = nft_collection.get(0)
     nft_2 = nft_collection.get(1)

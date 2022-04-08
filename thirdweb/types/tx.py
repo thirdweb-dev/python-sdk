@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import Callable, Generic, TypeVar
 from web3.eth import TxReceipt
 from dataclasses import dataclass
 
@@ -12,7 +12,7 @@ class TxResult:
 
 @dataclass
 class TxResultWithData(TxResult, Generic[T]):
-    data: T
+    data: Callable[[], T]
 
 
 @dataclass
