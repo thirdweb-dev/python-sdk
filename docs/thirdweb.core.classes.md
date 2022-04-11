@@ -463,7 +463,7 @@ Initializes the contract wrapper.
 * **Parameters**
 
     
-    * **contract_abi** (`TypeVar`(`TContractABI`, bound= `Union`[[`TokenERC721`](thirdweb.abi.token_erc721.md#thirdweb.abi.token_erc721.TokenERC721), [`TokenERC1155`](thirdweb.abi.token_erc1155.md#thirdweb.abi.token_erc1155.TokenERC1155), [`TokenERC20`](thirdweb.abi.token_erc20.md#thirdweb.abi.token_erc20.TokenERC20), [`Marketplace`](thirdweb.abi.marketplace.md#thirdweb.abi.marketplace.Marketplace), [`IERC20`](thirdweb.abi.ierc20.md#thirdweb.abi.ierc20.IERC20), [`IERC721`](thirdweb.abi.ierc721.md#thirdweb.abi.ierc721.IERC721), [`IERC1155`](thirdweb.abi.ierc1155.md#thirdweb.abi.ierc1155.IERC1155), [`TWRegistry`](thirdweb.abi.t_w_registry.md#thirdweb.abi.t_w_registry.TWRegistry), [`TWFactory`](thirdweb.abi.t_w_factory.md#thirdweb.abi.t_w_factory.TWFactory)])) – ABI of the thirdweb contract to use
+    * **contract_abi** (`TypeVar`(`TContractABI`, bound= `Union`[[`TokenERC721`](thirdweb.abi.md#thirdweb.abi.token_erc721.TokenERC721), [`TokenERC1155`](thirdweb.abi.md#thirdweb.abi.token_erc1155.TokenERC1155), [`TokenERC20`](thirdweb.abi.md#thirdweb.abi.token_erc20.TokenERC20), [`Marketplace`](thirdweb.abi.md#thirdweb.abi.marketplace.Marketplace), [`IERC20`](thirdweb.abi.md#thirdweb.abi.ierc20.IERC20), [`IERC721`](thirdweb.abi.md#thirdweb.abi.ierc721.IERC721), [`IERC1155`](thirdweb.abi.md#thirdweb.abi.ierc1155.IERC1155), [`TWRegistry`](thirdweb.abi.md#thirdweb.abi.t_w_registry.TWRegistry), [`TWFactory`](thirdweb.abi.md#thirdweb.abi.t_w_factory.TWFactory)])) – ABI of the thirdweb contract to use
 
 
     * **provider** (`Web3`) – web3 provider instance to use
@@ -580,7 +580,7 @@ Send and execute a transaction and return the receipt.
 
 
 ### _class_ thirdweb.core.classes.erc_1155.ERC1155(contract_wrapper, storage)
-Bases: `thirdweb.core.classes.base_contract.BaseContract`[[`thirdweb.abi.token_erc1155.TokenERC1155`](thirdweb.abi.token_erc1155.md#thirdweb.abi.token_erc1155.TokenERC1155)]
+Bases: `thirdweb.core.classes.base_contract.BaseContract`[[`thirdweb.abi.token_erc1155.TokenERC1155`](thirdweb.abi.md#thirdweb.abi.token_erc1155.TokenERC1155)]
 
 
 #### \__init__(contract_wrapper, storage)
@@ -847,7 +847,7 @@ Transfer a specified token from the connected wallet to a specified address.
 
 
 ### _class_ thirdweb.core.classes.erc_20.ERC20(contract_wrapper, storage)
-Bases: `thirdweb.core.classes.base_contract.BaseContract`[[`thirdweb.abi.token_erc20.TokenERC20`](thirdweb.abi.token_erc20.md#thirdweb.abi.token_erc20.TokenERC20)]
+Bases: `thirdweb.core.classes.base_contract.BaseContract`[[`thirdweb.abi.token_erc20.TokenERC20`](thirdweb.abi.md#thirdweb.abi.token_erc20.TokenERC20)]
 
 
 #### \__init__(contract_wrapper, storage)
@@ -1143,7 +1143,7 @@ Transfer a specified amount of tokens from one specified address to another.
 
 
 ### _class_ thirdweb.core.classes.erc_721.ERC721(contract_wrapper, storage)
-Bases: `thirdweb.core.classes.base_contract.BaseContract`[[`thirdweb.abi.token_erc721.TokenERC721`](thirdweb.abi.token_erc721.md#thirdweb.abi.token_erc721.TokenERC721)]
+Bases: `thirdweb.core.classes.base_contract.BaseContract`[[`thirdweb.abi.token_erc721.TokenERC721`](thirdweb.abi.md#thirdweb.abi.token_erc721.TokenERC721)]
 
 
 #### \__init__(contract_wrapper, storage)
@@ -1419,7 +1419,7 @@ Transfer a specified token from the connected wallet to a specified address.
 
 
 ### _class_ thirdweb.core.classes.factory.ContractFactory(factory_address, provider, signer=None, options=SDKOptions(read_only_settings=None, gas_settings=GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>)), storage=<thirdweb.core.classes.ipfs_storage.IpfsStorage object>)
-Bases: `thirdweb.core.classes.contract_wrapper.ContractWrapper`[[`thirdweb.abi.t_w_factory.TWFactory`](thirdweb.abi.t_w_factory.md#thirdweb.abi.t_w_factory.TWFactory)]
+Bases: `thirdweb.core.classes.contract_wrapper.ContractWrapper`[[`thirdweb.abi.t_w_factory.TWFactory`](thirdweb.abi.md#thirdweb.abi.t_w_factory.TWFactory)]
 
 
 #### \__init__(factory_address, provider, signer=None, options=SDKOptions(read_only_settings=None, gas_settings=GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>)), storage=<thirdweb.core.classes.ipfs_storage.IpfsStorage object>)
@@ -1538,7 +1538,7 @@ Uploads a list of metadata to IPFS and returns the hash.
 
 
 ### _class_ thirdweb.core.classes.marketplace_auction.MarketplaceAuction(contract_wrapper, storage)
-Bases: `thirdweb.core.classes.base_contract.BaseContract`[[`thirdweb.abi.marketplace.Marketplace`](thirdweb.abi.marketplace.md#thirdweb.abi.marketplace.Marketplace)]
+Bases: `thirdweb.core.classes.base_contract.BaseContract`[[`thirdweb.abi.marketplace.Marketplace`](thirdweb.abi.md#thirdweb.abi.marketplace.Marketplace)]
 
 
 #### \__init__(contract_wrapper, storage)
@@ -1618,7 +1618,7 @@ Bases: `thirdweb.core.classes.base_contract.BaseContract`[[`thirdweb.abi.marketp
 
 
 ### _class_ thirdweb.core.classes.marketplace_direct.MarketplaceDirect(contract_wrapper, storage)
-Bases: `thirdweb.core.classes.base_contract.BaseContract`[[`thirdweb.abi.marketplace.Marketplace`](thirdweb.abi.marketplace.md#thirdweb.abi.marketplace.Marketplace)]
+Bases: `thirdweb.core.classes.base_contract.BaseContract`[[`thirdweb.abi.marketplace.Marketplace`](thirdweb.abi.md#thirdweb.abi.marketplace.Marketplace)]
 
 
 #### \__init__(contract_wrapper, storage)

@@ -17,7 +17,7 @@ Bases: [`thirdweb.core.classes.erc_1155.ERC1155`](thirdweb.core.classes.md#third
 
 #### contract_type(_: Final[[thirdweb.types.contract.ContractType](thirdweb.types.md#thirdweb.types.contract.ContractType)_ _ = 'edition_ )
 
-#### metadata(_: [thirdweb.core.classes.contract_metadata.ContractMetadata](thirdweb.core.classes.md#thirdweb.core.classes.contract_metadata.ContractMetadata)[[thirdweb.abi.token_erc1155.TokenERC1155](thirdweb.abi.token_erc1155.md#thirdweb.abi.token_erc1155.TokenERC1155), thirdweb.types.settings.metadata.EditionContractMetadata_ )
+#### metadata(_: [thirdweb.core.classes.contract_metadata.ContractMetadata](thirdweb.core.classes.md#thirdweb.core.classes.contract_metadata.ContractMetadata)[[thirdweb.abi.token_erc1155.TokenERC1155](thirdweb.abi.md#thirdweb.abi.token_erc1155.TokenERC1155), thirdweb.types.settings.metadata.EditionContractMetadata_ )
 
 #### mint(metadata_with_supply)
 Mint a new NFT to the connected wallet
@@ -170,13 +170,13 @@ Mint a new NFT to the specified wallet
 
 
 
-#### platform_fee(_: [thirdweb.core.classes.contract_platform_fee.ContractPlatformFee](thirdweb.core.classes.md#thirdweb.core.classes.contract_platform_fee.ContractPlatformFee)[[thirdweb.abi.token_erc1155.TokenERC1155](thirdweb.abi.token_erc1155.md#thirdweb.abi.token_erc1155.TokenERC1155)_ )
+#### platform_fee(_: [thirdweb.core.classes.contract_platform_fee.ContractPlatformFee](thirdweb.core.classes.md#thirdweb.core.classes.contract_platform_fee.ContractPlatformFee)[[thirdweb.abi.token_erc1155.TokenERC1155](thirdweb.abi.md#thirdweb.abi.token_erc1155.TokenERC1155)_ )
 
-#### primary_sale(_: [thirdweb.core.classes.contract_sales.ContractPrimarySale](thirdweb.core.classes.md#thirdweb.core.classes.contract_sales.ContractPrimarySale)[[thirdweb.abi.token_erc1155.TokenERC1155](thirdweb.abi.token_erc1155.md#thirdweb.abi.token_erc1155.TokenERC1155)_ )
+#### primary_sale(_: [thirdweb.core.classes.contract_sales.ContractPrimarySale](thirdweb.core.classes.md#thirdweb.core.classes.contract_sales.ContractPrimarySale)[[thirdweb.abi.token_erc1155.TokenERC1155](thirdweb.abi.md#thirdweb.abi.token_erc1155.TokenERC1155)_ )
 
 #### roles(_: [thirdweb.core.classes.contract_roles.ContractRoles](thirdweb.core.classes.md#thirdweb.core.classes.contract_roles.ContractRoles_ )
 
-#### royalty(_: [thirdweb.core.classes.contract_royalty.ContractRoyalty](thirdweb.core.classes.md#thirdweb.core.classes.contract_royalty.ContractRoyalty)[[thirdweb.abi.token_erc1155.TokenERC1155](thirdweb.abi.token_erc1155.md#thirdweb.abi.token_erc1155.TokenERC1155)_ )
+#### royalty(_: [thirdweb.core.classes.contract_royalty.ContractRoyalty](thirdweb.core.classes.md#thirdweb.core.classes.contract_royalty.ContractRoyalty)[[thirdweb.abi.token_erc1155.TokenERC1155](thirdweb.abi.md#thirdweb.abi.token_erc1155.TokenERC1155)_ )
 
 #### schema()
 alias of `thirdweb.types.settings.metadata.EditionContractMetadata`
@@ -189,7 +189,7 @@ Interface for interacting with a marketplace contract
 
 
 ### _class_ thirdweb.contracts.marketplace.Marketplace(provider, address, storage, signer=None, options=SDKOptions(read_only_settings=None, gas_settings=GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>)))
-Bases: [`thirdweb.core.classes.base_contract.BaseContract`](thirdweb.core.classes.md#thirdweb.core.classes.base_contract.BaseContract)[[`thirdweb.abi.marketplace.Marketplace`](thirdweb.abi.marketplace.md#thirdweb.abi.marketplace.Marketplace)]
+Bases: [`thirdweb.core.classes.base_contract.BaseContract`](thirdweb.core.classes.md#thirdweb.core.classes.base_contract.BaseContract)[[`thirdweb.abi.marketplace.Marketplace`](thirdweb.abi.md#thirdweb.abi.marketplace.Marketplace)]
 
 
 #### \__init__(provider, address, storage, signer=None, options=SDKOptions(read_only_settings=None, gas_settings=GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>)))
@@ -290,9 +290,9 @@ Bases: [`thirdweb.core.classes.base_contract.BaseContract`](thirdweb.core.classe
 
 
 
-#### metadata(_: [thirdweb.core.classes.contract_metadata.ContractMetadata](thirdweb.core.classes.md#thirdweb.core.classes.contract_metadata.ContractMetadata)[[thirdweb.abi.marketplace.Marketplace](thirdweb.abi.marketplace.md#thirdweb.abi.marketplace.Marketplace), thirdweb.types.settings.metadata.MarketplaceContractMetadata_ )
+#### metadata(_: [thirdweb.core.classes.contract_metadata.ContractMetadata](thirdweb.core.classes.md#thirdweb.core.classes.contract_metadata.ContractMetadata)[[thirdweb.abi.marketplace.Marketplace](thirdweb.abi.md#thirdweb.abi.marketplace.Marketplace), thirdweb.types.settings.metadata.MarketplaceContractMetadata_ )
 
-#### platform_fee(_: [thirdweb.core.classes.contract_platform_fee.ContractPlatformFee](thirdweb.core.classes.md#thirdweb.core.classes.contract_platform_fee.ContractPlatformFee)[[thirdweb.abi.marketplace.Marketplace](thirdweb.abi.marketplace.md#thirdweb.abi.marketplace.Marketplace)_ )
+#### platform_fee(_: [thirdweb.core.classes.contract_platform_fee.ContractPlatformFee](thirdweb.core.classes.md#thirdweb.core.classes.contract_platform_fee.ContractPlatformFee)[[thirdweb.abi.marketplace.Marketplace](thirdweb.abi.md#thirdweb.abi.marketplace.Marketplace)_ )
 
 #### roles(_: [thirdweb.core.classes.contract_roles.ContractRoles](thirdweb.core.classes.md#thirdweb.core.classes.contract_roles.ContractRoles_ )
 
@@ -330,7 +330,7 @@ Bases: [`thirdweb.core.classes.erc_721.ERC721`](thirdweb.core.classes.md#thirdwe
 
 #### contract_type(_: Final[[thirdweb.types.contract.ContractType](thirdweb.types.md#thirdweb.types.contract.ContractType)_ _ = 'nft-collection_ )
 
-#### metadata(_: [thirdweb.core.classes.contract_metadata.ContractMetadata](thirdweb.core.classes.md#thirdweb.core.classes.contract_metadata.ContractMetadata)[[thirdweb.abi.token_erc721.TokenERC721](thirdweb.abi.token_erc721.md#thirdweb.abi.token_erc721.TokenERC721), thirdweb.types.settings.metadata.NFTCollectionContractMetadata_ )
+#### metadata(_: [thirdweb.core.classes.contract_metadata.ContractMetadata](thirdweb.core.classes.md#thirdweb.core.classes.contract_metadata.ContractMetadata)[[thirdweb.abi.token_erc721.TokenERC721](thirdweb.abi.md#thirdweb.abi.token_erc721.TokenERC721), thirdweb.types.settings.metadata.NFTCollectionContractMetadata_ )
 
 #### mint(metadata)
 Mint a new NFT to the connected wallet
@@ -428,13 +428,13 @@ Mint a new NFT to the specified wallet
 
 
 
-#### platform_fee(_: [thirdweb.core.classes.contract_platform_fee.ContractPlatformFee](thirdweb.core.classes.md#thirdweb.core.classes.contract_platform_fee.ContractPlatformFee)[[thirdweb.abi.token_erc721.TokenERC721](thirdweb.abi.token_erc721.md#thirdweb.abi.token_erc721.TokenERC721)_ )
+#### platform_fee(_: [thirdweb.core.classes.contract_platform_fee.ContractPlatformFee](thirdweb.core.classes.md#thirdweb.core.classes.contract_platform_fee.ContractPlatformFee)[[thirdweb.abi.token_erc721.TokenERC721](thirdweb.abi.md#thirdweb.abi.token_erc721.TokenERC721)_ )
 
-#### primary_sale(_: [thirdweb.core.classes.contract_sales.ContractPrimarySale](thirdweb.core.classes.md#thirdweb.core.classes.contract_sales.ContractPrimarySale)[[thirdweb.abi.token_erc721.TokenERC721](thirdweb.abi.token_erc721.md#thirdweb.abi.token_erc721.TokenERC721)_ )
+#### primary_sale(_: [thirdweb.core.classes.contract_sales.ContractPrimarySale](thirdweb.core.classes.md#thirdweb.core.classes.contract_sales.ContractPrimarySale)[[thirdweb.abi.token_erc721.TokenERC721](thirdweb.abi.md#thirdweb.abi.token_erc721.TokenERC721)_ )
 
 #### roles(_: [thirdweb.core.classes.contract_roles.ContractRoles](thirdweb.core.classes.md#thirdweb.core.classes.contract_roles.ContractRoles_ )
 
-#### royalty(_: [thirdweb.core.classes.contract_royalty.ContractRoyalty](thirdweb.core.classes.md#thirdweb.core.classes.contract_royalty.ContractRoyalty)[[thirdweb.abi.token_erc721.TokenERC721](thirdweb.abi.token_erc721.md#thirdweb.abi.token_erc721.TokenERC721)_ )
+#### royalty(_: [thirdweb.core.classes.contract_royalty.ContractRoyalty](thirdweb.core.classes.md#thirdweb.core.classes.contract_royalty.ContractRoyalty)[[thirdweb.abi.token_erc721.TokenERC721](thirdweb.abi.md#thirdweb.abi.token_erc721.TokenERC721)_ )
 
 #### schema()
 alias of `thirdweb.types.settings.metadata.NFTCollectionContractMetadata`
@@ -552,7 +552,7 @@ Get the voting power of the specified wallet in this token.
 
 
 
-#### metadata(_: [thirdweb.core.classes.contract_metadata.ContractMetadata](thirdweb.core.classes.md#thirdweb.core.classes.contract_metadata.ContractMetadata)[[thirdweb.abi.token_erc20.TokenERC20](thirdweb.abi.token_erc20.md#thirdweb.abi.token_erc20.TokenERC20), thirdweb.types.settings.metadata.TokenContractMetadata_ )
+#### metadata(_: [thirdweb.core.classes.contract_metadata.ContractMetadata](thirdweb.core.classes.md#thirdweb.core.classes.contract_metadata.ContractMetadata)[[thirdweb.abi.token_erc20.TokenERC20](thirdweb.abi.md#thirdweb.abi.token_erc20.TokenERC20), thirdweb.types.settings.metadata.TokenContractMetadata_ )
 
 #### mint(amount)
 Mint tokens to the connected wallet.
