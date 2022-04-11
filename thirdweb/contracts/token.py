@@ -1,3 +1,5 @@
+"""Interface for interacting with a token contract"""
+
 from typing import Final, List, Optional
 from thirdweb.abi import TokenERC20
 from web3 import Web3
@@ -66,7 +68,9 @@ class Token(ERC20):
         :returns: vote balance of the specified wallet
         """
 
-        return self._get_value(self._get_abi().get_votes.call(account))
+        return self._get_value(
+            self._contract_wrapper._contract_abi.get_votes.call(account)
+        )
 
     def get_delegation(self) -> str:
         """
@@ -85,7 +89,7 @@ class Token(ERC20):
         :returns: delegation address of the specified wallet
         """
 
-        return self._get_abi().delegates.call(account)
+        return self._contract_wrapper._contract_abi.delegates.call(account)
 
     """
     WRITE FUNCTIONS

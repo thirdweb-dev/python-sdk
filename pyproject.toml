@@ -23,6 +23,7 @@ pylint = "^2.12.2"
 types-requests = "^2.27.14"
 Sphinx = "^4.5.0"
 sphinx-markdown-builder = "^0.5.5"
+sphinx-autodoc-typehints = "^1.17.0"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"

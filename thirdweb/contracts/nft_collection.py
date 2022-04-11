@@ -1,3 +1,5 @@
+"""Interface for interacting with an nft collection contract"""
+
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee

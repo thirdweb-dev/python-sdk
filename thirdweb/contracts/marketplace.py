@@ -1,3 +1,5 @@
+"""Interface for interacting with a marketplace contract"""
+
 from time import time
 from thirdweb.common.error import ListingNotFoundException
 from thirdweb.constants.currency import ZERO_ADDRESS

@@ -1,3 +1,5 @@
+"""Interface for interacting with an edition contract"""
+
 from thirdweb.common.nft import upload_or_extract_uri, upload_or_extract_uris
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.contract_metadata import ContractMetadata
