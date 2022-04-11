@@ -68,39 +68,45 @@
 ## thirdweb.core.sdk module
 
 
-### _class_ thirdweb.core.sdk.ThirdwebSDK(provider: web3.main.Web3, signer: typing.Optional[eth_account.signers.local.LocalAccount] = None, options: thirdweb.types.sdk.SDKOptions = SDKOptions(read_only_settings=None, gas_settings=GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>)), storage: thirdweb.core.classes.ipfs_storage.IpfsStorage = <thirdweb.core.classes.ipfs_storage.IpfsStorage object>)
+### _class_ thirdweb.core.sdk.ThirdwebSDK(provider, signer=None, options=SDKOptions(read_only_settings=None, gas_settings=GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>)), storage=<thirdweb.core.classes.ipfs_storage.IpfsStorage object>)
 Bases: [`thirdweb.core.classes.provider_handler.ProviderHandler`](thirdweb.core.classes.md#thirdweb.core.classes.provider_handler.ProviderHandler)
 
 
-#### \__init__(provider: web3.main.Web3, signer: typing.Optional[eth_account.signers.local.LocalAccount] = None, options: thirdweb.types.sdk.SDKOptions = SDKOptions(read_only_settings=None, gas_settings=GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>)), storage: thirdweb.core.classes.ipfs_storage.IpfsStorage = <thirdweb.core.classes.ipfs_storage.IpfsStorage object>)
+#### \__init__(provider, signer=None, options=SDKOptions(read_only_settings=None, gas_settings=GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>)), storage=<thirdweb.core.classes.ipfs_storage.IpfsStorage object>)
 Initialize the thirdweb SDK.
 
 
 * **Parameters**
 
     
-    * **provider** – web3 provider instance to use for getting on-chain data
+    * **provider** (`Web3`) – web3 provider instance to use for getting on-chain data
 
 
-    * **signer** – signer to use for sending transactions
+    * **signer** (`Optional`[`LocalAccount`]) – signer to use for sending transactions
 
 
-    * **options** – optional SDK configuration options
+    * **options** ([`SDKOptions`](thirdweb.types.md#thirdweb.types.sdk.SDKOptions)) – optional SDK configuration options
 
 
-    * **storage** – optional IPFS storage instance to use for storing data
+    * **storage** ([`IpfsStorage`](thirdweb.core.classes.md#thirdweb.core.classes.ipfs_storage.IpfsStorage)) – optional IPFS storage instance to use for storing data
 
 
 
 #### deployer(_: [thirdweb.core.classes.contract_deployer.ContractDeployer](thirdweb.core.classes.md#thirdweb.core.classes.contract_deployer.ContractDeployer_ )
 
-#### get_edition(address: str)
+#### get_edition(address)
 Returns an Edition contract SDK instance
 
 
 * **Parameters**
 
-    **address** – address of the Edition contract
+    **address** (`str`) – address of the Edition contract
+
+
+
+* **Return type**
+
+    [`Edition`](thirdweb.contracts.md#thirdweb.contracts.edition.Edition)
 
 
 
@@ -110,13 +116,19 @@ Returns an Edition contract SDK instance
 
 
 
-#### get_marketplace(address: str)
+#### get_marketplace(address)
 Returns a Marketplace contract SDK instance
 
 
 * **Parameters**
 
-    **address** – address of the Marketplace contract
+    **address** (`str`) – address of the Marketplace contract
+
+
+
+* **Return type**
+
+    [`Marketplace`](thirdweb.contracts.md#thirdweb.contracts.marketplace.Marketplace)
 
 
 
@@ -126,13 +138,19 @@ Returns a Marketplace contract SDK instance
 
 
 
-#### get_nft_collection(address: str)
+#### get_nft_collection(address)
 Returns an NFT Collection contract SDK instance
 
 
 * **Parameters**
 
-    **address** – address of the NFT Collection contract
+    **address** (`str`) – address of the NFT Collection contract
+
+
+
+* **Return type**
+
+    [`NFTCollection`](thirdweb.contracts.md#thirdweb.contracts.nft_collection.NFTCollection)
 
 
 
@@ -142,13 +160,19 @@ Returns an NFT Collection contract SDK instance
 
 
 
-#### get_token(address: str)
+#### get_token(address)
 Returns a Token contract SDK instance
 
 
 * **Parameters**
 
-    **address** – address of the Token contract
+    **address** (`str`) – address of the Token contract
+
+
+
+* **Return type**
+
+    [`Token`](thirdweb.contracts.md#thirdweb.contracts.token.Token)
 
 
 
@@ -158,23 +182,23 @@ Returns a Token contract SDK instance
 
 
 
-#### update_provider(provider: web3.main.Web3)
+#### update_provider(provider)
 Update the provider instance used by the SDK.
 
 
 * **Parameters**
 
-    **provider** – web3 provider instance to use for getting on-chain data
+    **provider** (`Web3`) – web3 provider instance to use for getting on-chain data
 
 
 
-#### update_signer(signer: Optional[eth_account.signers.local.LocalAccount] = None)
+#### update_signer(signer=None)
 Update the signer instance used by the SDK.
 
 
 * **Parameters**
 
-    **signer** – signer to use for sending transactions
+    **signer** (`Optional`[`LocalAccount`]) – signer to use for sending transactions
 
 
 ## Module contents
