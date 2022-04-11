@@ -30,3 +30,4 @@ docs:
 	rm -rf docs && mkdir docs
 	mv sphinx-docs/_build/markdown/* ./docs
 	rm -rf sphinx-docs
+ 
