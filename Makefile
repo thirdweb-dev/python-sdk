@@ -29,3 +29,4 @@ docs:
 	cd sphinx-docs && poetry run make markdown
 	rm -rf docs && mkdir docs
 	mv sphinx-docs/_build/markdown/* ./docs
+	rm -rf sphinx-docs
