@@ -9,7 +9,6 @@ from thirdweb.abi import TokenERC721
 from thirdweb.common.currency import normalize_price_value, set_erc20_allowance
 from thirdweb.common.nft import upload_or_extract_uris
 from thirdweb.types.contracts.signature import (
-    FilledSignaturePayload721,
     MintRequest721,
     PayloadToSign721,
     PayloadWithUri721,
