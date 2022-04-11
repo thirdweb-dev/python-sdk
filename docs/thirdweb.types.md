@@ -21,11 +21,11 @@ An enumeration.
 ## thirdweb.types.currency module
 
 
-### _class_ thirdweb.types.currency.Currency(name: str, symbol: str, decimals: int)
+### _class_ thirdweb.types.currency.Currency(name, symbol, decimals)
 Bases: `object`
 
 
-#### \__init__(name: str, symbol: str, decimals: int)
+#### \__init__(name, symbol, decimals)
 
 #### decimals(_: in_ )
 
@@ -33,21 +33,21 @@ Bases: `object`
 
 #### symbol(_: st_ )
 
-### _class_ thirdweb.types.currency.CurrencyValue(name: str, symbol: str, decimals: int, value: int, display_value: float)
+### _class_ thirdweb.types.currency.CurrencyValue(name, symbol, decimals, value, display_value)
 Bases: `thirdweb.types.currency.Currency`
 
 
-#### \__init__(name: str, symbol: str, decimals: int, value: int, display_value: float)
+#### \__init__(name, symbol, decimals, value, display_value)
 
 #### display_value(_: floa_ )
 
 #### value(_: in_ )
 
-### _class_ thirdweb.types.currency.NativeToken(name: str, symbol: str, decimals: int, wrapped: thirdweb.types.currency.WrappedToken)
+### _class_ thirdweb.types.currency.NativeToken(name, symbol, decimals, wrapped)
 Bases: `object`
 
 
-#### \__init__(name: str, symbol: str, decimals: int, wrapped: thirdweb.types.currency.WrappedToken)
+#### \__init__(name, symbol, decimals, wrapped)
 
 #### decimals(_: in_ )
 
@@ -57,21 +57,21 @@ Bases: `object`
 
 #### wrapped(_: thirdweb.types.currency.WrappedToke_ )
 
-### _class_ thirdweb.types.currency.TokenAmount(to_address: str, amount: float)
+### _class_ thirdweb.types.currency.TokenAmount(to_address, amount)
 Bases: `object`
 
 
-#### \__init__(to_address: str, amount: float)
+#### \__init__(to_address, amount)
 
 #### amount(_: floa_ )
 
 #### to_address(_: st_ )
 
-### _class_ thirdweb.types.currency.WrappedToken(address: str, name: str, symbol: str)
+### _class_ thirdweb.types.currency.WrappedToken(address, name, symbol)
 Bases: `object`
 
 
-#### \__init__(address: str, name: str, symbol: str)
+#### \__init__(address, name, symbol)
 
 #### address(_: st_ )
 
@@ -81,11 +81,11 @@ Bases: `object`
 ## thirdweb.types.marketplace module
 
 
-### _class_ thirdweb.types.marketplace.AuctionListing(id: int, asset_contract_address: str, token_id: int, asset: thirdweb.types.nft.NFTMetadata, start_time_in_epoch_seconds: int, end_time_in_epoch_seconds: int, quantity: int, currency_contract_address: str, reserve_price: int, buyout_price: int, buyout_currency_value_per_token: thirdweb.types.currency.CurrencyValue, reserve_price_currency_value_per_token: thirdweb.types.currency.CurrencyValue, seller_address: str)
+### _class_ thirdweb.types.marketplace.AuctionListing(id, asset_contract_address, token_id, asset, start_time_in_epoch_seconds, end_time_in_epoch_seconds, quantity, currency_contract_address, reserve_price, buyout_price, buyout_currency_value_per_token, reserve_price_currency_value_per_token, seller_address)
 Bases: `object`
 
 
-#### \__init__(id: int, asset_contract_address: str, token_id: int, asset: thirdweb.types.nft.NFTMetadata, start_time_in_epoch_seconds: int, end_time_in_epoch_seconds: int, quantity: int, currency_contract_address: str, reserve_price: int, buyout_price: int, buyout_currency_value_per_token: thirdweb.types.currency.CurrencyValue, reserve_price_currency_value_per_token: thirdweb.types.currency.CurrencyValue, seller_address: str)
+#### \__init__(id, asset_contract_address, token_id, asset, start_time_in_epoch_seconds, end_time_in_epoch_seconds, quantity, currency_contract_address, reserve_price, buyout_price, buyout_currency_value_per_token, reserve_price_currency_value_per_token, seller_address)
 
 #### asset(_: thirdweb.types.nft.NFTMetadat_ )
 
@@ -115,11 +115,11 @@ Bases: `object`
 
 #### type(_ = _ )
 
-### _class_ thirdweb.types.marketplace.ContractListing(listing_id: int, token_owner: str, asset_contract: str, token_id: int, start_time: int, end_time: int, quantity: int, currency: str, reserve_price_per_token: int, buyout_price_per_token: int, token_type: int, listing_type: int)
+### _class_ thirdweb.types.marketplace.ContractListing(listing_id, token_owner, asset_contract, token_id, start_time, end_time, quantity, currency, reserve_price_per_token, buyout_price_per_token, token_type, listing_type)
 Bases: `object`
 
 
-#### \__init__(listing_id: int, token_owner: str, asset_contract: str, token_id: int, start_time: int, end_time: int, quantity: int, currency: str, reserve_price_per_token: int, buyout_price_per_token: int, token_type: int, listing_type: int)
+#### \__init__(listing_id, token_owner, asset_contract, token_id, start_time, end_time, quantity, currency, reserve_price_per_token, buyout_price_per_token, token_type, listing_type)
 
 #### asset_contract(_: st_ )
 
@@ -145,11 +145,11 @@ Bases: `object`
 
 #### token_type(_: in_ )
 
-### _class_ thirdweb.types.marketplace.ContractOffer(listing_id: int, offeror: str, quantity_wanted: int, currency: str, price_per_token: int)
+### _class_ thirdweb.types.marketplace.ContractOffer(listing_id, offeror, quantity_wanted, currency, price_per_token)
 Bases: `object`
 
 
-#### \__init__(listing_id: int, offeror: str, quantity_wanted: int, currency: str, price_per_token: int)
+#### \__init__(listing_id, offeror, quantity_wanted, currency, price_per_token)
 
 #### currency(_: st_ )
 
@@ -161,11 +161,11 @@ Bases: `object`
 
 #### quantity_wanted(_: in_ )
 
-### _class_ thirdweb.types.marketplace.DirectListing(id: int, asset_contract_address: str, token_id: int, asset: thirdweb.types.nft.NFTMetadata, start_time_in_seconds: int, seconds_until_end: int, quantity: int, currency_contract_address: str, buyout_currency_value_per_token: thirdweb.types.currency.CurrencyValue, buyout_price: int, seller_address: str)
+### _class_ thirdweb.types.marketplace.DirectListing(id, asset_contract_address, token_id, asset, start_time_in_seconds, seconds_until_end, quantity, currency_contract_address, buyout_currency_value_per_token, buyout_price, seller_address)
 Bases: `object`
 
 
-#### \__init__(id: int, asset_contract_address: str, token_id: int, asset: thirdweb.types.nft.NFTMetadata, start_time_in_seconds: int, seconds_until_end: int, quantity: int, currency_contract_address: str, buyout_currency_value_per_token: thirdweb.types.currency.CurrencyValue, buyout_price: int, seller_address: str)
+#### \__init__(id, asset_contract_address, token_id, asset, start_time_in_seconds, seconds_until_end, quantity, currency_contract_address, buyout_currency_value_per_token, buyout_price, seller_address)
 
 #### asset(_: thirdweb.types.nft.NFTMetadat_ )
 
@@ -201,11 +201,11 @@ An enumeration.
 
 #### DIRECT(_ = _ )
 
-### _class_ thirdweb.types.marketplace.MarketplaceFilter(start: int = 0, count: int = 100, seller: Union[str, NoneType] = None, token_contract: Union[str, NoneType] = None, token_id: Union[int, NoneType] = None)
+### _class_ thirdweb.types.marketplace.MarketplaceFilter(start=0, count=100, seller=None, token_contract=None, token_id=None)
 Bases: `object`
 
 
-#### \__init__(start: int = 0, count: int = 100, seller: Optional[str] = None, token_contract: Optional[str] = None, token_id: Optional[int] = None)
+#### \__init__(start=0, count=100, seller=None, token_contract=None, token_id=None)
 
 #### count(_: in_ _ = 10_ )
 
@@ -217,11 +217,11 @@ Bases: `object`
 
 #### token_id(_: Optional[int_ _ = Non_ )
 
-### _class_ thirdweb.types.marketplace.NewAuctionListing(asset_contract_address: str, token_id: int, start_time_in_seconds: int, listing_duration_in_seconds: int, quantity: int, currency_contract_address: str, reserve_price_per_token: int, buyout_price_per_token: int)
+### _class_ thirdweb.types.marketplace.NewAuctionListing(asset_contract_address, token_id, start_time_in_seconds, listing_duration_in_seconds, quantity, currency_contract_address, reserve_price_per_token, buyout_price_per_token)
 Bases: `object`
 
 
-#### \__init__(asset_contract_address: str, token_id: int, start_time_in_seconds: int, listing_duration_in_seconds: int, quantity: int, currency_contract_address: str, reserve_price_per_token: int, buyout_price_per_token: int)
+#### \__init__(asset_contract_address, token_id, start_time_in_seconds, listing_duration_in_seconds, quantity, currency_contract_address, reserve_price_per_token, buyout_price_per_token)
 
 #### asset_contract_address(_: st_ )
 
@@ -241,11 +241,11 @@ Bases: `object`
 
 #### type(_ = 'NewAuctionListing_ )
 
-### _class_ thirdweb.types.marketplace.NewDirectListing(asset_contract_address: str, token_id: int, start_time_in_seconds: int, listing_duration_in_seconds: int, quantity: int, currency_contract_address: str, buyout_price_per_token: int)
+### _class_ thirdweb.types.marketplace.NewDirectListing(asset_contract_address, token_id, start_time_in_seconds, listing_duration_in_seconds, quantity, currency_contract_address, buyout_price_per_token)
 Bases: `object`
 
 
-#### \__init__(asset_contract_address: str, token_id: int, start_time_in_seconds: int, listing_duration_in_seconds: int, quantity: int, currency_contract_address: str, buyout_price_per_token: int)
+#### \__init__(asset_contract_address, token_id, start_time_in_seconds, listing_duration_in_seconds, quantity, currency_contract_address, buyout_price_per_token)
 
 #### asset_contract_address(_: st_ )
 
@@ -263,11 +263,11 @@ Bases: `object`
 
 #### type(_ = 'NewDirectListing_ )
 
-### _class_ thirdweb.types.marketplace.Offer(listing_id: int, buyer_address: str, quantity_desired: int, price_per_token: int, currency_value: thirdweb.types.currency.CurrencyValue, currency_contract_address: str)
+### _class_ thirdweb.types.marketplace.Offer(listing_id, buyer_address, quantity_desired, price_per_token, currency_value, currency_contract_address)
 Bases: `object`
 
 
-#### \__init__(listing_id: int, buyer_address: str, quantity_desired: int, price_per_token: int, currency_value: thirdweb.types.currency.CurrencyValue, currency_contract_address: str)
+#### \__init__(listing_id, buyer_address, quantity_desired, price_per_token, currency_value, currency_contract_address)
 
 #### buyer_address(_: st_ )
 
@@ -283,17 +283,17 @@ Bases: `object`
 ## thirdweb.types.nft module
 
 
-### _class_ thirdweb.types.nft.EditionMetadata(metadata: thirdweb.types.nft.NFTMetadata, supply: int)
+### _class_ thirdweb.types.nft.EditionMetadata(metadata, supply)
 Bases: `object`
 
 
-#### \__init__(metadata: thirdweb.types.nft.NFTMetadata, supply: int)
+#### \__init__(metadata, supply)
 
 #### metadata(_: thirdweb.types.nft.NFTMetadat_ )
 
 #### supply(_: in_ )
 
-### _class_ thirdweb.types.nft.EditionMetadataInput(metadata: Union[thirdweb.types.nft.NFTMetadataInput, str], supply: int)
+### _class_ thirdweb.types.nft.EditionMetadataInput(metadata, supply)
 Bases: `object`
 
 The metadata of an edition NFT to mint
@@ -302,34 +302,34 @@ The metadata of an edition NFT to mint
 * **Parameters**
 
     
-    * **metadata** – The metadata of the edition NFT
+    * **metadata** (`Union`[`NFTMetadataInput`, `str`]) – The metadata of the edition NFT
 
 
-    * **supply** – The supply of the edition NFT
+    * **supply** (`int`) – The supply of the edition NFT
 
 
 
-#### \__init__(metadata: Union[thirdweb.types.nft.NFTMetadataInput, str], supply: int)
+#### \__init__(metadata, supply)
 
 #### metadata(_: Union[thirdweb.types.nft.NFTMetadataInput, str_ )
 
 #### supply(_: in_ )
 
-### _class_ thirdweb.types.nft.EditionMetadataOwner(metadata: thirdweb.types.nft.NFTMetadata, supply: int, owner: str, quantity_owned: int)
+### _class_ thirdweb.types.nft.EditionMetadataOwner(metadata, supply, owner, quantity_owned)
 Bases: `thirdweb.types.nft.EditionMetadata`
 
 
-#### \__init__(metadata: thirdweb.types.nft.NFTMetadata, supply: int, owner: str, quantity_owned: int)
+#### \__init__(metadata, supply, owner, quantity_owned)
 
 #### owner(_: st_ )
 
 #### quantity_owned(_: in_ )
 
-### _class_ thirdweb.types.nft.NFTMetadata(id: int, uri: str, name: str, description: Union[str, NoneType] = None, image: Union[str, NoneType] = None, external_url: Union[str, NoneType] = None, animation_url: Union[str, NoneType] = None, background_color: Union[str, NoneType] = None, properties: Union[Dict[Any, Any], NoneType] = None)
+### _class_ thirdweb.types.nft.NFTMetadata(id, uri, name, description=None, image=None, external_url=None, animation_url=None, background_color=None, properties=None)
 Bases: `object`
 
 
-#### \__init__(id: int, uri: str, name: str, description: Optional[str] = None, image: Optional[str] = None, external_url: Optional[str] = None, animation_url: Optional[str] = None, background_color: Optional[str] = None, properties: Optional[Dict[Any, Any]] = None)
+#### \__init__(id, uri, name, description=None, image=None, external_url=None, animation_url=None, background_color=None, properties=None)
 
 #### animation_url(_: Optional[str_ _ = Non_ )
 
@@ -339,7 +339,13 @@ Bases: `object`
 
 #### external_url(_: Optional[str_ _ = Non_ )
 
-#### _static_ from_json(json: Dict[str, Any])
+#### _static_ from_json(json)
+
+* **Return type**
+
+    `NFTMetadata`
+
+
 
 #### id(_: in_ )
 
@@ -351,7 +357,7 @@ Bases: `object`
 
 #### uri(_: st_ )
 
-### _class_ thirdweb.types.nft.NFTMetadataInput(name: str, description: Optional[str] = None, image: Optional[str] = None, external_url: Optional[str] = None, animation_url: Optional[str] = None, background_color: Optional[str] = None, properties: Optional[Dict[str, Any]] = None)
+### _class_ thirdweb.types.nft.NFTMetadataInput(name, description=None, image=None, external_url=None, animation_url=None, background_color=None, properties=None)
 Bases: `object`
 
 The metadata of an NFT to mint
@@ -363,29 +369,29 @@ an instance of this class from a dictionary.
 * **Parameters**
 
     
-    * **name** – The name of the NFT
+    * **name** (`str`) – The name of the NFT
 
 
-    * **description** – The optional description of the NFT
+    * **description** (`Optional`[`str`]) – The optional description of the NFT
 
 
-    * **image** – The optional image of the NFT
+    * **image** (`Optional`[`str`]) – The optional image of the NFT
 
 
-    * **external_url** – The optional external URL of the NFT
+    * **external_url** (`Optional`[`str`]) – The optional external URL of the NFT
 
 
-    * **animation_url** – The optional animation URL of the NFT
+    * **animation_url** (`Optional`[`str`]) – The optional animation URL of the NFT
 
 
-    * **background_color** – The optional background color of the NFT
+    * **background_color** (`Optional`[`str`]) – The optional background color of the NFT
 
 
-    * **properties** – The optional properties of the NFT
+    * **properties** (`Optional`[`Dict`[`str`, `Any`]]) – The optional properties of the NFT
 
 
 
-#### \__init__(name: str, description: Optional[str] = None, image: Optional[str] = None, external_url: Optional[str] = None, animation_url: Optional[str] = None, background_color: Optional[str] = None, properties: Optional[Dict[str, Any]] = None)
+#### \__init__(name, description=None, image=None, external_url=None, animation_url=None, background_color=None, properties=None)
 
 #### animation_url(_: Optional[str_ _ = Non_ )
 
@@ -395,7 +401,13 @@ an instance of this class from a dictionary.
 
 #### external_url(_: Optional[str_ _ = Non_ )
 
-#### _static_ from_json(json: Dict[str, Any])
+#### _static_ from_json(json)
+
+* **Return type**
+
+    `NFTMetadataInput`
+
+
 
 #### image(_: Optional[str_ _ = Non_ )
 
@@ -405,21 +417,27 @@ an instance of this class from a dictionary.
 
 #### to_json()
 
-### _class_ thirdweb.types.nft.NFTMetadataOwner(metadata: thirdweb.types.nft.NFTMetadata, owner: str)
+* **Return type**
+
+    `Dict`[`str`, `Any`]
+
+
+
+### _class_ thirdweb.types.nft.NFTMetadataOwner(metadata, owner)
 Bases: `object`
 
 
-#### \__init__(metadata: thirdweb.types.nft.NFTMetadata, owner: str)
+#### \__init__(metadata, owner)
 
 #### metadata(_: thirdweb.types.nft.NFTMetadat_ )
 
 #### owner(_: st_ )
 
-### _class_ thirdweb.types.nft.QueryAllParams(start: int = 0, count: int = 100)
+### _class_ thirdweb.types.nft.QueryAllParams(start=0, count=100)
 Bases: `object`
 
 
-#### \__init__(start: int = 0, count: int = 100)
+#### \__init__(start=0, count=100)
 
 #### count(_: in_ _ = 10_ )
 
@@ -427,7 +445,7 @@ Bases: `object`
 ## thirdweb.types.sdk module
 
 
-### _class_ thirdweb.types.sdk.GasSettings(max_price_in_gwei: int = 300, speed: thirdweb.types.sdk.GasSpeed = GasSpeed.FASTEST)
+### _class_ thirdweb.types.sdk.GasSettings(max_price_in_gwei=300, speed=GasSpeed.FASTEST)
 Bases: `object`
 
 The gas settings for the SDK.
@@ -436,14 +454,14 @@ The gas settings for the SDK.
 * **Parameters**
 
     
-    * **max_price_in_gwei** – maximum gas price in gwei, defaults to 300
+    * **max_price_in_gwei** (`int`) – maximum gas price in gwei, defaults to 300
 
 
-    * **speed** – gas speed to use, defaults to “fastest”
+    * **speed** (`GasSpeed`) – gas speed to use, defaults to “fastest”
 
 
 
-#### \__init__(max_price_in_gwei: int = 300, speed: thirdweb.types.sdk.GasSpeed = GasSpeed.FASTEST)
+#### \__init__(max_price_in_gwei=300, speed=GasSpeed.FASTEST)
 
 #### max_price_in_gwei(_: in_ _ = 30_ )
 
@@ -461,7 +479,7 @@ An enumeration.
 
 #### STANDARD(_ = 'standard_ )
 
-### _class_ thirdweb.types.sdk.ReadOnlySettings(rpc_url: str = '', chain_id: Optional[[thirdweb.constants.chains.ChainId](thirdweb.constants.md#thirdweb.constants.chains.ChainId)] = None)
+### _class_ thirdweb.types.sdk.ReadOnlySettings(rpc_url='', chain_id=None)
 Bases: `object`
 
 The read-only RPC settings for the SDK.
@@ -470,20 +488,20 @@ The read-only RPC settings for the SDK.
 * **Parameters**
 
     
-    * **rpc_url** – URL of the RPC
+    * **rpc_url** (`str`) – URL of the RPC
 
 
-    * **chain_id** – optional chain ID to use for the RPC
+    * **chain_id** (`Optional`[[`ChainId`](thirdweb.constants.md#thirdweb.constants.chains.ChainId)]) – optional chain ID to use for the RPC
 
 
 
-#### \__init__(rpc_url: str = '', chain_id: Optional[[thirdweb.constants.chains.ChainId](thirdweb.constants.md#thirdweb.constants.chains.ChainId)] = None)
+#### \__init__(rpc_url='', chain_id=None)
 
 #### chain_id(_: Optional[[thirdweb.constants.chains.ChainId](thirdweb.constants.md#thirdweb.constants.chains.ChainId)_ _ = Non_ )
 
 #### rpc_url(_: st_ _ = '_ )
 
-### _class_ thirdweb.types.sdk.SDKOptions(read_only_settings: typing.Optional[thirdweb.types.sdk.ReadOnlySettings] = None, gas_settings: thirdweb.types.sdk.GasSettings = GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>))
+### _class_ thirdweb.types.sdk.SDKOptions(read_only_settings=None, gas_settings=GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>))
 Bases: `object`
 
 Optional settings to configure the SDK
@@ -492,14 +510,14 @@ Optional settings to configure the SDK
 * **Parameters**
 
     
-    * **read_only_settings** – optional read-only RPC settings
+    * **read_only_settings** (`Optional`[`ReadOnlySettings`]) – optional read-only RPC settings
 
 
-    * **gas_settings** – gas settings
+    * **gas_settings** (`GasSettings`) – gas settings
 
 
 
-#### \__init__(read_only_settings: typing.Optional[thirdweb.types.sdk.ReadOnlySettings] = None, gas_settings: thirdweb.types.sdk.GasSettings = GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>))
+#### \__init__(read_only_settings=None, gas_settings=GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>))
 
 #### gas_settings(_: thirdweb.types.sdk.GasSetting_ _ = GasSettings(max_price_in_gwei=300, speed=<GasSpeed.FASTEST: 'fastest'>_ )
 
@@ -507,21 +525,21 @@ Optional settings to configure the SDK
 ## thirdweb.types.storage module
 
 
-### _class_ thirdweb.types.storage.CidWithFileName(cid: str, filenames: List[str])
+### _class_ thirdweb.types.storage.CidWithFileName(cid, filenames)
 Bases: `object`
 
 
-#### \__init__(cid: str, filenames: List[str])
+#### \__init__(cid, filenames)
 
 #### cid(_: st_ )
 
 #### filenames(_: List[str_ )
 
-### _class_ thirdweb.types.storage.UriWithMetadata(base_uri: str, metadata_uris: List[str])
+### _class_ thirdweb.types.storage.UriWithMetadata(base_uri, metadata_uris)
 Bases: `object`
 
 
-#### \__init__(base_uri: str, metadata_uris: List[str])
+#### \__init__(base_uri, metadata_uris)
 
 #### base_uri(_: st_ )
 
@@ -529,27 +547,27 @@ Bases: `object`
 ## thirdweb.types.tx module
 
 
-### _class_ thirdweb.types.tx.TxResult(receipt: web3.types.TxReceipt)
+### _class_ thirdweb.types.tx.TxResult(receipt)
 Bases: `object`
 
 
-#### \__init__(receipt: web3.types.TxReceipt)
+#### \__init__(receipt)
 
 #### receipt(_: web3.types.TxReceip_ )
 
-### _class_ thirdweb.types.tx.TxResultWithData(\*args, \*\*kwds)
+### _class_ thirdweb.types.tx.TxResultWithData(receipt, data)
 Bases: `thirdweb.types.tx.TxResult`, `Generic`[`thirdweb.types.tx.T`]
 
 
-#### \__init__(receipt: web3.types.TxReceipt, data: Callable[[], thirdweb.types.tx.T])
+#### \__init__(receipt, data)
 
 #### data(_: Callable[[], thirdweb.types.tx.T_ )
 
-### _class_ thirdweb.types.tx.TxResultWithId(\*args, \*\*kwds)
+### _class_ thirdweb.types.tx.TxResultWithId(receipt, data, id)
 Bases: `thirdweb.types.tx.TxResultWithData`[`thirdweb.types.tx.T`]
 
 
-#### \__init__(receipt: web3.types.TxReceipt, data: Callable[[], thirdweb.types.tx.T], id: int)
+#### \__init__(receipt, data, id)
 
 #### id(_: in_ )
 ## Module contents

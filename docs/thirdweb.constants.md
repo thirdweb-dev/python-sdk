@@ -5,7 +5,13 @@
 ## thirdweb.constants.addresses module
 
 
-### thirdweb.constants.addresses.get_contract_address_by_chain_id(chain_id: thirdweb.constants.chains.ChainId, contract_name: str)
+### thirdweb.constants.addresses.get_contract_address_by_chain_id(chain_id, contract_name)
+
+* **Return type**
+
+    `str`
+
+
 ## thirdweb.constants.chains module
 
 
@@ -37,7 +43,13 @@ An enumeration.
 ## thirdweb.constants.currency module
 
 
-### thirdweb.constants.currency.get_native_token_by_chain_id(chain_id: thirdweb.constants.chains.ChainId)
+### thirdweb.constants.currency.get_native_token_by_chain_id(chain_id)
+
+* **Return type**
+
+    [`NativeToken`](thirdweb.types.md#thirdweb.types.currency.NativeToken)
+
+
 ## thirdweb.constants.role module
 
 
@@ -61,7 +73,13 @@ An enumeration.
 
 #### TRANSFER(_ = 'transfer_ )
 
-### thirdweb.constants.role.get_role_hash(role: thirdweb.constants.role.Role)
+### thirdweb.constants.role.get_role_hash(role)
+
+* **Return type**
+
+    `HexBytes`
+
+
 ## thirdweb.constants.rpc module
 
 ## thirdweb.constants.urls module
