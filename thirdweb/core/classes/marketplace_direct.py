@@ -50,6 +50,12 @@ class MarketplaceDirect(BaseContract[Marketplace]):
     """
 
     def get_listing(self, listing_id: int) -> DirectListing:
+        """
+        Get a direct listing from the marketplace by ID
+
+        :param listing_id: The ID of the listing to get
+        :return: The listing
+        """
         raw_listing = self._contract_wrapper._contract_abi.listings.call(listing_id)
         listing = ContractListing(*raw_listing)
 
@@ -66,6 +72,13 @@ class MarketplaceDirect(BaseContract[Marketplace]):
         return self._map_listing(listing)
 
     def get_active_offer(self, listing_id: int, address: str) -> Optional[Offer]:
+        """
+        Get an active offer for a direct listing
+
+        :param listing_id: The ID of the listing to get the offer for
+        :param address: The address of the user to get the offer for
+        :return: The offer
+        """
         self._validate_listing(listing_id)
 
         if not is_address(address):
@@ -86,6 +99,12 @@ class MarketplaceDirect(BaseContract[Marketplace]):
     """
 
     def create_listing(self, listing: NewDirectListing) -> int:
+        """
+        Create a new direct listing
+
+        :param listing: The listing to create
+        :return: The ID of the listing
+        """
         validate_new_listing_param(listing)
 
         handle_token_approval(
@@ -130,6 +149,15 @@ class MarketplaceDirect(BaseContract[Marketplace]):
         currency_contract_address: str,
         price_per_token: Price,
     ) -> TxReceipt:
+        """
+        Make an offer on a direct listing
+
+        :param listing_id: The ID of the listing to make the offer on
+        :param quantity_desired: The quantity desired
+        :param currency_contract_address: The address of the currency contract
+        :param price_per_token: The price per token
+        :return: The transaction receipt
+        """
         if is_native_token(currency_contract_address):
             raise Exception(
                 "You must used the wrapped native token address when making an offer"
@@ -161,6 +189,13 @@ class MarketplaceDirect(BaseContract[Marketplace]):
         )
 
     def accept_offer(self, listing_id: int, address_or_offerror: str) -> TxReceipt:
+        """
+        Accept a direct listing offer
+
+        :param listing_id: The ID of the listing to accept the offer on
+        :param address_or_offerror: The address of the user to accept the offer for
+        :return: The transaction receipt
+        """
         self._validate_listing(listing_id)
 
         raw_offer = self._contract_wrapper._contract_abi.offers.call(
@@ -176,6 +211,14 @@ class MarketplaceDirect(BaseContract[Marketplace]):
     def buyout_listing(
         self, listing_id: int, quantity_desired: int, receiver: Optional[str] = None
     ) -> TxReceipt:
+        """
+        Buyout a direct listing by ID
+
+        :param listing_id: The ID of the listing to buyout
+        :param quantity_desired: The quantity desired
+        :param receiver: The address of the user to receive the tokens
+        :return: The transaction receipt
+        """
         listing = self._validate_listing(listing_id)
         valid = self._is_still_valid_listing(listing, quantity_desired)
 
@@ -207,6 +250,12 @@ class MarketplaceDirect(BaseContract[Marketplace]):
         )
 
     def update_listing(self, listing: DirectListing) -> TxReceipt:
+        """
+        Update a direct listing
+
+        :param listing: The listing to update
+        :return: The transaction receipt
+        """
         return self._contract_wrapper.send_transaction(
             "update_listing",
             [
@@ -221,6 +270,12 @@ class MarketplaceDirect(BaseContract[Marketplace]):
         )
 
     def cancel_listing(self, listing_id: int) -> TxReceipt:
+        """
+        Cancel a direct listing
+
+        :param listing_id: The ID of the listing to cancel
+        :return: The transaction receipt
+        """
         return self._contract_wrapper.send_transaction(
             "cancel_direct_listing", [listing_id]
         )

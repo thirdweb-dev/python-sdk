@@ -32,7 +32,6 @@ class Edition(ERC1155):
     contract_type: Final[ContractType] = ContractType.EDITION
     contract_roles: Final[List[Role]] = [Role.ADMIN, Role.MINTER, Role.TRANSFER]
 
-    schema = EditionContractMetadata
     metadata: ContractMetadata[TokenERC1155, EditionContractMetadata]
     roles: ContractRoles
     primary_sale: ContractPrimarySale[TokenERC1155]
@@ -51,7 +50,9 @@ class Edition(ERC1155):
         contract_wrapper = ContractWrapper(abi, provider, signer, options)
         super().__init__(contract_wrapper, storage)
 
-        self.metadata = ContractMetadata(contract_wrapper, storage, self.schema)
+        self.metadata = ContractMetadata(
+            contract_wrapper, storage, EditionContractMetadata
+        )
         self.roles = ContractRoles(contract_wrapper, self.contract_roles)
         self.primary_sale = ContractPrimarySale(contract_wrapper)
         self.platform_fee = ContractPlatformFee(contract_wrapper)

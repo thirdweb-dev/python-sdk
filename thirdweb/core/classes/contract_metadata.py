@@ -14,11 +14,11 @@ class ContractMetadata(Generic[TMetadataABI, TContractSchema]):
         self,
         contract_wrapper: ContractWrapper[TMetadataABI],
         storage: IpfsStorage,
-        schema: TContractSchema,
+        contract_schema: TContractSchema,
     ):
         self._contract_wrapper = contract_wrapper
         self._storage = storage
-        self._schema = schema
+        self._schema = contract_schema
 
     def get(self) -> TContractSchema:
         """

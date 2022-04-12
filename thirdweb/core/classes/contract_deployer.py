@@ -35,18 +35,34 @@ class ContractDeployer(ProviderHandler):
         self._storage = storage
 
     def deploy_nft_collection(self, metadata: NFTCollectionContractMetadata) -> str:
-        return self.deploy_contract(ContractType.NFT_COLLECTION, metadata.to_json())
+        """
+        Deploy an NFT Collection contract.
+        """
+
+        return self._deploy_contract(ContractType.NFT_COLLECTION, metadata.to_json())
 
     def deploy_edition(self, metadata: EditionContractMetadata) -> str:
-        return self.deploy_contract(ContractType.EDITION, metadata.to_json())
+        """
+        Deploy an Edition contract
+        """
+
+        return self._deploy_contract(ContractType.EDITION, metadata.to_json())
 
     def deploy_token(self, metadata: TokenContractMetadata) -> str:
-        return self.deploy_contract(ContractType.TOKEN, metadata.to_json())
+        """
+        Deploy a Token contract
+        """
+
+        return self._deploy_contract(ContractType.TOKEN, metadata.to_json())
 
     def deploy_marketplace(self, metadata: MarketplaceContractMetadata) -> str:
-        return self.deploy_contract(ContractType.MARKETPLACE, metadata.to_json())
+        """
+        Deploy a Marketplace contract
+        """
 
-    def deploy_contract(
+        return self._deploy_contract(ContractType.MARKETPLACE, metadata.to_json())
+
+    def _deploy_contract(
         self, contract_type: ContractType, contract_metadata: Dict[str, Any]
     ) -> str:
         factory = self._get_factory()
