@@ -31,15 +31,15 @@ nav:
       - "Token": "api-reference/contracts/token.md"
       - "Marketplace": "api-reference/contracts/marketplace.md"
     - "Core Interfaces":
-      - "Contract Intefaces"
+      - "Contract Intefaces":
         - "ERC20": "api-reference/core/classes/erc20.md"
         - "ERC721": "api-reference/core/classes/erc721.md"
         - "ERC1155": "api-reference/core/classes/erc1155.md"
       - "Signature Minting":
         - "ERC20 Signature Minting": "api-reference/core/classes/erc20-signature-minting.md"
         - "ERC721 Signature Minting": "api-reference/core/classes/erc721-signature-minting.md"
-        - "ERC1155 Signature Minting": ""api-reference/core/classes/erc1155-signature-minting.md"" 
-      - "Marketplace Listings"
+        - "ERC1155 Signature Minting": "api-reference/core/classes/erc1155-signature-minting.md"
+      - "Marketplace Listings":
         - "Marketplace Direct": "api-reference/core/classes/marketplace-direct.md"
         - "Marketplace Auction": "api-reference/core/classes/marketplace-auction.md"
       - "Contract Settings":

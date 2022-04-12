@@ -42,8 +42,6 @@ live-docs:
 	cd docs && mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
 build-docs:
-	rm -rf docs
-	mkdir docs
 	cd docs && mkdocs build
 
 test-docker:
