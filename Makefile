@@ -44,3 +44,8 @@ build-docs:
 	rm -rf docs
 	mkdir docs
 	cd docs && mkdocs build
+
+test-docker:
+	cp docs.Dockerfile Dockerfile
+	docker build --no-cache -t docker-test .
+	docker run -dp 3000:3000 docker-test
