@@ -62,25 +62,57 @@ class NFTDrop(ERC721[DropERC721]):
             self._contract_wrapper, self.metadata, self._storage
         )
 
-    def get_all_claimed(
-        self, query_params: Optional[QueryAllParams] = None
-    ) -> List[NFTMetadataOwner]:
-        pass
+    def get_all_claimed(self, query_params: QueryAllParams) -> List[NFTMetadataOwner]:
+        """
+        Get all claimed NFTs.
+
+        :param query_params: Query parameters.
+        :return: List of nft metadatas and owners for claimed nfts.
+        """
+
+        max_id = min(
+            self._contract_wrapper._contract_abi.next_token_id_to_claim.call(),
+            query_params.start + query_params.count,
+        )
+
+        return [self.get(token_id) for token_id in range(query_params.start, max_id)]
 
     def get_all_unclaimed(
         self, query_params: Optional[QueryAllParams] = None
     ) -> List[NFTMetadata]:
+        """
+        Get all unclaimed NFTs.
+
+        :param query_params: Query parameters.
+        :return: List of nft metadatas.
+        """
         pass
 
     def total_claimed_supply(self) -> int:
+        """
+        Get the total number of NFTs claimed from this contract
+
+        :return: Total number of NFTs claimed from this contract
+        """
         pass
 
     def total_unclaimed_supply(self) -> int:
+        """
+        Get the total number of unclaimed NFTs in this contract
+
+        :return: Total number of unclaimed NFTs in this contract
+        """
         pass
 
     def create_batch(
         self, metadatas: List[NFTMetadataInput]
     ) -> List[TxResultWithId[NFTMetadata]]:
+        """
+        Create a batch of NFTs.
+
+        :param metadatas: List of NFT metadata inputs.
+        :return: List of tx results with ids for created NFTs.
+        """
         pass
 
     def claim_to(
@@ -91,6 +123,14 @@ class NFTDrop(ERC721[DropERC721]):
             "0x0000000000000000000000000000000000000000000000000000000000000000"
         ],
     ) -> List[TxResultWithId[NFTMetadata]]:
+        """
+        Claim NFTs to a destination address.
+
+        :param destination_address: Destination address to claim to.
+        :param quantity: Number of NFTs to claim.
+        :param proofs: List of merkle proofs.
+        :return: List of tx results with ids for claimed NFTs.
+        """
         pass
 
     def claim(
@@ -100,6 +140,13 @@ class NFTDrop(ERC721[DropERC721]):
             "0x0000000000000000000000000000000000000000000000000000000000000000"
         ],
     ) -> List[TxResultWithId[NFTMetadata]]:
+        """
+        Claim NFTs.
+
+        :param quantity: Number of NFTs to claim.
+        :param proofs: List of merkle proofs.
+        :return: List of tx results with ids for claimed NFTs.
+        """
         pass
 
     """

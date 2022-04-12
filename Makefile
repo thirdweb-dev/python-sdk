@@ -40,10 +40,10 @@ sphinx-docs:
 live-docs:
 	# windows/mac/linux support
 	xdg-open http://localhost:$(DOCS_SERVER_PORT) || open http://localhost:$(DOCS_SERVER_PORT) || start http://localhost:$(DOCS_SERVER_PORT)
-	cd docs && mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
+	cd docs && poetry run mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
 build-docs:
-	cd docs && mkdocs build
+	cd docs && poetry run mkdocs build
 
 test-docker:
 	cp docs.Dockerfile Dockerfile
