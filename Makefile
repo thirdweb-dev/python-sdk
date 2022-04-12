@@ -24,6 +24,7 @@ abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC721.json && mv thirdweb/abi/ierc721/__init__.py thirdweb/abi/ierc721.py && rm -rf thirdweb/abi/ierc721
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC1155.json && mv thirdweb/abi/ierc1155/__init__.py thirdweb/abi/ierc1155.py && rm -rf thirdweb/abi/ierc1155
 
+# DO NOT USE RIGHT NOW
 sphinx-docs:
 	rm -rf sphinx-docs
 	poetry run sphinx-apidoc -o sphinx-docs . sphinx-apidoc --full -A 'Adam Majmudar'
@@ -40,4 +41,6 @@ live-docs:
 	cd docs && mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
 build-docs:
-	source .env/bin/activate && cd mkdocs && mkdocs build
+	rm -rf docs
+	mkdir docs
+	cd docs && mkdocs build
