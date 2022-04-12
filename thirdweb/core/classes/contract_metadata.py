@@ -18,7 +18,7 @@ class ContractMetadata(Generic[TMetadataABI, TContractSchema]):
     ):
         self._contract_wrapper = contract_wrapper
         self._storage = storage
-        self._contract_schema = contract_schema
+        self._schema = contract_schema
 
     def get(self) -> TContractSchema:
         """
