@@ -26,7 +26,6 @@ class Token(ERC20):
     contract_type: Final[ContractType] = ContractType.TOKEN
     contract_roles: Final[List[Role]] = [Role.ADMIN, Role.MINTER, Role.TRANSFER]
 
-    schema = TokenContractMetadata
     metadata: ContractMetadata[TokenERC20, TokenContractMetadata]
     roles: ContractRoles
     platform_fee: ContractPlatformFee
@@ -43,7 +42,9 @@ class Token(ERC20):
         contract_wrapper = ContractWrapper(abi, provider, signer, options)
         super().__init__(contract_wrapper, storage)
 
-        self.metadata = ContractMetadata(contract_wrapper, storage, self.schema)
+        self.metadata = ContractMetadata(
+            contract_wrapper, storage, TokenContractMetadata
+        )
         self.roles = ContractRoles(contract_wrapper, self.contract_roles)
         self.platform_fee = ContractPlatformFee(contract_wrapper)
 

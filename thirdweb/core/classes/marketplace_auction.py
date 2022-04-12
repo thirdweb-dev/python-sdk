@@ -49,6 +49,12 @@ class MarketplaceAuction(BaseContract[Marketplace]):
     """
 
     def get_listing(self, listing_id: int) -> AuctionListing:
+        """
+        Get an auction listing from the marketplace by ID
+
+        :param listing_id: The ID of the listing to get
+        :return: The auction listing
+        """
         raw_listing = self._contract_wrapper._contract_abi.listings.call(listing_id)
         listing = ContractListing(*raw_listing)
 
@@ -65,6 +71,12 @@ class MarketplaceAuction(BaseContract[Marketplace]):
         return self._map_listing(listing)
 
     def get_winning_bid(self, listing_id: int) -> Optional[Offer]:
+        """
+        Get the winning bid on an auction listing
+
+        :param listing_id: The ID of the listing to get the winning bid for
+        :return: The winning bid
+        """
         self._validate_listing(listing_id)
         raw_offers = self._contract_wrapper._contract_abi.winning_bid.call(listing_id)
         offers = ContractOffer(*raw_offers)
@@ -75,6 +87,12 @@ class MarketplaceAuction(BaseContract[Marketplace]):
         return map_offer(self._contract_wrapper.get_provider(), listing_id, offers)
 
     def get_winner(self, listing_id) -> str:
+        """
+        Get the winner of an auction that has already ended.
+
+        :param listing_id: The ID of the listing to get the winner for
+        :return: The winning bidder
+        """
         interface = self._contract_wrapper.get_contract_interface()
         closed_auctions = interface.events.AuctionClosed().getLogs()
 
@@ -95,6 +113,12 @@ class MarketplaceAuction(BaseContract[Marketplace]):
     """
 
     def create_listing(self, listing: NewAuctionListing) -> int:
+        """
+        Create a new auction listing
+
+        :param listing: The listing to create
+        :return: The ID of the listing
+        """
         validate_new_listing_param(listing)
 
         handle_token_approval(
@@ -139,6 +163,12 @@ class MarketplaceAuction(BaseContract[Marketplace]):
         return cast(Any, events[0].get("args")).get("listingId")
 
     def buyout_listing(self, listing_id: int) -> TxReceipt:
+        """
+        Buyout an auction listing
+
+        :param listing_id: The ID of the listing to buyout
+        :return: The transaction receipt
+        """
         listing = self._validate_listing(listing_id)
 
         currency_metadata = fetch_currency_metadata(
@@ -150,6 +180,13 @@ class MarketplaceAuction(BaseContract[Marketplace]):
         )
 
     def make_bid(self, listing_id: int, price_per_token: Price) -> TxReceipt:
+        """
+        Make a bid on an auction listing
+
+        :param listing_id: The ID of the listing to bid on
+        :param price_per_token: The price per token to bid
+        :return: The transaction receipt
+        """
         listing = self._validate_listing(listing_id)
         normalized_price = normalize_price_value(
             self._contract_wrapper.get_provider(),
@@ -193,6 +230,12 @@ class MarketplaceAuction(BaseContract[Marketplace]):
         )
 
     def cancel_listing(self, listing_id: int) -> TxReceipt:
+        """
+        Cancel an auction listing
+
+        :param listing_id: The ID of the listing to cancel
+        :return: The transaction receipt
+        """
         listing = self._validate_listing(listing_id)
 
         now = int(time())
@@ -224,6 +267,13 @@ class MarketplaceAuction(BaseContract[Marketplace]):
             raise Exception(err)
 
     def update_listing(self, listing: AuctionListing) -> TxReceipt:
+        """
+        Update a listing on the marketplace
+
+        :param listing: The listing to update
+        :return: The transaction receipt
+        """
+
         return self._contract_wrapper.send_transaction(
             "update_listing",
             [

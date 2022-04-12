@@ -7,6 +7,8 @@
 .mypy_cache
 .pytest_cache
 
+Dockerfile
+
 /abi
 /env
 /dist
@@ -15,3 +17,5 @@
 /interfaces
 /node_modules
 /sphinx-docs
+/docs/site
+/docker-test

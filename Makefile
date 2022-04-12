@@ -1,5 +1,7 @@
 .PHONY: abi docs
 
+DOCS_SERVER_PORT = 8087
+
 test:
 	poetry run brownie test --network hardhat
 
@@ -22,7 +24,8 @@ abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC721.json && mv thirdweb/abi/ierc721/__init__.py thirdweb/abi/ierc721.py && rm -rf thirdweb/abi/ierc721
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC1155.json && mv thirdweb/abi/ierc1155/__init__.py thirdweb/abi/ierc1155.py && rm -rf thirdweb/abi/ierc1155
 
-docs:
+# DO NOT USE RIGHT NOW
+sphinx-docs:
 	rm -rf sphinx-docs
 	poetry run sphinx-apidoc -o sphinx-docs . sphinx-apidoc --full -A 'Adam Majmudar'
 	cd sphinx-docs && printf "\n\nimport os\nimport sys\nsys.path.insert(0,os.path.abspath('../'))\n\ndef skip(app, what, name, obj,would_skip, options):\n\tif name in ( '__init__',):\n\t\treturn False\n\treturn would_skip\ndef setup(app):\n\tapp.connect('autodoc-skip-member', skip)\n\nextensions.append('sphinx_autodoc_typehints')" >> conf.py
@@ -32,3 +35,17 @@ docs:
 	rm -rf sphinx-docs
 	rm docs/index.md
  
+live-docs:
+	# windows/mac/linux support
+	xdg-open http://localhost:$(DOCS_SERVER_PORT) || open http://localhost:$(DOCS_SERVER_PORT) || start http://localhost:$(DOCS_SERVER_PORT)
+	cd docs && mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
+
+build-docs:
+	rm -rf docs
+	mkdir docs
+	cd docs && mkdocs build
+
+test-docker:
+	cp docs.Dockerfile Dockerfile
+	docker build --no-cache -t docker-test .
+	docker run -dp 3000:3000 docker-test

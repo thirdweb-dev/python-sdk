@@ -36,7 +36,6 @@ class Marketplace(BaseContract[MarketplaceABI]):
     contract_type: Final[ContractType] = ContractType.MARKETPLACE
     contract_roles: Final[List[Role]] = [Role.ADMIN, Role.LISTER, Role.ASSET]
 
-    schema = MarketplaceContractMetadata
     metadata: ContractMetadata[MarketplaceABI, MarketplaceContractMetadata]
     roles: ContractRoles
     platform_fee: ContractPlatformFee[MarketplaceABI]
@@ -56,6 +55,9 @@ class Marketplace(BaseContract[MarketplaceABI]):
         super().__init__(contract_wrapper)
 
         self._storage = storage
+        self.metadata = ContractMetadata(
+            contract_wrapper, storage, MarketplaceContractMetadata
+        )
         self.platform_fee = ContractPlatformFee(contract_wrapper)
         self.direct = MarketplaceDirect(contract_wrapper, storage)
         self.auction = MarketplaceAuction(contract_wrapper, storage)
@@ -65,6 +67,12 @@ class Marketplace(BaseContract[MarketplaceABI]):
     """
 
     def get_listing(self, listing_id: int) -> Union[DirectListing, AuctionListing]:
+        """
+        Get a listing from the marketplace by ID
+
+        :param listing_id: ID of the listing to get
+        :return: Listing object
+        """
         listing_args = self._contract_wrapper._contract_abi.listings.call(listing_id)
         listing = ContractListing(*listing_args)
 
@@ -79,6 +87,11 @@ class Marketplace(BaseContract[MarketplaceABI]):
         raise Exception(f"Unkown listing type {listing.listing_type}")
 
     def get_active_listings(self) -> List[Union[DirectListing, AuctionListing]]:
+        """
+        Get all the currently active listings from the marketplace.
+
+        :return: List of listings
+        """
         raw_listings = self._get_all_listings_no_filter()
 
         listings: List[Union[DirectListing, AuctionListing]] = []
@@ -97,6 +110,12 @@ class Marketplace(BaseContract[MarketplaceABI]):
     def get_all_listings(
         self, filter: MarketplaceFilter = None
     ) -> List[Union[DirectListing, AuctionListing]]:
+        """
+        Get all the listings that have ever been made on this marketplace.
+
+        :param filter: Filter to apply to the listings
+        :return: List of listings
+        """
         raw_listings = self._get_all_listings_no_filter()
 
         if filter is not None:
@@ -129,18 +148,38 @@ class Marketplace(BaseContract[MarketplaceABI]):
     get_all = get_all_listings
 
     def get_total_count(self) -> int:
+        """
+        Get the total number of listings on this marketplace.
+
+        :return: Total number of listings
+        """
         return self._contract_wrapper._contract_abi.total_listings.call()
 
     def is_restricted_to_lister_role_only(self) -> bool:
+        """
+        Check whether only wallets with the lister role can make listings.
+
+        :return: True if only lister wallets can make listings
+        """
         anyone_can_list = self._contract_wrapper._contract_abi.has_role.call(
             get_role_hash(Role.LISTER), ZERO_ADDRESS
         )
         return not anyone_can_list
 
     def get_bid_buffer_bps(self) -> int:
+        """
+        Get the bid buffer basis points for this marketplace.
+
+        :return: Bid buffer basis points
+        """
         return self._contract_wrapper._contract_abi.bid_buffer_bps.call()
 
     def get_time_buffer_in_seconds(self) -> int:
+        """
+        Get the time buffer for this marketplace in seconds
+
+        :return: Time buffer in seconds
+        """
         return self._contract_wrapper._contract_abi.time_buffer.call()
 
     """
@@ -153,6 +192,14 @@ class Marketplace(BaseContract[MarketplaceABI]):
         quantity_desired: Optional[int] = None,
         receiver: Optional[str] = None,
     ) -> TxReceipt:
+        """
+        Buyout a listing by listing ID
+
+        :param listing_id: ID of the listing to buyout
+        :param quantity_desired: Quantity to buyout
+        :param receiver: Address to send the asset to
+        :return: Transaction receipt of buyout
+        """
         raw_listing = self._contract_wrapper._contract_abi.listings.call(listing_id)
         listing = ContractListing(*raw_listing)
 
@@ -170,6 +217,12 @@ class Marketplace(BaseContract[MarketplaceABI]):
         raise Exception(f"Unkown listing type {listing.listing_type}")
 
     def set_bid_buffer_bps(self, buffer_bps: int) -> TxReceipt:
+        """
+        Set the bid buffer basis points for this marketplace.
+
+        :param buffer_bps: Bid buffer basis points
+        :return: Transaction receipt
+        """
         self.roles.verify([Role.ADMIN], self._contract_wrapper.get_signer_address())
 
         time_buffer = self.get_time_buffer_in_seconds()
@@ -178,6 +231,12 @@ class Marketplace(BaseContract[MarketplaceABI]):
         )
 
     def set_time_buffer_in_seconds(self, buffer_in_seconds: int) -> TxReceipt:
+        """
+        Set the time buffer of the marketplace.
+
+        :param buffer_in_seconds: Time buffer in seconds
+        :return: Transaction receipt
+        """
         self.roles.verify([Role.ADMIN], self._contract_wrapper.get_signer_address())
 
         bid_buffer_bps = self.get_bid_buffer_bps()
@@ -188,6 +247,11 @@ class Marketplace(BaseContract[MarketplaceABI]):
     def allow_listing_from_specific_asset_only(
         self, contract_address: str
     ) -> TxReceipt:
+        """
+        Restrict marketplace so only specific asset can be listed.
+
+        :param contract_address: Address of the asset contract
+        """
         encoded = []
         interface = self._contract_wrapper.get_contract_interface()
         members = self.roles.get(Role.ASSET)
@@ -208,6 +272,12 @@ class Marketplace(BaseContract[MarketplaceABI]):
         return self._contract_wrapper.multi_call(encoded)
 
     def allow_listing_from_any_asset(self) -> TxReceipt:
+        """
+        Allow asset to be listed on the marketplace.
+
+        :return: Transaction receipt
+        """
+
         encoded = []
         interface = self._contract_wrapper.get_contract_interface()
         members = self.roles.get(Role.ASSET)
