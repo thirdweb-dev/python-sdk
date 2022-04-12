@@ -9,9 +9,10 @@ import pytest
 from thirdweb.types.settings.metadata import TokenContractMetadata
 
 
-@pytest.mark.usefixtures("sdk")
+@pytest.mark.usefixtures("sdk", "primary_account")
 @pytest.fixture(scope="function")
-def token(sdk: ThirdwebSDK) -> Token:
+def token(sdk: ThirdwebSDK, primary_account) -> Token:
+    sdk.update_signer(primary_account)
     return sdk.get_token(
         sdk.deployer.deploy_token(
             TokenContractMetadata(

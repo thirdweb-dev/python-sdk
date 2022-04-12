@@ -15,7 +15,7 @@ from web3 import Web3
 def is_native_token(token_address: str) -> bool:
     return (
         token_address.lower() == ZERO_ADDRESS
-        or token_address.lower() == NATIVE_TOKEN_ADDRESS
+        or token_address.lower() == NATIVE_TOKEN_ADDRESS.lower()
     )
 
 

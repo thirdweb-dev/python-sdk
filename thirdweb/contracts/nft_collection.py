@@ -9,6 +9,7 @@ from thirdweb.core.classes.contract_sales import ContractPrimarySale
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.common.nft import upload_or_extract_uri, upload_or_extract_uris
 from thirdweb.core.classes.erc_721 import ERC721
+from thirdweb.core.classes.erc_721_signature_minting import ERC721SignatureMinting
 from thirdweb.abi import TokenERC721
 
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
@@ -35,6 +36,7 @@ class NFTCollection(ERC721):
     primary_sale: ContractPrimarySale[TokenERC721]
     platform_fee: ContractPlatformFee[TokenERC721]
     royalty: ContractRoyalty[TokenERC721]
+    signature: ERC721SignatureMinting
 
     def __init__(
         self,
@@ -55,6 +57,9 @@ class NFTCollection(ERC721):
         self.primary_sale = ContractPrimarySale(contract_wrapper)
         self.platform_fee = ContractPlatformFee(contract_wrapper)
         self.royalty = ContractRoyalty(contract_wrapper, self.metadata)
+        self.signature = ERC721SignatureMinting(
+            contract_wrapper, self.roles, self._storage
+        )
 
     """
     WRITE FUNCTIONS

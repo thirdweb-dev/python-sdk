@@ -8,9 +8,10 @@ import pytest
 from thirdweb.types.settings.metadata import NFTCollectionContractMetadata
 
 
-@pytest.mark.usefixtures("sdk")
+@pytest.mark.usefixtures("sdk", "primary_account")
 @pytest.fixture(scope="function")
-def nft_collection(sdk: ThirdwebSDK) -> NFTCollection:
+def nft_collection(sdk: ThirdwebSDK, primary_account) -> NFTCollection:
+    sdk.update_signer(primary_account)
     return sdk.get_nft_collection(
         sdk.deployer.deploy_nft_collection(
             NFTCollectionContractMetadata(

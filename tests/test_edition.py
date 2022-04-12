@@ -9,9 +9,10 @@ from thirdweb.types.nft import EditionMetadataInput, NFTMetadataInput
 from thirdweb.types.settings.metadata import EditionContractMetadata
 
 
-@pytest.mark.usefixtures("sdk")
+@pytest.mark.usefixtures("sdk", "primary_account")
 @pytest.fixture()
-def edition(sdk: ThirdwebSDK) -> Edition:
+def edition(sdk: ThirdwebSDK, primary_account) -> Edition:
+    sdk.update_signer(primary_account)
     return sdk.get_edition(
         sdk.deployer.deploy_edition(
             EditionContractMetadata(

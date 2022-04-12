@@ -9,6 +9,7 @@ from thirdweb.core.classes.contract_royalty import ContractRoyalty
 from thirdweb.core.classes.contract_sales import ContractPrimarySale
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_1155 import ERC1155
+from thirdweb.core.classes.erc_1155_signature_minting import ERC1155SignatureMinting
 from thirdweb.abi import TokenERC1155
 
 from eth_account.account import LocalAccount
@@ -37,6 +38,7 @@ class Edition(ERC1155):
     primary_sale: ContractPrimarySale[TokenERC1155]
     platform_fee: ContractPlatformFee[TokenERC1155]
     royalty: ContractRoyalty[TokenERC1155]
+    signature: ERC1155SignatureMinting
 
     def __init__(
         self,
@@ -57,6 +59,9 @@ class Edition(ERC1155):
         self.primary_sale = ContractPrimarySale(contract_wrapper)
         self.platform_fee = ContractPlatformFee(contract_wrapper)
         self.royalty = ContractRoyalty(contract_wrapper, self.metadata)
+        self.signature = ERC1155SignatureMinting(
+            contract_wrapper, self.roles, self._storage
+        )
 
     def mint(
         self, metadata_with_supply: EditionMetadataInput

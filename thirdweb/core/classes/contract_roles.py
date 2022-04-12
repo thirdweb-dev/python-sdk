@@ -57,7 +57,7 @@ class ContractRoles:
     def verify(self, roles: List[Role], address: str):
         for role in roles:
             members = self.get(role)
-            if address not in [member.lower() for member in members]:
+            if address.lower() not in [member.lower() for member in members]:
                 raise RoleException(f"Address {address} is not a member of role {role}")
 
     """

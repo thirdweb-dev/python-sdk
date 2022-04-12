@@ -30,19 +30,25 @@ nav:
       - "Edition": "api-reference/contracts/edition.md"
       - "Token": "api-reference/contracts/token.md"
       - "Marketplace": "api-reference/contracts/marketplace.md"
-    - "Common Interfaces":
-      - "ERC20": "api-reference/core/classes/erc20.md"
-      - "ERC721": "api-reference/core/classes/erc721.md"
-      - "ERC1155": "api-reference/core/classes/erc1155.md"
-      - "Marketplace Direct": "api-reference/core/classes/marketplace-direct.md"
-      - "Marketplace Auction": "api-reference/core/classes/marketplace-auction.md"
+    - "Core Interfaces":
+      - "Contract Intefaces":
+        - "ERC20": "api-reference/core/classes/erc20.md"
+        - "ERC721": "api-reference/core/classes/erc721.md"
+        - "ERC1155": "api-reference/core/classes/erc1155.md"
+      - "Signature Minting":
+        - "ERC20 Signature Minting": "api-reference/core/classes/erc20-signature-minting.md"
+        - "ERC721 Signature Minting": "api-reference/core/classes/erc721-signature-minting.md"
+        - "ERC1155 Signature Minting": "api-reference/core/classes/erc1155-signature-minting.md"
+      - "Marketplace Listings":
+        - "Marketplace Direct": "api-reference/core/classes/marketplace-direct.md"
+        - "Marketplace Auction": "api-reference/core/classes/marketplace-auction.md"
+      - "Contract Settings":
+        - "Contract Metadata": "api-reference/core/classes/contract-metadata.md"
+        - "Contract Platform Fee": "api-reference/core/classes/contract-platform-fee.md"
+        - "Contract Royalty": "api-reference/core/classes/contract-royalty.md"
+        - "Contract Sales": "api-reference/core/classes/contract-sales.md"
       - "Contract Deployer": "api-reference/core/classes/contract-deployer.md"
       - "Contract Roles": "api-reference/core/classes/contract-roles.md"
-      - "Contract Metadata": "api-reference/core/classes/contract-metadata.md"
-      - "Contract Platform Fee": "api-reference/core/classes/contract-platform-fee.md"
-      - "Contract Royalty": "api-reference/core/classes/contract-royalty.md"
-      - "Contract Sales": "api-reference/core/classes/contract-sales.md"
-
 markdown_extensions:
   - pymdownx.details
   - pymdownx.highlight

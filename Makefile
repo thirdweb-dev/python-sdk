@@ -2,15 +2,16 @@
 
 DOCS_SERVER_PORT = 8087
 
-test:
-	poetry run brownie test --network hardhat
-
-setup:
+init:
 	rm -rf .venv
 	poetry shell
 	poetry install
 	poetry run yarn add hardhat
+	poetry run pip3 install eth-brownie
 	make abi
+
+test:
+	poetry run brownie test --network hardhat
 
 abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/TWRegistry.json && mv thirdweb/abi/t_w_registry/__init__.py thirdweb/abi/t_w_registry.py && rm -rf thirdweb/abi/t_w_registry
@@ -41,8 +42,6 @@ live-docs:
 	cd docs && mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
 build-docs:
-	rm -rf docs
-	mkdir docs
 	cd docs && mkdocs build
 
 test-docker:

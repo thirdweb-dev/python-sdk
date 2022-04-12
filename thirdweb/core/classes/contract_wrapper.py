@@ -6,6 +6,7 @@ from web3.datastructures import AttributeDict
 from web3.contract import Contract
 from thirdweb.common.error import NoSignerException
 from web3._utils.events import EventLogErrorFlags
+from thirdweb.common.sign import EIP712Domain, sign_typed_data_internal
 
 from thirdweb.core.classes.provider_handler import ProviderHandler
 from web3.eth import TxReceipt
@@ -125,3 +126,11 @@ class ContractWrapper(Generic[TContractABI], ProviderHandler):
         """
 
         return self.send_transaction("multicall", [encoded])
+
+    def sign_typed_data(
+        self, signer: LocalAccount, domain: EIP712Domain, types: Any, message: Any
+    ) -> bytes:
+        signature = sign_typed_data_internal(
+            self.get_provider(), signer, domain, types, message
+        )
+        return signature
