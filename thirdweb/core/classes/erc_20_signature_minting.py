@@ -41,6 +41,12 @@ class ERC20SignatureMinting:
         self.roles = roles
 
     def mint(self, signed_payload: SignedPayload20) -> TxReceipt:
+        """
+        Mint a token with the given payload
+
+        :param signed_payload: Signed payload
+        :return: transaction result with the token ID of the minted token
+        """
         mint_request = signed_payload.payload
         signature = signed_payload.signature
         message = self._map_payload_to_contract_struct(mint_request)
@@ -59,6 +65,12 @@ class ERC20SignatureMinting:
         )
 
     def mint_batch(self, signed_payloads: List[SignedPayload20]) -> TxReceipt:
+        """
+        Mint a batch of tokens with the given payloads
+
+        :param signed_payloads: Signed payloads
+        :return: transaction results with the token IDs of the minted tokens
+        """
         contract_payloads = []
         for payload in signed_payloads:
             message = self._map_payload_to_contract_struct(payload.payload)
@@ -82,6 +94,12 @@ class ERC20SignatureMinting:
         return self._contract_wrapper.multi_call(encoded)
 
     def verify(self, signed_payload: SignedPayload20) -> bool:
+        """
+        Verify the signature of the given payload
+
+        :param signed_payload: Signed payload
+        :return: True if the signature is valid, False otherwise
+        """
         mint_request = signed_payload.payload
         signature = signed_payload.signature
         message = self._map_payload_to_contract_struct(mint_request)
@@ -91,11 +109,23 @@ class ERC20SignatureMinting:
         return verification[0]
 
     def generate(self, mint_request: PayloadToSign20) -> SignedPayload20:
+        """
+        Generate a signed payload from the given payload
+
+        :param mint_request: Payload to sign
+        :return: Signed payload
+        """
         return self.generate_batch([mint_request])[0]
 
     def generate_batch(
         self, payloads_to_sign: List[PayloadToSign20]
     ) -> List[SignedPayload20]:
+        """
+        Generate a batch of signed payloads from the given payloads
+
+        :param payloads_to_sign: Payloads to sign
+        :return: Signed payloads
+        """
         self.roles.verify([Role.MINTER], self._contract_wrapper.get_signer_address())
 
         parsed_requests = payloads_to_sign

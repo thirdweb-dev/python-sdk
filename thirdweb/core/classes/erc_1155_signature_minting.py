@@ -36,6 +36,12 @@ class ERC1155SignatureMinting:
         self.roles = roles
 
     def mint(self, signed_payload: SignedPayload1155) -> TxResultWithId:
+        """
+        Mint a token with the given payload
+
+        :param signed_payload: Signed payload
+        :return: transaction result with the token ID of the minted token
+        """
         mint_request = signed_payload.payload
         signature = signed_payload.signature
         message = self._map_payload_to_contract_struct(mint_request)
@@ -62,6 +68,12 @@ class ERC1155SignatureMinting:
     def mint_batch(
         self, signed_payloads: List[SignedPayload1155]
     ) -> List[TxResultWithId]:
+        """
+        Mint a batch of tokens with the given payloads
+
+        :param signed_payloads: Signed payloads
+        :return: transaction results with the token IDs of the minted tokens
+        """
         contract_payloads = []
         for payload in signed_payloads:
             message = self._map_payload_to_contract_struct(payload.payload)
@@ -96,6 +108,12 @@ class ERC1155SignatureMinting:
         ]
 
     def verify(self, signed_payload: SignedPayload1155) -> bool:
+        """
+        Verify the signature of the given payload
+
+        :param signed_payload: Signed payload
+        :return: True if the signature is valid, False otherwise
+        """
         mint_request = signed_payload.payload
         signature = signed_payload.signature
         message = self._map_payload_to_contract_struct(mint_request)
@@ -105,11 +123,23 @@ class ERC1155SignatureMinting:
         return verification[0]
 
     def generate(self, mint_request: PayloadToSign1155) -> SignedPayload1155:
+        """
+        Generate a signed payload from the given payload
+
+        :param mint_request: Payload to sign
+        :return: Signed payload
+        """
         return self.generate_batch([mint_request])[0]
 
     def generate_batch(
         self, payloads_to_sign: List[PayloadToSign1155]
     ) -> List[SignedPayload1155]:
+        """
+        Generate a batch of signed payloads from the given payloads
+
+        :param payloads_to_sign: Payloads to sign
+        :return: Signed payloads
+        """
         self.roles.verify([Role.MINTER], self._contract_wrapper.get_signer_address())
 
         parsed_requests = payloads_to_sign
@@ -140,7 +170,6 @@ class ERC1155SignatureMinting:
                 royalty_bps=request.royalty_bps,
                 uri=uri,
             ).set_uid(request.uid)
-            print("STRUCT: ", self._map_payload_to_contract_struct(final_payload))
             signature = self._contract_wrapper.sign_typed_data(
                 signer,
                 EIP712StandardDomain(
