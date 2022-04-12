@@ -1,12 +1,8 @@
 from time import time
-from typing import Any, cast
 from thirdweb.constants.currency import NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS
-from thirdweb.constants.role import Role
 from thirdweb.contracts.token import Token
 from thirdweb.types.contracts.signature import PayloadToSign20, PayloadToSign20
 from thirdweb.types.currency import TokenAmount
-from thirdweb.types.nft import NFTMetadataInput
-from thirdweb.contracts import NFTCollection
 from thirdweb.core.sdk import ThirdwebSDK
 from brownie import accounts
 import pytest
@@ -16,9 +12,11 @@ from thirdweb.types.settings.metadata import (
 )
 
 
-@pytest.mark.usefixtures("sdk")
+@pytest.mark.usefixtures("sdk", "primary_account")
 @pytest.fixture(scope="function")
-def token(sdk: ThirdwebSDK) -> Token:
+def token(sdk: ThirdwebSDK, primary_account) -> Token:
+    sdk.update_signer(primary_account)
+
     token = sdk.get_token(
         sdk.deployer.deploy_token(
             TokenContractMetadata(
@@ -92,7 +90,8 @@ def test_claiming(
     for i in range(0, 10):
         payloads.append(free_mint)
 
-    print("LEN: ", len(payloads))
+    balance = token.balance_of(accounts[0].address)
+    assert balance.display_value == 1000
 
     batch = [token.signature.generate(p) for p in payloads]
     sdk.update_signer(secondary_account)
@@ -100,4 +99,4 @@ def test_claiming(
     sdk.update_signer(primary_account)
 
     balance = token.balance_of(accounts[0].address)
-    assert balance.display_value == 10
+    assert balance.display_value == 1010

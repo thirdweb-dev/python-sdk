@@ -15,9 +15,10 @@ from thirdweb.types.settings.metadata import (
 )
 
 
-@pytest.mark.usefixtures("sdk")
+@pytest.mark.usefixtures("sdk", "primary_account")
 @pytest.fixture(scope="function")
-def marketplace(sdk: ThirdwebSDK) -> Marketplace:
+def marketplace(sdk: ThirdwebSDK, primary_account) -> Marketplace:
+    sdk.update_signer(primary_account)
     return sdk.get_marketplace(
         sdk.deployer.deploy_marketplace(
             MarketplaceContractMetadata(

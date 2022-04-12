@@ -17,9 +17,10 @@ from thirdweb.types.settings.metadata import (
 )
 
 
-@pytest.mark.usefixtures("sdk")
+@pytest.mark.usefixtures("sdk", "primary_account")
 @pytest.fixture(scope="function")
-def nft_collection(sdk: ThirdwebSDK) -> NFTCollection:
+def nft_collection(sdk: ThirdwebSDK, primary_account) -> NFTCollection:
+    sdk.update_signer(primary_account)
     nft_collection = sdk.get_nft_collection(
         sdk.deployer.deploy_nft_collection(
             NFTCollectionContractMetadata(
@@ -37,9 +38,9 @@ def nft_collection(sdk: ThirdwebSDK) -> NFTCollection:
     return nft_collection
 
 
-@pytest.mark.usefixtures("sdk")
+@pytest.mark.usefixtures("sdk", "secondary_account")
 @pytest.fixture(scope="function")
-def token(sdk: ThirdwebSDK) -> Token:
+def token(sdk: ThirdwebSDK, secondary_account) -> Token:
     token = sdk.get_token(
         sdk.deployer.deploy_token(
             TokenContractMetadata(
@@ -55,6 +56,7 @@ def token(sdk: ThirdwebSDK) -> Token:
             TokenAmount(to_address=accounts[0].address, amount=1000),
             TokenAmount(to_address=accounts[1].address, amount=1000),
             TokenAmount(to_address=sdk.get_signer().address, amount=1000),  # type: ignore
+            TokenAmount(to_address=secondary_account.address, amount=1000),
         ]
     )
 
@@ -116,3 +118,32 @@ def test_claiming(
 
     assert nft_collection.get(tx[0].id).metadata.name == "OUCH VOUCH"
     assert nft_collection.balance_of(accounts[0].address) == 10
+
+
+@pytest.mark.usefixtures("sdk", "primary_account", "secondary_account")
+def test_custom_token(
+    sdk: ThirdwebSDK,
+    nft_collection: NFTCollection,
+    token: Token,
+    primary_account,
+    secondary_account,
+):
+    old_balance = nft_collection.balance_of(accounts[0].address)
+    metadata = PayloadToSign721(
+        price=1,
+        currency_address=token.get_address(),
+        metadata=NFTMetadataInput(name="custom token test"),
+        mint_end_time=int(time() + 60 * 60 * 24 * 1000 * 1000),
+        mint_start_time=int(time()),
+        to=accounts[0].address,
+        uid=None,
+        primary_sale_recipient=ZERO_ADDRESS,
+    )
+    payload = nft_collection.signature.generate(metadata)
+
+    sdk.update_signer(secondary_account)
+    nft_collection.signature.mint(payload)
+
+    new_balance = nft_collection.balance_of(accounts[0].address)
+
+    assert new_balance == old_balance + 1
