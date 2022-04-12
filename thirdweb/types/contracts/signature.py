@@ -13,26 +13,12 @@ class BaseSignaturePayloadInput:
     currency_address: str
     mint_start_time: int
     mint_end_time: int
-    uid: Optional[str]
+    uid: Optional[bytes]
     primary_sale_recipient: Optional[str]
 
-    def __init__(
-        self,
-        to: str,
-        price: Price,
-        currency_address: str,
-        mint_start_time: int,
-        mint_end_time: int,
-        uid: Optional[str] = None,
-        primary_sale_recipient: str = ZERO_ADDRESS,
-    ):
-        self.to = to
-        self.price = price
-        self.currency_address = currency_address
-        self.mint_start_time = mint_start_time
-        self.mint_end_time = mint_end_time
+    def set_uid(self, uid: str) -> "BaseSignaturePayloadInput":
         self.uid = resolve_or_generate_id(uid)
-        self.primary_sale_recipient = primary_sale_recipient
+        return self
 
 
 @dataclass
@@ -71,8 +57,10 @@ class Signature1155PayloadInput(BaseSignaturePayloadInput):
 
 @dataclass
 class Signature1155PayloadOutput(BaseSignaturePayloadInput):
-    uri: str
+    metadata: NFTMetadataInput
     royalty_bps: int
+    royalty_recipient: str
+    uri: str
     token_id: int
     quantity: int
 
@@ -147,4 +135,11 @@ MintRequest1155 = [
     {"name": "validityStartTimestamp", "type": "uint128"},
     {"name": "validityEndTimestamp", "type": "uint128"},
     {"name": "uid", "type": "bytes32"},
+]
+
+EIP712DomainType = [
+    {"name": "name", "type": "string"},
+    {"name": "version", "type": "string"},
+    {"name": "chainId", "type": "uint256"},
+    {"name": "verifyingContract", "type": "address"},
 ]

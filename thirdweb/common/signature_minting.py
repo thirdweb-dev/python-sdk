@@ -1,9 +1,10 @@
 from typing import Optional
-from eth_utils import encode_hex
+from uuid import uuid4
 
 
-def resolve_or_generate_id(request_uid: Optional[str]) -> str:
+def resolve_or_generate_id(request_uid: Optional[str]) -> bytes:
     # TODO: Implement encoding
     if request_uid is None:
-        return encode_hex(bytes(32))
-    return encode_hex(request_uid).ljust(66, "0")
+        generated_id = uuid4().hex
+        return str.encode(generated_id)
+    return str.encode(request_uid)

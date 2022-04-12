@@ -12,6 +12,7 @@ from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
 from thirdweb.core.classes.contract_roles import ContractRoles
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_20 import ERC20
+from thirdweb.core.classes.erc_20_signature_minting import ERC20SignatureMinting
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
 from thirdweb.types.currency import CurrencyValue, Price, TokenAmount
@@ -29,6 +30,7 @@ class Token(ERC20):
     metadata: ContractMetadata[TokenERC20, TokenContractMetadata]
     roles: ContractRoles
     platform_fee: ContractPlatformFee
+    signature: ERC20SignatureMinting
 
     def __init__(
         self,
@@ -47,6 +49,9 @@ class Token(ERC20):
         )
         self.roles = ContractRoles(contract_wrapper, self.contract_roles)
         self.platform_fee = ContractPlatformFee(contract_wrapper)
+        self.signature = ERC20SignatureMinting(
+            contract_wrapper, self.roles, self._storage
+        )
 
     """
     READ FUNCTIONS

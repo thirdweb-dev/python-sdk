@@ -130,7 +130,7 @@ class ContractWrapper(Generic[TContractABI], ProviderHandler):
     def sign_typed_data(
         self, signer: LocalAccount, domain: EIP712Domain, types: Any, message: Any
     ) -> bytes:
-        payload = sign_typed_data_internal(
+        signature = sign_typed_data_internal(
             self.get_provider(), signer, domain, types, message
         )
-        return payload.signature
+        return signature

@@ -11,11 +11,11 @@ import os
 load_dotenv()
 
 
-@pytest.mark.usefixtures("contract_addresses")
+@pytest.mark.usefixtures("contract_addresses", "primary_account")
 @pytest.fixture(scope="session")
-def sdk_local(contract_addresses):
+def sdk_local(contract_addresses, primary_account):
     provider = Web3(Web3.HTTPProvider())
-    signer = Account.from_key(os.environ.get("PRIVATE_KEY"))
+    signer = primary_account
 
     sdk = ThirdwebSDK(provider, signer)
 

@@ -39,7 +39,12 @@ def contract_addresses():
     accounts.add(os.environ.get("PRIVATE_KEY"))
     address = Account.from_key(os.environ.get("PRIVATE_KEY")).address
     account = accounts.at(address)
-    accounts[0].transfer(account, accounts[0].balance().__truediv__(2))
+    accounts[0].transfer(account, accounts[0].balance().__truediv__(3))
+
+    accounts.add(os.environ.get("PRIVATE_KEY_2"))
+    secondary_address = Account.from_key(os.environ.get("PRIVATE_KEY_2")).address
+    secondary_account = accounts.at(secondary_address)
+    accounts[0].transfer(secondary_account, accounts[0].balance().__truediv__(2))
 
     trusted_forwarder = account.deploy(Forwarder)
     trusted_forwarder_address = trusted_forwarder.address

@@ -9,6 +9,7 @@ from thirdweb.abi import TokenERC721
 from thirdweb.common.currency import normalize_price_value, set_erc20_allowance
 from thirdweb.common.nft import upload_or_extract_uris
 from thirdweb.types.contracts.signature import (
+    EIP712DomainType,
     MintRequest721,
     PayloadToSign721,
     PayloadWithUri721,
@@ -123,19 +124,30 @@ class ERC721SignatureMinting:
             raise Exception("No signer found")
 
         signed_payloads = []
-        for i, request in parsed_requests:
+        for i, request in enumerate(parsed_requests):
             uri = uris[i]
-            # format could be wrong
-            final_payload = Signature721PayloadOutput(**request, uri=uri)
+            final_payload = Signature721PayloadOutput(
+                to=request.to,
+                currency_address=request.currency_address,
+                price=request.price,
+                metadata=request.metadata,
+                mint_end_time=request.mint_end_time,
+                mint_start_time=request.mint_start_time,
+                uid=request.uid,
+                primary_sale_recipient=request.primary_sale_recipient,
+                royalty_recipient=request.royalty_recipient,
+                royalty_bps=request.royalty_bps,
+                uri=uri,
+            ).set_uid(request.uid)
             signature = self._contract_wrapper.sign_typed_data(
                 signer,
                 EIP712StandardDomain(
                     name="TokenERC721",
                     version="1",
-                    chain_id=chain_id,
-                    verifying_contract=self._contract_wrapper._contract_abi.contract_address,
+                    chainId=chain_id,
+                    verifyingContract=self._contract_wrapper._contract_abi.contract_address,
                 ),
-                {"MintRequest": MintRequest721},
+                {"MintRequest": MintRequest721, "EIP712Domain": EIP712DomainType},
                 self._map_payload_to_contract_struct(final_payload),
             )
             signed_payloads.append(
