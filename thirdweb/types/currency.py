@@ -3,6 +3,7 @@ from typing import NewType
 
 Price = float
 PriceWei = int
+Amount = Price
 
 
 @dataclass

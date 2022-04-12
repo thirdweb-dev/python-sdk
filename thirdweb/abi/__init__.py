@@ -8,3 +8,4 @@ from .erc165 import ERC165
 from .ierc20 import IERC20
 from .ierc721 import IERC721
 from .ierc1155 import IERC1155
+from .drop_erc721 import DropERC721

@@ -1,4 +1,3 @@
-import os
 import pytest
 from requests import get
 from thirdweb.common.error import DuplicateFileNameException

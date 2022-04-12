@@ -1,4 +1,4 @@
-from typing import List, cast
+from typing import List, Generic
 from thirdweb.abi import TokenERC721
 from thirdweb.common.error import NotFoundException
 from thirdweb.common.nft import fetch_token_metadata
@@ -7,11 +7,12 @@ from thirdweb.constants.role import Role, get_role_hash
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
+from thirdweb.types.contract import TERC721
 from thirdweb.types.nft import NFTMetadata, NFTMetadataOwner, QueryAllParams
 from web3.eth import TxReceipt
 
 
-class ERC721(BaseContract[TokenERC721]):
+class ERC721(Generic[TERC721], BaseContract[TERC721]):
     _storage: IpfsStorage
 
     def __init__(
@@ -184,7 +185,7 @@ class ERC721(BaseContract[TokenERC721]):
         )
 
     """
-    PRIVATE FUNCTIONS
+    INTERNAL FUNCTIONS
     """
 
     def _get_token_metadata(self, token_id: int) -> NFTMetadata:

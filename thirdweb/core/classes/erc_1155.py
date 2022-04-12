@@ -190,7 +190,7 @@ class ERC1155(BaseContract[TokenERC1155]):
         )
 
     """
-    PRIVATE FUNCTIONS
+    INTERNAL FUNCTIONS
     """
 
     def _get_token_metadata(self, token_id: int) -> NFTMetadata:
