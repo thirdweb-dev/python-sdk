@@ -1,5 +1,7 @@
 .PHONY: abi docs
 
+DOCS_SERVER_PORT = 8087
+
 test:
 	poetry run brownie test --network hardhat
 
@@ -38,4 +40,4 @@ live-docs:
 	cd docs && mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
 build-docs:
-	source .env/bin/activate && cd docs && mkdocs build
+	source .env/bin/activate && cd mkdocs && mkdocs build
