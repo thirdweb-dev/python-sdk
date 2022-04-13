@@ -4,6 +4,8 @@ from web3 import Web3
 from typing import Dict
 from enum import Enum
 
+from thirdweb.common.claim_conditions import DEFAULT_MERKLE_ROOT
+
 
 class Role(Enum):
     ADMIN = "admin"
@@ -38,7 +40,5 @@ ALL_ROLES = [
 
 def get_role_hash(role: Role) -> HexBytes:
     if role == Role.ADMIN:
-        return HexBytes(
-            "0x0000000000000000000000000000000000000000000000000000000000000000"
-        )
+        return HexBytes(DEFAULT_MERKLE_ROOT)
     return Web3.keccak(text=ROLE_MAP[role])

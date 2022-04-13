@@ -1,4 +1,4 @@
-from typing import List, Generic
+from typing import List, Generic, Optional
 from thirdweb.abi import TokenERC721
 from thirdweb.common.error import NotFoundException
 from thirdweb.common.nft import fetch_token_metadata

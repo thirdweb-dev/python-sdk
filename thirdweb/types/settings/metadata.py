@@ -48,6 +48,11 @@ class ContractTrustedForwarderSchema:
 
 
 @dataclass
+class MerkleSchema:
+    merkle: Dict[str, str] = dataclasses.field(default_factory=lambda: {})
+
+
+@dataclass
 class NFTCollectionContractMetadata(
     ContractMetadataSchema,
     ContractRoyaltySchema,
@@ -105,6 +110,7 @@ class DropContractMetadata(
     ContractPrimarySaleSchema,
     ContractPlatformFeeSchema,
     ContractTrustedForwarderSchema,
+    MerkleSchema,
 ):
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "DropContractMetadata":
