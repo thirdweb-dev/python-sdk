@@ -141,11 +141,13 @@ class NFTDrop(ERC721[DropERC721]):
             self._contract_wrapper.get_signer_address(),
         )
         base_uri = batch.base_uri
+
         receipt = self._contract_wrapper.send_transaction(
             "lazy_mint",
             [
                 len(batch.metadata_uris),
                 base_uri if base_uri.endswith("/") else base_uri + "/",
+                Web3.toBytes(text=""),
             ],
         )
         events = self._contract_wrapper.get_events("TokensLazyMinted", receipt)

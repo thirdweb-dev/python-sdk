@@ -52,6 +52,7 @@ class SnapshotInfo:
 
 SnapshotInputSchema = List[SnapshotAddressInput]
 SnapshotInput = SnapshotInputSchema
+SnapshotSchema = Snapshot
 
 
 @dataclass
