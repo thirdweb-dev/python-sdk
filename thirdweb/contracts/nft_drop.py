@@ -1,6 +1,7 @@
 from typing import Final, List, Optional
 from thirdweb.abi import DropERC721
-from thirdweb.common.claim_conditions import DEFAULT_MERKLE_ROOT, prepare_claim
+from thirdweb.common.claim_conditions import prepare_claim
+from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee

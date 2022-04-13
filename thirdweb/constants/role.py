@@ -4,7 +4,7 @@ from web3 import Web3
 from typing import Dict
 from enum import Enum
 
-from thirdweb.common.claim_conditions import DEFAULT_MERKLE_ROOT
+from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
 
 
 class Role(Enum):

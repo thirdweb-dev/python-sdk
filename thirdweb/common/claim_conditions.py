@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from locale import currency
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple
 
 from web3 import Web3
 from thirdweb.abi.drop_erc721 import IDropClaimConditionClaimCondition
 from thirdweb.common.snapshots import create_snapshot
+from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
 from thirdweb.constants.currency import NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
@@ -27,10 +27,6 @@ from thirdweb.types.contracts.claim_conditions import (
     SnapshotInfo,
     SnapshotInputSchema,
     SnapshotProof,
-)
-
-DEFAULT_MERKLE_ROOT = (
-    "0x0000000000000000000000000000000000000000000000000000000000000000"
 )
 
 
