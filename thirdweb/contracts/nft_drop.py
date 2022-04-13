@@ -150,6 +150,7 @@ class NFTDrop(ERC721[DropERC721]):
                 Web3.toBytes(text=""),
             ],
         )
+
         events = self._contract_wrapper.get_events("TokensLazyMinted", receipt)
         start_index = events[0].get("args").get("startTokenId")  # type: ignore
         ending_index = events[0].get("args").get("endTokenId")  # type: ignore

@@ -15,7 +15,7 @@ from thirdweb.types.settings.metadata import NFTDropContractMetadata
 def nft_drop(sdk: ThirdwebSDK, primary_account) -> NFTDrop:
     sdk.update_signer(primary_account)
     nft_drop = sdk.get_nft_drop(
-        sdk.deployer.deploy_nft_collection(
+        sdk.deployer.deploy_nft_drop(
             NFTDropContractMetadata(
                 name="SDK NFT Drop",
                 primary_sale_recipient=sdk.get_signer().address,  # type: ignore

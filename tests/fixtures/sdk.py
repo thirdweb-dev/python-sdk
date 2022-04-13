@@ -45,6 +45,7 @@ def sdk_local(contract_addresses, primary_account):
     factory.send_transaction("add_implementation", [contract_addresses.edition])
     factory.send_transaction("add_implementation", [contract_addresses.token])
     factory.send_transaction("add_implementation", [contract_addresses.marketplace])
+    factory.send_transaction("add_implementation", [contract_addresses.drop])
 
     return sdk
 

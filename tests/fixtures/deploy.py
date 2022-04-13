@@ -10,6 +10,7 @@ from brownie import (
     TokenERC721,
     TokenERC1155,
     Marketplace,
+    DropERC721,
 )
 from brownie.network import priority_fee
 from eth_account import Account
@@ -31,6 +32,7 @@ class ContractAddresses:
     nft_collection: str
     edition: str
     marketplace: str
+    drop: str
 
 
 @pytest.fixture(scope="session")
@@ -67,6 +69,7 @@ def contract_addresses():
         get_native_token_by_chain_id(ChainId.HARDHAT).wrapped.address,
         thirdweb_fee.address,
     )
+    drop = account.deploy(DropERC721, thirdweb_fee.address)
 
     return ContractAddresses(
         factory=thirdweb_factory.address,
@@ -76,4 +79,5 @@ def contract_addresses():
         nft_collection=token_erc_721.address,
         edition=token_erc_1155.address,
         marketplace=marketplace.address,
+        drop=drop.address,
     )

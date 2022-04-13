@@ -82,6 +82,7 @@ class ContractFactory(ContractWrapper[TWFactory]):
             raise Exception("No proxy deployed event found")
 
         address = cast(Any, events[0].get("args")).get("proxy")
+        print("DROP ADDRESS: ", address)
         return address
 
     def get_deploy_arguments(
