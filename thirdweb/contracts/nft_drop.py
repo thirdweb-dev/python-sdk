@@ -21,7 +21,7 @@ from thirdweb.types.nft import (
     QueryAllParams,
 )
 from thirdweb.types.sdk import SDKOptions
-from thirdweb.types.settings.metadata import DropContractMetadata
+from thirdweb.types.settings.metadata import NFTDropContractMetadata
 from eth_account.account import LocalAccount
 from web3 import Web3
 
@@ -34,7 +34,7 @@ class NFTDrop(ERC721[DropERC721]):
     contract_type: Final[ContractType] = ContractType.NFT_DROP
     contract_roles: Final[List[Role]] = [Role.ADMIN, Role.MINTER, Role.TRANSFER]
 
-    metadata: ContractMetadata[DropERC721, DropContractMetadata]
+    metadata: ContractMetadata[DropERC721, NFTDropContractMetadata]
     roles: ContractRoles
     primary_sale: ContractPrimarySale[DropERC721]
     platform_fee: ContractPlatformFee[DropERC721]
@@ -54,7 +54,7 @@ class NFTDrop(ERC721[DropERC721]):
         super().__init__(contract_wrapper, storage)
 
         self.metadata = ContractMetadata(
-            contract_wrapper, storage, DropContractMetadata
+            contract_wrapper, storage, NFTDropContractMetadata
         )
         self.roles = ContractRoles(contract_wrapper, self.contract_roles)
         self.primary_sale = ContractPrimarySale(contract_wrapper)

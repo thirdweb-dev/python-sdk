@@ -103,7 +103,7 @@ class MarketplaceContractMetadata(
 
 
 @dataclass
-class DropContractMetadata(
+class NFTDropContractMetadata(
     ContractMetadataSchema,
     ContractRoyaltySchema,
     ContractSymbolSchema,
@@ -113,5 +113,5 @@ class DropContractMetadata(
     MerkleSchema,
 ):
     @staticmethod
-    def from_json(json: Dict[str, Any]) -> "DropContractMetadata":
-        return from_dict(DropContractMetadata, json)
+    def from_json(json: Dict[str, Any]) -> "NFTDropContractMetadata":
+        return from_dict(NFTDropContractMetadata, json)

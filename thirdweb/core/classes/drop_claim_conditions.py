@@ -16,7 +16,7 @@ from thirdweb.types.contracts.claim_conditions import (
     ClaimEligibility,
 )
 from thirdweb.types.currency import Amount
-from thirdweb.types.settings.metadata import DropContractMetadata
+from thirdweb.types.settings.metadata import NFTDropContractMetadata
 from web3.eth import TxReceipt
 from web3.constants import MAX_INT
 from time import time
@@ -24,13 +24,13 @@ from time import time
 
 class DropClaimConditions:
     _contract_wrapper: ContractWrapper[DropERC721]
-    _metadata: ContractMetadata[DropERC721, DropContractMetadata]
+    _metadata: ContractMetadata[DropERC721, NFTDropContractMetadata]
     _storage: IpfsStorage
 
     def __init__(
         self,
         contract_wrapper: ContractWrapper[DropERC721],
-        metadata: ContractMetadata[DropERC721, DropContractMetadata],
+        metadata: ContractMetadata[DropERC721, NFTDropContractMetadata],
         storage: IpfsStorage,
     ):
         self._contract_wrapper = contract_wrapper
@@ -80,7 +80,9 @@ class DropClaimConditions:
             for c in conditions
         ]
 
-    def can_claim(self, quantity: Amount, address_to_check: str) -> bool:
+    def can_claim(
+        self, quantity: Amount, address_to_check: Optional[str] = None
+    ) -> bool:
         """
         Check if a specified wallet can claim a specified quantity of NFTs
 
@@ -88,6 +90,12 @@ class DropClaimConditions:
         :param address_to_check: The wallet to check
         :return: True if the wallet can claim the quantity of NFTs, False otherwise
         """
+
+        address_to_check = (
+            address_to_check
+            if address_to_check is not None
+            else self._contract_wrapper.get_signer_address()
+        )
 
         return (
             len(self.get_claim_ineligibility_reasons(quantity, address_to_check)) == 0
