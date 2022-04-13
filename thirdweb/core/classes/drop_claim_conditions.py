@@ -1,5 +1,12 @@
-from typing import List
+from typing import Any, Dict, List, Optional, cast
 from thirdweb.abi.drop_erc721 import DropERC721
+from thirdweb.abi.ierc20 import IERC20
+from thirdweb.common.claim_conditions import (
+    process_claim_condition_inputs,
+    transform_result_to_claim_condition,
+)
+from thirdweb.common.currency import is_native_token, parse_units
+from thirdweb.common.error import includes_error_message
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
@@ -11,6 +18,8 @@ from thirdweb.types.contracts.claim_conditions import (
 from thirdweb.types.currency import Amount
 from thirdweb.types.settings.metadata import DropContractMetadata
 from web3.eth import TxReceipt
+from web3.constants import MAX_INT
+from time import time
 
 
 class DropClaimConditions:
@@ -38,7 +47,16 @@ class DropClaimConditions:
 
         :return: The currently active claim condition
         """
-        pass
+
+        id = self._contract_wrapper._contract_abi.get_active_claim_condition_id.call()
+        mc = self._contract_wrapper._contract_abi.get_claim_condition_by_id.call(id)
+        metadata = self._metadata.get()
+        return transform_result_to_claim_condition(
+            mc,
+            self._contract_wrapper.get_provider(),
+            metadata.merkle,
+            self._storage,
+        )
 
     def get_all(self) -> List[ClaimCondition]:
         """
@@ -46,7 +64,21 @@ class DropClaimConditions:
 
         :return: A list of all claim conditions on this contract
         """
-        pass
+
+        # Is this the correct order?
+        start_id, count = self._contract_wrapper._contract_abi.claim_condition.call()
+        conditions = []
+        for i in range(start_id + count):
+            conditions.append(
+                self._contract_wrapper._contract_abi.get_claim_condition_by_id.call(i)
+            )
+        metadata = self._metadata.get()
+        return [
+            transform_result_to_claim_condition(
+                c, self._contract_wrapper.get_provider(), metadata.merkle, self._storage
+            )
+            for c in conditions
+        ]
 
     def can_claim(self, quantity: Amount, address_to_check: str) -> bool:
         """
@@ -56,10 +88,13 @@ class DropClaimConditions:
         :param address_to_check: The wallet to check
         :return: True if the wallet can claim the quantity of NFTs, False otherwise
         """
-        pass
+
+        return (
+            len(self.get_claim_ineligibility_reasons(quantity, address_to_check)) == 0
+        )
 
     def get_claim_ineligibility_reasons(
-        self, quantity: Amount, address_to_check: str
+        self, quantity: Amount, address_to_check: Optional[str] = None
     ) -> List[ClaimEligibility]:
         """
         Get the reasons why a wallet cannot claim a specified quantity of NFTs
@@ -68,7 +103,65 @@ class DropClaimConditions:
         :param address_to_check: The wallet to check
         :return: A list of reasons why the wallet cannot claim the quantity of NFTs
         """
-        pass
+
+        reasons: List[ClaimEligibility] = []
+        quantity_with_decimals = parse_units(quantity, self._get_token_decimals())
+
+        if address_to_check == None:
+            address_to_check = self._contract_wrapper.get_signer_address()
+
+        try:
+            active_condition_index = (
+                self._contract_wrapper._contract_abi.get_active_claim_condition_id.call()
+            )
+            claim_condition = self.get_active()
+        except Exception as e:
+            if includes_error_message(e, "no public mint condition."):
+                reasons.append(ClaimEligibility.NO_CLAIM_CONDITION_SET)
+                return reasons
+            if includes_error_message(e, "no active claim condition."):
+                reasons.append(ClaimEligibility.NO_ACTIVE_CLAIM_PHASE)
+                return reasons
+            reasons.append(ClaimEligibility.UNKNOWN)
+            return reasons
+
+        if claim_condition.available_supply < quantity_with_decimals:
+            reasons.append(ClaimEligibility.NOT_ENOUGH_SUPPLY)
+
+        (
+            last_claimed_timestamp,
+            timestamp_for_next_claim,
+        ) = self._contract_wrapper._contract_abi.get_claim_timestamp.call(
+            active_condition_index, cast(str, address_to_check)
+        )
+
+        now = int(time())
+
+        if last_claimed_timestamp < 0 and now < timestamp_for_next_claim:
+            if timestamp_for_next_claim == int(MAX_INT, 0):
+                reasons.append(ClaimEligibility.ALREADY_CLAIMED)
+            else:
+                reasons.append(ClaimEligibility.WAIT_BEFORE_NEXT_CLAIM_TRANSACTION)
+
+        if claim_condition.price > 0:
+            total_price = claim_condition.price * quantity
+            provider = self._contract_wrapper.get_provider()
+            if is_native_token(claim_condition.currency_address):
+                balance = int(provider.eth.get_balance(address_to_check))
+                if balance < total_price:
+                    reasons.append(ClaimEligibility.NOT_ENOUGH_TOKENS)
+            else:
+                abi = IERC20(provider, claim_condition.currency_address)
+                erc20 = ContractWrapper[IERC20](
+                    abi, provider, self._contract_wrapper.get_signer()
+                )
+                balance = erc20._contract_abi.balance_of.call(
+                    cast(str, address_to_check)
+                )
+                if balance < total_price:
+                    reasons.append(ClaimEligibility.NOT_ENOUGH_TOKENS)
+
+        return reasons
 
     """
     WRITE FUNCTIONS
@@ -86,23 +179,41 @@ class DropClaimConditions:
         :param reset_claim_eligibility_for_all: Reset claim eligibility for all wallets
         :return: transaction receipt of the set
         """
-        pass
 
-    def update(
-        self, index: int, claim_condition_input: ClaimConditionInput
-    ) -> TxReceipt:
-        """
-        Update the claim conditions for this contract
+        snapshot_infos, sorted_conditions = process_claim_condition_inputs(
+            claim_condition_inputs,
+            self._get_token_decimals(),
+            self._contract_wrapper.get_provider(),
+            self._storage,
+        )
 
-        :param index: Index of the claim condition to update
-        :param claim_condition_input: Claim condition input
-        :return: transaction receipt of the update
-        """
-        pass
+        merkle_info: Dict[str, Any] = {}
+        for s in snapshot_infos:
+            merkle_info[s.merkle_root] = s.snapshot_uri
+
+        metadata = self._metadata.get()
+        encoded = []
+        interface = self._contract_wrapper.get_contract_interface()
+
+        if not metadata.merkle.__dict__ == merkle_info.__dict__:
+            metadata["merkle"] = merkle_info
+            merged_metadata = self._metadata._schema.from_json(metadata)
+            contract_uri = self._metadata._parse_and_upload_metadata(merged_metadata)
+            encoded.append(interface.encodeABI("setContractURI", [contract_uri]))
+
+        encoded.append(
+            interface.encodeABI(
+                "setClaimConditions",
+                [sorted_conditions, reset_claim_eligibility_for_all],
+            )
+        )
+
+        return self._contract_wrapper.multi_call(encoded)
 
     """
     INTERNAL FUNCTIONS
     """
 
     def _get_token_decimals(self) -> int:
-        pass
+        # TODO: Implement for TokenERC20
+        return 0

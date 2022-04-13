@@ -1,18 +1,31 @@
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass
+from locale import currency
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from thirdweb.constants.currency import ZERO_ADDRESS
+from web3 import Web3
+from thirdweb.abi.drop_erc721 import IDropClaimConditionClaimCondition
+from thirdweb.common.snapshots import create_snapshot
+from thirdweb.constants.currency import NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.common.currency import (
     approve_erc20_allowance,
+    fetch_currency_value,
     is_native_token,
+    normalize_price_value,
     parse_units,
 )
 
 from thirdweb.types.contracts.claim_conditions import (
     ClaimCondition,
+    ClaimConditionInput,
+    ClaimConditionInputList,
+    ClaimConditionOutput,
     ClaimVerification,
+    FilledConditionInput,
     Snapshot,
+    SnapshotInfo,
+    SnapshotInputSchema,
     SnapshotProof,
 )
 
@@ -78,7 +91,9 @@ def prepare_claim(
 
 
 def fetch_snapshot(
-    merkle_root: str, merkle_metadata: Dict[str, str], storage: IpfsStorage
+    merkle_root: str,
+    merkle_metadata: Dict[str, str],
+    storage: IpfsStorage,
 ) -> Optional[List[SnapshotProof]]:
     snapshot_uri = merkle_metadata[merkle_root]
     snapshot = None
@@ -89,3 +104,110 @@ def fetch_snapshot(
             snapshot = snapshot_data.claims
 
     return snapshot
+
+
+@dataclass
+class ClaimerProof:
+    max_claimable: int
+    proof: List[str]
+
+
+def get_claimer_proofs(
+    address_to_claim: str,
+    merkle_root: str,
+    token_decimals: int,
+    merkle_metadata: Dict[str, str],
+    storage: IpfsStorage,
+) -> ClaimerProof:
+    claims = fetch_snapshot(merkle_root, merkle_metadata, storage)
+
+    if claims is None:
+        return ClaimerProof(max_claimable=0, proof=[])
+    item = next((c for c in claims if c.address == address_to_claim), None)
+
+    if item is None:
+        return ClaimerProof(proof=[], max_claimable=0)
+
+    return ClaimerProof(
+        proof=item.proof, max_claimable=parse_units(item.max_claimable, token_decimals)
+    )
+
+
+def process_claim_condition_inputs(
+    claim_condition_inputs: List[ClaimConditionInput],
+    token_decimals: int,
+    provider: Web3,
+    storage: IpfsStorage,
+) -> Tuple[List[SnapshotInfo], List[IDropClaimConditionClaimCondition]]:
+    snapshot_infos: List[SnapshotInfo] = []
+    inputs_with_snapshots: List[ClaimConditionInput] = []
+    for condition_input in claim_condition_inputs:
+        if condition_input.snapshot:
+            snapshot_info = create_snapshot(
+                condition_input.snapshot, token_decimals, storage
+            )
+            snapshot_infos.append(snapshot_info)
+            condition_input.merkle_root_hash = snapshot_info.merkle_root
+
+        inputs_with_snapshots.append(condition_input)
+
+    parsed_inputs = inputs_with_snapshots
+
+    # TODO: Which order should it be sorted in?
+    sorted_conditions = sorted(
+        [convert_to_contract_model(c, token_decimals, provider) for c in parsed_inputs],
+        key=lambda x: x["startTimestamp"],
+        reverse=True,
+    )
+
+    return (snapshot_infos, sorted_conditions)
+
+
+def convert_to_contract_model(
+    c: FilledConditionInput, token_decimals: int, provider: Web3
+) -> IDropClaimConditionClaimCondition:
+    currency = (
+        NATIVE_TOKEN_ADDRESS
+        if ZERO_ADDRESS == c.currency_address
+        else c.currency_address
+    )
+
+    # TODO: Include unlimited here and change types
+    max_claimable_supply = parse_units(c.max_quantity, token_decimals)
+    quantity_limit_per_transaction = parse_units(
+        c.quantity_limit_per_transaction, token_decimals
+    )
+
+    return IDropClaimConditionClaimCondition(
+        startTimestamp=c.start_time,
+        maxClaimableSupply=max_claimable_supply,
+        supplyClaimed=0,
+        quantityLimitPerTransaction=quantity_limit_per_transaction,
+        waitTimeInSecondsBetweenClaims=c.wait_in_seconds,
+        pricePerToken=normalize_price_value(provider, c.price, currency),
+        currency=currency,
+        merkleRoot=c.merkle_root_hash,
+    )
+
+
+def transform_result_to_claim_condition(
+    pm: IDropClaimConditionClaimCondition,
+    provider: Web3,
+    merkle_metadata: Dict[str, str],
+    storage: IpfsStorage,
+) -> ClaimCondition:
+    cv = fetch_currency_value(provider, pm["currency"], pm["pricePerToken"])
+    claims = fetch_snapshot(str(pm["merkleRoot"]), merkle_metadata, storage)
+    return ClaimConditionOutput(
+        start_time=pm["startTimestamp"],
+        max_quantity=pm["maxClaimableSupply"],
+        available_supply=pm["maxClaimableSupply"] - pm["supplyClaimed"],
+        quantity_limit_per_tranaction=pm["quantityLimitPerTransaction"],
+        wait_in_seconds=pm["waitTimeInSecondsBetweenClaims"],
+        price=pm["pricePerToken"],
+        currency=pm["currency"],
+        currency_address=pm["currency"],
+        currency_metadata=cv,
+        merkle_root_hash=pm["merkleRoot"],
+        snapshot=claims,
+    )

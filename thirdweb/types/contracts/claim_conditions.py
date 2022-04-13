@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from time import time
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 from thirdweb.common.claim_conditions import DEFAULT_MERKLE_ROOT
 from thirdweb.constants.currency import NATIVE_TOKEN_ADDRESS
 from thirdweb.types.currency import Amount, CurrencyValue, Price
@@ -9,14 +9,16 @@ from enum import Enum
 
 
 @dataclass
-class SnapshotInput:
+class SnapshotAddressInput:
     address: str
-    max_claimable: int
+    max_claimable: int = 0
 
 
 @dataclass
-class SnapshotProof(SnapshotInput):
+class SnapshotProof:
     proof: str
+    address: str
+    max_claimable: int = 0
     timestamp: int = int(time())
 
 
@@ -42,6 +44,17 @@ class Snapshot:
 
 
 @dataclass
+class SnapshotInfo:
+    merkle_root: str
+    snapshot_uri: str
+    snapshot: Snapshot
+
+
+SnapshotInputSchema = List[SnapshotAddressInput]
+SnapshotInput = SnapshotInputSchema
+
+
+@dataclass
 class ClaimConditionInput:
     start_time: int
     quantity_limit_per_transaction: int
@@ -54,6 +67,7 @@ class ClaimConditionInput:
 
 
 ClaimConditionInputList = List[ClaimConditionInput]
+FilledConditionInput = ClaimConditionInput
 
 
 @dataclass
@@ -103,5 +117,5 @@ class ClaimEligibility(Enum):
     NO_ACTIVE_CLAIM_PHASE = (
         "There is no active claim phase at the moment. Please check back in later.",
     )
-    NO_ACTIVE_CLAIM_CONDITION_SET = ("There is no claim condition set.",)
+    NO_CLAIM_CONDITION_SET = ("There is no claim condition set.",)
     UNKNOWN = ("No claim conditions found.",)

@@ -1,3 +1,6 @@
+from typing import Any
+
+
 class NotFoundException(Exception):
     def __init__(self, indentifier: str):
         super().__init__(f"NOT FOUND: Object with ID {indentifier} not found")
@@ -70,3 +73,12 @@ class AuctionHasNotEndedException(Exception):
 class ListingNotFoundException(Exception):
     def __init__(self, listing_id: int):
         super().__init__(f"Error getting the listing with ID {str(listing_id)}.")
+
+
+class DuplicateLeafsException(Exception):
+    def __init__(self, message: str = ""):
+        super().__init__(f"Duplicate leafs: {message}")
+
+
+def includes_error_message(err: Exception, message: str) -> bool:
+    return message in str(err)
