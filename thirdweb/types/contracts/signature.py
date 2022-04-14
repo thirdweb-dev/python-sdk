@@ -1,20 +1,21 @@
 from dataclasses import dataclass
+from time import time
 from typing import Optional
 from thirdweb.common.signature_minting import resolve_or_generate_id
 from thirdweb.types.currency import Price
-from thirdweb.constants.currency import ZERO_ADDRESS
+from thirdweb.constants.currency import NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS
 from thirdweb.types.nft import NFTMetadataInput
 
 
 @dataclass
 class BaseSignaturePayloadInput:
-    to: str
-    price: Price
-    currency_address: str
-    mint_start_time: int
-    mint_end_time: int
-    uid: Optional[bytes]
-    primary_sale_recipient: Optional[str]
+    to: str = ZERO_ADDRESS
+    price: Price = 0
+    currency_address: str = NATIVE_TOKEN_ADDRESS
+    mint_start_time: int = int(time())
+    mint_end_time: int = int(time()) + 60 * 60 * 24 * 1000 * 1000
+    uid: Optional[bytes] = None
+    primary_sale_recipient: Optional[str] = ZERO_ADDRESS
 
     def set_uid(self, uid: str) -> "BaseSignaturePayloadInput":
         self.uid = resolve_or_generate_id(uid)
@@ -23,7 +24,7 @@ class BaseSignaturePayloadInput:
 
 @dataclass
 class Signature20PayloadInput(BaseSignaturePayloadInput):
-    quantity: Price
+    quantity: Price = 0
 
 
 @dataclass
@@ -32,37 +33,81 @@ class Signature20PayloadOutput(Signature20PayloadInput):
 
 
 @dataclass
-class Signature721PayloadInput(BaseSignaturePayloadInput):
+class Signature721PayloadInput:
     metadata: NFTMetadataInput
     royalty_recipient: str = ZERO_ADDRESS
     royalty_bps: int = 0
+    to: str = ZERO_ADDRESS
+    price: Price = 0
+    currency_address: str = NATIVE_TOKEN_ADDRESS
+    mint_start_time: int = int(time())
+    mint_end_time: int = int(time()) + 60 * 60 * 24 * 1000 * 1000
+    uid: Optional[bytes] = None
+    primary_sale_recipient: Optional[str] = ZERO_ADDRESS
+
+    def set_uid(self, uid: str) -> "Signature721PayloadInput":
+        self.uid = resolve_or_generate_id(uid)
+        return self
 
 
 @dataclass
-class Signature721PayloadOutput(BaseSignaturePayloadInput):
+class Signature721PayloadOutput:
     metadata: NFTMetadataInput
-    royalty_recipient: str
-    royalty_bps: int
-    uri: str
+    royalty_recipient: str = ZERO_ADDRESS
+    royalty_bps: int = 0
+    uri: str = ""
+    to: str = ZERO_ADDRESS
+    price: Price = 0
+    currency_address: str = NATIVE_TOKEN_ADDRESS
+    mint_start_time: int = int(time())
+    mint_end_time: int = int(time()) + 60 * 60 * 24 * 1000 * 1000
+    uid: Optional[bytes] = None
+    primary_sale_recipient: Optional[str] = ZERO_ADDRESS
+
+    def set_uid(self, uid: str) -> "Signature721PayloadOutput":
+        self.uid = resolve_or_generate_id(uid)
+        return self
 
 
 @dataclass
-class Signature1155PayloadInput(BaseSignaturePayloadInput):
+class Signature1155PayloadInput:
     metadata: NFTMetadataInput
     token_id: int
     quantity: int
     royalty_recipient: str = ZERO_ADDRESS
     royalty_bps: int = 0
+    to: str = ZERO_ADDRESS
+    price: Price = 0
+    currency_address: str = NATIVE_TOKEN_ADDRESS
+    mint_start_time: int = int(time())
+    mint_end_time: int = int(time()) + 60 * 60 * 24 * 1000 * 1000
+    uid: Optional[bytes] = None
+    primary_sale_recipient: Optional[str] = ZERO_ADDRESS
+
+    def set_uid(self, uid: str) -> "Signature1155PayloadInput":
+        self.uid = resolve_or_generate_id(uid)
+        return self
 
 
 @dataclass
-class Signature1155PayloadOutput(BaseSignaturePayloadInput):
+class Signature1155PayloadOutput:
     metadata: NFTMetadataInput
     royalty_bps: int
     royalty_recipient: str
     uri: str
     token_id: int
     quantity: int
+    to: str = ZERO_ADDRESS
+    price: Price = 0
+    currency_address: str = NATIVE_TOKEN_ADDRESS
+    mint_start_time: int = int(time())
+    mint_end_time: int = int(time()) + 60 * 60 * 24 * 1000 * 1000
+    uid: Optional[bytes] = None
+    primary_sale_recipient: Optional[str] = ZERO_ADDRESS
+
+    def set_uid(self, uid: str) -> "Signature1155PayloadOutput":
+        self.uid = resolve_or_generate_id(uid)
+        return self
 
 
 FilledSignaturePayload20 = Signature20PayloadInput
