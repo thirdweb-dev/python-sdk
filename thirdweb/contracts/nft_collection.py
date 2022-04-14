@@ -25,7 +25,7 @@ from thirdweb.types.settings.metadata import NFTCollectionContractMetadata
 from thirdweb.types.tx import TxResultWithId
 
 
-class NFTCollection(ERC721):
+class NFTCollection(ERC721[TokenERC721]):
     _abi_type = TokenERC721
 
     contract_type: Final[ContractType] = ContractType.NFT_COLLECTION

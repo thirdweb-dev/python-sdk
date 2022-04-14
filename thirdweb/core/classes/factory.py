@@ -15,6 +15,7 @@ from thirdweb.contracts.maps import (
     REMOTE_CONTRACT_NAME,
 )
 from thirdweb.contracts.marketplace import Marketplace
+from thirdweb.contracts.nft_drop import NFTDrop
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from eth_account.account import LocalAccount
 
@@ -22,6 +23,7 @@ from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
 from thirdweb.types.sdk import SDKOptions
 from thirdweb.types.settings.metadata import (
+    NFTDropContractMetadata,
     EditionContractMetadata,
     MarketplaceContractMetadata,
     NFTCollectionContractMetadata,
@@ -92,8 +94,11 @@ class ContractFactory(ContractWrapper[TWFactory]):
         if "trusted_forwarders" in contract_metadata:
             trusted_forwarders = contract_metadata["trusted_forwarders"]
 
-        if contract_type == NFTCollection.contract_type:
-            metadata = NFTCollectionContractMetadata.from_json(contract_metadata)
+        if (
+            contract_type == NFTCollection.contract_type
+            or contract_type == NFTDrop.contract_type
+        ):
+            metadata = NFTDropContractMetadata.from_json(contract_metadata)
             return [
                 self.get_signer_address(),
                 metadata.name,

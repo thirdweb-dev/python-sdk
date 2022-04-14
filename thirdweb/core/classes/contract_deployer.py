@@ -11,6 +11,7 @@ from thirdweb.core.classes.registry import ContractRegistry
 from thirdweb.types.contract import ContractType
 from thirdweb.types.sdk import SDKOptions
 from thirdweb.types.settings.metadata import (
+    NFTDropContractMetadata,
     EditionContractMetadata,
     MarketplaceContractMetadata,
     NFTCollectionContractMetadata,
@@ -61,6 +62,13 @@ class ContractDeployer(ProviderHandler):
         """
 
         return self._deploy_contract(ContractType.MARKETPLACE, metadata.to_json())
+
+    def deploy_nft_drop(self, metadata: NFTDropContractMetadata) -> str:
+        """
+        Deploy an NFT Drop contract
+        """
+
+        return self._deploy_contract(ContractType.NFT_DROP, metadata.to_json())
 
     def _deploy_contract(
         self, contract_type: ContractType, contract_metadata: Dict[str, Any]

@@ -24,6 +24,7 @@ abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC20.json && mv thirdweb/abi/ierc20/__init__.py thirdweb/abi/ierc20.py && rm -rf thirdweb/abi/ierc20
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC721.json && mv thirdweb/abi/ierc721/__init__.py thirdweb/abi/ierc721.py && rm -rf thirdweb/abi/ierc721
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC1155.json && mv thirdweb/abi/ierc1155/__init__.py thirdweb/abi/ierc1155.py && rm -rf thirdweb/abi/ierc1155
+	abi-gen --language Python -o thirdweb/abi --abis abi/DropERC721.json && mv thirdweb/abi/drop_erc721/__init__.py thirdweb/abi/drop_erc721.py && rm -rf thirdweb/abi/drop_erc721
 
 # DO NOT USE RIGHT NOW
 sphinx-docs:
@@ -39,10 +40,10 @@ sphinx-docs:
 live-docs:
 	# windows/mac/linux support
 	xdg-open http://localhost:$(DOCS_SERVER_PORT) || open http://localhost:$(DOCS_SERVER_PORT) || start http://localhost:$(DOCS_SERVER_PORT)
-	cd docs && mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
+	cd docs && poetry run mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
 build-docs:
-	cd docs && mkdocs build
+	cd docs && poetry run mkdocs build
 
 test-docker:
 	cp docs.Dockerfile Dockerfile

@@ -30,11 +30,8 @@ nav:
       - "Edition": "api-reference/contracts/edition.md"
       - "Token": "api-reference/contracts/token.md"
       - "Marketplace": "api-reference/contracts/marketplace.md"
+      - "NFT Drop": "api-reference/contracts/nft-drop.md"
     - "Core Interfaces":
-      - "Contract Intefaces":
-        - "ERC20": "api-reference/core/classes/erc20.md"
-        - "ERC721": "api-reference/core/classes/erc721.md"
-        - "ERC1155": "api-reference/core/classes/erc1155.md"
       - "Signature Minting":
         - "ERC20 Signature Minting": "api-reference/core/classes/erc20-signature-minting.md"
         - "ERC721 Signature Minting": "api-reference/core/classes/erc721-signature-minting.md"
@@ -47,6 +44,11 @@ nav:
         - "Contract Platform Fee": "api-reference/core/classes/contract-platform-fee.md"
         - "Contract Royalty": "api-reference/core/classes/contract-royalty.md"
         - "Contract Sales": "api-reference/core/classes/contract-sales.md"
+      - "Claim Conditions":
+        - "Drop Claim Conditions": "api-reference/core/classes/drop-claim-conditions.md"
+      - "ERC20": "api-reference/core/classes/erc20.md"
+      - "ERC721": "api-reference/core/classes/erc721.md"
+      - "ERC1155": "api-reference/core/classes/erc1155.md"
       - "Contract Deployer": "api-reference/core/classes/contract-deployer.md"
       - "Contract Roles": "api-reference/core/classes/contract-roles.md"
 markdown_extensions:

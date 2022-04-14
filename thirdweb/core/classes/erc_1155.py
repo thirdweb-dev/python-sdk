@@ -1,4 +1,4 @@
-from typing import Any, List, Union, cast
+from typing import Any, List, Optional, Union, cast
 from thirdweb.abi import TokenERC1155
 from thirdweb.common.error import NotFoundException
 from thirdweb.common.nft import fetch_token_metadata
@@ -38,11 +38,18 @@ class ERC1155(BaseContract[TokenERC1155]):
         :param token_id: token ID to check the metadata for
         :return: Metadata for the token
         """
-        supply = self._contract_wrapper._contract_abi.total_supply.call(token_id)
+
+        try:
+            supply = self._contract_wrapper._contract_abi.total_supply.call(token_id)
+        except:
+            supply = 0
+
         metadata = self._get_token_metadata(token_id)
         return EditionMetadata(metadata, supply)
 
-    def get_all(self, query_params: QueryAllParams) -> List[EditionMetadata]:
+    def get_all(
+        self, query_params: QueryAllParams = QueryAllParams()
+    ) -> List[EditionMetadata]:
         """
         Get the metadata for all tokens on the contract
 
@@ -190,7 +197,7 @@ class ERC1155(BaseContract[TokenERC1155]):
         )
 
     """
-    PRIVATE FUNCTIONS
+    INTERNAL FUNCTIONS
     """
 
     def _get_token_metadata(self, token_id: int) -> NFTMetadata:
