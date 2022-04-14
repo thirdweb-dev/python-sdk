@@ -1,4 +1,5 @@
 site_name: Thirdweb Python SDK
+docs_dir: mkdocs
 
 theme:
   logo: images/logo.png

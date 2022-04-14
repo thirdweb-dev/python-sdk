@@ -36,14 +36,19 @@ sphinx-docs:
 	mv sphinx-docs/_build/markdown/* ./docs
 	rm -rf sphinx-docs
 	rm docs/index.md
- 
-live-docs:
+
+mkdocs-docs:
+	cd docs && poetry run mkdocs build
 	# windows/mac/linux support
 	xdg-open http://localhost:$(DOCS_SERVER_PORT) || open http://localhost:$(DOCS_SERVER_PORT) || start http://localhost:$(DOCS_SERVER_PORT)
 	cd docs && poetry run mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
-build-docs:
-	cd docs && poetry run mkdocs build
+pydoc-markdown-docs:
+	cd docs && rm -rf pydoc-markdown
+	cd docs && poetry run pydoc-markdown
+	mv docs/build/docs docs/pydoc-markdown
+	xdg-open http://localhost:$(DOCS_SERVER_PORT) || open http://localhost:$(DOCS_SERVER_PORT) || start http://localhost:$(DOCS_SERVER_PORT)
+	cd docs/pydoc-markdown && poetry run mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
 test-docker:
 	cp docs.Dockerfile Dockerfile

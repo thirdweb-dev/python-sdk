@@ -1,0 +1,5 @@
+docs_dir: content
+nav:
+- ThirdwebSDK: api-reference/core/sdk.md.md
+- NFT Collection: api-reference/contracts/nft-collection.md.md
+site_name: My Project
