@@ -2,11 +2,13 @@ from typing import Any, Dict, List, Optional, cast
 from thirdweb.abi.drop_erc721 import DropERC721
 from thirdweb.abi.ierc20 import IERC20
 from thirdweb.common.claim_conditions import (
+    get_claimer_proofs,
     process_claim_condition_inputs,
     transform_result_to_claim_condition,
 )
 from thirdweb.common.currency import is_native_token, parse_units
 from thirdweb.common.error import includes_error_message
+from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
@@ -80,9 +82,7 @@ class DropClaimConditions:
             for c in conditions
         ]
 
-    def can_claim(
-        self, quantity: Amount, address_to_check: Optional[str] = None
-    ) -> bool:
+    def can_claim(self, quantity: int, address_to_check: Optional[str] = None) -> bool:
         """
         Check if a specified wallet can claim a specified quantity of NFTs
 
@@ -102,7 +102,7 @@ class DropClaimConditions:
         )
 
     def get_claim_ineligibility_reasons(
-        self, quantity: Amount, address_to_check: Optional[str] = None
+        self, quantity: int, address_to_check: Optional[str] = None
     ) -> List[ClaimEligibility]:
         """
         Get the reasons why a wallet cannot claim a specified quantity of NFTs
@@ -127,7 +127,7 @@ class DropClaimConditions:
             if includes_error_message(e, "no public mint condition."):
                 reasons.append(ClaimEligibility.NO_CLAIM_CONDITION_SET)
                 return reasons
-            if includes_error_message(e, "no active claim condition."):
+            if includes_error_message(e, "no active mint condition."):
                 reasons.append(ClaimEligibility.NO_ACTIVE_CLAIM_PHASE)
                 return reasons
             reasons.append(ClaimEligibility.UNKNOWN)
@@ -135,6 +135,39 @@ class DropClaimConditions:
 
         if claim_condition.available_supply < quantity_with_decimals:
             reasons.append(ClaimEligibility.NOT_ENOUGH_SUPPLY)
+
+        if (
+            claim_condition.merkle_root_hash != DEFAULT_MERKLE_ROOT
+            and claim_condition.merkle_root_hash
+            != b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        ):
+            merkle_lower = claim_condition.merkle_root_hash
+            metadata = self._metadata.get()
+            proofs = get_claimer_proofs(
+                cast(str, address_to_check),
+                merkle_lower,
+                self._get_token_decimals(),
+                metadata.merkle,
+                self._storage,
+            )
+
+            try:
+                (
+                    valid_merkle_proof,
+                ) = self._contract_wrapper._contract_abi.verify_claim_merkle_proof.call(
+                    active_condition_index,
+                    cast(str, address_to_check),
+                    quantity,
+                    proofs.proof,  # type: ignore
+                    proofs.max_claimable,
+                )
+
+                if not valid_merkle_proof:  # type: ignore
+                    reasons.append(ClaimEligibility.ADDRESS_NOT_ALLOWED)
+                    return reasons
+            except:
+                reasons.append(ClaimEligibility.ADDRESS_NOT_ALLOWED)
+                return reasons
 
         (
             last_claimed_timestamp,
@@ -203,10 +236,9 @@ class DropClaimConditions:
         encoded = []
         interface = self._contract_wrapper.get_contract_interface()
 
-        if not metadata.merkle.__dict__ == merkle_info.__dict__:
-            metadata["merkle"] = merkle_info
-            merged_metadata = self._metadata._schema.from_json(metadata)
-            contract_uri = self._metadata._parse_and_upload_metadata(merged_metadata)
+        if not metadata.merkle == merkle_info:
+            metadata.merkle = merkle_info
+            contract_uri = self._metadata._parse_and_upload_metadata(metadata.to_json())
             encoded.append(interface.encodeABI("setContractURI", [contract_uri]))
 
         encoded.append(

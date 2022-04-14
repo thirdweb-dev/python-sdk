@@ -35,7 +35,11 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         :return: the metadata for the token and its owner
         """
 
-        owner = self.owner_of(token_id)
+        try:
+            owner = self.owner_of(token_id)
+        except:
+            owner = ZERO_ADDRESS
+
         metadata = self._get_token_metadata(token_id)
         return NFTMetadataOwner(metadata, owner)
 

@@ -19,13 +19,11 @@ from thirdweb.common.currency import (
 from thirdweb.types.contracts.claim_conditions import (
     ClaimCondition,
     ClaimConditionInput,
-    ClaimConditionInputList,
     ClaimConditionOutput,
     ClaimVerification,
     FilledConditionInput,
     Snapshot,
     SnapshotInfo,
-    SnapshotInputSchema,
     SnapshotProof,
 )
 
@@ -91,8 +89,11 @@ def fetch_snapshot(
     merkle_metadata: Dict[str, str],
     storage: IpfsStorage,
 ) -> Optional[List[SnapshotProof]]:
-    snapshot_uri = merkle_metadata[merkle_root]
     snapshot = None
+    if not merkle_root in merkle_metadata:
+        return snapshot
+
+    snapshot_uri = merkle_metadata[merkle_root]
     if snapshot_uri:
         raw = storage.get(snapshot_uri)
         snapshot_data: Snapshot = Snapshot.from_json(raw)
@@ -149,11 +150,9 @@ def process_claim_condition_inputs(
 
     parsed_inputs = inputs_with_snapshots
 
-    # TODO: Which order should it be sorted in?
     sorted_conditions = sorted(
         [convert_to_contract_model(c, token_decimals, provider) for c in parsed_inputs],
         key=lambda x: x["startTimestamp"],
-        reverse=True,
     )
 
     return (snapshot_infos, sorted_conditions)
@@ -201,7 +200,6 @@ def transform_result_to_claim_condition(
         quantity_limit_per_tranaction=pm["quantityLimitPerTransaction"],
         wait_in_seconds=pm["waitTimeInSecondsBetweenClaims"],
         price=pm["pricePerToken"],
-        currency=pm["currency"],
         currency_address=pm["currency"],
         currency_metadata=cv,
         merkle_root_hash=pm["merkleRoot"],

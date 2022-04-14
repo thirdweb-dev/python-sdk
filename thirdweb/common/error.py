@@ -80,5 +80,5 @@ class DuplicateLeafsException(Exception):
         super().__init__(f"Duplicate leafs: {message}")
 
 
-def includes_error_message(err: Exception, message: str) -> bool:
+def includes_error_message(err: Any, message: str) -> bool:
     return message in str(err)

@@ -1,16 +1,23 @@
-from typing import List
+from typing import Any, Callable
+from hexbytes import HexBytes
 from web3 import Web3
 from thirdweb.common.error import DuplicateLeafsException
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contracts.claim_conditions import (
-    SnapshotAddressInput,
     SnapshotInfo,
     SnapshotInput,
     SnapshotProof,
-    SnapshotSchema,
 )
 from thirdweb.common.currency import parse_units
 from pymerkle import MerkleTree
+
+
+class HashedData:
+    def __init__(self, data: HexBytes):
+        self.data = data
+
+    def hexdigest(self):
+        return self.data.hex()
 
 
 def create_snapshot(
@@ -27,8 +34,16 @@ def create_snapshot(
         for i in input
     ]
 
-    # Need to use keccak256 encoding
-    tree = MerkleTree(*hashed_leafs, hash_type="sha3_256")
+    keccak256 = lambda x: HashedData(Web3.keccak(hexstr=x.decode()[1:]))
+    tree = MerkleTree(*hashed_leafs)
+
+    # tree.algorithm = keccak256
+    # for leaf in hashed_leafs:
+    #     tree.update(leaf.hex())
+
+    root_hash = "0x" + tree.rootHash.decode("utf-8")
+    # root_hash = tree.rootHash.decode("utf-8")
+    # root_hash = hashed_leafs[0].hex()
 
     claims = []
     for index, item in enumerate(input):
@@ -39,15 +54,20 @@ def create_snapshot(
             SnapshotProof(
                 address=item.address,
                 max_claimable=item.max_claimable,
-                proof=proof.serialize()["commitment"],
+                proof="0x" + proof.serialize()["header"]["commitment"],
             )
         )
 
-    snapshot = SnapshotSchema(merkle_root=tree.rootHash, claims=claims)
+    # snapshot = SnapshotSchema(merkle_root=tree.rootHash, claims=claims)
+    snapshot = {
+        "merkle_root": root_hash,
+        "claims": [c.__dict__ for c in claims],
+    }
+
     uri = storage.upload_metadata(snapshot)
 
-    return SnapshotInfo(merkle_root=tree.rootHash, snapshot_uri=uri, snapshot=snapshot)
+    return SnapshotInfo(merkle_root=root_hash, snapshot_uri=uri, snapshot=snapshot)
 
 
-def hash_leaf_node(address: str, max_claimable_amount: int) -> str:
+def hash_leaf_node(address: str, max_claimable_amount: int) -> HexBytes:
     return Web3.solidityKeccak(["address", "uint256"], [address, max_claimable_amount])

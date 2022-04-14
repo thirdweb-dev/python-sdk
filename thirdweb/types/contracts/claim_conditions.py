@@ -57,14 +57,18 @@ SnapshotSchema = Snapshot
 
 @dataclass
 class ClaimConditionInput:
-    start_time: int
-    quantity_limit_per_transaction: int
+    start_time: int = int(time())
+    quantity_limit_per_transaction: Amount = int(MAX_INT, 0)
     max_quantity: Amount = int(MAX_INT, 0)
-    wait_in_seconds: int = int(MAX_INT, 0)
+    wait_in_seconds: int = 0
     currency_address: str = NATIVE_TOKEN_ADDRESS
     price: Price = 0
     merkle_root_hash: str = DEFAULT_MERKLE_ROOT
-    snapshot: List[SnapshotInput] = field(default_factory=lambda: [])
+    snapshot: List[SnapshotAddressInput] = field(default_factory=lambda: [])
+
+    def set_snapshot(self, addresses: List[str]) -> "ClaimConditionInput":
+        self.snapshot = [SnapshotAddressInput(address=address) for address in addresses]
+        return self
 
 
 ClaimConditionInputList = List[ClaimConditionInput]

@@ -38,7 +38,12 @@ class ERC1155(BaseContract[TokenERC1155]):
         :param token_id: token ID to check the metadata for
         :return: Metadata for the token
         """
-        supply = self._contract_wrapper._contract_abi.total_supply.call(token_id)
+
+        try:
+            supply = self._contract_wrapper._contract_abi.total_supply.call(token_id)
+        except:
+            supply = 0
+
         metadata = self._get_token_metadata(token_id)
         return EditionMetadata(metadata, supply)
 
