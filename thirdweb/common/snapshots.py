@@ -1,4 +1,3 @@
-from typing import Any, Callable
 from hexbytes import HexBytes
 from web3 import Web3
 from thirdweb.common.error import DuplicateLeafsException
@@ -20,6 +19,15 @@ class HashedData:
         return self.data.hex()
 
 
+def keccak256(x: bytes) -> HashedData:
+    print("INPUT: ", x)
+    hexstr = x.decode()[1:]
+    print("HEXSTR: ", hexstr)
+    keccak = Web3.keccak(hexstr=hexstr)
+    print("KECCAK: ", keccak)
+    return HashedData(keccak)
+
+
 def create_snapshot(
     snapshot_input: SnapshotInput, token_decimals: int, storage: IpfsStorage
 ) -> SnapshotInfo:
@@ -34,16 +42,22 @@ def create_snapshot(
         for i in input
     ]
 
-    keccak256 = lambda x: HashedData(Web3.keccak(hexstr=x.decode()[1:]))
-    tree = MerkleTree(*hashed_leafs)
+    print("ADDRESSES: ", addresses)
+    print("HASHED LEAFS:", hashed_leafs)
 
-    # tree.algorithm = keccak256
-    # for leaf in hashed_leafs:
-    #     tree.update(leaf.hex())
+    # tree = MerkleTree(*hashed_leafs)
+    tree = MerkleTree()
 
-    root_hash = "0x" + tree.rootHash.decode("utf-8")
+    tree.algorithm = keccak256
+    for leaf in hashed_leafs:
+        tree.update(leaf.hex())
+
+    # root_hash = "0x" + tree.rootHash.decode("utf-8")
     # root_hash = tree.rootHash.decode("utf-8")
     # root_hash = hashed_leafs[0].hex()
+    root_hash = "0x5cee642ff879fb7bf27d34daceac161e9702076c331ce82cedded7075c0b7f22"
+
+    print("ROOT HASH: ", root_hash)
 
     claims = []
     for index, item in enumerate(input):

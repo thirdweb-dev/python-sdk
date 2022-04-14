@@ -57,7 +57,7 @@ SnapshotSchema = Snapshot
 
 @dataclass
 class ClaimConditionInput:
-    start_time: int = int(time())
+    start_time: int = int(time()) - 1
     quantity_limit_per_transaction: Amount = int(MAX_INT, 0)
     max_quantity: Amount = int(MAX_INT, 0)
     wait_in_seconds: int = 0
@@ -81,7 +81,7 @@ class ClaimConditionOutput:
     max_quantity: int
     quantity_limit_per_tranaction: int
     wait_in_seconds: int
-    start_time: int = int(time())
+    start_time: int = int(time()) - 1
     available_supply: str = ""
     currency_metadata: CurrencyValue = field(
         default_factory=lambda: CurrencyValue(
