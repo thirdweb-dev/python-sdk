@@ -7,103 +7,103 @@ renderer:
 
   # SDK
   - title: ThirdwebSDK
-    name: api-reference/core/sdk
+    name: sdk
     contents: 
     - core.sdk.*
 
   # Contracts
   - title: NFT Collection
-    name: api-reference/contracts/nft-collection
+    name: nft-collection
     contents: 
     - contracts.nft_collection.*
   - title: Edition
-    name: api-reference/contracts/edition
+    name: edition
     contents: 
     - contracts.edition.*
   - title: Token
-    name: api-reference/contracts/token
+    name: token
     contents: 
     - contracts.token.*
   - title: 'Marketplace'
-    name: api-reference/contracts/marketplace
+    name: marketplace
     contents: 
     - contracts.marketplace.*
   - title: 'NFT Drop'
-    name: api-reference/contracts/nft-drop
+    name: nft-drop
     contents: 
     - contracts.nft_drop.*
   
   # Signature Minting
   - title: ERC20 Signature Minting
-    name: api-reference/core/classes/erc20-signature-minting
+    name: erc20-signature-minting
     contents: 
     - core.classes.erc_20_signature_minting.*
   - title: ERC721 Signature Minting
-    name: api-reference/core/classes/erc721-signature-minting
+    name: erc721-signature-minting
     contents: 
     - core.classes.erc_721_signature_minting.*
   - title: ERC1155 Signature Minting
-    name: api-reference/core/classes/erc1155-signature-minting
+    name: erc1155-signature-minting
     contents: 
     - core.classes.erc_1155_signature_minting.*
 
   # Marketplace Listing
   - title: Marketplace Direct
-    name: api-reference/core/classes/marketplace-direct
+    name: marketplace-direct
     contents:
     - core.classes.marketplace_direct.*
   - title: Marketplace Auction
-    name: api-reference/core/classes/marketplace-auction
+    name: marketplace-auction
     contents:
     - core.classes.marketplace_auction.*
 
   # Contract Settings
   - title: Contract Metadata
-    name: api-reference/core/classes/contract-metadata
+    name: contract-metadata
     contents:
     - core.classes.contract_metadata.*
   - title: Contract Platform Fee
-    name: api-reference/core/classes/contract-platform-fee
+    name: contract-platform-fee
     contents:
     - core.classes.contract_platform_fee.*
   - title: Contract Royalty
-    name: api-reference/core/classes/contract-royalty
+    name: contract-royalty
     contents:
     - core.classes.contract_royalty.*
   - title: Contract Sales
-    name: api-reference/core/classes/contract-sales
+    name: contract-sales
     contents:
     - core.classes.contract_sales.*
   
   # Claim Conditions
   - title: Drop Claim Conditions
-    name: api-reference/core/classes/drop-claim-conditions
+    name: drop-claim-conditions
     contents:
     - core.classes.drop_claim_conditions.*
   
   # Other Interfaces
   - title: ERC20
-    name: api-reference/core/classes/erc20
+    name: erc20
     contents:
     - core.classes.erc_20.*
   - title: ERC721
-    name: api-reference/core/classes/erc721
+    name: erc721
     contents:
     - core.classes.erc_721.*
   - title: ERC1155
-    name: api-reference/core/classes/erc1155
+    name: erc1155
     contents:
     - core.classes.erc_1155.*
   - title: ERC20
-    name: api-reference/core/classes/erc20
+    name: erc20
     contents:
     - core.classes.erc_20.*
   - title: Contract Deployer
-    name: api-reference/core/classes/contract-deployer
+    name: contract-deployer
     contents:
     - core.classes.contract_deployer.*
   - title: Contract Roles
-    name: api-reference/core/classes/contract-roles
+    name: contract-roles
     contents:
     - core.classes.contract_roles.*
 
