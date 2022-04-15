@@ -27,7 +27,7 @@ from thirdweb.types.settings.metadata import EditionContractMetadata
 from thirdweb.types.tx import TxResultWithId
 
 
-class Edition(ERC1155):
+class Edition(ERC1155[TokenERC1155]):
     _abi_type = TokenERC1155
 
     contract_type: Final[ContractType] = ContractType.EDITION

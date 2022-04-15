@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union, cast
+from typing import Any, Generic, List, Optional, Union, cast
 from thirdweb.abi import TokenERC1155
 from thirdweb.common.error import NotFoundException
 from thirdweb.common.nft import fetch_token_metadata
@@ -7,6 +7,7 @@ from thirdweb.constants.role import Role, get_role_hash
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
+from thirdweb.types.contract import TERC1155
 from thirdweb.types.nft import (
     EditionMetadata,
     EditionMetadataOwner,
@@ -16,7 +17,7 @@ from thirdweb.types.nft import (
 from web3.eth import TxReceipt
 
 
-class ERC1155(BaseContract[TokenERC1155]):
+class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
     _storage: IpfsStorage
 
     def __init__(

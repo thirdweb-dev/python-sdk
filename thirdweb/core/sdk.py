@@ -1,4 +1,5 @@
 from thirdweb.contracts import Marketplace
+from thirdweb.contracts.edition_drop import EditionDrop
 from thirdweb.contracts.nft_drop import NFTDrop
 from thirdweb.core.classes.contract_deployer import ContractDeployer
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
@@ -14,7 +15,7 @@ from thirdweb.types.sdk import SDKOptions
 
 class ThirdwebSDK(ProviderHandler):
     __contract_cache: Dict[
-        str, Union[NFTCollection, Edition, Token, Marketplace, NFTDrop]
+        str, Union[NFTCollection, Edition, Token, Marketplace, NFTDrop, EditionDrop]
     ] = {}
     __storage: IpfsStorage
 
@@ -90,6 +91,16 @@ class ThirdwebSDK(ProviderHandler):
 
         return cast(NFTDrop, self._get_contract(address, NFTDrop))
 
+    def get_edition_drop(self, address: str) -> EditionDrop:
+        """
+        Returns an Edition Drop contract SDK instance
+
+        :param address: address of the Edition Drop contract
+        :returns: Edition Drop contract SDK instance
+        """
+
+        return cast(EditionDrop, self._get_contract(address, EditionDrop))
+
     def update_provider(self, provider: Web3):
         """
         Update the provider instance used by the SDK.
@@ -123,8 +134,9 @@ class ThirdwebSDK(ProviderHandler):
             Type[Token],
             Type[Marketplace],
             Type[NFTDrop],
+            Type[EditionDrop],
         ],
-    ) -> Union[NFTCollection, Edition, Token, Marketplace, NFTDrop]:
+    ) -> Union[NFTCollection, Edition, Token, Marketplace, NFTDrop, EditionDrop]:
         if address in self.__contract_cache:
             return self.__contract_cache[address]
 
