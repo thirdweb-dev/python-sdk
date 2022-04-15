@@ -42,21 +42,24 @@ def prepare_claim(
     max_claimable = 0
 
     try:
-        if not active_claim_condition.merkle_root_hash.startswith(ZERO_ADDRESS):
+        if not active_claim_condition.merkle_root_hash == DEFAULT_MERKLE_ROOT:
             claims = fetch_snapshot(
                 active_claim_condition.merkle_root_hash, merkle_metadata, storage
             )
+
             item = (
                 next((c for c in claims if c.address == address_to_claim), None)
                 if claims is not None
                 else None
             )
+
             if item is None:
                 raise Exception("No claim found for this address")
+
             proofs = item.proof
             max_claimable = parse_units(item.max_claimable, token_decimals)
     except Exception as e:
-        if str(e) == "No claim found for this address":
+        if "No claim found for this address" in str(e):
             raise e
 
         print(
@@ -96,7 +99,17 @@ def fetch_snapshot(
     snapshot_uri = merkle_metadata[merkle_root]
     if snapshot_uri:
         raw = storage.get(snapshot_uri)
-        snapshot_data: Snapshot = Snapshot.from_json(raw)
+        snapshot_data: Snapshot = Snapshot(
+            merkle_root=raw["merkleRoot"],
+            claims=[
+                SnapshotProof(
+                    address=claim["address"],
+                    proof=claim["proof"],
+                    max_claimable=claim["maxClaimable"],
+                )
+                for claim in raw["claims"]
+            ],
+        )
         if merkle_root.lower() == snapshot_data.merkle_root.lower():
             snapshot = snapshot_data.claims
 
@@ -139,14 +152,15 @@ def process_claim_condition_inputs(
     snapshot_infos: List[SnapshotInfo] = []
     inputs_with_snapshots: List[ClaimConditionInput] = []
     for condition_input in claim_condition_inputs:
-        if condition_input.snapshot:
+        if len(condition_input.snapshot) > 0:
             snapshot_info = create_snapshot(
                 condition_input.snapshot, token_decimals, storage
             )
             snapshot_infos.append(snapshot_info)
             condition_input.merkle_root_hash = snapshot_info.merkle_root
-
-        inputs_with_snapshots.append(condition_input)
+            inputs_with_snapshots.append(condition_input)
+        else:
+            condition_input.merkle_root_hash = DEFAULT_MERKLE_ROOT
 
     parsed_inputs = inputs_with_snapshots
 
@@ -174,7 +188,7 @@ def convert_to_contract_model(
     )
 
     return IDropClaimConditionClaimCondition(
-        startTimestamp=c.start_time,
+        startTimestamp=int(c.start_time),
         maxClaimableSupply=max_claimable_supply,
         supplyClaimed=0,
         quantityLimitPerTransaction=quantity_limit_per_transaction,
@@ -194,7 +208,7 @@ def transform_result_to_claim_condition(
     cv = fetch_currency_value(provider, pm["currency"], pm["pricePerToken"])
     claims = fetch_snapshot(str(pm["merkleRoot"]), merkle_metadata, storage)
     return ClaimConditionOutput(
-        start_time=pm["startTimestamp"],
+        start_time=int(pm["startTimestamp"]),
         max_quantity=pm["maxClaimableSupply"],
         available_supply=pm["maxClaimableSupply"] - pm["supplyClaimed"],
         quantity_limit_per_tranaction=pm["quantityLimitPerTransaction"],
@@ -202,6 +216,7 @@ def transform_result_to_claim_condition(
         price=pm["pricePerToken"],
         currency_address=pm["currency"],
         currency_metadata=cv,
-        merkle_root_hash=pm["merkleRoot"],
+        # TODO: Handle case for string
+        merkle_root_hash="0x" + pm["merkleRoot"].hex(),
         snapshot=claims,
     )

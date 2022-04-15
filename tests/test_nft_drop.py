@@ -115,7 +115,7 @@ def test_snapshot_claim(
     nft_drop.claim_conditions.set(
         [
             ClaimConditionInput(
-                start_time=int(time()) / 2,
+                start_time=int(time() / 2),
                 snapshot=[
                     SnapshotAddressInput(
                         address=primary_account.address, max_claimable=10
@@ -124,8 +124,6 @@ def test_snapshot_claim(
             )
         ]
     )
-
-    print("ACTIVE: ", nft_drop.claim_conditions.get_active())
 
     # assert nft_drop.claim_conditions.can_claim(1) is True
     # assert nft_drop.claim_conditions.can_claim(1, secondary_account.address) is False

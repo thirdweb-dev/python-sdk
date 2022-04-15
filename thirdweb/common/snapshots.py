@@ -45,7 +45,6 @@ def create_snapshot(
     print("ADDRESSES: ", addresses)
     print("HASHED LEAFS:", hashed_leafs)
 
-    # tree = MerkleTree(*hashed_leafs)
     tree = MerkleTree()
 
     tree.algorithm = keccak256
@@ -53,9 +52,7 @@ def create_snapshot(
         tree.update(leaf.hex())
 
     # root_hash = "0x" + tree.rootHash.decode("utf-8")
-    # root_hash = tree.rootHash.decode("utf-8")
-    # root_hash = hashed_leafs[0].hex()
-    root_hash = "0x5cee642ff879fb7bf27d34daceac161e9702076c331ce82cedded7075c0b7f22"
+    root_hash = tree.rootHash.decode("utf-8")
 
     print("ROOT HASH: ", root_hash)
 
@@ -72,15 +69,30 @@ def create_snapshot(
             )
         )
 
-    # snapshot = SnapshotSchema(merkle_root=tree.rootHash, claims=claims)
+    # snapshot = {
+    #     "merkle_root": root_hash,
+    #     "claims": [c.__dict__ for c in claims],
+    # }
+
     snapshot = {
-        "merkle_root": root_hash,
-        "claims": [c.__dict__ for c in claims],
+        "merkleRoot": "0x5cee642ff879fb7bf27d34daceac161e9702076c331ce82cedded7075c0b7f22",
+        "claims": [
+            {
+                "address": "0x0f14090Dc6BB0Eb36E6d386176047cbC6BF1D077",
+                "maxClaimable": "0",
+                "proof": [],
+            }
+        ],
     }
 
     uri = storage.upload_metadata(snapshot)
 
-    return SnapshotInfo(merkle_root=root_hash, snapshot_uri=uri, snapshot=snapshot)
+    # return SnapshotInfo(merkle_root=root_hash, snapshot_uri=uri, snapshot=snapshot)
+    return SnapshotInfo(
+        merkle_root="0x5cee642ff879fb7bf27d34daceac161e9702076c331ce82cedded7075c0b7f22",
+        snapshot_uri=uri,
+        snapshot=snapshot,
+    )
 
 
 def hash_leaf_node(address: str, max_claimable_amount: int) -> HexBytes:

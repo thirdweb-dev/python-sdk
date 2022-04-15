@@ -259,13 +259,13 @@ class Marketplace(BaseContract[MarketplaceABI]):
         if ZERO_ADDRESS in members:
             encoded.append(
                 interface.encodeABI(
-                    "revoke_role", [get_role_hash(Role.ASSET), ZERO_ADDRESS]
+                    "revokeRole", [get_role_hash(Role.ASSET), ZERO_ADDRESS]
                 )
             )
 
         encoded.append(
             interface.encodeABI(
-                "grant_role", [get_role_hash(Role.ASSET), contract_address]
+                "grantRole", [get_role_hash(Role.ASSET), contract_address]
             )
         )
 
@@ -284,11 +284,11 @@ class Marketplace(BaseContract[MarketplaceABI]):
 
         for member in members:
             encoded.append(
-                interface.encodeABI("revoke_role", [get_role_hash(Role.ASSET), member])
+                interface.encodeABI("revokeRole", [get_role_hash(Role.ASSET), member])
             )
 
         encoded.append(
-            interface.encodeABI("grant_role", [get_role_hash(Role.ASSET), ZERO_ADDRESS])
+            interface.encodeABI("grantRole", [get_role_hash(Role.ASSET), ZERO_ADDRESS])
         )
 
         return self._contract_wrapper.multi_call(encoded)
