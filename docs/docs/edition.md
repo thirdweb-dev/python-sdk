@@ -9,7 +9,7 @@ Interface for interacting with an edition contract
 ## Edition Objects
 
 ```python
-class Edition(ERC1155)
+class Edition(ERC1155[TokenERC1155])
 ```
 
 <a id="contracts.edition.Edition.mint"></a>

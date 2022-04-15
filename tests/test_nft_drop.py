@@ -99,9 +99,6 @@ def test_snapshot(nft_drop: NFTDrop, primary_account, secondary_account):
     assert len(roots) == 2
 
 
-"""
-
-
 @pytest.mark.usefixtures("sdk", "primary_account", "secondary_account")
 def test_snapshot_claim(
     nft_drop: NFTDrop, sdk: ThirdwebSDK, primary_account, secondary_account
@@ -141,3 +138,4 @@ def test_snapshot_claim(
     nft_drop.claim(1)
 
     assert nft_drop.balance() == 1
+"""

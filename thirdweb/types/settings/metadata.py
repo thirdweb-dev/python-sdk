@@ -115,3 +115,18 @@ class NFTDropContractMetadata(
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "NFTDropContractMetadata":
         return from_dict(NFTDropContractMetadata, json)
+
+
+@dataclass
+class EditionDropContractMetadata(
+    ContractMetadataSchema,
+    ContractRoyaltySchema,
+    ContractSymbolSchema,
+    ContractPrimarySaleSchema,
+    ContractPlatformFeeSchema,
+    ContractTrustedForwarderSchema,
+    MerkleSchema,
+):
+    @staticmethod
+    def from_json(json: Dict[str, Any]) -> "EditionDropContractMetadata":
+        return from_dict(EditionDropContractMetadata, json)

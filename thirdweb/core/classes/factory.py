@@ -9,13 +9,18 @@ from thirdweb.constants.addresses import (
 )
 from thirdweb.constants.chains import ChainId
 from thirdweb.constants.currency import ZERO_ADDRESS
-from thirdweb.contracts import NFTCollection, Edition, Token
+from thirdweb.contracts import (
+    NFTCollection,
+    Edition,
+    Token,
+    NFTDrop,
+    EditionDrop,
+    Marketplace,
+)
 from thirdweb.contracts.maps import (
     CONTRACTS_MAP,
     REMOTE_CONTRACT_NAME,
 )
-from thirdweb.contracts.marketplace import Marketplace
-from thirdweb.contracts.nft_drop import NFTDrop
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from eth_account.account import LocalAccount
 
@@ -24,9 +29,8 @@ from thirdweb.types.contract import ContractType
 from thirdweb.types.sdk import SDKOptions
 from thirdweb.types.settings.metadata import (
     NFTDropContractMetadata,
-    EditionContractMetadata,
+    EditionDropContractMetadata,
     MarketplaceContractMetadata,
-    NFTCollectionContractMetadata,
     TokenContractMetadata,
 )
 
@@ -112,8 +116,11 @@ class ContractFactory(ContractWrapper[TWFactory]):
                 metadata.platform_fee_recipient,
             ]
 
-        if contract_type == Edition.contract_type:
-            metadata = EditionContractMetadata.from_json(contract_metadata)
+        if (
+            contract_type == Edition.contract_type
+            or contract_type == EditionDrop.contract_type
+        ):
+            metadata = EditionDropContractMetadata.from_json(contract_metadata)
             return [
                 self.get_signer_address(),
                 metadata.name,

@@ -60,3 +60,13 @@ def deploy_nft_drop(metadata: NFTDropContractMetadata) -> str
 
 Deploy an NFT Drop contract
 
+<a id="core.classes.contract_deployer.ContractDeployer.deploy_edition_drop"></a>
+
+#### deploy\_edition\_drop
+
+```python
+def deploy_edition_drop(metadata: EditionDropContractMetadata) -> str
+```
+
+Deploy an Edition Drop contract
+

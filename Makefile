@@ -25,6 +25,7 @@ abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC721.json && mv thirdweb/abi/ierc721/__init__.py thirdweb/abi/ierc721.py && rm -rf thirdweb/abi/ierc721
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC1155.json && mv thirdweb/abi/ierc1155/__init__.py thirdweb/abi/ierc1155.py && rm -rf thirdweb/abi/ierc1155
 	abi-gen --language Python -o thirdweb/abi --abis abi/DropERC721.json && mv thirdweb/abi/drop_erc721/__init__.py thirdweb/abi/drop_erc721.py && rm -rf thirdweb/abi/drop_erc721
+	abi-gen --language Python -o thirdweb/abi --abis abi/DropERC1155.json && mv thirdweb/abi/drop_erc1155/__init__.py thirdweb/abi/drop_erc1155.py && rm -rf thirdweb/abi/drop_erc1155
 
 # DO NOT USE RIGHT NOW
 sphinx-docs:
