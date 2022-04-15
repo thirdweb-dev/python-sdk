@@ -21,6 +21,8 @@ Dockerfile
 /interfaces
 /node_modules
 /sphinx-docs
+/docker-test
+
+/docs/pydoc-markdown
 /docs/mkdocs/site
 /docs/build
-/docker-test

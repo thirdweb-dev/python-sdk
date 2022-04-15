@@ -49,6 +49,7 @@ pydoc-markdown-docs:
 	cd docs && poetry run pydoc-markdown
 	mv docs/build/docs docs/pydoc-markdown
 	cp -R docs/common/css docs/pydoc-markdown/css
+	cp -R docs/pydoc-markdown/content docs/docs
 	xdg-open http://localhost:$(DOCS_SERVER_PORT) || open http://localhost:$(DOCS_SERVER_PORT) || start http://localhost:$(DOCS_SERVER_PORT)
 	cd docs/pydoc-markdown && poetry run mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
