@@ -63,11 +63,11 @@ class ContractRoyalty(Generic[TRoyaltyABI]):
 
         encoded = [
             self._contract_wrapper.get_contract_interface().encodeABI(
-                "set_default_royalty_info",
+                "setDefaultRoyaltyInfo",
                 [metadata.fee_recipient, metadata.seller_fee_basis_points],
             ),
             self._contract_wrapper.get_contract_interface().encodeABI(
-                "set_contract_uri", [contract_uri]
+                "setContractUri", [contract_uri]
             ),
         ]
 
