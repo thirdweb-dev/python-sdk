@@ -19,16 +19,16 @@ COPY Makefile /app/Makefile
 COPY thirdweb /app/thirdweb
 COPY docs /app/docs
 COPY README.md /app/README.md
-COPY docs/mkdocs.yml /app/mkdocs.yml
+COPY docs/mkdocs/mkdocs.yml /app/mkdocs/mkdocs.yml
 
 RUN poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
 
-RUN poetry shell && cd docs && mkdocs build
+RUN poetry shell && cd docs/mkdocs && poetry run mkdocs build
 
 FROM halverneus/static-file-server
 
 WORKDIR /docs
 
-COPY --from=build /app/docs/site /docs/site
-ENV FOLDER=/docs/site
+COPY --from=build /app/docs/mkdocs/site /docs/mkdocs/site
+ENV FOLDER=/docs/mkdocs/site

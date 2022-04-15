@@ -38,15 +38,17 @@ sphinx-docs:
 	rm docs/index.md
 
 mkdocs-docs:
-	cd docs && poetry run mkdocs build
+	cd docs/mkdocs && poetry run mkdocs build
+	cp -R docs/common/css docs/mkdocs/css
 	# windows/mac/linux support
 	xdg-open http://localhost:$(DOCS_SERVER_PORT) || open http://localhost:$(DOCS_SERVER_PORT) || start http://localhost:$(DOCS_SERVER_PORT)
-	cd docs && poetry run mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
+	cd docs/mkdocs && poetry run mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
 pydoc-markdown-docs:
 	cd docs && rm -rf pydoc-markdown
 	cd docs && poetry run pydoc-markdown
 	mv docs/build/docs docs/pydoc-markdown
+	cp -R docs/common/css docs/pydoc-markdown/css
 	xdg-open http://localhost:$(DOCS_SERVER_PORT) || open http://localhost:$(DOCS_SERVER_PORT) || start http://localhost:$(DOCS_SERVER_PORT)
 	cd docs/pydoc-markdown && poetry run mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
