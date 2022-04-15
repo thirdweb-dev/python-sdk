@@ -9,3 +9,4 @@ from .ierc20 import IERC20
 from .ierc721 import IERC721
 from .ierc1155 import IERC1155
 from .drop_erc721 import DropERC721
+from .drop_erc1155 import DropERC1155

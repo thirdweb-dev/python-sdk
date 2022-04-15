@@ -9,7 +9,6 @@ from typing import (  # pylint: disable=unused-import
     Optional,
     Tuple,
     Union,
-    cast,
 )
 
 from eth_utils import to_checksum_address
@@ -110,7 +109,7 @@ class OperatorRoleMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         tx_params = super().normalize_tx_params(tx_params)
         returned = self._underlying_method().call(tx_params.as_dict())
-        return cast(Union[bytes, str], (returned))
+        return returned
 
     def send_transaction(
         self, tx_params: Optional[TxParams] = None
