@@ -11,6 +11,7 @@ from brownie import (
     TokenERC1155,
     Marketplace,
     DropERC721,
+    DropERC1155,
 )
 from brownie.network import priority_fee
 from eth_account import Account
@@ -33,6 +34,7 @@ class ContractAddresses:
     edition: str
     marketplace: str
     drop: str
+    edition_drop: str
 
 
 @pytest.fixture(scope="session")
@@ -70,6 +72,7 @@ def contract_addresses():
         thirdweb_fee.address,
     )
     drop = account.deploy(DropERC721, thirdweb_fee.address)
+    edition_drop = account.deploy(DropERC1155, thirdweb_fee.address)
 
     return ContractAddresses(
         factory=thirdweb_factory.address,
@@ -80,4 +83,5 @@ def contract_addresses():
         edition=token_erc_1155.address,
         marketplace=marketplace.address,
         drop=drop.address,
+        edition_drop=edition_drop.address,
     )

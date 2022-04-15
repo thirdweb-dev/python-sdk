@@ -32,6 +32,10 @@ renderer:
     name: nft-drop
     contents: 
     - contracts.nft_drop.*
+  - title: 'Edition Drop'
+    name: edition-drop
+    contents:
+    - contracts.edition_drop.*
   
   # Signature Minting
   - title: ERC20 Signature Minting
@@ -76,10 +80,14 @@ renderer:
     - core.classes.contract_sales.*
   
   # Claim Conditions
-  - title: Drop Claim Conditions
-    name: drop-claim-conditions
+  - title: NFT Drop Claim Conditions
+    name: nft-drop-claim-conditions
     contents:
     - core.classes.drop_claim_conditions.*
+  - title: Edition Drop Claim Conditions
+    name: edition-drop-claim-conditions
+    contents:
+    - core.classes.drop_erc1155_claim_conditions.*
   
   # Other Interfaces
   - title: ERC20

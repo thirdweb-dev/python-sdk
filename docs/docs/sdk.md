@@ -120,6 +120,24 @@ Returns an NFT Drop contract SDK instance
 
 NFT Drop contract SDK instance
 
+<a id="core.sdk.ThirdwebSDK.get_edition_drop"></a>
+
+#### get\_edition\_drop
+
+```python
+def get_edition_drop(address: str) -> EditionDrop
+```
+
+Returns an Edition Drop contract SDK instance
+
+**Arguments**:
+
+- `address`: address of the Edition Drop contract
+
+**Returns**:
+
+Edition Drop contract SDK instance
+
 <a id="core.sdk.ThirdwebSDK.update_provider"></a>
 
 #### update\_provider
