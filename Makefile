@@ -45,17 +45,12 @@ mkdocs-docs:
 	cd docs/mkdocs && poetry run mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
 pydoc-markdown-docs:
-	cd docs && rm -rf pydoc-markdown
-	cd docs && poetry run pydoc-markdown
-	mv docs/build/docs docs/pydoc-markdown
-	rm -rf docs/build
-	cp -R docs/common/css docs/pydoc-markdown/css
-	cp -R docs/pydoc-markdown/content docs/docs
+	make generate-docs
 	xdg-open http://localhost:$(DOCS_SERVER_PORT) || open http://localhost:$(DOCS_SERVER_PORT) || start http://localhost:$(DOCS_SERVER_PORT)
 	cd docs/pydoc-markdown && poetry run mkdocs serve --dev-addr localhost:$(DOCS_SERVER_PORT)
 
 generate-docs:
-	cd docs && rm -rf pydoc-markdown
+	cd docs && rm -rf pydoc-markdown && rm -rf docs
 	cd docs && poetry run pydoc-markdown
 	mv docs/build/docs docs/pydoc-markdown
 	rm -rf docs/build
