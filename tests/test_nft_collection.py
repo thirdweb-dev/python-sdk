@@ -103,3 +103,27 @@ def test_batch_mint_to(nft_collection: NFTCollection):
     assert nft_2.metadata.name == "Python SDK NFT 2"
     assert nft_1.metadata.description == "Minted with the python SDK!"
     assert nft_2.metadata.description == "Minted with the python SDK!"
+
+
+@pytest.mark.usefixtures("primary_account")
+def test_ownership(nft_collection: NFTCollection, primary_account):
+    nft_collection.mint_batch_to(
+        primary_account.address,
+        [
+            NFTMetadataInput.from_json(
+                {
+                    "name": "Python SDK NFT 1",
+                    "description": "Minted with the python SDK!",
+                }
+            ),
+            NFTMetadataInput.from_json(
+                {
+                    "name": "Python SDK NFT 2",
+                    "description": "Minted with the python SDK!",
+                }
+            ),
+        ],
+    )
+
+    assert nft_collection.get_owned_token_ids() == [0, 1]
+    assert nft_collection.get_owned()[0].metadata.name == "Python SDK NFT 1"
