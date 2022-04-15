@@ -42,9 +42,6 @@ def create_snapshot(
         for i in input
     ]
 
-    print("ADDRESSES: ", addresses)
-    print("HASHED LEAFS:", hashed_leafs)
-
     tree = MerkleTree()
 
     tree.algorithm = keccak256
@@ -53,8 +50,6 @@ def create_snapshot(
 
     # root_hash = "0x" + tree.rootHash.decode("utf-8")
     root_hash = tree.rootHash.decode("utf-8")
-
-    print("ROOT HASH: ", root_hash)
 
     claims = []
     for index, item in enumerate(input):

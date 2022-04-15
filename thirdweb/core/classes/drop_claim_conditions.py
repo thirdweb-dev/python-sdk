@@ -246,6 +246,7 @@ class DropClaimConditions:
             contract_uri = self._metadata._parse_and_upload_metadata(metadata.to_json())
             encoded.append(interface.encodeABI("setContractURI", [contract_uri]))
 
+        print("SORTED: ", sorted_conditions)
         encoded.append(
             interface.encodeABI(
                 "setClaimConditions",

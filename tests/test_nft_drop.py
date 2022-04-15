@@ -74,7 +74,6 @@ def test_claim_defaults(nft_drop: NFTDrop):
     assert nft_drop.balance() == 1
 
 
-
 @pytest.mark.usefixtures("primary_account", "secondary_account")
 def test_snapshot(nft_drop: NFTDrop, primary_account, secondary_account):
     nft_drop.claim_conditions.set(
@@ -97,8 +96,6 @@ def test_snapshot(nft_drop: NFTDrop, primary_account, secondary_account):
 
     roots = [c.merkle_root_hash for c in nft_drop.claim_conditions.get_all()]
     assert len(roots) == 2
-
-
 """
 
 
@@ -115,7 +112,6 @@ def test_snapshot_claim(
     nft_drop.claim_conditions.set(
         [
             ClaimConditionInput(
-                start_time=int(time() / 2),
                 snapshot=[
                     SnapshotAddressInput(
                         address=primary_account.address, max_claimable=10

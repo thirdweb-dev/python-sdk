@@ -158,9 +158,10 @@ def process_claim_condition_inputs(
             )
             snapshot_infos.append(snapshot_info)
             condition_input.merkle_root_hash = snapshot_info.merkle_root
-            inputs_with_snapshots.append(condition_input)
         else:
             condition_input.merkle_root_hash = DEFAULT_MERKLE_ROOT
+
+        inputs_with_snapshots.append(condition_input)
 
     parsed_inputs = inputs_with_snapshots
 
@@ -217,6 +218,6 @@ def transform_result_to_claim_condition(
         currency_address=pm["currency"],
         currency_metadata=cv,
         # TODO: Handle case for string
-        merkle_root_hash="0x" + pm["merkleRoot"].hex(),
+        merkle_root_hash="0x" + pm["merkleRoot"].hex(),  # type: ignore
         snapshot=claims,
     )

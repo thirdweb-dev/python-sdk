@@ -184,7 +184,6 @@ class NFTDrop(ERC721[DropERC721]):
 
         # TODO: OVERRIDES
         claim_verification = self._prepare_claim(quantity, proofs)
-        print("VERIFICATION: ", claim_verification)
         receipt = self._contract_wrapper.send_transaction(
             "claim",
             [
