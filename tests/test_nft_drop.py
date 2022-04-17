@@ -34,7 +34,6 @@ def nft_drop(sdk: ThirdwebSDK, primary_account) -> NFTDrop:
     return nft_drop
 
 
-"""
 def test_create_batch(nft_drop: NFTDrop):
     metadatas = []
     for i in range(10):
@@ -53,6 +52,7 @@ def test_create_batch(nft_drop: NFTDrop):
     assert len(nft_drop.get_all_unclaimed()) == 10
 
 
+"""
 def test_claim_defaults(nft_drop: NFTDrop):
     assert nft_drop.total_claimed_supply() == 0
     assert nft_drop.balance() == 0
