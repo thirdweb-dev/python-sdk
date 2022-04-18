@@ -70,3 +70,4 @@ class ContractType(Enum):
     MARKETPLACE = "marketplace"
     NFT_DROP = "nft-drop"
     EDITION_DROP = "edition-drop"
+    CUSTOM = "custom"
