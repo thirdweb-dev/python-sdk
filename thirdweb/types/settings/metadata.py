@@ -17,7 +17,11 @@ class ContractMetadataSchema:
         return from_dict(ContractMetadataSchema, json)
 
     def to_json(self) -> Dict[str, Any]:
-        return self.__dict__
+        json = {}
+        for key, value in self.__dict__.items():
+            if (value is not None and value is not "") or key == "name":
+                json[key] = value
+        return json
 
 
 @dataclass
