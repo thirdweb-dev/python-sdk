@@ -7,7 +7,7 @@ from thirdweb.core.classes.provider_handler import ProviderHandler
 from thirdweb.contracts import Token, Edition, NFTCollection
 
 from eth_account.account import LocalAccount
-from typing import Any, Dict, Optional, Type, Union, cast
+from typing import Dict, Optional, Type, Union, cast
 from web3 import Web3
 
 from thirdweb.types.sdk import SDKOptions

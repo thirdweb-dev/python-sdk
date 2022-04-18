@@ -2,6 +2,7 @@ dependencies:
   - OpenZeppelin/openzeppelin-contracts-upgradeable@4.5.1
   - OpenZeppelin/openzeppelin-contracts@4.5.0
   - smartcontractkit/chainlink@1.2.1
+
 compiler:
   solc:
     remappings:
