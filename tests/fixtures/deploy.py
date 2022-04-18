@@ -37,18 +37,11 @@ class ContractAddresses:
     edition_drop: str
 
 
+@pytest.mark.usefixtures("primary_account")
 @pytest.fixture(scope="session")
-def contract_addresses():
+def contract_addresses(primary_account):
     priority_fee("1 gwei")
-    accounts.add(os.environ.get("PRIVATE_KEY"))
-    address = Account.from_key(os.environ.get("PRIVATE_KEY")).address
-    account = accounts.at(address)
-    accounts[0].transfer(account, accounts[0].balance().__truediv__(3))
-
-    accounts.add(os.environ.get("PRIVATE_KEY_2"))
-    secondary_address = Account.from_key(os.environ.get("PRIVATE_KEY_2")).address
-    secondary_account = accounts.at(secondary_address)
-    accounts[0].transfer(secondary_account, accounts[0].balance().__truediv__(2))
+    account = accounts.at(primary_account.address)
 
     trusted_forwarder = account.deploy(Forwarder)
     trusted_forwarder_address = trusted_forwarder.address
