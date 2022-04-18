@@ -102,6 +102,7 @@ class ContractOffer:
     quantity_wanted: int
     currency: str
     price_per_token: PriceWei
+    expiration_timestamp: int
 
 
 @dataclass
