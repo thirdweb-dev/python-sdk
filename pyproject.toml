@@ -16,6 +16,7 @@ thirdweb-contract-wrappers = "^2.0.4"
 web3 = "5.27.0"
 thirdweb-eth-account = "^0.6.6"
 pymerkle = "^2.0.2"
+pyee = "^9.0.4"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
