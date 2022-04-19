@@ -14,6 +14,7 @@ from web3.eth import TxReceipt
 from eth_account.account import LocalAccount
 from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.types.contract import TContractABI
+from thirdweb.types.events import SignatureEvent, TxEvent
 
 from thirdweb.types.sdk import SDKOptions
 
@@ -135,16 +136,14 @@ class ContractWrapper(Generic[TContractABI], ProviderHandler):
         return self.send_transaction("multicall", [encoded])
 
     def emit_transaction_event(self, status: EventStatus, tx_hash: str):
-        self.emit(EventType.TRANSACTION, status, tx_hash)  # type: ignore
+        self.emit(EventType.TRANSACTION, TxEvent(status, tx_hash))  # type: ignore
 
     def sign_typed_data(
         self, signer: LocalAccount, domain: EIP712Domain, types: Any, message: Any
     ) -> bytes:
         self.emit(
             EventType.SIGNATURE,  # type: ignore
-            status=EventStatus.SUBMITTED,
-            message=message,
-            signature="",
+            SignatureEvent(EventStatus.SUBMITTED, message, ""),
         )
 
         signature = sign_typed_data_internal(
@@ -153,9 +152,7 @@ class ContractWrapper(Generic[TContractABI], ProviderHandler):
 
         self.emit(
             EventType.SIGNATURE,  # type: ignore
-            status=EventStatus.COMPLETED,
-            message=message,
-            signature=signature,
+            SignatureEvent(EventStatus.COMPLETED, message, signature),
         )
 
         return signature
