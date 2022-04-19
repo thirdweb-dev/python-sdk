@@ -1,6 +1,7 @@
 """Interface for interacting with an nft collection contract"""
 
 from thirdweb.constants.role import Role
+from thirdweb.core.classes.contract_events import ContractEvents
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
 from thirdweb.core.classes.contract_roles import ContractRoles
@@ -37,6 +38,7 @@ class NFTCollection(ERC721[TokenERC721]):
     platform_fee: ContractPlatformFee[TokenERC721]
     royalty: ContractRoyalty[TokenERC721]
     signature: ERC721SignatureMinting
+    events: ContractEvents[TokenERC721]
 
     def __init__(
         self,
@@ -60,6 +62,7 @@ class NFTCollection(ERC721[TokenERC721]):
         self.signature = ERC721SignatureMinting(
             contract_wrapper, self.roles, self._storage
         )
+        self.events = ContractEvents(contract_wrapper)
 
     """
     WRITE FUNCTIONS
