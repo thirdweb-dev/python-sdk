@@ -4,8 +4,7 @@ from thirdweb.common.error import DuplicateFileNameException
 
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 
-# GATEWAY_URL = "https://gateway.ipfscdn.io/ipfs/"
-GATEWAY_URL = "https://ipfs.thirdweb.com/ipfs/"
+GATEWAY_URL = "https://gateway.ipfscdn.io/ipfs/"
 
 
 @pytest.fixture()

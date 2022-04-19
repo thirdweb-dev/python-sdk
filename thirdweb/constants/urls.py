@@ -1,5 +1,4 @@
-# DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/"
-DEFAULT_IPFS_GATEWAY = "https://ipfs.thirdweb.com/ipfs/"
+DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/"
 
 TW_IPFS_SERVER_URL = "https://upload.nftlabs.co"
 
