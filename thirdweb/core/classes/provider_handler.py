@@ -1,6 +1,6 @@
 import re
 from typing import Optional
-
+from pyee.base import EventEmitter
 from thirdweb.constants.chains import ChainId
 from thirdweb.constants.rpc import CHAIN_ID_TO_RPC_URL
 from thirdweb.types.sdk import SDKOptions
@@ -9,7 +9,7 @@ from web3.middleware import geth_poa_middleware
 from web3 import Web3
 
 
-class ProviderHandler(object):
+class ProviderHandler(EventEmitter):
     """
     The provider handler is responsible for managing the connected provider and signer
     for any class including the read-only provider.
@@ -32,6 +32,8 @@ class ProviderHandler(object):
         :param signer: optional account to use for signing transactions
         :param options: optional SDKOptions instance to specify read-only RPC URL and gas settings
         """
+
+        super().__init__()
 
         self.update_provider(provider)
         self.update_signer(signer)

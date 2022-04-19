@@ -2,13 +2,14 @@
 
 DOCS_SERVER_PORT = 8087
 
-init:
+clean-env:
 	rm -rf .venv
 	poetry shell
+
+init:
 	poetry install
 	poetry run yarn add hardhat
 	poetry run pip3 install eth-brownie
-	make abi
 
 test:
 	poetry run brownie test --network hardhat
