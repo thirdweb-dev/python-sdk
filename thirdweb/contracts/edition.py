@@ -2,6 +2,7 @@
 
 from thirdweb.common.nft import upload_or_extract_uri, upload_or_extract_uris
 from thirdweb.constants.role import Role
+from thirdweb.core.classes.contract_events import ContractEvents
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
 from thirdweb.core.classes.contract_roles import ContractRoles
@@ -39,6 +40,7 @@ class Edition(ERC1155[TokenERC1155]):
     platform_fee: ContractPlatformFee[TokenERC1155]
     royalty: ContractRoyalty[TokenERC1155]
     signature: ERC1155SignatureMinting
+    events: ContractEvents[TokenERC1155]
 
     def __init__(
         self,
@@ -62,6 +64,7 @@ class Edition(ERC1155[TokenERC1155]):
         self.signature = ERC1155SignatureMinting(
             contract_wrapper, self.roles, self._storage
         )
+        self.events = ContractEvents(contract_wrapper)
 
     def mint(
         self, metadata_with_supply: EditionMetadataInput

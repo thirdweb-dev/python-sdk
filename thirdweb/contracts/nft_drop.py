@@ -3,6 +3,7 @@ from thirdweb.abi import DropERC721
 from thirdweb.common.claim_conditions import prepare_claim
 from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
 from thirdweb.constants.role import Role
+from thirdweb.core.classes.contract_events import ContractEvents
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
 from thirdweb.core.classes.contract_roles import ContractRoles
@@ -40,6 +41,7 @@ class NFTDrop(ERC721[DropERC721]):
     platform_fee: ContractPlatformFee[DropERC721]
     royalty: ContractRoyalty[DropERC721]
     claim_conditions: DropClaimConditions
+    events: ContractEvents[DropERC721]
 
     def __init__(
         self,
@@ -63,6 +65,7 @@ class NFTDrop(ERC721[DropERC721]):
         self.claim_conditions = DropClaimConditions(
             self._contract_wrapper, self.metadata, self._storage
         )
+        self.events = ContractEvents(contract_wrapper)
 
     def get_all_claimed(
         self, query_params: QueryAllParams = QueryAllParams()

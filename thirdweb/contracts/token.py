@@ -7,6 +7,7 @@ from web3.eth import TxReceipt
 from eth_account.account import LocalAccount
 from thirdweb.common.currency import parse_units
 from thirdweb.constants.role import Role
+from thirdweb.core.classes.contract_events import ContractEvents
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
 from thirdweb.core.classes.contract_roles import ContractRoles
@@ -31,6 +32,7 @@ class Token(ERC20):
     roles: ContractRoles
     platform_fee: ContractPlatformFee
     signature: ERC20SignatureMinting
+    events: ContractEvents[TokenERC20]
 
     def __init__(
         self,
@@ -52,6 +54,7 @@ class Token(ERC20):
         self.signature = ERC20SignatureMinting(
             contract_wrapper, self.roles, self._storage
         )
+        self.events = ContractEvents(contract_wrapper)
 
     """
     READ FUNCTIONS
