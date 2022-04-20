@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/Create2.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
-import "./openzeppelin-presets/metatx/ERC2771Context.sol";
+import "@openzeppelin/contracts/metatx/ERC2771Context.sol";
 
 //  ==========  Internal imports    ==========
 import { IByocFactory } from "./interfaces/IByocFactory.sol";
@@ -35,7 +35,7 @@ contract ByocFactory is IByocFactory, ERC2771Context, AccessControlEnumerable {
         _;
     }
 
-    constructor(address _twRegistry, address[] memory _trustedForwarders) ERC2771Context(_trustedForwarders) {
+    constructor(address _twRegistry, address _trustedForwarder) ERC2771Context(_trustedForwarder) {
         registry = TWRegistry(_twRegistry);
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
@@ -56,10 +56,8 @@ contract ByocFactory is IByocFactory, ERC2771Context, AccessControlEnumerable {
         require(bytes(_thirdwebInfo.publishMetadataUri).length > 0, "No publish metadata");
 
         bytes memory contractBytecode = abi.encodePacked(_contractBytecode, _constructorArgs);
-        bytes32 salt = _salt == "" 
-            ? keccak256(abi.encodePacked(_msgSender(), block.number))
-            : _salt;
-        
+        bytes32 salt = _salt == "" ? keccak256(abi.encodePacked(_msgSender(), block.number)) : _salt;
+
         deployedAddress = Create2.deploy(_value, salt, contractBytecode);
 
         ThirdwebContract(deployedAddress).setThirdwebInfo(_thirdwebInfo);
@@ -83,10 +81,7 @@ contract ByocFactory is IByocFactory, ERC2771Context, AccessControlEnumerable {
         uint256 _value,
         ThirdwebContract.ThirdwebInfo memory _thirdwebInfo
     ) external onlyUnpausedOrAdmin returns (address deployedAddress) {
-
-        bytes32 salt = _salt == "" 
-            ? keccak256(abi.encodePacked(_msgSender(), block.number))
-            : _salt;
+        bytes32 salt = _salt == "" ? keccak256(abi.encodePacked(_msgSender(), block.number)) : _salt;
         deployedAddress = Clones.cloneDeterministic(_implementation, salt);
 
         ThirdwebContract(deployedAddress).setThirdwebInfo(_thirdwebInfo);

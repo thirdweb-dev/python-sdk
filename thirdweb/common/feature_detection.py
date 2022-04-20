@@ -33,4 +33,4 @@ def matches_interface(contract: Contract, interface_to_match: Contract) -> bool:
 def fetch_contract_metadata(metadata_uri: str, storage: IpfsStorage) -> str:
     metadata = CustomContractMetadata.from_json(storage.get(metadata_uri))
     abi = storage.get(metadata["abiUri"])
-    return abi
+    return abi  # type: ignore

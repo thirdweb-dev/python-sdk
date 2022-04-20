@@ -188,16 +188,12 @@ contract TokenERC1155 is
     }
 
     /// @dev Returns the URI for a tokenId
-<<<<<<< HEAD
     function uri(uint256 _tokenId)
         public
         view
         override(ERC1155Upgradeable, IERC1155MetadataURIUpgradeable)
         returns (string memory)
     {
-=======
-    function uri(uint256 _tokenId) public view override(ERC1155Upgradeable, IERC1155MetadataURIUpgradeable) returns (string memory) {
->>>>>>> main
         return _tokenURI[_tokenId];
     }
 
