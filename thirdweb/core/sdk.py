@@ -1,4 +1,7 @@
+from thirdweb.abi.thirdweb_contract import ThirdwebContract
+from thirdweb.common.feature_detection import fetch_contract_metadata
 from thirdweb.contracts import Marketplace
+from thirdweb.contracts.custom import CustomContract
 from thirdweb.contracts.edition_drop import EditionDrop
 from thirdweb.contracts.nft_drop import NFTDrop
 from thirdweb.core.classes.contract_deployer import ContractDeployer
@@ -100,6 +103,19 @@ class ThirdwebSDK(ProviderHandler):
         """
 
         return cast(EditionDrop, self._get_contract(address, EditionDrop))
+
+    def unstable_get_custom_contract(self, address: str, abi: str = ""):
+        if not abi:
+            try:
+                contract = ThirdwebContract(self.get_provider(), address)
+                metadata_uri = contract.get_publish_metadata_uri.call()
+                abi = fetch_contract_metadata(metadata_uri, self.__storage)
+            except:
+                raise Exception("Error fetching ABI for this contract")
+
+        return CustomContract(
+            self.get_provider(), address, abi, self.__storage, self.get_signer()
+        )
 
     def update_provider(self, provider: Web3):
         """

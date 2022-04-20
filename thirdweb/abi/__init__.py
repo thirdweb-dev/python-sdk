@@ -14,3 +14,4 @@ from .thirdweb_contract import ThirdwebContract
 from .access_control_enumerable import AccessControlEnumerable
 from .i_thirdweb_platform_fee import IThirdwebPlatformFee
 from .i_thirdweb_primary_sale import IThirdwebPrimarySale
+from .i_thirdweb_royalty import IThirdwebRoyalty

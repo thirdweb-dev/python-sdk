@@ -30,6 +30,7 @@ abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/AccessControlEnumerable.json && mv thirdweb/abi/access_control_enumerable/__init__.py thirdweb/abi/access_control_enumerable.py && rm -rf thirdweb/abi/access_control_enumerable
 	abi-gen --language Python -o thirdweb/abi --abis abi/IThirdwebPrimarySale.json && mv thirdweb/abi/i_thirdweb_primary_sale/__init__.py thirdweb/abi/i_thirdweb_primary_sale.py && rm -rf thirdweb/abi/i_thirdweb_primary_sale
 	abi-gen --language Python -o thirdweb/abi --abis abi/IThirdwebPlatformFee.json && mv thirdweb/abi/i_thirdweb_platform_fee/__init__.py thirdweb/abi/i_thirdweb_platform_fee.py && rm -rf thirdweb/abi/i_thirdweb_platform_fee
+	abi-gen --language Python -o thirdweb/abi --abis abi/IThirdwebRoyalty.json && mv thirdweb/abi/i_thirdweb_royalty/__init__.py thirdweb/abi/i_thirdweb_royalty.py && rm -rf thirdweb/abi/i_thirdweb_royalty
 
 # DO NOT USE RIGHT NOW
 sphinx-docs:
