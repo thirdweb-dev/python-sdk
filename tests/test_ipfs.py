@@ -3,21 +3,21 @@ from requests import get
 from thirdweb.common.error import DuplicateFileNameException
 
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
+from thirdweb.core.sdk import ThirdwebSDK
 
-GATEWAY_URL = "https://gateway.ipfscdn.io/ipfs/"
 
-
+@pytest.mark.usefixtures("sdk")
 @pytest.fixture()
-def storage():
-    storage = IpfsStorage()
+def storage(sdk: ThirdwebSDK):
+    storage = sdk._ThirdwebSDK__storage  # type: ignore
     return storage
 
 
-def get_file(upload: str):
+def get_file(upload: str, gateway_url: str):
     url = upload.replace("ipfs://", "")
 
     try:
-        res = get(f"{GATEWAY_URL}{url}")
+        res = get(f"{gateway_url}{url}")
         return res
     except:
         assert False
@@ -44,7 +44,7 @@ def test_batch(storage: IpfsStorage):
 
     cid = storage.upload_batch(sample_objects)
 
-    assert get_file(f"{cid}test.jpeg") is not None
+    assert get_file(f"{cid}test.jpeg", storage._gateway_url) is not None
 
 
 def test_properties(storage: IpfsStorage):
