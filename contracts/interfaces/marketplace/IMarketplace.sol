@@ -34,6 +34,7 @@ interface IMarketplace is IThirdwebContract, IThirdwebPlatformFee {
      *                        This is the entire listing quantity if the listing is an auction.
      *  @param currency       The currency in which the offer is made.
      *  @param pricePerToken  The price per token offered to the lister.
+     *  @param expirationTimestamp The timestamp after which a seller cannot accept this offer.
      */
     struct Offer {
         uint256 listingId;
@@ -41,6 +42,7 @@ interface IMarketplace is IThirdwebContract, IThirdwebPlatformFee {
         uint256 quantityWanted;
         address currency;
         uint256 pricePerToken;
+        uint256 expirationTimestamp;
     }
 
     /**
@@ -190,9 +192,6 @@ interface IMarketplace is IThirdwebContract, IThirdwebPlatformFee {
         address winningBidder
     );
 
-    /// @dev Emitted when fee on primary sales is updated.
-    event PlatformFeeInfoUpdated(address platformFeeRecipient, uint256 platformFeeBps);
-
     /// @dev Emitted when auction buffers are updated.
     event AuctionBuffersUpdated(uint256 timeBuffer, uint256 bidBufferBps);
 
@@ -297,12 +296,16 @@ interface IMarketplace is IThirdwebContract, IThirdwebPlatformFee {
      *
      *  @param _pricePerToken    For direct listings: offered price per token. For auction listings: the bid
      *                           amount per token. The total offer/bid amount is `_quantityWanted * _pricePerToken`.
+     *
+     *  @param _expirationTimestamp For aution listings: inapplicable. For direct listings: The timestamp after which
+     *                              the seller can no longer accept the offer.
      */
     function offer(
         uint256 _listingId,
         uint256 _quantityWanted,
         address _currency,
-        uint256 _pricePerToken
+        uint256 _pricePerToken,
+        uint256 _expirationTimestamp
     ) external payable;
 
     /**

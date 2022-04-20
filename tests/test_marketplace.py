@@ -181,3 +181,23 @@ def test_listings(
 
     assert len(marketplace.get_active_listings()) == 1
     assert nft_collection.owner_of(0) == accounts[0].address
+
+
+def test_make_offer(
+    sdk: ThirdwebSDK,
+    marketplace: Marketplace,
+    nft_collection: NFTCollection,
+    token: Token,
+):
+    listing_id = create_direct_listing(
+        marketplace, token.get_address(), nft_collection.get_address(), 0
+    )
+
+    assert listing_id == 0
+
+    marketplace.direct.make_offer(
+        0,
+        quantity_desired=1,
+        currency_contract_address=token.get_address(),
+        price_per_token=0.1,
+    )
