@@ -11,6 +11,12 @@ import "../interfaces/IThirdwebPrimarySale.sol";
 import "../interfaces/IThirdwebRoyalty.sol";
 import "../interfaces/IThirdwebOwnable.sol";
 
+import "../interfaces/IThirdwebContract.sol";
+import "../interfaces/IThirdwebPlatformFee.sol";
+import "../interfaces/IThirdwebPrimarySale.sol";
+import "../interfaces/IThirdwebRoyalty.sol";
+import "../interfaces/IThirdwebOwnable.sol";
+
 // Token
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 
@@ -179,12 +185,16 @@ contract TokenERC721 is
     }
 
     /// @dev Returns the URI for a tokenId
+<<<<<<< HEAD
     function tokenURI(uint256 _tokenId)
         public
         view
         override(ERC721Upgradeable, IERC721MetadataUpgradeable)
         returns (string memory)
     {
+=======
+    function tokenURI(uint256 _tokenId) public view override(ERC721Upgradeable, IERC721MetadataUpgradeable) returns (string memory) {
+>>>>>>> main
         return uri[_tokenId];
     }
 

@@ -9,7 +9,15 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721Enume
  *  `SignatureMint` is an ERC 721 contract. It lets anyone mint NFTs by producing a mint request
  *  and a signature (produced by an account with MINTER_ROLE, signing the mint request).
  */
+<<<<<<< HEAD
 interface ITokenERC721 is IERC721MetadataUpgradeable, IERC721EnumerableUpgradeable {
+=======
+interface ITokenERC721 is 
+    IERC721MetadataUpgradeable,
+    IERC721EnumerableUpgradeable
+{
+
+>>>>>>> main
     /**
      * @dev Burns `tokenId`. See {ERC721-_burn}.
      *
@@ -18,7 +26,11 @@ interface ITokenERC721 is IERC721MetadataUpgradeable, IERC721EnumerableUpgradeab
      * - The caller must own `tokenId` or be an approved operator.
      */
     function burn(uint256 tokenId) external;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> main
     /**
      *  @notice The body of a request to mint NFTs.
      *

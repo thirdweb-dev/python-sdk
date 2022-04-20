@@ -13,6 +13,7 @@ from thirdweb.common.currency import (
     normalize_price_value,
     set_erc20_allowance,
 )
+from web3.constants import MAX_INT
 from thirdweb.common.error import ListingNotFoundException, WrongListingTypeException
 from thirdweb.common.marketplace import (
     handle_token_approval,
@@ -148,6 +149,7 @@ class MarketplaceDirect(BaseContract[Marketplace]):
         quantity_desired: int,
         currency_contract_address: str,
         price_per_token: Price,
+        expiration_date: int = int(MAX_INT, 0),
     ) -> TxReceipt:
         """
         Make an offer on a direct listing
@@ -182,10 +184,27 @@ class MarketplaceDirect(BaseContract[Marketplace]):
             overrides,
         )
 
+        print(
+            "PARAMS: ",
+            [
+                listing_id,
+                quantity_desired,
+                currency_contract_address,
+                normalized_price,
+                expiration_date,
+            ],
+        )
+
         # TODO: Add OVERRIDES
         return self._contract_wrapper.send_transaction(
             "offer",
-            [listing_id, quantity_desired, currency_contract_address, normalized_price],
+            [
+                listing_id,
+                quantity_desired,
+                currency_contract_address,
+                normalized_price,
+                expiration_date,
+            ],
         )
 
     def accept_offer(self, listing_id: int, address_or_offerror: str) -> TxReceipt:

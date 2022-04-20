@@ -3,6 +3,7 @@
 from time import time
 from thirdweb.common.error import ListingNotFoundException
 from thirdweb.constants.currency import ZERO_ADDRESS
+from thirdweb.core.classes.contract_events import ContractEvents
 from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
 from thirdweb.types.marketplace import (
     AuctionListing,
@@ -41,6 +42,7 @@ class Marketplace(BaseContract[MarketplaceABI]):
     platform_fee: ContractPlatformFee[MarketplaceABI]
     direct: MarketplaceDirect
     auction: MarketplaceAuction
+    events: ContractEvents[MarketplaceABI]
 
     def __init__(
         self,
@@ -61,6 +63,7 @@ class Marketplace(BaseContract[MarketplaceABI]):
         self.platform_fee = ContractPlatformFee(contract_wrapper)
         self.direct = MarketplaceDirect(contract_wrapper, storage)
         self.auction = MarketplaceAuction(contract_wrapper, storage)
+        self.events = ContractEvents(contract_wrapper)
 
     """
     READ FUNCTIONS

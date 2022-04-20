@@ -114,6 +114,10 @@ renderer:
     name: contract-roles
     contents:
     - core.classes.contract_roles.*
+  - title: Contract Events
+    name: contract-events
+    contents:
+    - core.classes.contract_events.*
 
   mkdocs_config:
     site_name: Thirdweb Python SDK

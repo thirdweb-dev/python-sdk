@@ -182,6 +182,19 @@ contract TokenERC20 is
         _mintTo(to, amount);
     }
 
+<<<<<<< HEAD
+=======
+    /// @dev Verifies that a mint request is signed by an account holding MINTER_ROLE (at the time of the function call).
+    function verify(MintRequest calldata _req, bytes calldata _signature)
+        public
+        view
+        returns (bool success, address signer)
+    {
+        signer = recoverAddress(_req, _signature);
+        success = !minted[_req.uid] && hasRole(MINTER_ROLE, signer);
+    }
+
+>>>>>>> main
     /// @dev Mints tokens according to the provided mint request.
     function mintWithSignature(MintRequest calldata _req, bytes calldata _signature) external payable nonReentrant {
         address signer = verifyRequest(_req, _signature);

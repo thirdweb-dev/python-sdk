@@ -7,12 +7,14 @@ from web3.contract import Contract
 from thirdweb.common.error import NoSignerException
 from web3._utils.events import EventLogErrorFlags
 from thirdweb.common.sign import EIP712Domain, sign_typed_data_internal
+from thirdweb.constants.events import EventStatus, EventType
 
 from thirdweb.core.classes.provider_handler import ProviderHandler
 from web3.eth import TxReceipt
 from eth_account.account import LocalAccount
 from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.types.contract import TContractABI
+from thirdweb.types.events import SignatureEvent, TxEvent
 
 from thirdweb.types.sdk import SDKOptions
 
@@ -116,7 +118,13 @@ class ContractWrapper(Generic[TContractABI], ProviderHandler):
         signed_tx = signer.sign_transaction(tx)
         tx_hash = provider.eth.send_raw_transaction(signed_tx.rawTransaction)
 
-        return provider.eth.wait_for_transaction_receipt(tx_hash)
+        self.emit_transaction_event(EventStatus.SUBMITTED, tx_hash.hex())
+
+        receipt = provider.eth.wait_for_transaction_receipt(tx_hash)
+
+        self.emit_transaction_event(EventStatus.COMPLETED, tx_hash.hex())
+
+        return receipt
 
     def multi_call(self, encoded: List[str]) -> TxReceipt:
         """
@@ -127,10 +135,24 @@ class ContractWrapper(Generic[TContractABI], ProviderHandler):
 
         return self.send_transaction("multicall", [encoded])
 
+    def emit_transaction_event(self, status: EventStatus, tx_hash: str):
+        self.emit(EventType.TRANSACTION, TxEvent(status, tx_hash))  # type: ignore
+
     def sign_typed_data(
         self, signer: LocalAccount, domain: EIP712Domain, types: Any, message: Any
     ) -> bytes:
+        self.emit(
+            EventType.SIGNATURE,  # type: ignore
+            SignatureEvent(EventStatus.SUBMITTED, message, ""),
+        )
+
         signature = sign_typed_data_internal(
             self.get_provider(), signer, domain, types, message
         )
+
+        self.emit(
+            EventType.SIGNATURE,  # type: ignore
+            SignatureEvent(EventStatus.COMPLETED, message, signature),
+        )
+
         return signature

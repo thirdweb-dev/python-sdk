@@ -5,6 +5,7 @@ from thirdweb.abi import DropERC1155
 from thirdweb.common.claim_conditions import prepare_claim
 from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
 from thirdweb.constants.role import Role
+from thirdweb.core.classes.contract_events import ContractEvents
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
 from thirdweb.core.classes.contract_roles import ContractRoles
@@ -38,6 +39,7 @@ class EditionDrop(ERC1155[DropERC1155]):
     platform_fee: ContractPlatformFee[DropERC1155]
     royalty: ContractRoyalty[DropERC1155]
     claim_conditions: DropERC1155ClaimConditions
+    events: ContractEvents[DropERC1155]
 
     def __init__(
         self,
@@ -61,6 +63,7 @@ class EditionDrop(ERC1155[DropERC1155]):
         self.claim_conditions = DropERC1155ClaimConditions(
             self._contract_wrapper, self.metadata, self._storage
         )
+        self.events = ContractEvents(contract_wrapper)
 
     def create_batch(
         self, metadatas: List[NFTMetadataInput]

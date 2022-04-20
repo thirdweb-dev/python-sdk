@@ -1,3 +1,4 @@
+from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.registry import ContractRegistry
 from thirdweb.core.classes.factory import ContractFactory
 from web3.middleware import geth_poa_middleware
@@ -17,7 +18,9 @@ def sdk_local(contract_addresses, primary_account):
     provider = Web3(Web3.HTTPProvider())
     signer = primary_account
 
-    sdk = ThirdwebSDK(provider, signer)
+    sdk = ThirdwebSDK(
+        provider, signer, storage=IpfsStorage("https://ipfs.thirdweb.com/ipfs/")
+    )
 
     # Manually set factory and registry addresses
     factory = ContractFactory(
