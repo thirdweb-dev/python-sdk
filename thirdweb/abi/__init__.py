@@ -10,3 +10,7 @@ from .ierc721 import IERC721
 from .ierc1155 import IERC1155
 from .drop_erc721 import DropERC721
 from .drop_erc1155 import DropERC1155
+from .thirdweb_contract import ThirdwebContract
+from .access_control_enumerable import AccessControlEnumerable
+from .i_thirdweb_platform_fee import IThirdwebPlatformFee
+from .i_thirdweb_primary_sale import IThirdwebPrimarySale
