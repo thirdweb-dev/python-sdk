@@ -3,6 +3,7 @@ from eth_typing import Address
 
 from web3 import Web3
 from web3.contract import ContractFunctions
+from thirdweb.abi.i_signature_mint import ISignatureMint
 from thirdweb.abi.i_thirdweb_platform_fee import IThirdwebPlatformFee
 from thirdweb.abi.i_thirdweb_primary_sale import IThirdwebPrimarySale
 from thirdweb.abi.i_token_erc1155 import ITokenERC1155
@@ -68,6 +69,8 @@ class CustomContract(BaseContract[ThirdwebContract]):
         self.nft = self.detect_erc_721()
         self.edition = self.detect_erc_1155()
 
+        # self.signature_mint = self.detect_signature_mint()
+
     def detect_roles(self):
         interface_to_match = self._get_interface_functions(
             AccessControlEnumerable.abi()
@@ -128,6 +131,14 @@ class CustomContract(BaseContract[ThirdwebContract]):
 
         if matches_interface(self.functions, interface_to_match):
             contract_wrapper = self._get_contract_wrapper(ITokenERC1155)
+            return ERC1155(contract_wrapper, self._storage)
+        return None
+
+    def detect_signature_mint(self):
+        interface_to_match = self._get_interface_functions(ISignatureMint.abi())
+
+        if matches_interface(self.functions, interface_to_match):
+            contract_wrapper = self._get_contract_wrapper(ISignatureMint)
             return ERC1155(contract_wrapper, self._storage)
         return None
 
