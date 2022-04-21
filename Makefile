@@ -27,11 +27,17 @@ abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC1155.json && mv thirdweb/abi/ierc1155/__init__.py thirdweb/abi/ierc1155.py && rm -rf thirdweb/abi/ierc1155
 	abi-gen --language Python -o thirdweb/abi --abis abi/DropERC721.json && mv thirdweb/abi/drop_erc721/__init__.py thirdweb/abi/drop_erc721.py && rm -rf thirdweb/abi/drop_erc721
 	abi-gen --language Python -o thirdweb/abi --abis abi/DropERC1155.json && mv thirdweb/abi/drop_erc1155/__init__.py thirdweb/abi/drop_erc1155.py && rm -rf thirdweb/abi/drop_erc1155
+	
 	abi-gen --language Python -o thirdweb/abi --abis abi/ThirdwebContract.json && mv thirdweb/abi/thirdweb_contract/__init__.py thirdweb/abi/thirdweb_contract.py && rm -rf thirdweb/abi/thirdweb_contract
+	
 	abi-gen --language Python -o thirdweb/abi --abis abi/AccessControlEnumerable.json && mv thirdweb/abi/access_control_enumerable/__init__.py thirdweb/abi/access_control_enumerable.py && rm -rf thirdweb/abi/access_control_enumerable
 	abi-gen --language Python -o thirdweb/abi --abis abi/IThirdwebPrimarySale.json && mv thirdweb/abi/i_thirdweb_primary_sale/__init__.py thirdweb/abi/i_thirdweb_primary_sale.py && rm -rf thirdweb/abi/i_thirdweb_primary_sale
 	abi-gen --language Python -o thirdweb/abi --abis abi/IThirdwebPlatformFee.json && mv thirdweb/abi/i_thirdweb_platform_fee/__init__.py thirdweb/abi/i_thirdweb_platform_fee.py && rm -rf thirdweb/abi/i_thirdweb_platform_fee
 	abi-gen --language Python -o thirdweb/abi --abis abi/IThirdwebRoyalty.json && mv thirdweb/abi/i_thirdweb_royalty/__init__.py thirdweb/abi/i_thirdweb_royalty.py && rm -rf thirdweb/abi/i_thirdweb_royalty
+
+	abi-gen --language Python -o thirdweb/abi --abis abi/ITokenERC20.json && mv thirdweb/abi/i_token_erc20/__init__.py thirdweb/abi/i_token_erc20.py && rm -rf thirdweb/abi/i_token_erc20
+	abi-gen --language Python -o thirdweb/abi --abis abi/ITokenERC721.json && mv thirdweb/abi/i_token_erc721/__init__.py thirdweb/abi/i_token_erc721.py && rm -rf thirdweb/abi/i_token_erc721
+	abi-gen --language Python -o thirdweb/abi --abis abi/ITokenERC1155.json && mv thirdweb/abi/i_token_erc1155/__init__.py thirdweb/abi/i_token_erc1155.py && rm -rf thirdweb/abi/i_token_erc1155
 
 # DO NOT USE RIGHT NOW
 sphinx-docs:

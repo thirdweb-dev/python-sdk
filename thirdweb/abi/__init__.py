@@ -15,3 +15,6 @@ from .access_control_enumerable import AccessControlEnumerable
 from .i_thirdweb_platform_fee import IThirdwebPlatformFee
 from .i_thirdweb_primary_sale import IThirdwebPrimarySale
 from .i_thirdweb_royalty import IThirdwebRoyalty
+from .i_token_erc20 import ITokenERC20
+from .i_token_erc721 import ITokenERC721
+from .i_token_erc1155 import ITokenERC1155
