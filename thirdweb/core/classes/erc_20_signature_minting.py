@@ -17,7 +17,7 @@ from thirdweb.abi import TokenERC20
 from thirdweb.types.tx import TxResultWithId
 from thirdweb.types.contracts.signature import (
     EIP712DomainType,
-    MintRequest20,
+    MintRequest1155,
     PayloadToSign20,
     PayloadWithUri20,
     Signature20PayloadOutput,
@@ -153,12 +153,12 @@ class ERC20SignatureMinting:
             signature = self._contract_wrapper.sign_typed_data(
                 signer,
                 EIP712StandardDomain(
-                    name=name,
+                    name="TokenERC20",
                     version="1",
                     chainId=chain_id,
                     verifyingContract=self._contract_wrapper._contract_abi.contract_address,
                 ),
-                {"MintRequest": MintRequest20, "EIP712Domain": EIP712DomainType},
+                {"MintRequest": MintRequest1155, "EIP712Domain": EIP712DomainType},
                 self._map_payload_to_contract_struct(final_payload),
             )
             signed_payloads.append(
@@ -194,7 +194,7 @@ class ERC20SignatureMinting:
             uid=mint_request.uid,
             quantity=amount_with_decimals,
             primarySaleRecipient=mint_request.primary_sale_recipient,
-            uri=self._contract_wrapper._contract_abi.contract_uri.call(),
+            uri="",
             tokenId=0,
             royaltyRecipient=ZERO_ADDRESS,
             royaltyBps=0,

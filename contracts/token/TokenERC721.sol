@@ -2,9 +2,9 @@
 pragma solidity ^0.8.11;
 
 // Interface
-import "../interfaces/token/ITokenERC721.sol";
 import "../interfaces/token/IMintableERC721.sol";
 import "../interfaces/token/IBurnableERC721.sol";
+import "./SignatureMintUpgradeable.sol";
 
 import "../interfaces/IThirdwebContract.sol";
 import "../interfaces/IThirdwebPlatformFee.sol";
@@ -33,7 +33,7 @@ import "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
 
 // Thirdweb top-level
 import "../interfaces/ITWFee.sol";
-import "./SignatureMintUpgradeable.sol";
+
 
 contract TokenERC721 is
     Initializable,
@@ -46,7 +46,6 @@ contract TokenERC721 is
     ERC2771ContextUpgradeable,
     MulticallUpgradeable,
     ERC721EnumerableUpgradeable,
-    ITokenERC721,
     IMintableERC721,
     IBurnableERC721,
     SignatureMintUpgradeable
@@ -157,12 +156,7 @@ contract TokenERC721 is
     }
 
     /// @dev Returns the URI for a tokenId
-    function tokenURI(uint256 _tokenId)
-        public
-        view
-        override(ERC721Upgradeable, IERC721MetadataUpgradeable)
-        returns (string memory)
-    {
+    function tokenURI(uint256 _tokenId) public view override(ERC721Upgradeable) returns (string memory) {
         return uri[_tokenId];
     }
 
