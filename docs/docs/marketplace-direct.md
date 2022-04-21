@@ -70,9 +70,12 @@ The ID of the listing
 #### make\_offer
 
 ```python
-def make_offer(listing_id: int, quantity_desired: int,
-               currency_contract_address: str,
-               price_per_token: Price) -> TxReceipt
+def make_offer(
+    listing_id: int,
+    quantity_desired: int,
+    currency_contract_address: str,
+    price_per_token: Price,
+    expiration_date: int = int(MAX_INT, 0)) -> TxReceipt
 ```
 
 Make an offer on a direct listing
