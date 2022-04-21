@@ -34,9 +34,7 @@ try:
     )
 except ImportError:
 
-    class ThirdwebContractValidator(  # type: ignore
-        Validator
-    ):
+    class ThirdwebContractValidator(Validator):  # type: ignore
         """No-op input validator."""
 
 
@@ -67,10 +65,15 @@ class ThirdwebContractThirdwebInfo(TypedDict):
     contractURI: str
 
 
-class ContractUriMethod(ContractMethod): # pylint: disable=invalid-name
+class ContractUriMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the contractURI method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address)
         self._underlying_method = contract_function
@@ -85,7 +88,9 @@ class ContractUriMethod(ContractMethod): # pylint: disable=invalid-name
         returned = self._underlying_method().call(tx_params.as_dict())
         return str(returned)
 
-    def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -103,10 +108,18 @@ class ContractUriMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class GetPublishMetadataUriMethod(ContractMethod): # pylint: disable=invalid-name
+
+class GetPublishMetadataUriMethod(
+    ContractMethod
+):  # pylint: disable=invalid-name
     """Various interfaces to the getPublishMetadataUri method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address)
         self._underlying_method = contract_function
@@ -121,7 +134,9 @@ class GetPublishMetadataUriMethod(ContractMethod): # pylint: disable=invalid-nam
         returned = self._underlying_method().call(tx_params.as_dict())
         return str(returned)
 
-    def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -139,24 +154,37 @@ class GetPublishMetadataUriMethod(ContractMethod): # pylint: disable=invalid-nam
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class SetThirdwebInfoMethod(ContractMethod): # pylint: disable=invalid-name
+
+class SetThirdwebInfoMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the setThirdwebInfo method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(self, thirdweb_info: ThirdwebContractThirdwebInfo):
+    def validate_and_normalize_inputs(
+        self, thirdweb_info: ThirdwebContractThirdwebInfo
+    ):
         """Validate the inputs to the setThirdwebInfo method."""
         self.validator.assert_valid(
-            method_name='setThirdwebInfo',
-            parameter_name='_thirdwebInfo',
+            method_name="setThirdwebInfo",
+            parameter_name="_thirdwebInfo",
             argument_value=thirdweb_info,
         )
-        return (thirdweb_info)
+        return thirdweb_info
 
-    def call(self, thirdweb_info: ThirdwebContractThirdwebInfo, tx_params: Optional[TxParams] = None) -> None:
+    def call(
+        self,
+        thirdweb_info: ThirdwebContractThirdwebInfo,
+        tx_params: Optional[TxParams] = None,
+    ) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -166,30 +194,50 @@ class SetThirdwebInfoMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         self._underlying_method(thirdweb_info).call(tx_params.as_dict())
 
-    def send_transaction(self, thirdweb_info: ThirdwebContractThirdwebInfo, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self,
+        thirdweb_info: ThirdwebContractThirdwebInfo,
+        tx_params: Optional[TxParams] = None,
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
         (thirdweb_info) = self.validate_and_normalize_inputs(thirdweb_info)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(thirdweb_info).transact(tx_params.as_dict())
+        return self._underlying_method(thirdweb_info).transact(
+            tx_params.as_dict()
+        )
 
-    def build_transaction(self, thirdweb_info: ThirdwebContractThirdwebInfo, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self,
+        thirdweb_info: ThirdwebContractThirdwebInfo,
+        tx_params: Optional[TxParams] = None,
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (thirdweb_info) = self.validate_and_normalize_inputs(thirdweb_info)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(thirdweb_info).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(thirdweb_info).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, thirdweb_info: ThirdwebContractThirdwebInfo, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self,
+        thirdweb_info: ThirdwebContractThirdwebInfo,
+        tx_params: Optional[TxParams] = None,
+    ) -> int:
         """Estimate gas consumption of method call."""
         (thirdweb_info) = self.validate_and_normalize_inputs(thirdweb_info)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(thirdweb_info).estimateGas(tx_params.as_dict())
+        return self._underlying_method(thirdweb_info).estimateGas(
+            tx_params.as_dict()
+        )
+
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
 class ThirdwebContract:
     """Wrapper class for ThirdwebContract Solidity contract."""
+
     contract_uri: ContractUriMethod
     """Constructor-initialized instance of
     :class:`ContractUriMethod`.
@@ -204,7 +252,6 @@ class ThirdwebContract:
     """Constructor-initialized instance of
     :class:`SetThirdwebInfoMethod`.
     """
-
 
     def __init__(
         self,
@@ -224,7 +271,9 @@ class ThirdwebContract:
         self.contract_address = contract_address
 
         if not validator:
-            validator = ThirdwebContractValidator(web3_or_provider, contract_address)
+            validator = ThirdwebContractValidator(
+                web3_or_provider, contract_address
+            )
 
         web3 = None
         if isinstance(web3_or_provider, BaseProvider):
@@ -246,22 +295,36 @@ class ThirdwebContract:
             try:
                 for middleware in MIDDLEWARE:
                     web3.middleware_onion.inject(
-                         middleware['function'], layer=middleware['layer'],
+                        middleware["function"],
+                        layer=middleware["layer"],
                     )
             except ValueError as value_error:
-                if value_error.args == ("You can't add the same un-named instance twice",):
+                if value_error.args == (
+                    "You can't add the same un-named instance twice",
+                ):
                     pass
 
         self._web3_eth = web3.eth
 
-        functions = self._web3_eth.contract(address=to_checksum_address(contract_address), abi=ThirdwebContract.abi()).functions
+        functions = self._web3_eth.contract(
+            address=to_checksum_address(contract_address),
+            abi=ThirdwebContract.abi(),
+        ).functions
 
-        self.contract_uri = ContractUriMethod(web3_or_provider, contract_address, functions.contractURI)
+        self.contract_uri = ContractUriMethod(
+            web3_or_provider, contract_address, functions.contractURI
+        )
 
-        self.get_publish_metadata_uri = GetPublishMetadataUriMethod(web3_or_provider, contract_address, functions.getPublishMetadataUri)
+        self.get_publish_metadata_uri = GetPublishMetadataUriMethod(
+            web3_or_provider, contract_address, functions.getPublishMetadataUri
+        )
 
-        self.set_thirdweb_info = SetThirdwebInfoMethod(web3_or_provider, contract_address, functions.setThirdwebInfo, validator)
-
+        self.set_thirdweb_info = SetThirdwebInfoMethod(
+            web3_or_provider,
+            contract_address,
+            functions.setThirdwebInfo,
+            validator,
+        )
 
     @staticmethod
     def abi():
@@ -269,5 +332,6 @@ class ThirdwebContract:
         return json.loads(
             '[{"inputs":[],"name":"contractURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPublishMetadataUri","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"components":[{"internalType":"string","name":"publishMetadataUri","type":"string"},{"internalType":"string","name":"contractURI","type":"string"}],"internalType":"struct ThirdwebContract.ThirdwebInfo","name":"_thirdwebInfo","type":"tuple"}],"name":"setThirdwebInfo","outputs":[],"stateMutability":"nonpayable","type":"function"}]'  # noqa: E501 (line-too-long)
         )
+
 
 # pylint: disable=too-many-lines
