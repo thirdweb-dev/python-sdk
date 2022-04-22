@@ -5,6 +5,7 @@ from thirdweb.constants.currency import ZERO_ADDRESS
 from thirdweb.contracts.nft_collection import NFTCollection
 from thirdweb.contracts.token import Token
 from thirdweb.core.sdk import ThirdwebSDK
+from zero_ex.contract_wrappers.tx_params import TxParams
 from web3 import Web3
 
 from thirdweb.types.settings.metadata import (
@@ -85,3 +86,12 @@ def test_get_abi():
     contract_uri = custom.functions.contractURI().call()
     metadata = sdk._ThirdwebSDK__storage.get(contract_uri)  # type: ignore
     assert metadata["name"] == "Ethrone v1.4"
+
+
+@pytest.mark.usefixtures("sdk")
+def test_write(sdk: ThirdwebSDK, nft_collection: NFTCollection):
+    custom = sdk.get_custom_contract(nft_collection.get_address(), TokenERC721.abi())
+
+    assert custom.functions.totalSupply().call() == 0
+    custom.send_transaction("mintTo", [sdk.get_signer().address, "https://example.com"])  # type: ignore
+    assert custom.functions.totalSupply().call() == 1

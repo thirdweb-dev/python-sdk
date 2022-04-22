@@ -26,11 +26,25 @@ custom = sdk.get_custom_contract(<CUSTOM_CONTRACT_ADDRESS>, abi)
 
 ### Using Contract Functions
 
-Every custom contract gives you direct access to every function on your contract through the `functions` scope. For example, if I had an NFT custom contract and I wanted to call the `balance` function with a token ID of `1`, I would do the following:
+Every custom contract gives you direct access to every function on your contract through the `functions` scope. 
+
+I can easily call any read-only function (functions that only read data from the blockchain) with this `functions` scope.
+
+For example, if I had an NFT custom contract and I wanted to call the `balance` function with a token ID of `1`, I would do the following:
 
 ```python
 # Any arguments passed to the balance function go into the args of "call"
 custom.functions.balance().call(1)
+```
+
+If you want to make a transaction to the blockchain, you can use the `send_transaction` helper.
+
+For example, if I want to mint an NFT on my custom contract, I would want to use the `mintTo(address, uri)` function. I could do this with the following:
+
+```python
+# The first argument is the function name
+# And the second argument is a list of the parameters to pass to the function
+custom.send_transaction("mintTo", [<EXAMPLE_ADDRESS>, <EXAMPLE_URI>])
 ```
 
 Even better, if you're contract implements common interfaces recognized by the thirdweb SDK, we'll give you even nicer convenience functions to make this function calls. For example, let's say my contract implements the `ERC721` interface. If I want to call the `balance` function, I could also do the following:
@@ -50,6 +64,6 @@ Below is a list of all the currently supported contract interfaces and their cor
 | ContractRoles   | `custom.roles` |
 | ContractRoyalties   | `custom.royalties` |
 | ContractPrimarySales   | `custom.platform_fee` |
-| ERC20   | `custom.token`        |
-| ERC721   | `custom.nft`        |
-| ERC1155   | `custom.edition`        |
+| ERC20   | `custom.token` |
+| ERC721   | `custom.nft` |
+| ERC1155   | `custom.edition` |

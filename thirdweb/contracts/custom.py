@@ -1,7 +1,8 @@
-from typing import Final, Optional, cast
+from typing import Any, Final, List, Optional, cast
 from eth_typing import Address
 
 from web3 import Web3
+from web3.eth import TxReceipt
 from web3.contract import ContractFunctions
 from thirdweb.abi.i_signature_mint import ISignatureMint
 from thirdweb.abi.i_thirdweb_platform_fee import IThirdwebPlatformFee
@@ -22,6 +23,7 @@ from thirdweb.core.classes.erc_1155 import ERC1155
 from thirdweb.core.classes.erc_20 import ERC20
 from thirdweb.core.classes.erc_721 import ERC721
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
+from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.types.contract import ContractType
 from eth_account.account import LocalAccount
 from thirdweb.abi import ThirdwebContract, AccessControlEnumerable, IThirdwebRoyalty
@@ -60,18 +62,36 @@ class CustomContract(BaseContract[ThirdwebContract]):
             contract_wrapper, storage, CustomContractMetadata
         )
 
-        self.roles = self.detect_roles()
-        self.royalties = self.detect_royalties()
-        self.sales = self.detect_primary_sales()
-        self.platform_fee = self.detect_platform_fee()
+        self.roles = self._detect_roles()
+        self.royalties = self._detect_royalties()
+        self.sales = self._detect_primary_sales()
+        self.platform_fee = self._detect_platform_fee()
 
-        self.token = self.detect_erc_20()
-        self.nft = self.detect_erc_721()
-        self.edition = self.detect_erc_1155()
+        self.token = self._detect_erc_20()
+        self.nft = self._detect_erc_721()
+        self.edition = self._detect_erc_1155()
 
         # self.signature_mint = self.detect_signature_mint()
 
-    def detect_roles(self):
+    def send_transaction(self, fn: str, args: List[Any]) -> TxReceipt:
+        provider = self._contract_wrapper.get_provider()
+        signer = self._contract_wrapper.get_signer()
+
+        nonce = provider.eth.get_transaction_count(signer.address)  # type: ignore
+        tx = getattr(self.functions, fn)(*args).buildTransaction(
+            TxParams(gas_price=provider.eth.gas_price).as_dict()
+        )
+        tx["nonce"] = nonce
+
+        signed_tx = signer.sign_transaction(tx)  # type: ignore
+        tx_hash = provider.eth.send_raw_transaction(signed_tx.rawTransaction)
+        return provider.eth.wait_for_transaction_receipt(tx_hash)
+
+    """
+    INTERNAL FUNCTIONS
+    """
+
+    def _detect_roles(self):
         interface_to_match = self._get_interface_functions(
             AccessControlEnumerable.abi()
         )
@@ -81,7 +101,7 @@ class CustomContract(BaseContract[ThirdwebContract]):
             return ContractRoles(contract_wrapper, ALL_ROLES)
         return None
 
-    def detect_royalties(self):
+    def _detect_royalties(self):
         interface_to_match = self._get_interface_functions(IThirdwebRoyalty.abi())
 
         if matches_interface(self.functions, interface_to_match):
@@ -94,7 +114,7 @@ class CustomContract(BaseContract[ThirdwebContract]):
             return ContractRoyalty(contract_wrapper, metadata)
         return None
 
-    def detect_primary_sales(self):
+    def _detect_primary_sales(self):
         interface_to_match = self._get_interface_functions(IThirdwebPrimarySale.abi())
 
         if matches_interface(self.functions, interface_to_match):
@@ -102,7 +122,7 @@ class CustomContract(BaseContract[ThirdwebContract]):
             return ContractPrimarySale(contract_wrapper)
         return None
 
-    def detect_platform_fee(self):
+    def _detect_platform_fee(self):
         interface_to_match = self._get_interface_functions(IThirdwebPlatformFee.abi())
 
         if matches_interface(self.functions, interface_to_match):
@@ -110,7 +130,7 @@ class CustomContract(BaseContract[ThirdwebContract]):
             return ContractPlatformFee(contract_wrapper)
         return None
 
-    def detect_erc_20(self):
+    def _detect_erc_20(self):
         interface_to_match = self._get_interface_functions(ITokenERC20.abi())
 
         if matches_interface(self.functions, interface_to_match):
@@ -118,7 +138,7 @@ class CustomContract(BaseContract[ThirdwebContract]):
             return ERC20(contract_wrapper, self._storage)
         return None
 
-    def detect_erc_721(self):
+    def _detect_erc_721(self):
         interface_to_match = self._get_interface_functions(ITokenERC721.abi())
 
         if matches_interface(self.functions, interface_to_match):
@@ -126,7 +146,7 @@ class CustomContract(BaseContract[ThirdwebContract]):
             return ERC721(contract_wrapper, self._storage)
         return None
 
-    def detect_erc_1155(self):
+    def _detect_erc_1155(self):
         interface_to_match = self._get_interface_functions(ITokenERC1155.abi())
 
         if matches_interface(self.functions, interface_to_match):
@@ -134,17 +154,13 @@ class CustomContract(BaseContract[ThirdwebContract]):
             return ERC1155(contract_wrapper, self._storage)
         return None
 
-    def detect_signature_mint(self):
+    def _detect_signature_mint(self):
         interface_to_match = self._get_interface_functions(ISignatureMint.abi())
 
         if matches_interface(self.functions, interface_to_match):
             contract_wrapper = self._get_contract_wrapper(ISignatureMint)
             return ERC1155(contract_wrapper, self._storage)
         return None
-
-    """
-    INTERNAL FUNCTIONS
-    """
 
     def _get_interface_functions(self, abi: str) -> ContractFunctions:
         return (
