@@ -1,8 +1,6 @@
-from dataclasses import dataclass
 import dataclasses
+from dataclasses import dataclass
 from typing import Any, BinaryIO, Dict, List, Optional, TextIO, Union
-
-from brownie import Contract
 from thirdweb.constants.currency import ZERO_ADDRESS
 from dacite import from_dict
 
