@@ -104,7 +104,7 @@ class ThirdwebSDK(ProviderHandler):
 
         return cast(EditionDrop, self._get_contract(address, EditionDrop))
 
-    def unstable_get_custom_contract(self, address: str, abi: str = ""):
+    def get_custom_contract(self, address: str, abi: str = ""):
         """
         Get an SDK interface for any custom contract! If you deployed the contract with
         the thirdweb CLI, you won't need to specify an ABI. Alternatively, you can

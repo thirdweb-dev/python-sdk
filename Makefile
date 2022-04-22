@@ -70,6 +70,7 @@ generate-docs:
 	rm -rf docs/build
 	cp -R docs/pydoc-markdown/content docs/docs
 	cp docs/common/index.md docs/docs/index.md
+	cp docs/common/custom.md docs/docs/custom.md
 
 test-docker:
 	cp docs.Dockerfile Dockerfile
