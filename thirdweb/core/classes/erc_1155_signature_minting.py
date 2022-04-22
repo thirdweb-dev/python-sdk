@@ -1,5 +1,5 @@
 from typing import Any, Dict, List
-from thirdweb.abi.token_erc1155 import ITokenERC1155MintRequest
+from thirdweb.abi.token_erc1155 import ISignatureMintMintRequest
 from thirdweb.common.currency import normalize_price_value, set_erc20_allowance
 from thirdweb.common.nft import upload_or_extract_uris
 from thirdweb.common.sign import EIP712StandardDomain
@@ -193,14 +193,14 @@ class ERC1155SignatureMinting:
 
     def _map_payload_to_contract_struct(
         self, mint_request: PayloadWithUri1155
-    ) -> ITokenERC1155MintRequest:
+    ) -> ISignatureMintMintRequest:
         normalized_price_per_token = normalize_price_value(
             self._contract_wrapper.get_provider(),
             mint_request.price,
             mint_request.currency_address,
         )
 
-        return ITokenERC1155MintRequest(
+        return ISignatureMintMintRequest(
             to=mint_request.to,
             tokenId=mint_request.token_id,
             uri=mint_request.uri,

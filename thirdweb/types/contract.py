@@ -12,6 +12,7 @@ from thirdweb.abi import (
     IERC1155,
     DropERC721,
     DropERC1155,
+    ThirdwebContract,
 )
 from thirdweb.types.settings.metadata import ContractMetadataSchema
 
@@ -30,6 +31,7 @@ TContractABI = TypeVar(
         TWFactory,
         DropERC721,
         DropERC1155,
+        ThirdwebContract,
     ],
 )
 
@@ -56,7 +58,13 @@ TRoyaltyABI = TypeVar(
 TMetadataABI = TypeVar(
     "TMetadataABI",
     bound=Union[
-        TokenERC721, TokenERC1155, TokenERC20, Marketplace, DropERC721, DropERC1155
+        TokenERC721,
+        TokenERC1155,
+        TokenERC20,
+        Marketplace,
+        DropERC721,
+        DropERC1155,
+        ThirdwebContract,
     ],
 )
 
@@ -70,3 +78,4 @@ class ContractType(Enum):
     MARKETPLACE = "marketplace"
     NFT_DROP = "nft-drop"
     EDITION_DROP = "edition-drop"
+    CUSTOM = "custom"

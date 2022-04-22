@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 import dataclasses
 from typing import Any, BinaryIO, Dict, List, Optional, TextIO, Union
+
+from brownie import Contract
 from thirdweb.constants.currency import ZERO_ADDRESS
 from dacite import from_dict
 
@@ -134,3 +136,10 @@ class EditionDropContractMetadata(
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "EditionDropContractMetadata":
         return from_dict(EditionDropContractMetadata, json)
+
+
+@dataclass
+class CustomContractMetadata(ContractMetadataSchema):
+    @staticmethod
+    def from_json(json: Dict[str, Any]) -> "CustomContractMetadata":
+        return from_dict(CustomContractMetadata, json)

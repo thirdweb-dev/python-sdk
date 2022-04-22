@@ -1,5 +1,5 @@
 from typing import Any, Dict, List
-from thirdweb.abi.token_erc20 import ITokenERC20MintRequest
+from thirdweb.abi.token_erc20 import ISignatureMintMintRequest
 from thirdweb.common.currency import (
     normalize_price_value,
     parse_units,
@@ -8,6 +8,7 @@ from thirdweb.common.currency import (
 from web3.eth import TxReceipt
 from thirdweb.common.nft import upload_or_extract_uris
 from thirdweb.common.sign import EIP712StandardDomain
+from thirdweb.constants.currency import ZERO_ADDRESS
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
@@ -16,7 +17,7 @@ from thirdweb.abi import TokenERC20
 from thirdweb.types.tx import TxResultWithId
 from thirdweb.types.contracts.signature import (
     EIP712DomainType,
-    MintRequest20,
+    MintRequest1155,
     PayloadToSign20,
     PayloadWithUri20,
     Signature20PayloadOutput,
@@ -55,7 +56,7 @@ class ERC20SignatureMinting:
         overrides: Dict[str, Any] = {}
         set_erc20_allowance(
             self._contract_wrapper,
-            message["price"],
+            message["pricePerToken"],
             mint_request.currency_address,
             overrides,
         )
@@ -152,12 +153,12 @@ class ERC20SignatureMinting:
             signature = self._contract_wrapper.sign_typed_data(
                 signer,
                 EIP712StandardDomain(
-                    name=name,
+                    name="TokenERC20",
                     version="1",
                     chainId=chain_id,
                     verifyingContract=self._contract_wrapper._contract_abi.contract_address,
                 ),
-                {"MintRequest": MintRequest20, "EIP712Domain": EIP712DomainType},
+                {"MintRequest": MintRequest1155, "EIP712Domain": EIP712DomainType},
                 self._map_payload_to_contract_struct(final_payload),
             )
             signed_payloads.append(
@@ -173,7 +174,7 @@ class ERC20SignatureMinting:
     def _map_payload_to_contract_struct(
         self,
         mint_request: PayloadWithUri20,
-    ) -> ITokenERC20MintRequest:
+    ) -> ISignatureMintMintRequest:
         normalized_price_per_token = normalize_price_value(
             self._contract_wrapper.get_provider(),
             mint_request.price,
@@ -184,13 +185,17 @@ class ERC20SignatureMinting:
             mint_request.quantity, self._contract_wrapper._contract_abi.decimals.call()
         )
 
-        return ITokenERC20MintRequest(
+        return ISignatureMintMintRequest(
             to=mint_request.to,
-            price=normalized_price_per_token,
+            pricePerToken=normalized_price_per_token,
             currency=mint_request.currency_address,
             validityEndTimestamp=mint_request.mint_end_time,
             validityStartTimestamp=mint_request.mint_start_time,
             uid=mint_request.uid,
             quantity=amount_with_decimals,
             primarySaleRecipient=mint_request.primary_sale_recipient,
+            uri="",
+            tokenId=0,
+            royaltyRecipient=ZERO_ADDRESS,
+            royaltyBps=0,
         )
