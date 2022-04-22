@@ -50,6 +50,6 @@ Below is a list of all the currently supported contract interfaces and their cor
 | ContractRoles   | `custom.roles` |
 | ContractRoyalties   | `custom.royalties` |
 | ContractPrimarySales   | `custom.platform_fee` |
-| ERC20   | `custom.token` |
-| ERC721   | `custom.nft` |
-| ERC1155   | `custom.edition` |
+| ERC20   | `custom.token`        |
+| ERC721   | `custom.nft`        |
+| ERC1155   | `custom.edition`        |

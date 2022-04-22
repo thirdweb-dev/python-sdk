@@ -138,12 +138,12 @@ Returns an Edition Drop contract SDK instance
 
 Edition Drop contract SDK instance
 
-<a id="core.sdk.ThirdwebSDK.unstable_get_custom_contract"></a>
+<a id="core.sdk.ThirdwebSDK.get_custom_contract"></a>
 
-#### unstable\_get\_custom\_contract
+#### get\_custom\_contract
 
 ```python
-def unstable_get_custom_contract(address: str, abi: str = "")
+def get_custom_contract(address: str, abi: str = "")
 ```
 
 Get an SDK interface for any custom contract! If you deployed the contract with
