@@ -23,6 +23,24 @@ from thirdweb.types.settings.metadata import TokenContractMetadata
 
 
 class Token(ERC20):
+    """
+    Create a standard crypto token or cryptocurrency.
+
+    ```python
+    from thirdweb import ThirdwebSDK
+    from eth_account import Account
+    from web3 import Web3
+
+    // You can switch out this provider and RPC URL for your own
+    provider = Web3(Web3.HTTPProvider("<RPC_URL>"))
+    // This will create a random account to use for signing transactions
+    signer = Account.create()
+
+    sdk = ThirdwebSDK(provider, signer)
+    contract = sdk.get_token("<CONTRACT_ADDRESS>")
+    ```
+    """
+
     _abi_type = TokenERC20
 
     contract_type: Final[ContractType] = ContractType.TOKEN

@@ -12,6 +12,19 @@ Interface for interacting with an nft collection contract
 class NFTCollection(ERC721[TokenERC721])
 ```
 
+Create a collection of one-of-one NFTs.
+
+:example:
+```python
+from thirdweb import ThirdwebSDK
+from web3 import Web3
+
+// You can switch out this provider and RPC URL for your own
+provider = Web3(Web3.HTTPProvider("<RPC_URL>"))
+sdk = ThirdwebSDK(provider)
+nft_collection = sdk.get_nft_collection("<CONTRACT_ADDRESS>")
+```
+
 <a id="contracts.nft_collection.NFTCollection.mint"></a>
 
 #### mint

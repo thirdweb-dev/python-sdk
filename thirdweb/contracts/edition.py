@@ -29,6 +29,24 @@ from thirdweb.types.tx import TxResultWithId
 
 
 class Edition(ERC1155[TokenERC1155]):
+    """
+    Create a collection of NFTs that lets you mint multiple copies of each NFT.
+
+    ```python
+    from thirdweb import ThirdwebSDK
+    from eth_account import Account
+    from web3 import Web3
+
+    // You can switch out this provider and RPC URL for your own
+    provider = Web3(Web3.HTTPProvider("<RPC_URL>"))
+    // This will create a random account to use for signing transactions
+    signer = Account.create()
+
+    sdk = ThirdwebSDK(provider, signer)
+    contract = sdk.get_edition("<CONTRACT_ADDRESS>")
+    ```
+    """
+
     _abi_type = TokenERC1155
 
     contract_type: Final[ContractType] = ContractType.EDITION
