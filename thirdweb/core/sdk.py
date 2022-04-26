@@ -17,6 +17,10 @@ from thirdweb.types.sdk import SDKOptions
 
 
 class ThirdwebSDK(ProviderHandler):
+    """
+    The main entry point for the Thirdweb SDK.
+    """
+
     __contract_cache: Dict[
         str, Union[NFTCollection, Edition, Token, Marketplace, NFTDrop, EditionDrop]
     ] = {}
