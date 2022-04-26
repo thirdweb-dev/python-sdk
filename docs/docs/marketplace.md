@@ -12,6 +12,22 @@ Interface for interacting with a marketplace contract
 class Marketplace(BaseContract[MarketplaceABI])
 ```
 
+Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
+
+```python
+from thirdweb import ThirdwebSDK
+from eth_account import Account
+from web3 import Web3
+
+// You can switch out this provider and RPC URL for your own
+provider = Web3(Web3.HTTPProvider("<RPC_URL>"))
+// This will create a random account to use for signing transactions
+signer = Account.create()
+
+sdk = ThirdwebSDK(provider, signer)
+contract = sdk.get_marketplace("<CONTRACT_ADDRESS>")
+```
+
 <a id="contracts.marketplace.Marketplace.get_listing"></a>
 
 #### get\_listing

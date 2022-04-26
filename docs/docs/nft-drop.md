@@ -10,6 +10,22 @@
 class NFTDrop(ERC721[DropERC721])
 ```
 
+Setup a collection of one-of-one NFTs that are minted as users claim them.
+
+```python
+from thirdweb import ThirdwebSDK
+from eth_account import Account
+from web3 import Web3
+
+// You can switch out this provider and RPC URL for your own
+provider = Web3(Web3.HTTPProvider("<RPC_URL>"))
+// This will create a random account to use for signing transactions
+signer = Account.create()
+
+sdk = ThirdwebSDK(provider, signer)
+contract = sdk.get_nft_drop("<CONTRACT_ADDRESS>")
+```
+
 <a id="contracts.nft_drop.NFTDrop.get_all_claimed"></a>
 
 #### get\_all\_claimed
