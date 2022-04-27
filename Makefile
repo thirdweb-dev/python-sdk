@@ -41,7 +41,7 @@ abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/ISignatureMint.json && mv thirdweb/abi/i_signature_mint/__init__.py thirdweb/abi/i_signature_mint.py && rm -rf thirdweb/abi/i_signature_mint
 
 snippets:
-	python3 scripts/generate_snippets.py
+	poetry run python3 scripts/generate_snippets.py
 
 docs:
 	cd docs && rm -rf pydoc-markdown && rm -rf docs
@@ -51,6 +51,7 @@ docs:
 	cp -R docs/pydoc-markdown/content docs/docs
 	cp docs/common/index.md docs/docs/index.md
 	cp docs/common/custom.md docs/docs/custom.md
+	make snippets
 
 live-docs:
 	make docs

@@ -41,7 +41,7 @@ class NFTCollection(ERC721[TokenERC721]):
     signer = Account.create()
 
     sdk = ThirdwebSDK(provider, signer)
-    contract = sdk.get_nft_collection("<CONTRACT_ADDRESS>")
+    contract = sdk.get_nft_collection("{{contract_address}}")
     ```
     """
 
@@ -104,6 +104,23 @@ class NFTCollection(ERC721[TokenERC721]):
         """
         Mint a new NFT to the specified wallet
 
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput
+
+        # Note that you can customize this metadata however you like
+        metadata = NFTMetadataInput.from_json({
+            "name": "Cool NFT",
+            "description": "This is a cool NFT",
+            "image": open("path/to/file.jpg", "rb"),
+        })
+
+        # You can pass in any address here to mint the NFT to
+        tx = contract.mint_to("{{wallet_address}}", metadata)
+        receipt = tx.receipt
+        token_id = tx.id
+        nft = tx.data()
+        ```
+
         :param to: wallet address to mint the NFT to
         :param metadata: metadata of the NFT to mint
         :returns: receipt, id, and metadata for the mint
@@ -139,6 +156,30 @@ class NFTCollection(ERC721[TokenERC721]):
     ) -> List[TxResultWithId[NFTMetadataOwner]]:
         """
         Mint a batch of new NFTs to the specified wallet
+
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput
+
+        # You can customize this metadata however you like
+        metadatas = [
+            NFTMetadataInput.from_json({
+                "name": "Cool NFT",
+                "description": "This is a cool NFT",
+                "image": open("path/to/file.jpg", "rb"),
+            }),
+            NFTMetadataInput.from_json({
+                "name": "Cooler NFT",
+                "description": "This is a cooler NFT",
+                "image": open("path/to/file.jpg", "rb"),
+            }),
+        ]
+
+        # You can pass in any address here to mint the NFT to
+        txs = contract.mint_batch_to("{{wallet_address}}", metadatas)
+        receipt = txs[0].receipt
+        first_token_id = txs[0].id
+        first_nft = txs[0].data()
+        ```
 
         :param to: wallet address to mint the NFTs to
         :param metadatas: list of metadata of the NFTs to mint

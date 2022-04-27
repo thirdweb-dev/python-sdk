@@ -36,6 +36,11 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         """
         Get metadata for a token
 
+        ```python
+        nft = contract.get(0)
+        print(nft)
+        ```
+
         :param token_id: token ID to check the metadata for
         :return: Metadata for the token
         """
@@ -53,6 +58,11 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
     ) -> List[EditionMetadata]:
         """
         Get the metadata for all tokens on the contract
+
+        ```python
+        metadatas = contract.get_all()
+        print(metadatas)
+        ```
 
         :param query_params: optional QueryAllParams to define which tokens to get metadata for
         :return: list of metadata for all tokens
@@ -73,6 +83,12 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
     def get_owned(self, address: str = "") -> List[EditionMetadataOwner]:
         """
         Get the metadata for all the tokens owned by an address
+
+        ```python
+        address = "{{wallet_address}}"
+        owned = contract.get_owned(address)
+        print(owned)
+        ```
 
         :param address: address to get the owned tokens for
         :return: list of metadata for all tokens owned by the address
@@ -117,6 +133,13 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         """
         Get a specific wallets balance of a specific token
 
+        ```python
+        address = "{{wallet_address}}"
+        token_id = 0
+
+        balance = contract.balance_of(address, token_id)
+        ```
+
         :param address: address to check the balance for
         :param token_id: token ID to check the balance for
         :return: balance of the token
@@ -159,6 +182,14 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
     ) -> TxReceipt:
         """
         Transfer a specified token from the connected wallet to a specified address.
+
+        ```python
+        to = "{{wallet_address}}"
+        token_id = 0
+        amount = 1
+
+        receipt = contract.transfer(to, token_id, amount)
+        ```
 
         :param to: wallet address to transfer the tokens to
         :param token_id: the specific token ID to transfer

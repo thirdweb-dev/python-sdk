@@ -25,7 +25,7 @@ provider = Web3(Web3.HTTPProvider("<RPC_URL>"))
 signer = Account.create()
 
 sdk = ThirdwebSDK(provider, signer)
-contract = sdk.get_edition("<CONTRACT_ADDRESS>")
+contract = sdk.get_edition("{{contract_address}}")
 ```
 
 <a id="contracts.edition.Edition.mint"></a>
@@ -59,6 +59,26 @@ def mint_to(
 ```
 
 Mint a new NFT to the specified wallet
+
+```python
+from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput
+
+# Note that you can customize this metadata however you like
+metadata_with_supply = EditionMetadataInput(
+    NFTMetadataInput.from_json({
+        "name": "Cool NFT",
+        "description": "This is a cool NFT",
+        "image": open("path/to/file.jpg", "rb"),
+    }),
+    100
+)
+
+# You can pass in any address here to mint the NFT to
+tx = contract.mint_to("{{wallet_address}}", metadata_with_supply)
+receipt = tx.receipt
+token_id = tx.id
+nft = tx.data()
+```
 
 **Arguments**:
 
@@ -143,6 +163,36 @@ def mint_batch_to(
 ```
 
 Mint a batch of NFTs to the specified wallet
+
+```python
+from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput
+
+# Note that you can customize this metadata however you like
+metadatas_with_supply = [
+    EditionMetadataInput(
+        NFTMetadataInput.from_json({
+            "name": "Cool NFT",
+            "description": "This is a cool NFT",
+            "image": open("path/to/file.jpg", "rb"),
+        }),
+        100
+    ),
+    EditionMetadataInput(
+        NFTMetadataInput.from_json({
+            "name": "Cooler NFT",
+            "description": "This is a cooler NFT",
+            "image": open("path/to/file.jpg", "rb"),
+        }),
+        100
+    )
+]
+
+# You can pass in any address here to mint the NFT to
+txs = contract.mint_to("{{wallet_address}}", metadata_with_supply)
+receipt = txs[0].receipt
+token_id = txs[0].id
+nft = txs[0].data()
+```
 
 **Arguments**:
 
