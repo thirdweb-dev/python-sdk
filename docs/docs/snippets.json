@@ -7,41 +7,48 @@
             {
                 "name": "balance_of",
                 "summary": "Get the token balance of a specific address",
-                "example": "\n        balance = contract.balance_of(\"{{wallet_address}}\")\n        print(balance)\n        "
+                "example": "\n        balance = contract.balance_of(\"{{wallet_address}}\")\n        print(balance)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc721#balance_of"
             },
             {
                 "name": "get",
                 "summary": "Get metadata for a token",
-                "example": "\n        nft = contract.get(0)\n        print(nft)\n        "
+                "example": "\n        nft = contract.get(0)\n        print(nft)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc721#get"
             },
             {
                 "name": "get_all",
                 "summary": "Get the metadata of all tokens in the contract",
-                "example": "\n        nfts = contract.get_all()\n        print(nfts)\n        "
+                "example": "\n        nfts = contract.get_all()\n        print(nfts)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc721#get_all"
             },
             {
                 "name": "get_owned",
                 "summary": "Get the metadata of all tokens owned by a specific address",
-                "example": "\n        nfts = contract.get_owned(\"{{wallet_address}}\")\n        print(nfts)\n        "
+                "example": "\n        nfts = contract.get_owned(\"{{wallet_address}}\")\n        print(nfts)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc721#get_owned"
             },
             {
                 "name": "mint_batch_to",
                 "summary": "Mint a batch of new NFTs to the specified wallet",
-                "example": "\n        from thirdweb.types.nft import NFTMetadataInput\n\n        # You can customize this metadata however you like\n        metadatas = [\n            NFTMetadataInput.from_json({\n                \"name\": \"Cool NFT\",\n                \"description\": \"This is a cool NFT\",\n                \"image\": open(\"path/to/file.jpg\", \"rb\"),\n            }),\n            NFTMetadataInput.from_json({\n                \"name\": \"Cooler NFT\",\n                \"description\": \"This is a cooler NFT\",\n                \"image\": open(\"path/to/file.jpg\", \"rb\"),\n            }),\n        ]\n\n        # You can pass in any address here to mint the NFT to\n        txs = contract.mint_batch_to(\"{{wallet_address}}\", metadatas)\n        receipt = txs[0].receipt\n        first_token_id = txs[0].id\n        first_nft = txs[0].data()\n        "
+                "example": "\n        from thirdweb.types.nft import NFTMetadataInput\n\n        # You can customize this metadata however you like\n        metadatas = [\n            NFTMetadataInput.from_json({\n                \"name\": \"Cool NFT\",\n                \"description\": \"This is a cool NFT\",\n                \"image\": open(\"path/to/file.jpg\", \"rb\"),\n            }),\n            NFTMetadataInput.from_json({\n                \"name\": \"Cooler NFT\",\n                \"description\": \"This is a cooler NFT\",\n                \"image\": open(\"path/to/file.jpg\", \"rb\"),\n            }),\n        ]\n\n        # You can pass in any address here to mint the NFT to\n        txs = contract.mint_batch_to(\"{{wallet_address}}\", metadatas)\n        receipt = txs[0].receipt\n        first_token_id = txs[0].id\n        first_nft = txs[0].data()\n        ",
+                "reference": "https://docs.thirdweb.com/python/nft-collection#mint_batch_to"
             },
             {
                 "name": "mint_to",
                 "summary": "Mint a new NFT to the specified wallet",
-                "example": "\n        from thirdweb.types.nft import NFTMetadataInput\n\n        # Note that you can customize this metadata however you like\n        metadata = NFTMetadataInput.from_json({\n            \"name\": \"Cool NFT\",\n            \"description\": \"This is a cool NFT\",\n            \"image\": open(\"path/to/file.jpg\", \"rb\"),\n        })\n\n        # You can pass in any address here to mint the NFT to\n        tx = contract.mint_to(\"{{wallet_address}}\", metadata)\n        receipt = tx.receipt\n        token_id = tx.id\n        nft = tx.data()\n        "
+                "example": "\n        from thirdweb.types.nft import NFTMetadataInput\n\n        # Note that you can customize this metadata however you like\n        metadata = NFTMetadataInput.from_json({\n            \"name\": \"Cool NFT\",\n            \"description\": \"This is a cool NFT\",\n            \"image\": open(\"path/to/file.jpg\", \"rb\"),\n        })\n\n        # You can pass in any address here to mint the NFT to\n        tx = contract.mint_to(\"{{wallet_address}}\", metadata)\n        receipt = tx.receipt\n        token_id = tx.id\n        nft = tx.data()\n        ",
+                "reference": "https://docs.thirdweb.com/python/nft-collection#mint_to"
             },
             {
                 "name": "transfer",
                 "summary": "Transfer a specified token from the connected wallet to a specified address.",
-                "example": "\n        to = \"{{wallet_address}}\"\n        token_id = 0\n\n        receipt = contract.transfer(to, token_id)\n        "
+                "example": "\n        to = \"{{wallet_address}}\"\n        token_id = 0\n\n        receipt = contract.transfer(to, token_id)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc721#transfer"
             }
         ],
         "properties": [],
-        "reference": ""
+        "reference": "https://docs.thirdweb.com/python/nft-collection"
     },
     "Edition": {
         "name": "Edition",
@@ -51,41 +58,48 @@
             {
                 "name": "balance_of",
                 "summary": "Get a specific wallets balance of a specific token",
-                "example": "\n        address = \"{{wallet_address}}\"\n        token_id = 0\n\n        balance = contract.balance_of(address, token_id)\n        "
+                "example": "\n        address = \"{{wallet_address}}\"\n        token_id = 0\n\n        balance = contract.balance_of(address, token_id)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc1155#balance_of"
             },
             {
                 "name": "get",
                 "summary": "Get metadata for a token",
-                "example": "\n        nft = contract.get(0)\n        print(nft)\n        "
+                "example": "\n        nft = contract.get(0)\n        print(nft)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc1155#get"
             },
             {
                 "name": "get_all",
                 "summary": "Get the metadata for all tokens on the contract",
-                "example": "\n        metadatas = contract.get_all()\n        print(metadatas)\n        "
+                "example": "\n        metadatas = contract.get_all()\n        print(metadatas)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc1155#get_all"
             },
             {
                 "name": "get_owned",
                 "summary": "Get the metadata for all the tokens owned by an address",
-                "example": "\n        address = \"{{wallet_address}}\"\n        owned = contract.get_owned(address)\n        print(owned)\n        "
+                "example": "\n        address = \"{{wallet_address}}\"\n        owned = contract.get_owned(address)\n        print(owned)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc1155#get_owned"
             },
             {
                 "name": "mint_batch_to",
                 "summary": "Mint a batch of NFTs to the specified wallet",
-                "example": "\n        from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput\n\n        # Note that you can customize this metadata however you like\n        metadatas_with_supply = [\n            EditionMetadataInput(\n                NFTMetadataInput.from_json({\n                    \"name\": \"Cool NFT\",\n                    \"description\": \"This is a cool NFT\",\n                    \"image\": open(\"path/to/file.jpg\", \"rb\"),\n                }),\n                100\n            ),\n            EditionMetadataInput(\n                NFTMetadataInput.from_json({\n                    \"name\": \"Cooler NFT\",\n                    \"description\": \"This is a cooler NFT\",\n                    \"image\": open(\"path/to/file.jpg\", \"rb\"),\n                }),\n                100\n            )\n        ]\n\n        # You can pass in any address here to mint the NFT to\n        txs = contract.mint_to(\"{{wallet_address}}\", metadata_with_supply)\n        receipt = txs[0].receipt\n        token_id = txs[0].id\n        nft = txs[0].data()\n        "
+                "example": "\n        from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput\n\n        # Note that you can customize this metadata however you like\n        metadatas_with_supply = [\n            EditionMetadataInput(\n                NFTMetadataInput.from_json({\n                    \"name\": \"Cool NFT\",\n                    \"description\": \"This is a cool NFT\",\n                    \"image\": open(\"path/to/file.jpg\", \"rb\"),\n                }),\n                100\n            ),\n            EditionMetadataInput(\n                NFTMetadataInput.from_json({\n                    \"name\": \"Cooler NFT\",\n                    \"description\": \"This is a cooler NFT\",\n                    \"image\": open(\"path/to/file.jpg\", \"rb\"),\n                }),\n                100\n            )\n        ]\n\n        # You can pass in any address here to mint the NFT to\n        txs = contract.mint_to(\"{{wallet_address}}\", metadata_with_supply)\n        receipt = txs[0].receipt\n        token_id = txs[0].id\n        nft = txs[0].data()\n        ",
+                "reference": "https://docs.thirdweb.com/python/edition#mint_batch_to"
             },
             {
                 "name": "mint_to",
                 "summary": "Mint a new NFT to the specified wallet",
-                "example": "\n        from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput\n\n        # Note that you can customize this metadata however you like\n        metadata_with_supply = EditionMetadataInput(\n            NFTMetadataInput.from_json({\n                \"name\": \"Cool NFT\",\n                \"description\": \"This is a cool NFT\",\n                \"image\": open(\"path/to/file.jpg\", \"rb\"),\n            }),\n            100\n        )\n\n        # You can pass in any address here to mint the NFT to\n        tx = contract.mint_to(\"{{wallet_address}}\", metadata_with_supply)\n        receipt = tx.receipt\n        token_id = tx.id\n        nft = tx.data()\n        "
+                "example": "\n        from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput\n\n        # Note that you can customize this metadata however you like\n        metadata_with_supply = EditionMetadataInput(\n            NFTMetadataInput.from_json({\n                \"name\": \"Cool NFT\",\n                \"description\": \"This is a cool NFT\",\n                \"image\": open(\"path/to/file.jpg\", \"rb\"),\n            }),\n            100\n        )\n\n        # You can pass in any address here to mint the NFT to\n        tx = contract.mint_to(\"{{wallet_address}}\", metadata_with_supply)\n        receipt = tx.receipt\n        token_id = tx.id\n        nft = tx.data()\n        ",
+                "reference": "https://docs.thirdweb.com/python/edition#mint_to"
             },
             {
                 "name": "transfer",
                 "summary": "Transfer a specified token from the connected wallet to a specified address.",
-                "example": "\n        to = \"{{wallet_address}}\"\n        token_id = 0\n        amount = 1\n\n        receipt = contract.transfer(to, token_id, amount)\n        "
+                "example": "\n        to = \"{{wallet_address}}\"\n        token_id = 0\n        amount = 1\n\n        receipt = contract.transfer(to, token_id, amount)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc1155#transfer"
             }
         ],
         "properties": [],
-        "reference": ""
+        "reference": "https://docs.thirdweb.com/python/edition"
     },
     "Token": {
         "name": "Token",
@@ -95,71 +109,84 @@
             {
                 "name": "allowance",
                 "summary": "Get a specific spenders allowance of this token for the connected wallet.",
-                "example": "\n        spender = \"{{wallet_address}}\"\n        allowance = contract.allowance(spender)\n        "
+                "example": "\n        spender = \"{{wallet_address}}\"\n        allowance = contract.allowance(spender)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc20#allowance"
             },
             {
                 "name": "allowance_of",
                 "summary": "Get the allowance of the specified spender for a specified owner.",
-                "example": "\n        # Address of the wallet who owns the funds\n        address = \"{{wallet_address}}\"\n\n        # Address of the wallet to check the token allowance\n        spender = \"0x...\"\n\n        allowance = contract.allowance_of(address, spender)\n        print(allowance)\n        "
+                "example": "\n        # Address of the wallet who owns the funds\n        address = \"{{wallet_address}}\"\n\n        # Address of the wallet to check the token allowance\n        spender = \"0x...\"\n\n        allowance = contract.allowance_of(address, spender)\n        print(allowance)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc20#allowance_of"
             },
             {
                 "name": "balance",
                 "summary": "Get the token balance of the connected wallet.",
-                "example": "\n        balance = contract.balance()\n        print(balance)\n        "
+                "example": "\n        balance = contract.balance()\n        print(balance)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc20#balance"
             },
             {
                 "name": "balance_of",
                 "summary": "Get the balance of the specified wallet",
-                "example": "\n        address = \"{{wallet_address}}\"\n        balance = contract.balance_of(address)\n        print(balance)\n        "
+                "example": "\n        address = \"{{wallet_address}}\"\n        balance = contract.balance_of(address)\n        print(balance)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc20#balance_of"
             },
             {
                 "name": "burn",
                 "summary": "Burn a specified amount of tokens from the connected wallet.",
-                "example": "\n        amount = 0.1\n        contract.burn(amount)\n        "
+                "example": "\n        amount = 0.1\n        contract.burn(amount)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc20#burn"
             },
             {
                 "name": "burn_from",
                 "summary": "Burn a specified amount of tokens from a specified wallet.",
-                "example": "\n        holder = \"{{wallet_address}}\"\n        amount = 0.1\n        contract.burn_from(holder, amount)\n        "
+                "example": "\n        holder = \"{{wallet_address}}\"\n        amount = 0.1\n        contract.burn_from(holder, amount)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc20#burn_from"
             },
             {
                 "name": "get",
                 "summary": "Get the token metadata including name, symbol, decimals, etc.",
-                "example": "\n        token = contract.get()\n        print(token)\n        "
+                "example": "\n        token = contract.get()\n        print(token)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc20#get"
             },
             {
                 "name": "mint_batch_to",
                 "summary": "Mint tokens to a list of wallets.",
-                "example": "\n        from thirdweb.types.currency import TokenAmount\n\n        args = [\n            TokenAmount(\"{{wallet_address}}\", 1),\n            TokenAmount(\"{{wallet_address}}\", 2),\n        ]\n\n        contract.mint_batch_to(args)\n        "
+                "example": "\n        from thirdweb.types.currency import TokenAmount\n\n        args = [\n            TokenAmount(\"{{wallet_address}}\", 1),\n            TokenAmount(\"{{wallet_address}}\", 2),\n        ]\n\n        contract.mint_batch_to(args)\n        ",
+                "reference": "https://docs.thirdweb.com/python/token#mint_batch_to"
             },
             {
                 "name": "mint_to",
                 "summary": "Mint tokens to a specified wallet.",
-                "example": "\n        contract.mint_to(\"{{wallet_address}}\", 1)\n        "
+                "example": "\n        contract.mint_to(\"{{wallet_address}}\", 1)\n        ",
+                "reference": "https://docs.thirdweb.com/python/token#mint_to"
             },
             {
                 "name": "set_allowance",
                 "summary": "Sets the allowance of the specified wallet over the connected wallets funds to        a specified amount.",
-                "example": "\n        spender = \"0x...\"\n        amount = 100\n        contract.set_allowance(spender, amount)\n        "
+                "example": "\n        spender = \"0x...\"\n        amount = 100\n        contract.set_allowance(spender, amount)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc20#set_allowance"
             },
             {
                 "name": "transfer",
                 "summary": "Transfer a specified amount of tokens from the connected wallet to a specified address.",
-                "example": "\n        # Address to send tokens to\n        to = \"0x...\n\n        # Amount of tokens to transfer\n        amount = 0.1\n\n        contract.transfer(to, amount)\n        "
+                "example": "\n        # Address to send tokens to\n        to = \"0x...\n\n        # Amount of tokens to transfer\n        amount = 0.1\n\n        contract.transfer(to, amount)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc20#transfer"
             },
             {
                 "name": "transfer_batch",
                 "summary": "Transfer tokens from the connected wallet to many wallets.",
-                "example": "\n        from thirdweb.types.currency import TokenAmount\n\n        data = [\n            TokenAmount(\"{{wallet_address}}\", 0.1),\n            TokenAmount(\"0x...\", 0.2),\n        ]\n\n        contract.transfer_batch(data)\n        "
+                "example": "\n        from thirdweb.types.currency import TokenAmount\n\n        data = [\n            TokenAmount(\"{{wallet_address}}\", 0.1),\n            TokenAmount(\"0x...\", 0.2),\n        ]\n\n        contract.transfer_batch(data)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc20#transfer_batch"
             },
             {
                 "name": "transfer_from",
                 "summary": "Transfer a specified amount of tokens from one specified address to another.",
-                "example": "\n        # Address to send tokens from\n        fr = \"{{wallet_address}}\"\n\n        # Address to send tokens to\n        to = \"0x...\"\n\n        # Amount of tokens to transfer\n        amount = 0.1\n\n        contract.transfer_from(fr, to, amount)\n        "
+                "example": "\n        # Address to send tokens from\n        fr = \"{{wallet_address}}\"\n\n        # Address to send tokens to\n        to = \"0x...\"\n\n        # Amount of tokens to transfer\n        amount = 0.1\n\n        contract.transfer_from(fr, to, amount)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc20#transfer_from"
             }
         ],
         "properties": [],
-        "reference": ""
+        "reference": "https://docs.thirdweb.com/python/token"
     },
     "Marketplace": {
         "name": "Marketplace",
@@ -169,36 +196,42 @@
             {
                 "name": "buyout_listing",
                 "summary": "Buyout a listing by listing ID",
-                "example": "\n        listing_id = 0\n        quantity_desired = 1\n\n        contract.buyout_listing(listing_id, quantity_desired)\n        "
+                "example": "\n        listing_id = 0\n        quantity_desired = 1\n\n        contract.buyout_listing(listing_id, quantity_desired)\n        ",
+                "reference": "https://docs.thirdweb.com/python/marketplace#buyout_listing"
             },
             {
                 "name": "get_active_listings",
                 "summary": "Get all the currently active listings from the marketplace.",
-                "example": "\n        listings = contract.get_active_listings()\n        price_of_first = listings[0].price\n        "
+                "example": "\n        listings = contract.get_active_listings()\n        price_of_first = listings[0].price\n        ",
+                "reference": "https://docs.thirdweb.com/python/marketplace#get_active_listings"
             },
             {
                 "name": "get_all",
                 "summary": "Get all the listings that have ever been made on this marketplace.",
-                "example": "\n        listings = contract.get_all_listings()\n        price_of_first = listings[0].price\n        "
+                "example": "\n        listings = contract.get_all_listings()\n        price_of_first = listings[0].price\n        ",
+                "reference": "https://docs.thirdweb.com/python/marketplace#get_all"
             },
             {
                 "name": "get_all_listings",
                 "summary": "Get all the listings that have ever been made on this marketplace.",
-                "example": "\n        listings = contract.get_all_listings()\n        price_of_first = listings[0].price\n        "
+                "example": "\n        listings = contract.get_all_listings()\n        price_of_first = listings[0].price\n        ",
+                "reference": "https://docs.thirdweb.com/python/marketplace#get_all_listings"
             },
             {
                 "name": "set_bid_buffer_bps",
                 "summary": "Set the bid buffer basis points for this marketplace.",
-                "example": "\n        buffer_bps = 500\n        contract.set_bid_buffer_bps(buffer_bps)\n        "
+                "example": "\n        buffer_bps = 500\n        contract.set_bid_buffer_bps(buffer_bps)\n        ",
+                "reference": "https://docs.thirdweb.com/python/marketplace#set_bid_buffer_bps"
             },
             {
                 "name": "set_time_buffer_in_seconds",
                 "summary": "Set the time buffer of the marketplace.",
-                "example": "\n        buffer_in_seconds = 60\n        contract.set_time_buffer_in_seconds(buffer_in_seconds)\n        "
+                "example": "\n        buffer_in_seconds = 60\n        contract.set_time_buffer_in_seconds(buffer_in_seconds)\n        ",
+                "reference": "https://docs.thirdweb.com/python/marketplace#set_time_buffer_in_seconds"
             }
         ],
         "properties": [],
-        "reference": ""
+        "reference": "https://docs.thirdweb.com/python/marketplace"
     },
     "NFTDrop": {
         "name": "NFTDrop",
@@ -208,61 +241,72 @@
             {
                 "name": "balance_of",
                 "summary": "Get the token balance of a specific address",
-                "example": "\n        balance = contract.balance_of(\"{{wallet_address}}\")\n        print(balance)\n        "
+                "example": "\n        balance = contract.balance_of(\"{{wallet_address}}\")\n        print(balance)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc721#balance_of"
             },
             {
                 "name": "claim_to",
                 "summary": "Claim NFTs to a destination address.",
-                "example": "\n        address = {{wallet_address}}\n        quantity = 1\n\n        tx = contract.claim_to(address, quantity)\n        receipt = tx.receipt\n        claimed_token_id = tx.id\n        claimed_nft = tx.data()\n        "
+                "example": "\n        address = {{wallet_address}}\n        quantity = 1\n\n        tx = contract.claim_to(address, quantity)\n        receipt = tx.receipt\n        claimed_token_id = tx.id\n        claimed_nft = tx.data()\n        ",
+                "reference": "https://docs.thirdweb.com/python/nft-drop#claim_to"
             },
             {
                 "name": "create_batch",
                 "summary": "Create a batch of NFTs.",
-                "example": "\n        from thirdweb.types.nft import NFTMetadataInput\n\n        # You can customize this metadata however you like\n        metadatas = [\n            NFTMetadataInput.from_json({\n                \"name\": \"Cool NFT\",\n                \"description\": \"This is a cool NFT\",\n                \"image\": open(\"path/to/file.jpg\", \"rb\"),\n            }),\n            NFTMetadataInput.from_json({\n                \"name\": \"Cooler NFT\",\n                \"description\": \"This is a cooler NFT\",\n                \"image\": open(\"path/to/file.jpg\", \"rb\"),\n            }),\n        ]\n\n        txs = contract.create_batch(metadatas)\n        first_token_id = txs[0].id\n        first_nft = txs[0].data()\n        "
+                "example": "\n        from thirdweb.types.nft import NFTMetadataInput\n\n        # You can customize this metadata however you like\n        metadatas = [\n            NFTMetadataInput.from_json({\n                \"name\": \"Cool NFT\",\n                \"description\": \"This is a cool NFT\",\n                \"image\": open(\"path/to/file.jpg\", \"rb\"),\n            }),\n            NFTMetadataInput.from_json({\n                \"name\": \"Cooler NFT\",\n                \"description\": \"This is a cooler NFT\",\n                \"image\": open(\"path/to/file.jpg\", \"rb\"),\n            }),\n        ]\n\n        txs = contract.create_batch(metadatas)\n        first_token_id = txs[0].id\n        first_nft = txs[0].data()\n        ",
+                "reference": "https://docs.thirdweb.com/python/nft-drop#create_batch"
             },
             {
                 "name": "get",
                 "summary": "Get metadata for a token",
-                "example": "\n        nft = contract.get(0)\n        print(nft)\n        "
+                "example": "\n        nft = contract.get(0)\n        print(nft)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc721#get"
             },
             {
                 "name": "get_all",
                 "summary": "Get the metadata of all tokens in the contract",
-                "example": "\n        nfts = contract.get_all()\n        print(nfts)\n        "
+                "example": "\n        nfts = contract.get_all()\n        print(nfts)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc721#get_all"
             },
             {
                 "name": "get_all_claimed",
                 "summary": "Get all claimed NFTs.",
-                "example": "\n        claimed_nfts = contract.get_all_claimed()\n        first_owner = claimed_nfts[0].owner\n        "
+                "example": "\n        claimed_nfts = contract.get_all_claimed()\n        first_owner = claimed_nfts[0].owner\n        ",
+                "reference": "https://docs.thirdweb.com/python/nft-drop#get_all_claimed"
             },
             {
                 "name": "get_all_unclaimed",
                 "summary": "Get all unclaimed NFTs.",
-                "example": "\n        unclaimed_nfts = contract.get_all_unclaimed()\n        first_nft_name = unclaimed_nfts[0].name\n        "
+                "example": "\n        unclaimed_nfts = contract.get_all_unclaimed()\n        first_nft_name = unclaimed_nfts[0].name\n        ",
+                "reference": "https://docs.thirdweb.com/python/nft-drop#get_all_unclaimed"
             },
             {
                 "name": "get_owned",
                 "summary": "Get the metadata of all tokens owned by a specific address",
-                "example": "\n        nfts = contract.get_owned(\"{{wallet_address}}\")\n        print(nfts)\n        "
+                "example": "\n        nfts = contract.get_owned(\"{{wallet_address}}\")\n        print(nfts)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc721#get_owned"
             },
             {
                 "name": "total_claimed_supply",
                 "summary": "Get the total number of NFTs claimed from this contract",
-                "example": "\n        total_claimed = contract.total_claimed_supply()\n        "
+                "example": "\n        total_claimed = contract.total_claimed_supply()\n        ",
+                "reference": "https://docs.thirdweb.com/python/nft-drop#total_claimed_supply"
             },
             {
                 "name": "total_unclaimed_supply",
                 "summary": "Get the total number of unclaimed NFTs in this contract",
-                "example": "\n        total_unclaimed = contract.total_unclaimed_supply()\n        "
+                "example": "\n        total_unclaimed = contract.total_unclaimed_supply()\n        ",
+                "reference": "https://docs.thirdweb.com/python/nft-drop#total_unclaimed_supply"
             },
             {
                 "name": "transfer",
                 "summary": "Transfer a specified token from the connected wallet to a specified address.",
-                "example": "\n        to = \"{{wallet_address}}\"\n        token_id = 0\n\n        receipt = contract.transfer(to, token_id)\n        "
+                "example": "\n        to = \"{{wallet_address}}\"\n        token_id = 0\n\n        receipt = contract.transfer(to, token_id)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc721#transfer"
             }
         ],
         "properties": [],
-        "reference": ""
+        "reference": "https://docs.thirdweb.com/python/nft-drop"
     },
     "EditionDrop": {
         "name": "EditionDrop",
@@ -272,40 +316,47 @@
             {
                 "name": "balance_of",
                 "summary": "Get a specific wallets balance of a specific token",
-                "example": "\n        address = \"{{wallet_address}}\"\n        token_id = 0\n\n        balance = contract.balance_of(address, token_id)\n        "
+                "example": "\n        address = \"{{wallet_address}}\"\n        token_id = 0\n\n        balance = contract.balance_of(address, token_id)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc1155#balance_of"
             },
             {
                 "name": "claim_to",
                 "summary": "Claim NFTs to a destination address.",
-                "example": "\n        address = {{wallet_address}}\n        token_id = 0\n        quantity = 1\n\n        tx = contract.claim_to(address, token_id, quantity)\n        receipt = tx.receipt\n        claimed_token_id = tx.id\n        claimed_nft = tx.data()\n        "
+                "example": "\n        address = {{wallet_address}}\n        token_id = 0\n        quantity = 1\n\n        tx = contract.claim_to(address, token_id, quantity)\n        receipt = tx.receipt\n        claimed_token_id = tx.id\n        claimed_nft = tx.data()\n        ",
+                "reference": "https://docs.thirdweb.com/python/edition-drop#claim_to"
             },
             {
                 "name": "create_batch",
                 "summary": "Create a batch of NFTs.",
-                "example": "\n        from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput\n\n        # Note that you can customize this metadata however you like\n        metadatas_with_supply = [\n            EditionMetadataInput(\n                NFTMetadataInput.from_json({\n                    \"name\": \"Cool NFT\",\n                    \"description\": \"This is a cool NFT\",\n                    \"image\": open(\"path/to/file.jpg\", \"rb\"),\n                }),\n                100\n            ),\n            EditionMetadataInput(\n                NFTMetadataInput.from_json({\n                    \"name\": \"Cooler NFT\",\n                    \"description\": \"This is a cooler NFT\",\n                    \"image\": open(\"path/to/file.jpg\", \"rb\"),\n                }),\n                100\n            )\n        ]\n\n        txs = contract.create_batch(metadata_with_supply)\n        first_token_id = txs[0].id\n        first_nft = txs[0].data()\n        "
+                "example": "\n        from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput\n\n        # Note that you can customize this metadata however you like\n        metadatas_with_supply = [\n            EditionMetadataInput(\n                NFTMetadataInput.from_json({\n                    \"name\": \"Cool NFT\",\n                    \"description\": \"This is a cool NFT\",\n                    \"image\": open(\"path/to/file.jpg\", \"rb\"),\n                }),\n                100\n            ),\n            EditionMetadataInput(\n                NFTMetadataInput.from_json({\n                    \"name\": \"Cooler NFT\",\n                    \"description\": \"This is a cooler NFT\",\n                    \"image\": open(\"path/to/file.jpg\", \"rb\"),\n                }),\n                100\n            )\n        ]\n\n        txs = contract.create_batch(metadata_with_supply)\n        first_token_id = txs[0].id\n        first_nft = txs[0].data()\n        ",
+                "reference": "https://docs.thirdweb.com/python/edition-drop#create_batch"
             },
             {
                 "name": "get",
                 "summary": "Get metadata for a token",
-                "example": "\n        nft = contract.get(0)\n        print(nft)\n        "
+                "example": "\n        nft = contract.get(0)\n        print(nft)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc1155#get"
             },
             {
                 "name": "get_all",
                 "summary": "Get the metadata for all tokens on the contract",
-                "example": "\n        metadatas = contract.get_all()\n        print(metadatas)\n        "
+                "example": "\n        metadatas = contract.get_all()\n        print(metadatas)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc1155#get_all"
             },
             {
                 "name": "get_owned",
                 "summary": "Get the metadata for all the tokens owned by an address",
-                "example": "\n        address = \"{{wallet_address}}\"\n        owned = contract.get_owned(address)\n        print(owned)\n        "
+                "example": "\n        address = \"{{wallet_address}}\"\n        owned = contract.get_owned(address)\n        print(owned)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc1155#get_owned"
             },
             {
                 "name": "transfer",
                 "summary": "Transfer a specified token from the connected wallet to a specified address.",
-                "example": "\n        to = \"{{wallet_address}}\"\n        token_id = 0\n        amount = 1\n\n        receipt = contract.transfer(to, token_id, amount)\n        "
+                "example": "\n        to = \"{{wallet_address}}\"\n        token_id = 0\n        amount = 1\n\n        receipt = contract.transfer(to, token_id, amount)\n        ",
+                "reference": "https://docs.thirdweb.com/python/erc1155#transfer"
             }
         ],
         "properties": [],
-        "reference": ""
+        "reference": "https://docs.thirdweb.com/python/edition-drop"
     }
 }

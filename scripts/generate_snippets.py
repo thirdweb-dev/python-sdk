@@ -13,11 +13,24 @@ CONTRACTS = [
     "EditionDrop",
 ]
 
+DOC_NAMES = {
+    "NFTCollection": "nft-collection",
+    "Edition": "edition",
+    "Token": "token",
+    "Marketplace": "marketplace",
+    "NFTDrop": "nft-drop",
+    "EditionDrop": "edition-drop",
+    "ERC20": "erc20",
+    "ERC721": "erc721",
+    "ERC1155": "erc1155",
+}
+
 
 def get_description(cls: object) -> str:
     doc = getattr(cls, "__doc__", "")
     if doc is None:
         return ""
+    # inspect.cleandoc(doc)
     # no_example = re.sub(r"```(.|\n)*```", "", doc)
     no_example = doc.split("\n\n")[0]
     cleaned = no_example.replace("\n", "").strip()
@@ -34,39 +47,62 @@ def get_example(cls: object) -> str:
     return matches.group(0).replace("```python", "").replace("```", "")
 
 
+BASE_DOC_URL = "https://docs.thirdweb.com/python"
+
+
 def describe(cls: object):
+    cls_name = cls.__name__  # type: ignore
+    doc_url = f"{BASE_DOC_URL}/{DOC_NAMES[cls_name]}"
+
     data: Dict[str, Any] = {
-        "name": cls.__name__,  # type: ignore
+        "name": cls_name,
         "summary": get_description(cls),
         "example": get_example(cls),
         "methods": [],
         "properties": [],
-        "reference": "",
+        "reference": doc_url,
     }
 
     inspected = inspect.getmembers(cls, predicate=inspect.isfunction)
+    classes = inspect.classify_class_attrs(cls)  # type: ignore
     fns = [(k, v) for k, v in inspected if not k.startswith("_")]
 
     methods = []
     for name, fn in fns:
         if inspect.isfunction(fn):
             docstring = get_description(fn)
-            if not docstring:
-                continue
+
             example = get_example(fn)
             if not example:
                 continue
 
-            methods.append({"name": name, "summary": docstring, "example": example})
+            reference = f"{doc_url}#{name}"
+            for c in classes:
+                if c[0] == name:
+                    class_url = DOC_NAMES[c[2].__name__]
+                    reference = f"{BASE_DOC_URL}/{class_url}#{name}"
+                    break
+
+            methods.append(
+                {
+                    "name": name,
+                    "summary": docstring,
+                    "example": example,
+                    "reference": reference,
+                }
+            )
 
     data["methods"] = methods
 
     properties = []
-    spec = inspect.getfullargspec(cls)._asdict()
-    for name, val in spec["annotations"].items():
+    spec = [
+        (k, v)
+        for k, v in inspect.getmembers(cls, lambda a: not (inspect.isroutine(a)))
+        if not k.startswith("_")
+    ]
+    for name, val in spec:
         docstring = get_description(val)
-        if not docstring:
-            continue
+
         example = get_example(val)
         if not example:
             continue
@@ -76,6 +112,7 @@ def describe(cls: object):
                 "name": name,
                 "summary": docstring,
                 "example": example,
+                "reference": "",
             }
         )
 
