@@ -1,7 +1,17 @@
 from typing import Any, Dict
-from thirdweb.contracts import Marketplace
+import thirdweb.contracts
 import inspect
+import json
 import re
+
+CONTRACTS = [
+    "NFTCollection",
+    "Edition",
+    "Token",
+    "Marketplace",
+    "NFTDrop",
+    "EditionDrop",
+]
 
 
 def get_description(cls: object) -> str:
@@ -72,4 +82,15 @@ def describe(cls: object):
     return data
 
 
-print(describe(Marketplace))
+def generate():
+    data = {}
+    for contract in CONTRACTS:
+        cls = getattr(thirdweb.contracts, contract)
+        data[contract] = describe(cls)
+
+    with open("docs/docs/snippets.json", "w") as f:
+        j = json.dumps(data, indent=4)
+        f.write(j)
+
+
+generate()
