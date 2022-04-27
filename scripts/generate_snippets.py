@@ -94,8 +94,12 @@ def describe(cls: object):
     data["methods"] = methods
 
     properties = []
-    spec = inspect.getfullargspec(cls)._asdict()
-    for name, val in spec["annotations"].items():
+    spec = [
+        (k, v)
+        for k, v in inspect.getmembers(cls, lambda a: not (inspect.isroutine(a)))
+        if not k.startswith("_")
+    ]
+    for name, val in spec:
         docstring = get_description(val)
 
         example = get_example(val)

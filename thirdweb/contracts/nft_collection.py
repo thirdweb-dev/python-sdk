@@ -55,6 +55,7 @@ class NFTCollection(ERC721[TokenERC721]):
     primary_sale: ContractPrimarySale[TokenERC721]
     platform_fee: ContractPlatformFee[TokenERC721]
     royalty: ContractRoyalty[TokenERC721]
+
     signature: ERC721SignatureMinting
     events: ContractEvents[TokenERC721]
 
