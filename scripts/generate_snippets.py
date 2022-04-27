@@ -30,6 +30,7 @@ def get_description(cls: object) -> str:
     doc = getattr(cls, "__doc__", "")
     if doc is None:
         return ""
+    # inspect.cleandoc(doc)
     # no_example = re.sub(r"```(.|\n)*```", "", doc)
     no_example = doc.split("\n\n")[0]
     cleaned = no_example.replace("\n", "").strip()
