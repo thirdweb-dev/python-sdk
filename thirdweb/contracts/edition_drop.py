@@ -42,7 +42,7 @@ class EditionDrop(ERC1155[DropERC1155]):
     signer = Account.create()
 
     sdk = ThirdwebSDK(provider, signer)
-    contract = sdk.get_edition_drop("<CONTRACT_ADDRESS>")
+    contract = sdk.get_edition_drop("{{contract_address}}")
     ```
     """
 
@@ -88,6 +88,34 @@ class EditionDrop(ERC1155[DropERC1155]):
     ) -> List[TxResultWithId[NFTMetadata]]:
         """
         Create a batch of NFTs.
+
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput
+
+        # Note that you can customize this metadata however you like
+        metadatas_with_supply = [
+            EditionMetadataInput(
+                NFTMetadataInput.from_json({
+                    "name": "Cool NFT",
+                    "description": "This is a cool NFT",
+                    "image": open("path/to/file.jpg", "rb"),
+                }),
+                100
+            ),
+            EditionMetadataInput(
+                NFTMetadataInput.from_json({
+                    "name": "Cooler NFT",
+                    "description": "This is a cooler NFT",
+                    "image": open("path/to/file.jpg", "rb"),
+                }),
+                100
+            )
+        ]
+
+        txs = contract.create_batch(metadata_with_supply)
+        first_token_id = txs[0].id
+        first_nft = txs[0].data()
+        ```
 
         :param metadatas: List of NFT metadata inputs.
         :return: List of tx results with ids for created NFTs.
@@ -137,6 +165,17 @@ class EditionDrop(ERC1155[DropERC1155]):
     ) -> TxReceipt:
         """
         Claim NFTs to a destination address.
+
+        ```python
+        address = {{wallet_address}}
+        token_id = 0
+        quantity = 1
+
+        tx = contract.claim_to(address, token_id, quantity)
+        receipt = tx.receipt
+        claimed_token_id = tx.id
+        claimed_nft = tx.data()
+        ```
 
         :param destination_address: Destination address to claim to.
         :param token_id: token ID of the token to claim.

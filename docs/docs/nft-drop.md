@@ -23,7 +23,7 @@ provider = Web3(Web3.HTTPProvider("<RPC_URL>"))
 signer = Account.create()
 
 sdk = ThirdwebSDK(provider, signer)
-contract = sdk.get_nft_drop("<CONTRACT_ADDRESS>")
+contract = sdk.get_nft_drop("{{contract_address}}")
 ```
 
 <a id="contracts.nft_drop.NFTDrop.get_all_claimed"></a>
@@ -36,6 +36,11 @@ def get_all_claimed(query_params: QueryAllParams = QueryAllParams()
 ```
 
 Get all claimed NFTs.
+
+```python
+claimed_nfts = contract.get_all_claimed()
+first_owner = claimed_nfts[0].owner
+```
 
 **Arguments**:
 
@@ -56,6 +61,11 @@ def get_all_unclaimed(query_params: QueryAllParams = QueryAllParams()
 
 Get all unclaimed NFTs.
 
+```python
+unclaimed_nfts = contract.get_all_unclaimed()
+first_nft_name = unclaimed_nfts[0].name
+```
+
 **Arguments**:
 
 - `query_params`: Query parameters.
@@ -74,6 +84,10 @@ def total_claimed_supply() -> int
 
 Get the total number of NFTs claimed from this contract
 
+```python
+total_claimed = contract.total_claimed_supply()
+```
+
 **Returns**:
 
 Total number of NFTs claimed from this contract
@@ -87,6 +101,10 @@ def total_unclaimed_supply() -> int
 ```
 
 Get the total number of unclaimed NFTs in this contract
+
+```python
+total_unclaimed = contract.total_unclaimed_supply()
+```
 
 **Returns**:
 
@@ -103,6 +121,28 @@ def create_batch(
 ```
 
 Create a batch of NFTs.
+
+```python
+from thirdweb.types.nft import NFTMetadataInput
+
+# You can customize this metadata however you like
+metadatas = [
+    NFTMetadataInput.from_json({
+        "name": "Cool NFT",
+        "description": "This is a cool NFT",
+        "image": open("path/to/file.jpg", "rb"),
+    }),
+    NFTMetadataInput.from_json({
+        "name": "Cooler NFT",
+        "description": "This is a cooler NFT",
+        "image": open("path/to/file.jpg", "rb"),
+    }),
+]
+
+txs = contract.create_batch(metadatas)
+first_token_id = txs[0].id
+first_nft = txs[0].data()
+```
 
 **Arguments**:
 
@@ -125,6 +165,16 @@ def claim_to(
 ```
 
 Claim NFTs to a destination address.
+
+```python
+address = {{wallet_address}}
+quantity = 1
+
+tx = contract.claim_to(address, quantity)
+receipt = tx.receipt
+claimed_token_id = tx.id
+claimed_nft = tx.data()
+```
 
 **Arguments**:
 

@@ -39,6 +39,11 @@ class ERC20(BaseContract[TokenERC20]):
         """
         Get the token metadata including name, symbol, decimals, etc.
 
+        ```python
+        token = contract.get()
+        print(token)
+        ```
+
         :returns: token metadata
         """
 
@@ -50,6 +55,11 @@ class ERC20(BaseContract[TokenERC20]):
         """
         Get the token balance of the connected wallet.
 
+        ```python
+        balance = contract.balance()
+        print(balance)
+        ```
+
         :returns: balance of the connected wallet
         """
 
@@ -58,6 +68,12 @@ class ERC20(BaseContract[TokenERC20]):
     def balance_of(self, address: str) -> CurrencyValue:
         """
         Get the balance of the specified wallet
+
+        ```python
+        address = "{{wallet_address}}"
+        balance = contract.balance_of(address)
+        print(balance)
+        ```
 
         :param address: wallet address to check the balance of
         :returns: balance of the specified wallet
@@ -80,6 +96,11 @@ class ERC20(BaseContract[TokenERC20]):
         """
         Get a specific spenders allowance of this token for the connected wallet.
 
+        ```python
+        spender = "{{wallet_address}}"
+        allowance = contract.allowance(spender)
+        ```
+
         :param spender: wallet address to check the allowance of
         :returns: allowance of the connected wallet
         """
@@ -89,6 +110,17 @@ class ERC20(BaseContract[TokenERC20]):
     def allowance_of(self, owner: str, spender: str) -> CurrencyValue:
         """
         Get the allowance of the specified spender for a specified owner.
+
+        ```python
+        # Address of the wallet who owns the funds
+        address = "{{wallet_address}}"
+
+        # Address of the wallet to check the token allowance
+        spender = "0x..."
+
+        allowance = contract.allowance_of(address, spender)
+        print(allowance)
+        ```
 
         :param owner: wallet address whose assets will be spent
         :param spender: wallet address to check the allowance of
@@ -120,6 +152,16 @@ class ERC20(BaseContract[TokenERC20]):
         """
         Transfer a specified amount of tokens from the connected wallet to a specified address.
 
+        ```python
+        # Address to send tokens to
+        to = "0x...
+
+        # Amount of tokens to transfer
+        amount = 0.1
+
+        contract.transfer(to, amount)
+        ```
+
         :param to: wallet address to transfer the tokens to
         :param amount: amount of tokens to transfer
         :returns: transaction receipt of the transfer
@@ -133,6 +175,19 @@ class ERC20(BaseContract[TokenERC20]):
     def transfer_from(self, fr: str, to: str, amount: Price) -> TxReceipt:
         """
         Transfer a specified amount of tokens from one specified address to another.
+
+        ```python
+        # Address to send tokens from
+        fr = "{{wallet_address}}"
+
+        # Address to send tokens to
+        to = "0x..."
+
+        # Amount of tokens to transfer
+        amount = 0.1
+
+        contract.transfer_from(fr, to, amount)
+        ```
 
         :param fr: wallet address to transfer the tokens from
         :param to: wallet address to transfer the tokens to
@@ -150,6 +205,12 @@ class ERC20(BaseContract[TokenERC20]):
         Sets the allowance of the specified wallet over the connected wallets funds to
         a specified amount.
 
+        ```python
+        spender = "0x..."
+        amount = 100
+        contract.set_allowance(spender, amount)
+        ```
+
         :param spender: wallet address to set the allowance of
         :param amount: amount to set the allowance to
         :returns: transaction receipt of the allowance set
@@ -163,6 +224,17 @@ class ERC20(BaseContract[TokenERC20]):
     def transfer_batch(self, args: List[TokenAmount]):
         """
         Transfer tokens from the connected wallet to many wallets.
+
+        ```python
+        from thirdweb.types.currency import TokenAmount
+
+        data = [
+            TokenAmount("{{wallet_address}}", 0.1),
+            TokenAmount("0x...", 0.2),
+        ]
+
+        contract.transfer_batch(data)
+        ```
 
         :param args: list of token amounts and addressed to transfer to
         :returns: transaction receipt of the transfers
@@ -183,6 +255,11 @@ class ERC20(BaseContract[TokenERC20]):
         """
         Burn a specified amount of tokens from the connected wallet.
 
+        ```python
+        amount = 0.1
+        contract.burn(amount)
+        ```
+
         :param amount: amount of tokens to burn
         :returns: transaction receipt of the burn
         """
@@ -193,6 +270,12 @@ class ERC20(BaseContract[TokenERC20]):
     def burn_from(self, holder: str, amount: Price) -> TxReceipt:
         """
         Burn a specified amount of tokens from a specified wallet.
+
+        ```python
+        holder = "{{wallet_address}}"
+        amount = 0.1
+        contract.burn_from(holder, amount)
+        ```
 
         :param holder: wallet address to burn the tokens from
         :param amount: amount of tokens to burn

@@ -31,6 +31,11 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         Get metadata for a token
 
+        ```python
+        nft = contract.get(0)
+        print(nft)
+        ```
+
         :param token_id: token ID of the token to get the metadata for
         :return: the metadata for the token and its owner
         """
@@ -48,6 +53,11 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
     ) -> List[NFTMetadataOwner]:
         """
         Get the metadata of all tokens in the contract
+
+        ```python
+        nfts = contract.get_all()
+        print(nfts)
+        ```
 
         :param query_params: optionally define a QueryAllParams instance to narrow the metadata query to specific tokens
         :return: the metadata of all tokens in the contract
@@ -68,6 +78,11 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
     def get_owned(self, address: str = "") -> List[NFTMetadataOwner]:
         """
         Get the metadata of all tokens owned by a specific address
+
+        ```python
+        nfts = contract.get_owned("{{wallet_address}}")
+        print(nfts)
+        ```
 
         :param address: the address to get the metadata for
         :return: the metadata of all tokens owned by the address
@@ -125,6 +140,11 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         Get the token balance of a specific address
 
+        ```python
+        balance = contract.balance_of("{{wallet_address}}")
+        print(balance)
+        ```
+
         :param address: the address to get the token balance of
         """
 
@@ -165,6 +185,13 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
     def transfer(self, to: str, token_id: int) -> TxReceipt:
         """
         Transfer a specified token from the connected wallet to a specified address.
+
+        ```python
+        to = "{{wallet_address}}"
+        token_id = 0
+
+        receipt = contract.transfer(to, token_id)
+        ```
 
         :param to: wallet address to transfer the tokens to
         :param token_id: the specific token ID to transfer

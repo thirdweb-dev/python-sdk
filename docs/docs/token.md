@@ -25,7 +25,7 @@ provider = Web3(Web3.HTTPProvider("<RPC_URL>"))
 signer = Account.create()
 
 sdk = ThirdwebSDK(provider, signer)
-contract = sdk.get_token("<CONTRACT_ADDRESS>")
+contract = sdk.get_token("{{contract_address}}")
 ```
 
 <a id="contracts.token.Token.get_vote_balance"></a>
@@ -120,6 +120,10 @@ def mint_to(to: str, amount: Price) -> TxReceipt
 
 Mint tokens to a specified wallet.
 
+```python
+contract.mint_to("{{wallet_address}}", 1)
+```
+
 **Arguments**:
 
 - `to`: wallet address to mint tokens to
@@ -138,6 +142,17 @@ def mint_batch_to(args: List[TokenAmount]) -> TxReceipt
 ```
 
 Mint tokens to a list of wallets.
+
+```python
+from thirdweb.types.currency import TokenAmount
+
+args = [
+    TokenAmount("{{wallet_address}}", 1),
+    TokenAmount("{{wallet_address}}", 2),
+]
+
+contract.mint_batch_to(args)
+```
 
 **Arguments**:
 

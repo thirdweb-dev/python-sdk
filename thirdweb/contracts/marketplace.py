@@ -45,7 +45,7 @@ class Marketplace(BaseContract[MarketplaceABI]):
     signer = Account.create()
 
     sdk = ThirdwebSDK(provider, signer)
-    contract = sdk.get_marketplace("<CONTRACT_ADDRESS>")
+    contract = sdk.get_marketplace("{{contract_address}}")
     ```
     """
 
@@ -111,6 +111,11 @@ class Marketplace(BaseContract[MarketplaceABI]):
         """
         Get all the currently active listings from the marketplace.
 
+        ```python
+        listings = contract.get_active_listings()
+        price_of_first = listings[0].price
+        ```
+
         :return: List of listings
         """
         raw_listings = self._get_all_listings_no_filter()
@@ -133,6 +138,11 @@ class Marketplace(BaseContract[MarketplaceABI]):
     ) -> List[Union[DirectListing, AuctionListing]]:
         """
         Get all the listings that have ever been made on this marketplace.
+
+        ```python
+        listings = contract.get_all_listings()
+        price_of_first = listings[0].price
+        ```
 
         :param filter: Filter to apply to the listings
         :return: List of listings
@@ -216,6 +226,13 @@ class Marketplace(BaseContract[MarketplaceABI]):
         """
         Buyout a listing by listing ID
 
+        ```python
+        listing_id = 0
+        quantity_desired = 1
+
+        contract.buyout_listing(listing_id, quantity_desired)
+        ```
+
         :param listing_id: ID of the listing to buyout
         :param quantity_desired: Quantity to buyout
         :param receiver: Address to send the asset to
@@ -241,6 +258,11 @@ class Marketplace(BaseContract[MarketplaceABI]):
         """
         Set the bid buffer basis points for this marketplace.
 
+        ```python
+        buffer_bps = 500
+        contract.set_bid_buffer_bps(buffer_bps)
+        ```
+
         :param buffer_bps: Bid buffer basis points
         :return: Transaction receipt
         """
@@ -254,6 +276,11 @@ class Marketplace(BaseContract[MarketplaceABI]):
     def set_time_buffer_in_seconds(self, buffer_in_seconds: int) -> TxReceipt:
         """
         Set the time buffer of the marketplace.
+
+        ```python
+        buffer_in_seconds = 60
+        contract.set_time_buffer_in_seconds(buffer_in_seconds)
+        ```
 
         :param buffer_in_seconds: Time buffer in seconds
         :return: Transaction receipt

@@ -18,7 +18,8 @@ def get_description(cls: object) -> str:
     doc = getattr(cls, "__doc__", "")
     if doc is None:
         return ""
-    no_example = re.sub(r"```(.|\n)*```", "", doc)
+    # no_example = re.sub(r"```(.|\n)*```", "", doc)
+    no_example = doc.split("\n\n")[0]
     cleaned = no_example.replace("\n", "").strip()
     return cleaned
 
@@ -43,7 +44,8 @@ def describe(cls: object):
         "reference": "",
     }
 
-    fns = [(k, v) for k, v in cls.__dict__.items() if not k.startswith("_")]
+    inspected = inspect.getmembers(cls, predicate=inspect.isfunction)
+    fns = [(k, v) for k, v in inspected if not k.startswith("_")]
 
     methods = []
     for name, fn in fns:

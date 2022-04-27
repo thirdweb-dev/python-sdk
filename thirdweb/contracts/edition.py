@@ -43,7 +43,7 @@ class Edition(ERC1155[TokenERC1155]):
     signer = Account.create()
 
     sdk = ThirdwebSDK(provider, signer)
-    contract = sdk.get_edition("<CONTRACT_ADDRESS>")
+    contract = sdk.get_edition("{{contract_address}}")
     ```
     """
 
@@ -103,6 +103,26 @@ class Edition(ERC1155[TokenERC1155]):
     ) -> TxResultWithId[EditionMetadata]:
         """
         Mint a new NFT to the specified wallet
+
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput
+
+        # Note that you can customize this metadata however you like
+        metadata_with_supply = EditionMetadataInput(
+            NFTMetadataInput.from_json({
+                "name": "Cool NFT",
+                "description": "This is a cool NFT",
+                "image": open("path/to/file.jpg", "rb"),
+            }),
+            100
+        )
+
+        # You can pass in any address here to mint the NFT to
+        tx = contract.mint_to("{{wallet_address}}", metadata_with_supply)
+        receipt = tx.receipt
+        token_id = tx.id
+        nft = tx.data()
+        ```
 
         :param to: wallet address to mint the NFT to
         :param metadata_with_supply: EditionMetadataInput for the NFT to mint
@@ -174,6 +194,36 @@ class Edition(ERC1155[TokenERC1155]):
     ) -> List[TxResultWithId[EditionMetadata]]:
         """
         Mint a batch of NFTs to the specified wallet
+
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput
+
+        # Note that you can customize this metadata however you like
+        metadatas_with_supply = [
+            EditionMetadataInput(
+                NFTMetadataInput.from_json({
+                    "name": "Cool NFT",
+                    "description": "This is a cool NFT",
+                    "image": open("path/to/file.jpg", "rb"),
+                }),
+                100
+            ),
+            EditionMetadataInput(
+                NFTMetadataInput.from_json({
+                    "name": "Cooler NFT",
+                    "description": "This is a cooler NFT",
+                    "image": open("path/to/file.jpg", "rb"),
+                }),
+                100
+            )
+        ]
+
+        # You can pass in any address here to mint the NFT to
+        txs = contract.mint_to("{{wallet_address}}", metadata_with_supply)
+        receipt = txs[0].receipt
+        token_id = txs[0].id
+        nft = txs[0].data()
+        ```
 
         :param to: wallet address to mint the NFTs to
         :param metadatas_with_supply: list of EditionMetadataInput for the NFTs to mint

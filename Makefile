@@ -51,6 +51,7 @@ docs:
 	cp -R docs/pydoc-markdown/content docs/docs
 	cp docs/common/index.md docs/docs/index.md
 	cp docs/common/custom.md docs/docs/custom.md
+	make snippets
 
 live-docs:
 	make docs

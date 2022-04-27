@@ -44,7 +44,7 @@ class NFTDrop(ERC721[DropERC721]):
     signer = Account.create()
 
     sdk = ThirdwebSDK(provider, signer)
-    contract = sdk.get_nft_drop("<CONTRACT_ADDRESS>")
+    contract = sdk.get_nft_drop("{{contract_address}}")
     ```
     """
 
@@ -91,6 +91,11 @@ class NFTDrop(ERC721[DropERC721]):
         """
         Get all claimed NFTs.
 
+        ```python
+        claimed_nfts = contract.get_all_claimed()
+        first_owner = claimed_nfts[0].owner
+        ```
+
         :param query_params: Query parameters.
         :return: List of nft metadatas and owners for claimed nfts.
         """
@@ -107,6 +112,11 @@ class NFTDrop(ERC721[DropERC721]):
     ) -> List[NFTMetadata]:
         """
         Get all unclaimed NFTs.
+
+        ```python
+        unclaimed_nfts = contract.get_all_unclaimed()
+        first_nft_name = unclaimed_nfts[0].name
+        ```
 
         :param query_params: Query parameters.
         :return: List of nft metadatas.
@@ -127,6 +137,10 @@ class NFTDrop(ERC721[DropERC721]):
         """
         Get the total number of NFTs claimed from this contract
 
+        ```python
+        total_claimed = contract.total_claimed_supply()
+        ```
+
         :return: Total number of NFTs claimed from this contract
         """
         return self._contract_wrapper._contract_abi.next_token_id_to_claim.call()
@@ -134,6 +148,10 @@ class NFTDrop(ERC721[DropERC721]):
     def total_unclaimed_supply(self) -> int:
         """
         Get the total number of unclaimed NFTs in this contract
+
+        ```python
+        total_unclaimed = contract.total_unclaimed_supply()
+        ```
 
         :return: Total number of unclaimed NFTs in this contract
         """
@@ -147,6 +165,29 @@ class NFTDrop(ERC721[DropERC721]):
     ) -> List[TxResultWithId[NFTMetadata]]:
         """
         Create a batch of NFTs.
+
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput
+
+        # You can customize this metadata however you like
+        metadatas = [
+            NFTMetadataInput.from_json({
+                "name": "Cool NFT",
+                "description": "This is a cool NFT",
+                "image": open("path/to/file.jpg", "rb"),
+            }),
+            NFTMetadataInput.from_json({
+                "name": "Cooler NFT",
+                "description": "This is a cooler NFT",
+                "image": open("path/to/file.jpg", "rb"),
+            }),
+        ]
+
+        txs = contract.create_batch(metadatas)
+        first_token_id = txs[0].id
+        first_nft = txs[0].data()
+        ```
+
 
         :param metadatas: List of NFT metadata inputs.
         :return: List of tx results with ids for created NFTs.
@@ -196,6 +237,16 @@ class NFTDrop(ERC721[DropERC721]):
     ) -> List[TxResultWithId[NFTMetadata]]:
         """
         Claim NFTs to a destination address.
+
+        ```python
+        address = {{wallet_address}}
+        quantity = 1
+
+        tx = contract.claim_to(address, quantity)
+        receipt = tx.receipt
+        claimed_token_id = tx.id
+        claimed_nft = tx.data()
+        ```
 
         :param destination_address: Destination address to claim to.
         :param quantity: Number of NFTs to claim.

@@ -37,7 +37,7 @@ class Token(ERC20):
     signer = Account.create()
 
     sdk = ThirdwebSDK(provider, signer)
-    contract = sdk.get_token("<CONTRACT_ADDRESS>")
+    contract = sdk.get_token("{{contract_address}}")
     ```
     """
 
@@ -136,6 +136,10 @@ class Token(ERC20):
         """
         Mint tokens to a specified wallet.
 
+        ```python
+        contract.mint_to("{{wallet_address}}", 1)
+        ```
+
         :param to: wallet address to mint tokens to
         :param amount: amount of tokens to mint
         :returns: transaction receipt of the mint
@@ -149,6 +153,17 @@ class Token(ERC20):
     def mint_batch_to(self, args: List[TokenAmount]) -> TxReceipt:
         """
         Mint tokens to a list of wallets.
+
+        ```python
+        from thirdweb.types.currency import TokenAmount
+
+        args = [
+            TokenAmount("{{wallet_address}}", 1),
+            TokenAmount("{{wallet_address}}", 2),
+        ]
+
+        contract.mint_batch_to(args)
+        ```
 
         :param args: list of wallet addresses and amounts to mint
         :returns: transaction receipt of the mint

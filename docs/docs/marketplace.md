@@ -25,7 +25,7 @@ provider = Web3(Web3.HTTPProvider("<RPC_URL>"))
 signer = Account.create()
 
 sdk = ThirdwebSDK(provider, signer)
-contract = sdk.get_marketplace("<CONTRACT_ADDRESS>")
+contract = sdk.get_marketplace("{{contract_address}}")
 ```
 
 <a id="contracts.marketplace.Marketplace.get_listing"></a>
@@ -56,6 +56,11 @@ def get_active_listings() -> List[Union[DirectListing, AuctionListing]]
 
 Get all the currently active listings from the marketplace.
 
+```python
+listings = contract.get_active_listings()
+price_of_first = listings[0].price
+```
+
 **Returns**:
 
 List of listings
@@ -71,6 +76,11 @@ def get_all_listings(
 ```
 
 Get all the listings that have ever been made on this marketplace.
+
+```python
+listings = contract.get_all_listings()
+price_of_first = listings[0].price
+```
 
 **Arguments**:
 
@@ -148,6 +158,13 @@ def buyout_listing(listing_id: int,
 
 Buyout a listing by listing ID
 
+```python
+listing_id = 0
+quantity_desired = 1
+
+contract.buyout_listing(listing_id, quantity_desired)
+```
+
 **Arguments**:
 
 - `listing_id`: ID of the listing to buyout
@@ -168,6 +185,11 @@ def set_bid_buffer_bps(buffer_bps: int) -> TxReceipt
 
 Set the bid buffer basis points for this marketplace.
 
+```python
+buffer_bps = 500
+contract.set_bid_buffer_bps(buffer_bps)
+```
+
 **Arguments**:
 
 - `buffer_bps`: Bid buffer basis points
@@ -185,6 +207,11 @@ def set_time_buffer_in_seconds(buffer_in_seconds: int) -> TxReceipt
 ```
 
 Set the time buffer of the marketplace.
+
+```python
+buffer_in_seconds = 60
+contract.set_time_buffer_in_seconds(buffer_in_seconds)
+```
 
 **Arguments**:
 
