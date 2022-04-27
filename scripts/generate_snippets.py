@@ -36,7 +36,7 @@ def get_example(cls: object) -> str:
 
 def describe(cls: object):
     data: Dict[str, Any] = {
-        "name": type(cls).__name__,
+        "name": cls.__name__,  # type: ignore
         "summary": get_description(cls),
         "example": get_example(cls),
         "methods": [],
