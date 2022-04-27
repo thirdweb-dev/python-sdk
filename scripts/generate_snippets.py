@@ -30,7 +30,6 @@ def get_description(cls: object) -> str:
     doc = getattr(cls, "__doc__", "")
     if doc is None:
         return ""
-    # inspect.cleandoc(doc)
     # no_example = re.sub(r"```(.|\n)*```", "", doc)
     no_example = doc.split("\n\n")[0]
     cleaned = no_example.replace("\n", "").strip()
@@ -44,7 +43,8 @@ def get_example(cls: object) -> str:
     matches = re.search(r"```(.|\n)*```", doc)
     if matches is None:
         return ""
-    return matches.group(0).replace("```python", "").replace("```", "")
+    example = matches.group(0).replace("```python", "").replace("```", "")
+    return inspect.cleandoc(example)
 
 
 BASE_DOC_URL = "https://docs.thirdweb.com/python"
