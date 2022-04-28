@@ -10,6 +10,24 @@
 class IpfsStorage(ABC)
 ```
 
+Upload and download files from IPFS.
+
+```python
+from thirdweb import ThirdwebSDK
+from eth_account import Account
+from web3 import Web3
+
+# You can switch out this provider and RPC URL for your own
+provider = Web3(Web3.HTTPProvider("<RPC_URL>"))
+# This will create a random account to use for signing transactions
+signer = Account.create()
+
+sdk = ThirdwebSDK(provider, signer)
+
+# Now all the IPFS functions will be available on the sdk.storage name space
+sdk.storage.get("<IPFS_HASH>")
+```
+
 <a id="core.classes.ipfs_storage.IpfsStorage.get"></a>
 
 #### get
