@@ -118,6 +118,10 @@ renderer:
     name: contract-events
     contents:
     - core.classes.contract_events.*
+  - title: IPFS Storage
+    name: ipfs-storage
+    contents:
+    - core.classes.ipfs_storage.*
 
   mkdocs_config:
     site_name: Thirdweb Python SDK
