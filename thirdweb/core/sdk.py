@@ -24,7 +24,7 @@ class ThirdwebSDK(ProviderHandler):
     __contract_cache: Dict[
         str, Union[NFTCollection, Edition, Token, Marketplace, NFTDrop, EditionDrop]
     ] = {}
-    __storage: IpfsStorage
+    storage: IpfsStorage
 
     deployer: ContractDeployer
 
@@ -45,7 +45,7 @@ class ThirdwebSDK(ProviderHandler):
         """
 
         super().__init__(provider, signer, options)
-        self.__storage = storage
+        self.storage = storage
         self.deployer = ContractDeployer(provider, signer, options, storage)
 
     def get_nft_collection(self, address: str) -> NFTCollection:
@@ -123,12 +123,12 @@ class ThirdwebSDK(ProviderHandler):
             try:
                 contract = ThirdwebContract(self.get_provider(), address)
                 metadata_uri = contract.get_publish_metadata_uri.call()
-                abi = fetch_contract_metadata(metadata_uri, self.__storage)
+                abi = fetch_contract_metadata(metadata_uri, self.storage)
             except Exception as e:
                 raise Exception("Error fetching ABI for this contract: " + str(e))
 
         return CustomContract(
-            self.get_provider(), address, abi, self.__storage, self.get_signer()
+            self.get_provider(), address, abi, self.storage, self.get_signer()
         )
 
     def update_provider(self, provider: Web3):
@@ -173,7 +173,7 @@ class ThirdwebSDK(ProviderHandler):
         contract = contract_type(
             self.get_provider(),
             address,
-            self.__storage,
+            self.storage,
             self.get_signer(),
             self.get_options(),
         )

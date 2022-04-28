@@ -43,6 +43,9 @@ class IpfsStorage(ABC):
     def get_upload_token(self, contract_address: str) -> str:
         """
         Gets an upload token for a given contract address.
+
+        :param contract_address: address of the contract to get the token for.
+        :returns: upload token.
         """
 
         res = get(
@@ -65,6 +68,11 @@ class IpfsStorage(ABC):
     ) -> str:
         """
         Uploads data to IPFS and returns the hash of the data.
+
+        :param data: data to upload.
+        :param contract_address: optional address of the contract to get the token for.
+        :param signer_address: optional address of the signer to get the token for.
+        :returns: hash of the data.
         """
 
         cid = self.upload_batch([data], 0, contract_address, signer_address)
@@ -79,6 +87,12 @@ class IpfsStorage(ABC):
     ) -> str:
         """
         Uploads a list of files to IPFS and returns the hash.
+
+        :param files: list of files to upload.
+        :param file_start_number: optional number to start the file names with.
+        :param contract_address: optional address of the contract to get the token for.
+        :param signer_address: optional address of the signer to get the token for.
+        :returns: hash of the data.
         """
 
         cid_with_filename = self._upload_batch_with_cid(
@@ -98,6 +112,11 @@ class IpfsStorage(ABC):
     ) -> str:
         """
         Uploads metadata to IPFS and returns the hash of the metadata.
+
+        :param metadata: metadata to upload.
+        :param contract_address: optional address of the contract to get the token for.
+        :param signer_address: optional address of the signer to get the token for.
+        :returns: hash of the metadata.
         """
 
         uri_with_metadata = self.upload_metadata_batch(
@@ -115,6 +134,12 @@ class IpfsStorage(ABC):
     ) -> UriWithMetadata:
         """
         Uploads a list of metadata to IPFS and returns the hash.
+
+        :param metadatas: list of metadata to upload.
+        :param file_start_number: optional number to start the file names with.
+        :param contract_address: optional address of the contract to get the token for.
+        :param signer_address: optional address of the signer to get the token for.
+        :returns: hash of the metadata.
         """
 
         metadata_to_upload = self._batch_upload_properties(metadatas)

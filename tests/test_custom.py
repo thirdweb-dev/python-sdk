@@ -47,7 +47,7 @@ def test_custom_functions(sdk: ThirdwebSDK, nft_collection: NFTCollection):
     custom = sdk.get_custom_contract(nft_collection.get_address(), TokenERC721.abi())
 
     contract_uri = custom.functions.contractURI().call()
-    metadata = sdk._ThirdwebSDK__storage.get(contract_uri)  # type: ignore
+    metadata = sdk.storage.get(contract_uri)  # type: ignore
     assert metadata["name"] == "SDK NFT Collection"
 
 
@@ -84,7 +84,7 @@ def test_get_abi():
     custom = sdk.get_custom_contract("0x87f80ba61BceC41108127991a706EDE2aBBef015")
 
     contract_uri = custom.functions.contractURI().call()
-    metadata = sdk._ThirdwebSDK__storage.get(contract_uri)  # type: ignore
+    metadata = sdk.storage.get(contract_uri)  # type: ignore
     assert metadata["name"] == "Ethrone v1.4"
 
 

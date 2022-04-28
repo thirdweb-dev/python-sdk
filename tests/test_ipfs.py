@@ -9,7 +9,7 @@ from thirdweb.core.sdk import ThirdwebSDK
 @pytest.mark.usefixtures("sdk")
 @pytest.fixture()
 def storage(sdk: ThirdwebSDK):
-    storage = sdk._ThirdwebSDK__storage  # type: ignore
+    storage = sdk.storage  # type: ignore
     return storage
 
 
