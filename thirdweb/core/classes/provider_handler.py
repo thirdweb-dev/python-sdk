@@ -92,43 +92,7 @@ class ProviderHandler(EventEmitter):
     def get_options(self) -> SDKOptions:
         return self.__options
 
-    def __get_read_only_provider(self) -> Optional[Web3]:
-        """
-        Get a read only provider based on the read-only settings and specified provider.
-        """
-
-        # First check if there is a read-only settings instance
-        if self.__options.read_only_settings is not None:
-            match = re.match(
-                r"^(ws|http)s?:\/\/", self.__options.read_only_settings.rpc_url
-            )
-
-            # Check if the read only RPC URL is a valid URL (websocket or http/https)
-            if match is not None:
-                if "https://" in match.group() or "http://" in match.group():
-                    return Web3(
-                        Web3.HTTPProvider(self.__options.read_only_settings.rpc_url)
-                    )
-                if "ws://" in match.group():
-                    return Web3(
-                        Web3.WebsocketProvider(
-                            self.__options.read_only_settings.rpc_url
-                        )
-                    )
-
-            # Otherwise try to use a default provider using default public RPC URLs using the specified chain_id
-            if self.__options.read_only_settings.chain_id is not None:
-                default_provider = self.__get_default_provider(
-                    self.__options.read_only_settings.chain_id
-                )
-                if default_provider != None:
-                    return default_provider
-
-        # Finally, if nothing else works, use the connected providers chain id to get a default provider
-        provider = self.get_provider()
-        return self.__get_default_provider(ChainId(provider.eth.chain_id))
-
-    def __get_default_provider(self, chain_id: ChainId) -> Optional[Web3]:
+    def _get_default_provider(self, chain_id: ChainId) -> Optional[Web3]:
         """
         Get a default provider for the given chain id using default public RPC URLs.
 

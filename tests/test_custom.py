@@ -2,6 +2,7 @@ import pytest
 from thirdweb.abi import TokenERC721
 from thirdweb.abi.token_erc20 import TokenERC20
 from thirdweb.constants.currency import ZERO_ADDRESS
+from thirdweb.constants.urls import DEFAULT_API_KEY
 from thirdweb.contracts.nft_collection import NFTCollection
 from thirdweb.contracts.token import Token
 from thirdweb.core.sdk import ThirdwebSDK
@@ -77,9 +78,8 @@ def test_feature_detection(
 
 
 def test_get_abi():
-    RPC_URL = "https://rpc-mumbai.maticvigil.com"
-    provider = Web3(Web3.HTTPProvider(RPC_URL))
-    sdk = ThirdwebSDK(provider)
+    RPC_URL = f"https://polygon-mumbai.g.alchemy.com/v2/{DEFAULT_API_KEY}"
+    sdk = ThirdwebSDK(RPC_URL)
 
     custom = sdk.get_custom_contract("0x87f80ba61BceC41108127991a706EDE2aBBef015")
 

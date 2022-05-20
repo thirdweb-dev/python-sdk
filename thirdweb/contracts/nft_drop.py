@@ -36,14 +36,14 @@ class NFTDrop(ERC721[DropERC721]):
     ```python
     from thirdweb import ThirdwebSDK
     from eth_account import Account
-    from web3 import Web3
 
-    # You can switch out this provider and RPC URL for your own
-    provider = Web3(Web3.HTTPProvider("<RPC_URL>"))
+    # You can customize this to a supported network or your own RPC URL
+    network = "mumbai"
+
     # This will create a random account to use for signing transactions
     signer = Account.create()
 
-    sdk = ThirdwebSDK(provider, signer)
+    sdk = ThirdwebSDK(network, signer)
     contract = sdk.get_nft_drop("{{contract_address}}")
     ```
     """
