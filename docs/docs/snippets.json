@@ -2,7 +2,7 @@
     "NFTCollection": {
         "name": "NFTCollection",
         "summary": "Create a collection of one-of-one NFTs.",
-        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\nfrom web3 import Web3\n\n# You can switch out this provider and RPC URL for your own\nprovider = Web3(Web3.HTTPProvider(\"<RPC_URL>\"))\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(provider, signer)\ncontract = sdk.get_nft_collection(\"{{contract_address}}\")",
+        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\n\n# You can customize this to a supported network or your own RPC URL\nnetwork = \"mumbai\"\n\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(network, signer)\ncontract = sdk.get_nft_collection(\"{{contract_address}}\")",
         "methods": [
             {
                 "name": "balance_of",
@@ -53,7 +53,7 @@
     "Edition": {
         "name": "Edition",
         "summary": "Create a collection of NFTs that lets you mint multiple copies of each NFT.",
-        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\nfrom web3 import Web3\n\n# You can switch out this provider and RPC URL for your own\nprovider = Web3(Web3.HTTPProvider(\"<RPC_URL>\"))\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(provider, signer)\ncontract = sdk.get_edition(\"{{contract_address}}\")",
+        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\n\n# You can customize this to a supported network or your own RPC URL\nnetwork = \"mumbai\"\n\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(network, signer)\ncontract = sdk.get_edition(\"{{contract_address}}\")",
         "methods": [
             {
                 "name": "balance_of",
@@ -104,7 +104,7 @@
     "Token": {
         "name": "Token",
         "summary": "Create a standard crypto token or cryptocurrency.",
-        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\nfrom web3 import Web3\n\n# You can switch out this provider and RPC URL for your own\nprovider = Web3(Web3.HTTPProvider(\"<RPC_URL>\"))\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(provider, signer)\ncontract = sdk.get_token(\"{{contract_address}}\")",
+        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\n\n# You can customize this to a supported network or your own RPC URL\nnetwork = \"mumbai\"\n\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(network, signer)\ncontract = sdk.get_token(\"{{contract_address}}\")",
         "methods": [
             {
                 "name": "allowance",
@@ -191,7 +191,7 @@
     "Marketplace": {
         "name": "Marketplace",
         "summary": "Create your own whitelabel marketplace that enables users to buy and sell any digital assets.",
-        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\nfrom web3 import Web3\n\n# You can switch out this provider and RPC URL for your own\nprovider = Web3(Web3.HTTPProvider(\"<RPC_URL>\"))\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(provider, signer)\ncontract = sdk.get_marketplace(\"{{contract_address}}\")",
+        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\n\n# You can customize this to a supported network or your own RPC URL\nnetwork = \"mumbai\"\n\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(network, signer)\ncontract = sdk.get_marketplace(\"{{contract_address}}\")",
         "methods": [
             {
                 "name": "buyout_listing",
@@ -236,7 +236,7 @@
     "NFTDrop": {
         "name": "NFTDrop",
         "summary": "Setup a collection of one-of-one NFTs that are minted as users claim them.",
-        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\nfrom web3 import Web3\n\n# You can switch out this provider and RPC URL for your own\nprovider = Web3(Web3.HTTPProvider(\"<RPC_URL>\"))\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(provider, signer)\ncontract = sdk.get_nft_drop(\"{{contract_address}}\")",
+        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\n\n# You can customize this to a supported network or your own RPC URL\nnetwork = \"mumbai\"\n\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(network, signer)\ncontract = sdk.get_nft_drop(\"{{contract_address}}\")",
         "methods": [
             {
                 "name": "balance_of",
@@ -311,7 +311,7 @@
     "EditionDrop": {
         "name": "EditionDrop",
         "summary": "Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.",
-        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\nfrom web3 import Web3\n\n# You can switch out this provider and RPC URL for your own\nprovider = Web3(Web3.HTTPProvider(\"<RPC_URL>\"))\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(provider, signer)\ncontract = sdk.get_edition_drop(\"{{contract_address}}\")",
+        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\n\n# You can customize this to a supported network or your own RPC URL\nnetwork = \"mumbai\"\n\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(network, signer)\ncontract = sdk.get_edition_drop(\"{{contract_address}}\")",
         "methods": [
             {
                 "name": "balance_of",

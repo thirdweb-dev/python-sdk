@@ -14,15 +14,11 @@ Upload and download files from IPFS.
 
 ```python
 from thirdweb import ThirdwebSDK
-from eth_account import Account
-from web3 import Web3
 
-# You can switch out this provider and RPC URL for your own
-provider = Web3(Web3.HTTPProvider("<RPC_URL>"))
-# This will create a random account to use for signing transactions
-signer = Account.create()
+# You can customize this to a supported network or your own RPC URL
+network = "mumbai"
 
-sdk = ThirdwebSDK(provider, signer)
+sdk = ThirdwebSDK(network)
 
 # Now all the IPFS functions will be available on the sdk.storage name space
 sdk.storage.get("<IPFS_HASH>")

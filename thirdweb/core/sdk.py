@@ -1,5 +1,7 @@
+from eth_account import Account
 from thirdweb.abi.thirdweb_contract import ThirdwebContract
 from thirdweb.common.feature_detection import fetch_contract_metadata
+from thirdweb.constants.urls import get_provider_for_network
 from thirdweb.contracts import Marketplace
 from thirdweb.contracts.custom import CustomContract
 from thirdweb.contracts.edition_drop import EditionDrop
@@ -28,9 +30,19 @@ class ThirdwebSDK(ProviderHandler):
 
     deployer: ContractDeployer
 
+    @staticmethod
+    def from_private_key(
+        private_key: str,
+        network: str,
+        options: SDKOptions = SDKOptions(),
+    ) -> "ThirdwebSDK":
+        signer = Account.from_key(private_key)
+        sdk = ThirdwebSDK(network, signer, options)
+        return sdk
+
     def __init__(
         self,
-        provider: Web3,
+        network: str,
         signer: Optional[LocalAccount] = None,
         options: SDKOptions = SDKOptions(),
         storage: IpfsStorage = IpfsStorage(),
@@ -44,6 +56,7 @@ class ThirdwebSDK(ProviderHandler):
         :param storage: optional IPFS storage instance to use for storing data
         """
 
+        provider = get_provider_for_network(network)
         super().__init__(provider, signer, options)
         self.storage = storage
         self.deployer = ContractDeployer(provider, signer, options, storage)
