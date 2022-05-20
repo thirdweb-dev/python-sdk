@@ -14,14 +14,10 @@ from brownie import (
     DropERC1155,
 )
 from brownie.network import priority_fee
-from eth_account import Account
 import pytest
-import os
 from thirdweb.constants.chains import ChainId
 
 from thirdweb.constants.currency import get_native_token_by_chain_id
-
-load_dotenv()
 
 
 @dataclass

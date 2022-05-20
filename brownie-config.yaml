@@ -5,6 +5,7 @@ dependencies:
 
 compiler:
   solc:
+    version: 0.8.13
     remappings:
       - '@openzeppelin/contracts-upgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.6.0/contracts'
       - '@openzeppelin/contracts=OpenZeppelin/openzeppelin-contracts@4.6.0/contracts'
