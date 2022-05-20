@@ -190,6 +190,7 @@ class EditionDrop(ERC1155[DropERC1155]):
             [
                 destination_address,
                 quantity,
+                token_id,
                 claim_verification.currency_address,
                 claim_verification.price,
                 claim_verification.proofs,
