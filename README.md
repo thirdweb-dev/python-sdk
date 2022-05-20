@@ -172,3 +172,4 @@ Assuming you have the thirdweb contract ABIs in this directory at `/abi`, you ca
 ```bash
 $ bash scripts/abi/generate.sh
 ```
+
