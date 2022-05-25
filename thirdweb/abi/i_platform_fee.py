@@ -1,4 +1,4 @@
-"""Generated wrapper for IThirdwebPlatformFee Solidity contract."""
+"""Generated wrapper for IPlatformFee Solidity contract."""
 
 # pylint: disable=too-many-arguments
 
@@ -25,16 +25,18 @@ from zero_ex.contract_wrappers.tx_params import TxParams
 
 # Try to import a custom validator class definition; if there isn't one,
 # declare one that we can instantiate for the default argument to the
-# constructor for IThirdwebPlatformFee below.
+# constructor for IPlatformFee below.
 try:
     # both mypy and pylint complain about what we're doing here, but this
     # works just fine, so their messages have been disabled here.
     from . import (  # type: ignore # pylint: disable=import-self
-        IThirdwebPlatformFeeValidator,
+        IPlatformFeeValidator,
     )
 except ImportError:
 
-    class IThirdwebPlatformFeeValidator(Validator):  # type: ignore
+    class IPlatformFeeValidator(  # type: ignore
+        Validator
+    ):
         """No-op input validator."""
 
 
@@ -44,15 +46,13 @@ except ImportError:
     pass
 
 
-class GetPlatformFeeInfoMethod(ContractMethod):  # pylint: disable=invalid-name
+
+
+
+class GetPlatformFeeInfoMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the getPlatformFeeInfo method."""
 
-    def __init__(
-        self,
-        web3_or_provider: Union[Web3, BaseProvider],
-        contract_address: str,
-        contract_function: ContractFunction,
-    ):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address)
         self._underlying_method = contract_function
@@ -65,14 +65,9 @@ class GetPlatformFeeInfoMethod(ContractMethod):  # pylint: disable=invalid-name
         """
         tx_params = super().normalize_tx_params(tx_params)
         returned = self._underlying_method().call(tx_params.as_dict())
-        return (
-            returned[0],
-            returned[1],
-        )
+        return (returned[0],returned[1],)
 
-    def send_transaction(
-        self, tx_params: Optional[TxParams] = None
-    ) -> Union[HexBytes, bytes]:
+    def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -90,126 +85,65 @@ class GetPlatformFeeInfoMethod(ContractMethod):  # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-
-class SetPlatformFeeInfoMethod(ContractMethod):  # pylint: disable=invalid-name
+class SetPlatformFeeInfoMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the setPlatformFeeInfo method."""
 
-    def __init__(
-        self,
-        web3_or_provider: Union[Web3, BaseProvider],
-        contract_address: str,
-        contract_function: ContractFunction,
-        validator: Validator = None,
-    ):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(
-        self, platform_fee_recipient: str, platform_fee_bps: int
-    ):
+    def validate_and_normalize_inputs(self, platform_fee_recipient: str, platform_fee_bps: int):
         """Validate the inputs to the setPlatformFeeInfo method."""
         self.validator.assert_valid(
-            method_name="setPlatformFeeInfo",
-            parameter_name="_platformFeeRecipient",
+            method_name='setPlatformFeeInfo',
+            parameter_name='_platformFeeRecipient',
             argument_value=platform_fee_recipient,
         )
-        platform_fee_recipient = self.validate_and_checksum_address(
-            platform_fee_recipient
-        )
+        platform_fee_recipient = self.validate_and_checksum_address(platform_fee_recipient)
         self.validator.assert_valid(
-            method_name="setPlatformFeeInfo",
-            parameter_name="_platformFeeBps",
+            method_name='setPlatformFeeInfo',
+            parameter_name='_platformFeeBps',
             argument_value=platform_fee_bps,
         )
         # safeguard against fractional inputs
         platform_fee_bps = int(platform_fee_bps)
         return (platform_fee_recipient, platform_fee_bps)
 
-    def call(
-        self,
-        platform_fee_recipient: str,
-        platform_fee_bps: int,
-        tx_params: Optional[TxParams] = None,
-    ) -> None:
+    def call(self, platform_fee_recipient: str, platform_fee_bps: int, tx_params: Optional[TxParams] = None) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (
-            platform_fee_recipient,
-            platform_fee_bps,
-        ) = self.validate_and_normalize_inputs(
-            platform_fee_recipient, platform_fee_bps
-        )
+        (platform_fee_recipient, platform_fee_bps) = self.validate_and_normalize_inputs(platform_fee_recipient, platform_fee_bps)
         tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(platform_fee_recipient, platform_fee_bps).call(
-            tx_params.as_dict()
-        )
+        self._underlying_method(platform_fee_recipient, platform_fee_bps).call(tx_params.as_dict())
 
-    def send_transaction(
-        self,
-        platform_fee_recipient: str,
-        platform_fee_bps: int,
-        tx_params: Optional[TxParams] = None,
-    ) -> Union[HexBytes, bytes]:
+    def send_transaction(self, platform_fee_recipient: str, platform_fee_bps: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (
-            platform_fee_recipient,
-            platform_fee_bps,
-        ) = self.validate_and_normalize_inputs(
-            platform_fee_recipient, platform_fee_bps
-        )
+        (platform_fee_recipient, platform_fee_bps) = self.validate_and_normalize_inputs(platform_fee_recipient, platform_fee_bps)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(
-            platform_fee_recipient, platform_fee_bps
-        ).transact(tx_params.as_dict())
+        return self._underlying_method(platform_fee_recipient, platform_fee_bps).transact(tx_params.as_dict())
 
-    def build_transaction(
-        self,
-        platform_fee_recipient: str,
-        platform_fee_bps: int,
-        tx_params: Optional[TxParams] = None,
-    ) -> dict:
+    def build_transaction(self, platform_fee_recipient: str, platform_fee_bps: int, tx_params: Optional[TxParams] = None) -> dict:
         """Construct calldata to be used as input to the method."""
-        (
-            platform_fee_recipient,
-            platform_fee_bps,
-        ) = self.validate_and_normalize_inputs(
-            platform_fee_recipient, platform_fee_bps
-        )
+        (platform_fee_recipient, platform_fee_bps) = self.validate_and_normalize_inputs(platform_fee_recipient, platform_fee_bps)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(
-            platform_fee_recipient, platform_fee_bps
-        ).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(platform_fee_recipient, platform_fee_bps).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self,
-        platform_fee_recipient: str,
-        platform_fee_bps: int,
-        tx_params: Optional[TxParams] = None,
-    ) -> int:
+    def estimate_gas(self, platform_fee_recipient: str, platform_fee_bps: int, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
-        (
-            platform_fee_recipient,
-            platform_fee_bps,
-        ) = self.validate_and_normalize_inputs(
-            platform_fee_recipient, platform_fee_bps
-        )
+        (platform_fee_recipient, platform_fee_bps) = self.validate_and_normalize_inputs(platform_fee_recipient, platform_fee_bps)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(
-            platform_fee_recipient, platform_fee_bps
-        ).estimateGas(tx_params.as_dict())
-
+        return self._underlying_method(platform_fee_recipient, platform_fee_bps).estimateGas(tx_params.as_dict())
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
-class IThirdwebPlatformFee:
-    """Wrapper class for IThirdwebPlatformFee Solidity contract."""
-
+class IPlatformFee:
+    """Wrapper class for IPlatformFee Solidity contract."""
     get_platform_fee_info: GetPlatformFeeInfoMethod
     """Constructor-initialized instance of
     :class:`GetPlatformFeeInfoMethod`.
@@ -220,11 +154,12 @@ class IThirdwebPlatformFee:
     :class:`SetPlatformFeeInfoMethod`.
     """
 
+
     def __init__(
         self,
         web3_or_provider: Union[Web3, BaseProvider],
         contract_address: str,
-        validator: IThirdwebPlatformFeeValidator = None,
+        validator: IPlatformFeeValidator = None,
     ):
         """Get an instance of wrapper for smart contract.
 
@@ -238,9 +173,7 @@ class IThirdwebPlatformFee:
         self.contract_address = contract_address
 
         if not validator:
-            validator = IThirdwebPlatformFeeValidator(
-                web3_or_provider, contract_address
-            )
+            validator = IPlatformFeeValidator(web3_or_provider, contract_address)
 
         web3 = None
         if isinstance(web3_or_provider, BaseProvider):
@@ -262,32 +195,19 @@ class IThirdwebPlatformFee:
             try:
                 for middleware in MIDDLEWARE:
                     web3.middleware_onion.inject(
-                        middleware["function"],
-                        layer=middleware["layer"],
+                         middleware['function'], layer=middleware['layer'],
                     )
             except ValueError as value_error:
-                if value_error.args == (
-                    "You can't add the same un-named instance twice",
-                ):
+                if value_error.args == ("You can't add the same un-named instance twice",):
                     pass
 
         self._web3_eth = web3.eth
 
-        functions = self._web3_eth.contract(
-            address=to_checksum_address(contract_address),
-            abi=IThirdwebPlatformFee.abi(),
-        ).functions
+        functions = self._web3_eth.contract(address=to_checksum_address(contract_address), abi=IPlatformFee.abi()).functions
 
-        self.get_platform_fee_info = GetPlatformFeeInfoMethod(
-            web3_or_provider, contract_address, functions.getPlatformFeeInfo
-        )
+        self.get_platform_fee_info = GetPlatformFeeInfoMethod(web3_or_provider, contract_address, functions.getPlatformFeeInfo)
 
-        self.set_platform_fee_info = SetPlatformFeeInfoMethod(
-            web3_or_provider,
-            contract_address,
-            functions.setPlatformFeeInfo,
-            validator,
-        )
+        self.set_platform_fee_info = SetPlatformFeeInfoMethod(web3_or_provider, contract_address, functions.setPlatformFeeInfo, validator)
 
     def get_platform_fee_info_updated_event(
         self, tx_hash: Union[HexBytes, bytes]
@@ -298,14 +218,7 @@ class IThirdwebPlatformFee:
             event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return (
-            self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=IThirdwebPlatformFee.abi(),
-            )
-            .events.PlatformFeeInfoUpdated()
-            .processReceipt(tx_receipt)
-        )
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=IPlatformFee.abi()).events.PlatformFeeInfoUpdated().processReceipt(tx_receipt)
 
     @staticmethod
     def abi():
@@ -313,6 +226,5 @@ class IThirdwebPlatformFee:
         return json.loads(
             '[{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"platformFeeRecipient","type":"address"},{"indexed":false,"internalType":"uint256","name":"platformFeeBps","type":"uint256"}],"name":"PlatformFeeInfoUpdated","type":"event"},{"inputs":[],"name":"getPlatformFeeInfo","outputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_platformFeeRecipient","type":"address"},{"internalType":"uint256","name":"_platformFeeBps","type":"uint256"}],"name":"setPlatformFeeInfo","outputs":[],"stateMutability":"nonpayable","type":"function"}]'  # noqa: E501 (line-too-long)
         )
-
 
 # pylint: disable=too-many-lines

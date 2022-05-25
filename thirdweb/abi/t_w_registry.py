@@ -163,10 +163,7 @@ class AddMethod(ContractMethod):  # pylint: disable=invalid-name
         return (deployer, deployment)
 
     def call(
-        self,
-        deployer: str,
-        deployment: str,
-        tx_params: Optional[TxParams] = None,
+        self, deployer: str, deployment: str, tx_params: Optional[TxParams] = None
     ) -> None:
         """Execute underlying contract method via eth_call.
 
@@ -180,10 +177,7 @@ class AddMethod(ContractMethod):  # pylint: disable=invalid-name
         self._underlying_method(deployer, deployment).call(tx_params.as_dict())
 
     def send_transaction(
-        self,
-        deployer: str,
-        deployment: str,
-        tx_params: Optional[TxParams] = None,
+        self, deployer: str, deployment: str, tx_params: Optional[TxParams] = None
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
@@ -198,10 +192,7 @@ class AddMethod(ContractMethod):  # pylint: disable=invalid-name
         )
 
     def build_transaction(
-        self,
-        deployer: str,
-        deployment: str,
-        tx_params: Optional[TxParams] = None,
+        self, deployer: str, deployment: str, tx_params: Optional[TxParams] = None
     ) -> dict:
         """Construct calldata to be used as input to the method."""
         (deployer, deployment) = self.validate_and_normalize_inputs(
@@ -213,10 +204,7 @@ class AddMethod(ContractMethod):  # pylint: disable=invalid-name
         )
 
     def estimate_gas(
-        self,
-        deployer: str,
-        deployment: str,
-        tx_params: Optional[TxParams] = None,
+        self, deployer: str, deployment: str, tx_params: Optional[TxParams] = None
     ) -> int:
         """Estimate gas consumption of method call."""
         (deployer, deployment) = self.validate_and_normalize_inputs(
@@ -445,10 +433,7 @@ class GetRoleMemberMethod(ContractMethod):  # pylint: disable=invalid-name
         return (role, index)
 
     def call(
-        self,
-        role: Union[bytes, str],
-        index: int,
-        tx_params: Optional[TxParams] = None,
+        self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None
     ) -> str:
         """Execute underlying contract method via eth_call.
 
@@ -461,10 +446,7 @@ class GetRoleMemberMethod(ContractMethod):  # pylint: disable=invalid-name
         return str(returned)
 
     def send_transaction(
-        self,
-        role: Union[bytes, str],
-        index: int,
-        tx_params: Optional[TxParams] = None,
+        self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
@@ -475,10 +457,7 @@ class GetRoleMemberMethod(ContractMethod):  # pylint: disable=invalid-name
         return self._underlying_method(role, index).transact(tx_params.as_dict())
 
     def build_transaction(
-        self,
-        role: Union[bytes, str],
-        index: int,
-        tx_params: Optional[TxParams] = None,
+        self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None
     ) -> dict:
         """Construct calldata to be used as input to the method."""
         (role, index) = self.validate_and_normalize_inputs(role, index)
@@ -488,10 +467,7 @@ class GetRoleMemberMethod(ContractMethod):  # pylint: disable=invalid-name
         )
 
     def estimate_gas(
-        self,
-        role: Union[bytes, str],
-        index: int,
-        tx_params: Optional[TxParams] = None,
+        self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None
     ) -> int:
         """Estimate gas consumption of method call."""
         (role, index) = self.validate_and_normalize_inputs(role, index)
@@ -815,9 +791,7 @@ class MulticallMethod(ContractMethod):  # pylint: disable=invalid-name
         return data
 
     def call(
-        self,
-        data: List[Union[bytes, str]],
-        tx_params: Optional[TxParams] = None,
+        self, data: List[Union[bytes, str]], tx_params: Optional[TxParams] = None
     ) -> List[Union[bytes, str]]:
         """Execute underlying contract method via eth_call.
 
@@ -830,9 +804,7 @@ class MulticallMethod(ContractMethod):  # pylint: disable=invalid-name
         return [Union[bytes, str](element) for element in returned]
 
     def send_transaction(
-        self,
-        data: List[Union[bytes, str]],
-        tx_params: Optional[TxParams] = None,
+        self, data: List[Union[bytes, str]], tx_params: Optional[TxParams] = None
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
@@ -843,9 +815,7 @@ class MulticallMethod(ContractMethod):  # pylint: disable=invalid-name
         return self._underlying_method(data).transact(tx_params.as_dict())
 
     def build_transaction(
-        self,
-        data: List[Union[bytes, str]],
-        tx_params: Optional[TxParams] = None,
+        self, data: List[Union[bytes, str]], tx_params: Optional[TxParams] = None
     ) -> dict:
         """Construct calldata to be used as input to the method."""
         (data) = self.validate_and_normalize_inputs(data)
@@ -853,9 +823,7 @@ class MulticallMethod(ContractMethod):  # pylint: disable=invalid-name
         return self._underlying_method(data).buildTransaction(tx_params.as_dict())
 
     def estimate_gas(
-        self,
-        data: List[Union[bytes, str]],
-        tx_params: Optional[TxParams] = None,
+        self, data: List[Union[bytes, str]], tx_params: Optional[TxParams] = None
     ) -> int:
         """Estimate gas consumption of method call."""
         (data) = self.validate_and_normalize_inputs(data)
@@ -894,10 +862,7 @@ class RemoveMethod(ContractMethod):  # pylint: disable=invalid-name
         return (deployer, deployment)
 
     def call(
-        self,
-        deployer: str,
-        deployment: str,
-        tx_params: Optional[TxParams] = None,
+        self, deployer: str, deployment: str, tx_params: Optional[TxParams] = None
     ) -> None:
         """Execute underlying contract method via eth_call.
 
@@ -911,10 +876,7 @@ class RemoveMethod(ContractMethod):  # pylint: disable=invalid-name
         self._underlying_method(deployer, deployment).call(tx_params.as_dict())
 
     def send_transaction(
-        self,
-        deployer: str,
-        deployment: str,
-        tx_params: Optional[TxParams] = None,
+        self, deployer: str, deployment: str, tx_params: Optional[TxParams] = None
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
@@ -929,10 +891,7 @@ class RemoveMethod(ContractMethod):  # pylint: disable=invalid-name
         )
 
     def build_transaction(
-        self,
-        deployer: str,
-        deployment: str,
-        tx_params: Optional[TxParams] = None,
+        self, deployer: str, deployment: str, tx_params: Optional[TxParams] = None
     ) -> dict:
         """Construct calldata to be used as input to the method."""
         (deployer, deployment) = self.validate_and_normalize_inputs(
@@ -944,10 +903,7 @@ class RemoveMethod(ContractMethod):  # pylint: disable=invalid-name
         )
 
     def estimate_gas(
-        self,
-        deployer: str,
-        deployment: str,
-        tx_params: Optional[TxParams] = None,
+        self, deployer: str, deployment: str, tx_params: Optional[TxParams] = None
     ) -> int:
         """Estimate gas consumption of method call."""
         (deployer, deployment) = self.validate_and_normalize_inputs(
@@ -1149,9 +1105,7 @@ class SupportsInterfaceMethod(ContractMethod):  # pylint: disable=invalid-name
         return interface_id
 
     def call(
-        self,
-        interface_id: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
+        self, interface_id: Union[bytes, str], tx_params: Optional[TxParams] = None
     ) -> bool:
         """Execute underlying contract method via eth_call.
 
@@ -1164,9 +1118,7 @@ class SupportsInterfaceMethod(ContractMethod):  # pylint: disable=invalid-name
         return bool(returned)
 
     def send_transaction(
-        self,
-        interface_id: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
+        self, interface_id: Union[bytes, str], tx_params: Optional[TxParams] = None
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
@@ -1177,9 +1129,7 @@ class SupportsInterfaceMethod(ContractMethod):  # pylint: disable=invalid-name
         return self._underlying_method(interface_id).transact(tx_params.as_dict())
 
     def build_transaction(
-        self,
-        interface_id: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
+        self, interface_id: Union[bytes, str], tx_params: Optional[TxParams] = None
     ) -> dict:
         """Construct calldata to be used as input to the method."""
         (interface_id) = self.validate_and_normalize_inputs(interface_id)
@@ -1189,9 +1139,7 @@ class SupportsInterfaceMethod(ContractMethod):  # pylint: disable=invalid-name
         )
 
     def estimate_gas(
-        self,
-        interface_id: Union[bytes, str],
-        tx_params: Optional[TxParams] = None,
+        self, interface_id: Union[bytes, str], tx_params: Optional[TxParams] = None
     ) -> int:
         """Estimate gas consumption of method call."""
         (interface_id) = self.validate_and_normalize_inputs(interface_id)
@@ -1359,24 +1307,15 @@ class TWRegistry:
         )
 
         self.get_role_admin = GetRoleAdminMethod(
-            web3_or_provider,
-            contract_address,
-            functions.getRoleAdmin,
-            validator,
+            web3_or_provider, contract_address, functions.getRoleAdmin, validator
         )
 
         self.get_role_member = GetRoleMemberMethod(
-            web3_or_provider,
-            contract_address,
-            functions.getRoleMember,
-            validator,
+            web3_or_provider, contract_address, functions.getRoleMember, validator
         )
 
         self.get_role_member_count = GetRoleMemberCountMethod(
-            web3_or_provider,
-            contract_address,
-            functions.getRoleMemberCount,
-            validator,
+            web3_or_provider, contract_address, functions.getRoleMemberCount, validator
         )
 
         self.grant_role = GrantRoleMethod(
@@ -1388,10 +1327,7 @@ class TWRegistry:
         )
 
         self.is_trusted_forwarder = IsTrustedForwarderMethod(
-            web3_or_provider,
-            contract_address,
-            functions.isTrustedForwarder,
-            validator,
+            web3_or_provider, contract_address, functions.isTrustedForwarder, validator
         )
 
         self.multicall = MulticallMethod(
@@ -1403,10 +1339,7 @@ class TWRegistry:
         )
 
         self.renounce_role = RenounceRoleMethod(
-            web3_or_provider,
-            contract_address,
-            functions.renounceRole,
-            validator,
+            web3_or_provider, contract_address, functions.renounceRole, validator
         )
 
         self.revoke_role = RevokeRoleMethod(
@@ -1414,10 +1347,7 @@ class TWRegistry:
         )
 
         self.supports_interface = SupportsInterfaceMethod(
-            web3_or_provider,
-            contract_address,
-            functions.supportsInterface,
-            validator,
+            web3_or_provider, contract_address, functions.supportsInterface, validator
         )
 
     def get_added_event(self, tx_hash: Union[HexBytes, bytes]) -> Tuple[AttributeDict]:
@@ -1428,8 +1358,7 @@ class TWRegistry:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=TWRegistry.abi(),
+                address=to_checksum_address(self.contract_address), abi=TWRegistry.abi()
             )
             .events.Added()
             .processReceipt(tx_receipt)
@@ -1445,8 +1374,7 @@ class TWRegistry:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=TWRegistry.abi(),
+                address=to_checksum_address(self.contract_address), abi=TWRegistry.abi()
             )
             .events.Deleted()
             .processReceipt(tx_receipt)
@@ -1462,8 +1390,7 @@ class TWRegistry:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=TWRegistry.abi(),
+                address=to_checksum_address(self.contract_address), abi=TWRegistry.abi()
             )
             .events.RoleAdminChanged()
             .processReceipt(tx_receipt)
@@ -1479,8 +1406,7 @@ class TWRegistry:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=TWRegistry.abi(),
+                address=to_checksum_address(self.contract_address), abi=TWRegistry.abi()
             )
             .events.RoleGranted()
             .processReceipt(tx_receipt)
@@ -1496,8 +1422,7 @@ class TWRegistry:
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
         return (
             self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=TWRegistry.abi(),
+                address=to_checksum_address(self.contract_address), abi=TWRegistry.abi()
             )
             .events.RoleRevoked()
             .processReceipt(tx_receipt)

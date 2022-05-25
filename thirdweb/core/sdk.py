@@ -1,6 +1,7 @@
 from eth_account import Account
 from thirdweb.abi.thirdweb_contract import ThirdwebContract
 from thirdweb.common.feature_detection import fetch_contract_metadata
+from thirdweb.constants.addresses import get_contract_address_by_chain_id
 from thirdweb.constants.urls import get_provider_for_network
 from thirdweb.contracts import Marketplace
 from thirdweb.contracts.custom import CustomContract
@@ -120,29 +121,6 @@ class ThirdwebSDK(ProviderHandler):
         """
 
         return cast(EditionDrop, self._get_contract(address, EditionDrop))
-
-    def get_custom_contract(self, address: str, abi: str = ""):
-        """
-        Get an SDK interface for any custom contract! If you deployed the contract with
-        the thirdweb CLI, you won't need to specify an ABI. Alternatively, you can
-        alternatively specify an ABI if you're contract doesn't have one uploaded.
-
-        :param address: address of the contract
-        :param abi: optional ABI to use for the contract
-        :returns: Custom contract SDK instance
-        """
-
-        if not abi:
-            try:
-                contract = ThirdwebContract(self.get_provider(), address)
-                metadata_uri = contract.get_publish_metadata_uri.call()
-                abi = fetch_contract_metadata(metadata_uri, self.storage)
-            except Exception as e:
-                raise Exception("Error fetching ABI for this contract: " + str(e))
-
-        return CustomContract(
-            self.get_provider(), address, abi, self.storage, self.get_signer()
-        )
 
     def update_provider(self, provider: Web3):
         """

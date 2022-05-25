@@ -1,3 +1,4 @@
+"""
 import pytest
 from thirdweb.abi import TokenERC721
 from thirdweb.abi.token_erc20 import TokenERC20
@@ -95,3 +96,4 @@ def test_write(sdk: ThirdwebSDK, nft_collection: NFTCollection):
     assert custom.functions.totalSupply().call() == 0
     custom.send_transaction("mintTo", [sdk.get_signer().address, "https://example.com"])  # type: ignore
     assert custom.functions.totalSupply().call() == 1
+"""
