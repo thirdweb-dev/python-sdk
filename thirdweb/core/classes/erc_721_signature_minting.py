@@ -9,6 +9,7 @@ from thirdweb.abi import TokenERC721
 from thirdweb.common.currency import normalize_price_value, set_erc20_allowance
 from thirdweb.common.nft import upload_or_extract_uris
 from thirdweb.types.contracts.signature import (
+    EIP712DomainType,
     MintRequest721,
     PayloadToSign721,
     PayloadWithUri721,
@@ -177,7 +178,7 @@ class ERC721SignatureMinting:
                     chainId=chain_id,
                     verifyingContract=self._contract_wrapper._contract_abi.contract_address,
                 ),
-                {"MintRequest": MintRequest721},
+                {"MintRequest": MintRequest721, "EIP712Domain": EIP712DomainType},
                 self._map_payload_to_contract_struct(final_payload),
             )
             signed_payloads.append(

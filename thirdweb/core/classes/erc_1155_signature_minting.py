@@ -178,7 +178,7 @@ class ERC1155SignatureMinting:
                     chainId=chain_id,
                     verifyingContract=self._contract_wrapper._contract_abi.contract_address,
                 ),
-                {"MintRequest": MintRequest1155},
+                {"MintRequest": MintRequest1155, "EIP712Domain": EIP712DomainType},
                 self._map_payload_to_contract_struct(final_payload),
             )
             signed_payloads.append(
