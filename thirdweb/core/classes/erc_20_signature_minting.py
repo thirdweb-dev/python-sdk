@@ -6,18 +6,14 @@ from thirdweb.common.currency import (
     set_erc20_allowance,
 )
 from web3.eth import TxReceipt
-from thirdweb.common.nft import upload_or_extract_uris
 from thirdweb.common.sign import EIP712StandardDomain
-from thirdweb.constants.currency import ZERO_ADDRESS
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.contract_roles import ContractRoles
 from thirdweb.abi import TokenERC20
-from thirdweb.types.tx import TxResultWithId
 from thirdweb.types.contracts.signature import (
     EIP712DomainType,
-    MintRequest1155,
     MintRequest20,
     PayloadToSign20,
     PayloadWithUri20,
@@ -154,7 +150,7 @@ class ERC20SignatureMinting:
             signature = self._contract_wrapper.sign_typed_data(
                 signer,
                 EIP712StandardDomain(
-                    name="TokenERC20",
+                    name=name,
                     version="1",
                     chainId=chain_id,
                     verifyingContract=self._contract_wrapper._contract_abi.contract_address,
