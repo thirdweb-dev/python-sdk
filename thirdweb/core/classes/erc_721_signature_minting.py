@@ -11,6 +11,7 @@ from thirdweb.common.nft import upload_or_extract_uris
 from thirdweb.types.contracts.signature import (
     EIP712DomainType,
     MintRequest1155,
+    MintRequest721,
     PayloadToSign721,
     PayloadWithUri721,
     Signature721PayloadOutput,
@@ -178,7 +179,7 @@ class ERC721SignatureMinting:
                     chainId=chain_id,
                     verifyingContract=self._contract_wrapper._contract_abi.contract_address,
                 ),
-                {"MintRequest": MintRequest1155, "EIP712Domain": EIP712DomainType},
+                {"MintRequest": MintRequest721},
                 self._map_payload_to_contract_struct(final_payload),
             )
             signed_payloads.append(
