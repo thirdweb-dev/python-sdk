@@ -1,5 +1,5 @@
 from typing import Any, Dict, List
-from thirdweb.abi.token_erc721 import ISignatureMintMintRequest
+from thirdweb.abi.token_erc721 import ITokenERC721MintRequest
 from thirdweb.common.sign import EIP712StandardDomain
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
@@ -50,7 +50,7 @@ class ERC721SignatureMinting:
         overrides: Dict[str, Any] = {}
         set_erc20_allowance(
             self._contract_wrapper,
-            message["pricePerToken"],
+            message["price"],
             mint_request.currency_address,
             overrides,
         )
@@ -193,16 +193,16 @@ class ERC721SignatureMinting:
     def _map_payload_to_contract_struct(
         self,
         mint_request: PayloadWithUri721,
-    ) -> ISignatureMintMintRequest:
+    ) -> ITokenERC721MintRequest:
         normalized_price_per_token = normalize_price_value(
             self._contract_wrapper.get_provider(),
             mint_request.price,
             mint_request.currency_address,
         )
 
-        return ISignatureMintMintRequest(
+        return ITokenERC721MintRequest(
             to=mint_request.to,
-            pricePerToken=normalized_price_per_token,
+            price=normalized_price_per_token,
             uri=mint_request.uri,
             currency=mint_request.currency_address,
             validityEndTimestamp=mint_request.mint_end_time,
@@ -211,6 +211,4 @@ class ERC721SignatureMinting:
             royaltyRecipient=mint_request.royalty_recipient,
             royaltyBps=mint_request.royalty_bps,
             primarySaleRecipient=mint_request.primary_sale_recipient,
-            quantity=1,
-            tokenId=0,
         )

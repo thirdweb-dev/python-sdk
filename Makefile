@@ -38,6 +38,7 @@ abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/ITokenERC721.json && mv thirdweb/abi/i_token_erc721/__init__.py thirdweb/abi/i_token_erc721.py && rm -rf thirdweb/abi/i_token_erc721
 	abi-gen --language Python -o thirdweb/abi --abis abi/ITokenERC1155.json && mv thirdweb/abi/i_token_erc1155/__init__.py thirdweb/abi/i_token_erc1155.py && rm -rf thirdweb/abi/i_token_erc1155
 
+	abi-gen --language Python -o thirdweb/abi --abis abi/IPermissionsEnumerable.json && mv thirdweb/abi/i_permissions_enumerable/__init__.py thirdweb/abi/i_permissions_enumerable.py && rm -rf thirdweb/abi/i_permissions_enumerable
 	abi-gen --language Python -o thirdweb/abi --abis abi/IPrimarySale.json && mv thirdweb/abi/i_primary_sale/__init__.py thirdweb/abi/i_primary_sale.py && rm -rf thirdweb/abi/i_primary_sale
 	abi-gen --language Python -o thirdweb/abi --abis abi/IPlatformFee.json && mv thirdweb/abi/i_platform_fee/__init__.py thirdweb/abi/i_platform_fee.py && rm -rf thirdweb/abi/i_platform_fee
 	abi-gen --language Python -o thirdweb/abi --abis abi/IRoyalty.json && mv thirdweb/abi/i_royalty/__init__.py thirdweb/abi/i_royalty.py && rm -rf thirdweb/abi/i_royalty

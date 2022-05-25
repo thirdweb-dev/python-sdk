@@ -4,9 +4,6 @@ from eth_typing import Address
 from web3 import Web3
 from web3.eth import TxReceipt
 from web3.contract import ContractFunctions
-from thirdweb.abi.i_signature_mint import ISignatureMint
-from thirdweb.abi.i_thirdweb_platform_fee import IThirdwebPlatformFee
-from thirdweb.abi.i_thirdweb_primary_sale import IThirdwebPrimarySale
 from thirdweb.abi.i_token_erc1155 import ITokenERC1155
 from thirdweb.abi.i_token_erc20 import ITokenERC20
 from thirdweb.abi.i_token_erc721 import ITokenERC721
@@ -26,7 +23,13 @@ from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.types.contract import ContractType
 from eth_account.account import LocalAccount
-from thirdweb.abi import ThirdwebContract, AccessControlEnumerable, IThirdwebRoyalty
+from thirdweb.abi import (
+    ThirdwebContract,
+    IPermissionsEnumerable,
+    IRoyalty,
+    IPrimarySale,
+    IPlatformFee,
+)
 
 from thirdweb.types.sdk import SDKOptions
 from thirdweb.types.settings.metadata import (
@@ -92,20 +95,18 @@ class CustomContract(BaseContract[ThirdwebContract]):
     """
 
     def _detect_roles(self):
-        interface_to_match = self._get_interface_functions(
-            AccessControlEnumerable.abi()
-        )
+        interface_to_match = self._get_interface_functions(IPermissionsEnumerable.abi())
 
         if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(AccessControlEnumerable)
+            contract_wrapper = self._get_contract_wrapper(IPermissionsEnumerable)
             return ContractRoles(contract_wrapper, ALL_ROLES)
         return None
 
     def _detect_royalties(self):
-        interface_to_match = self._get_interface_functions(IThirdwebRoyalty.abi())
+        interface_to_match = self._get_interface_functions(IRoyalty.abi())
 
         if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(IThirdwebRoyalty)
+            contract_wrapper = self._get_contract_wrapper(IRoyalty)
             metadata = ContractMetadata(
                 contract_wrapper,
                 self._storage,
@@ -115,18 +116,18 @@ class CustomContract(BaseContract[ThirdwebContract]):
         return None
 
     def _detect_primary_sales(self):
-        interface_to_match = self._get_interface_functions(IThirdwebPrimarySale.abi())
+        interface_to_match = self._get_interface_functions(IPrimarySale.abi())
 
         if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(IThirdwebPrimarySale)
+            contract_wrapper = self._get_contract_wrapper(IPrimarySale)
             return ContractPrimarySale(contract_wrapper)
         return None
 
     def _detect_platform_fee(self):
-        interface_to_match = self._get_interface_functions(IThirdwebPlatformFee.abi())
+        interface_to_match = self._get_interface_functions(IPlatformFee.abi())
 
         if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(IThirdwebPlatformFee)
+            contract_wrapper = self._get_contract_wrapper(IPlatformFee)
             return ContractPlatformFee(contract_wrapper)
         return None
 
@@ -151,14 +152,6 @@ class CustomContract(BaseContract[ThirdwebContract]):
 
         if matches_interface(self.functions, interface_to_match):
             contract_wrapper = self._get_contract_wrapper(ITokenERC1155)
-            return ERC1155(contract_wrapper, self._storage)
-        return None
-
-    def _detect_signature_mint(self):
-        interface_to_match = self._get_interface_functions(ISignatureMint.abi())
-
-        if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(ISignatureMint)
             return ERC1155(contract_wrapper, self._storage)
         return None
 
