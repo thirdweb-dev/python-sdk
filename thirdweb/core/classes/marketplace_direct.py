@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional, cast
 
 from eth_utils import is_address
 from thirdweb.abi import Marketplace
-from thirdweb.abi.erc165 import ERC165
+from thirdweb.abi import IERC165
 from thirdweb.abi.ierc1155 import IERC1155
 from thirdweb.abi.ierc721 import IERC721
 from thirdweb.abi.marketplace import IMarketplaceListingParameters
@@ -348,7 +348,7 @@ class MarketplaceDirect(BaseContract[Marketplace]):
             return False
 
         provider = self._contract_wrapper.get_provider()
-        erc165 = ERC165(provider, listing.asset_contract_address)
+        erc165 = IERC165(provider, listing.asset_contract_address)
         is_erc721 = erc165.supports_interface.call(INTERFACE_ID_IERC721)
         is_erc1155 = erc165.supports_interface.call(INTERFACE_ID_IERC1155)
 
