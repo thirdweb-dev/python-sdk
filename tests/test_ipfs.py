@@ -97,6 +97,7 @@ def test_bulk_upload(storage: IpfsStorage):
 def test_upload_and_resolve(storage: IpfsStorage):
     upload = storage.upload_metadata(
         {
+            "name": "test name",
             "description": "made with python sdk",
             "animation_url": open("tests/files/test.mp4", "rb"),
         }

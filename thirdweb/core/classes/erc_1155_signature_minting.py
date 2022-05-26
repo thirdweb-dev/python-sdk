@@ -3,6 +3,7 @@ from thirdweb.abi.token_erc1155 import ITokenERC1155MintRequest
 from thirdweb.common.currency import normalize_price_value, set_erc20_allowance
 from thirdweb.common.nft import upload_or_extract_uris
 from thirdweb.common.sign import EIP712StandardDomain
+from thirdweb.constants.chains import ChainId
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
@@ -145,10 +146,9 @@ class ERC1155SignatureMinting:
         parsed_requests = payloads_to_sign
         metadatas = [request.metadata for request in parsed_requests]
         uris = upload_or_extract_uris(metadatas, self._storage)
-
         chain_id = self._contract_wrapper.get_chain_id()
-        signer = self._contract_wrapper.get_signer()
 
+        signer = self._contract_wrapper.get_signer()
         if signer is None:
             raise Exception("No signer found")
 

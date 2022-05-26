@@ -71,7 +71,7 @@ def metadata() -> PayloadToSign721:
         currency_address=NATIVE_TOKEN_ADDRESS,
         metadata=NFTMetadataInput(name="OUCH VOUCH"),
         mint_end_time=int(time() + 60 * 60 * 24 * 1000 * 1000),
-        mint_start_time=int(time()),
+        mint_start_time=int(time()) - 1800,
         uid=None,
         primary_sale_recipient=ZERO_ADDRESS,
     )
@@ -99,7 +99,7 @@ def test_claiming(
         currency_address=NATIVE_TOKEN_ADDRESS,
         metadata=NFTMetadataInput(name="OUCH VOUCH"),
         mint_end_time=int(time() + 60 * 60 * 24 * 1000 * 1000),
-        mint_start_time=int(time()),
+        mint_start_time=int(time()) - 1800,
         uid=None,
         primary_sale_recipient=ZERO_ADDRESS,
     )
@@ -134,7 +134,7 @@ def test_custom_token(
         currency_address=token.get_address(),
         metadata=NFTMetadataInput(name="custom token test"),
         mint_end_time=int(time() + 60 * 60 * 24 * 1000 * 1000),
-        mint_start_time=int(time()),
+        mint_start_time=int(time()) - 1800,
         to=accounts[0].address,
         uid=None,
         primary_sale_recipient=ZERO_ADDRESS,
