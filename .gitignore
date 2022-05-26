@@ -18,6 +18,7 @@ Dockerfile
 /dist
 /build
 /reports
+/contracts
 /interfaces
 /node_modules
 /sphinx-docs
