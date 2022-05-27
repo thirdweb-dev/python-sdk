@@ -1,6 +1,7 @@
 from typing import Any, Dict, List
 from thirdweb.abi.token_erc721 import ITokenERC721MintRequest
 from thirdweb.common.sign import EIP712StandardDomain
+from thirdweb.constants.chains import ChainId
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
@@ -147,10 +148,9 @@ class ERC721SignatureMinting:
 
         metadatas = [request.metadata for request in parsed_requests]
         uris = upload_or_extract_uris(metadatas, self._storage)
-
         chain_id = self._contract_wrapper.get_chain_id()
-        signer = self._contract_wrapper.get_signer()
 
+        signer = self._contract_wrapper.get_signer()
         if signer is None:
             raise Exception("No signer found")
 

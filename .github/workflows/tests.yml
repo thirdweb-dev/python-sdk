@@ -1,5 +1,8 @@
 
 name: Tests
+env:
+  SDK_ALCHEMY_KEY: ${{ secrets.SDK_ALCHEMY_KEY }}
+
 on:
   push:
     branches:
@@ -19,6 +22,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Environment
+        run: echo $SDK_ALCHEMY_KEY
 
       - name: Install Python 3
         uses: "actions/setup-python@v2.2.1"

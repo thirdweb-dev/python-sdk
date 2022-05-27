@@ -1,4 +1,6 @@
 from typing import Any, Dict, List
+
+from brownie import chain
 from thirdweb.abi.token_erc20 import ITokenERC20MintRequest
 from thirdweb.common.currency import (
     normalize_price_value,
@@ -7,6 +9,7 @@ from thirdweb.common.currency import (
 )
 from web3.eth import TxReceipt
 from thirdweb.common.sign import EIP712StandardDomain
+from thirdweb.constants.chains import ChainId
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
@@ -104,6 +107,7 @@ class ERC20SignatureMinting:
         verification = self._contract_wrapper._contract_abi.verify.call(
             message, signature
         )
+
         return verification[0]
 
     def generate(self, mint_request: PayloadToSign20) -> SignedPayload20:
@@ -128,8 +132,8 @@ class ERC20SignatureMinting:
 
         parsed_requests = payloads_to_sign
         chain_id = self._contract_wrapper.get_chain_id()
-        signer = self._contract_wrapper.get_signer()
 
+        signer = self._contract_wrapper.get_signer()
         if signer is None:
             raise Exception("No signer found")
 
