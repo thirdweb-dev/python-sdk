@@ -1,6 +1,9 @@
 from eth_account import Account
 from thirdweb.abi.thirdweb_contract import ThirdwebContract
-from thirdweb.common.feature_detection import fetch_contract_metadata
+from thirdweb.common.feature_detection import (
+    fetch_contract_metadata,
+    fetch_contract_metadata_from_address,
+)
 from thirdweb.constants.addresses import get_contract_address_by_chain_id
 from thirdweb.constants.urls import get_provider_for_network
 from thirdweb.contracts import Marketplace
@@ -13,7 +16,7 @@ from thirdweb.core.classes.provider_handler import ProviderHandler
 from thirdweb.contracts import Token, Edition, NFTCollection
 
 from eth_account.account import LocalAccount
-from typing import Dict, Optional, Type, Union, cast
+from typing import Any, Dict, Optional, Type, Union, cast
 from web3 import Web3
 
 from thirdweb.types.sdk import SDKOptions
@@ -25,7 +28,15 @@ class ThirdwebSDK(ProviderHandler):
     """
 
     __contract_cache: Dict[
-        str, Union[NFTCollection, Edition, Token, Marketplace, NFTDrop, EditionDrop]
+        str,
+        Union[
+            NFTCollection,
+            Edition,
+            Token,
+            Marketplace,
+            NFTDrop,
+            EditionDrop,
+        ],
     ] = {}
     storage: IpfsStorage
 
@@ -121,6 +132,32 @@ class ThirdwebSDK(ProviderHandler):
         """
 
         return cast(EditionDrop, self._get_contract(address, EditionDrop))
+
+    def get_contract(self, address: str) -> CustomContract:
+        """
+        Returns a custom contract SDK instance
+
+        :param address: address of the custom contract
+        :returns: custom contract SDK instance
+        """
+        if address in self.__contract_cache:
+            return cast(CustomContract, self.__contract_cache[address])
+
+        try:
+            provider = self.get_provider()
+            abi = fetch_contract_metadata_from_address(address, provider, self.storage)
+            contract = CustomContract(
+                provider,
+                address,
+                abi,
+                self.storage,
+                self.get_signer(),
+                self.get_options(),
+            )
+            self.__contract_cache[address] = cast(Any, contract)
+            return contract
+        except:
+            raise Exception(f"fError fetching ABI for this contract\n{address}")
 
     def update_provider(self, provider: Web3):
         """

@@ -10,6 +10,7 @@ from .ierc721 import IERC721
 from .ierc1155 import IERC1155
 from .drop_erc721 import DropERC721
 from .drop_erc1155 import DropERC1155
+from .contract_metadata_registry import ContractMetadataRegistry
 from .thirdweb_contract import ThirdwebContract
 from .i_platform_fee import IPlatformFee
 from .i_primary_sale import IPrimarySale
