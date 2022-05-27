@@ -218,7 +218,7 @@ class Edition(ERC1155[TokenERC1155]):
         ]
 
         # You can pass in any address here to mint the NFT to
-        txs = contract.mint_to("{{wallet_address}}", metadata_with_supply)
+        txs = contract.mint_batch_to("{{wallet_address}}", metadatas_with_supply)
         receipt = txs[0].receipt
         token_id = txs[0].id
         nft = txs[0].data()
