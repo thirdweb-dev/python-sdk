@@ -146,18 +146,33 @@ class ThirdwebSDK(ProviderHandler):
         try:
             provider = self.get_provider()
             abi = fetch_contract_metadata_from_address(address, provider, self.storage)
-            contract = CustomContract(
-                provider,
-                address,
-                abi,
-                self.storage,
-                self.get_signer(),
-                self.get_options(),
-            )
-            self.__contract_cache[address] = cast(Any, contract)
-            return contract
+            return self.get_contract_from_abi(address, abi)
         except:
             raise Exception(f"fError fetching ABI for this contract\n{address}")
+
+    def get_contract_from_abi(self, address: str, abi: str) -> CustomContract:
+        """
+        Returns a custom contract SDK instance given the contract ABI
+
+        :param address: address of the custom contract
+        :param abi: abi of the custom contract
+        :returns: custom contract SDK instance
+        """
+
+        if address in self.__contract_cache:
+            return cast(CustomContract, self.__contract_cache[address])
+
+        provider = self.get_provider()
+        contract = CustomContract(
+            provider,
+            address,
+            abi,
+            self.storage,
+            self.get_signer(),
+            self.get_options(),
+        )
+        self.__contract_cache[address] = cast(Any, contract)
+        return contract
 
     def update_provider(self, provider: Web3):
         """
