@@ -23,9 +23,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Environment
-        run: echo $SDK_ALCHEMY_KEY
-
       - name: Install Python 3
         uses: "actions/setup-python@v2.2.1"
         with:
