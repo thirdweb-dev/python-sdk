@@ -140,6 +140,43 @@ Returns an Edition Drop contract SDK instance
 
 Edition Drop contract SDK instance
 
+<a id="core.sdk.ThirdwebSDK.get_contract"></a>
+
+#### get\_contract
+
+```python
+def get_contract(address: str) -> CustomContract
+```
+
+Returns a custom contract SDK instance
+
+**Arguments**:
+
+- `address`: address of the custom contract
+
+**Returns**:
+
+custom contract SDK instance
+
+<a id="core.sdk.ThirdwebSDK.get_contract_from_abi"></a>
+
+#### get\_contract\_from\_abi
+
+```python
+def get_contract_from_abi(address: str, abi: str) -> CustomContract
+```
+
+Returns a custom contract SDK instance given the contract ABI
+
+**Arguments**:
+
+- `address`: address of the custom contract
+- `abi`: abi of the custom contract
+
+**Returns**:
+
+custom contract SDK instance
+
 <a id="core.sdk.ThirdwebSDK.update_provider"></a>
 
 #### update\_provider

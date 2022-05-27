@@ -10,7 +10,7 @@ If you've published and deployed your contracts with the Thirdweb CLI, the proce
 
 ```python
 # Just pass in the address of your contract and your ready
-custom = sdk.get_custom_contract(<CUSTOM_CONTRACT_ADDRESS>) 
+custom = sdk.get_contract(<CUSTOM_CONTRACT_ADDRESS>) 
 ```
 
 That's it! Now you have a custom contract instance which has the full functionality of your contract (we'll go over how to use this functionality soon).
@@ -21,7 +21,7 @@ Alternatively, if you didn't publish your contract with the thirdweb CLI, you ca
 
 ```python
 abi = ... # Add or import your contract abi 
-custom = sdk.get_custom_contract(<CUSTOM_CONTRACT_ADDRESS>, abi)
+custom = sdk.get_contract_from_abi(<CUSTOM_CONTRACT_ADDRESS>, abi)
 ```
 
 ### Using Contract Functions

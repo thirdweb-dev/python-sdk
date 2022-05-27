@@ -58,6 +58,13 @@ docs:
 	cp docs/common/custom.md docs/docs/custom.md
 	make snippets
 
+publish:
+	make docs
+	poetry version prerelease
+	rm -rf dist
+	poetry build
+	poetry publish
+
 live-docs:
 	make docs
 	xdg-open http://localhost:$(DOCS_SERVER_PORT) || open http://localhost:$(DOCS_SERVER_PORT) || start http://localhost:$(DOCS_SERVER_PORT)
