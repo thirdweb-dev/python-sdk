@@ -1,5 +1,6 @@
 from time import time
 from thirdweb.constants.currency import NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS
+from thirdweb.constants.role import Role
 from thirdweb.contracts.token import Token
 from thirdweb.types.contracts.signature import PayloadToSign20, PayloadToSign20
 from thirdweb.types.currency import TokenAmount
@@ -52,12 +53,12 @@ def token(sdk: ThirdwebSDK, primary_account) -> Token:
 def metadata() -> PayloadToSign20:
     return PayloadToSign20(
         to=accounts[0].address,
-        price=0.2,
+        price=0,
         currency_address=NATIVE_TOKEN_ADDRESS,
         primary_sale_recipient=ZERO_ADDRESS,
-        quantity=50,
-        mint_end_time=int(time() + 60 * 60 * 24 * 1000 * 1000),
-        mint_start_time=int(time()),
+        quantity=1,
+        mint_end_time=int(time() + 60 * 60 * 24),
+        mint_start_time=int(time()) - 1800,
         uid=None,
     )
 
@@ -66,6 +67,8 @@ def test_generate_valid_signature(token: Token, metadata: PayloadToSign20):
     good_payload = token.signature.generate(metadata)
     valid = token.signature.verify(good_payload)
     assert valid
+
+    token.signature.mint(good_payload)
 
 
 @pytest.mark.usefixtures("sdk", "primary_account", "secondary_account")
@@ -82,8 +85,8 @@ def test_claiming(
         currency_address=NATIVE_TOKEN_ADDRESS,
         quantity=1,
         primary_sale_recipient=ZERO_ADDRESS,
-        mint_end_time=int(time() + 60 * 60 * 24 * 1000 * 1000),
-        mint_start_time=int(time()),
+        mint_end_time=int(time() + 60 * 60 * 24),
+        mint_start_time=int(time()) - 1800,
         uid=None,
     )
 

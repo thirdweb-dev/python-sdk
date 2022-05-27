@@ -15,7 +15,6 @@ from thirdweb.abi import TokenERC1155
 
 from eth_account.account import LocalAccount
 from web3.constants import MAX_INT
-from web3.eth import TxReceipt
 from web3 import Web3
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType

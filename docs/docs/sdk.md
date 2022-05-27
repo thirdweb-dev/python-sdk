@@ -140,28 +140,6 @@ Returns an Edition Drop contract SDK instance
 
 Edition Drop contract SDK instance
 
-<a id="core.sdk.ThirdwebSDK.get_custom_contract"></a>
-
-#### get\_custom\_contract
-
-```python
-def get_custom_contract(address: str, abi: str = "")
-```
-
-Get an SDK interface for any custom contract! If you deployed the contract with
-
-the thirdweb CLI, you won't need to specify an ABI. Alternatively, you can
-alternatively specify an ABI if you're contract doesn't have one uploaded.
-
-**Arguments**:
-
-- `address`: address of the contract
-- `abi`: optional ABI to use for the contract
-
-**Returns**:
-
-Custom contract SDK instance
-
 <a id="core.sdk.ThirdwebSDK.update_provider"></a>
 
 #### update\_provider

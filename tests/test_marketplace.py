@@ -118,8 +118,8 @@ def create_direct_listing(
             asset_contract_address=contract_address,
             buyout_price_per_token=0.1,  # type: ignore
             currency_contract_address=token_address,
-            start_time_in_seconds=int(time()),
-            listing_duration_in_seconds=60 * 60 * 24,
+            start_time_in_seconds=int(time()) - 1800,
+            listing_duration_in_seconds=60 * 60 * 24 * 365 * 100,
             token_id=token_id,
             quantity=quantity,
         )
@@ -132,15 +132,14 @@ def create_auction_listing(
     contract_address: str,
     token_id: int,
     quantity: int = 1,
-    start_time: int = int(time()),
 ):
     return marketplace.auction.create_listing(
         NewAuctionListing(
             asset_contract_address=contract_address,
             buyout_price_per_token=0.1,  # type: ignore
             currency_contract_address=token_address,
-            start_time_in_seconds=start_time,
-            listing_duration_in_seconds=60 * 60 * 24,
+            start_time_in_seconds=int(time()) - 1800,
+            listing_duration_in_seconds=60 * 60 * 24 * 365 * 100,
             token_id=token_id,
             quantity=quantity,
             reserve_price_per_token=0.05,  # type: ignore

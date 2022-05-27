@@ -1,8 +1,9 @@
 from typing import Any, Dict, List
-from thirdweb.abi.token_erc1155 import ISignatureMintMintRequest
+from thirdweb.abi.token_erc1155 import ITokenERC1155MintRequest
 from thirdweb.common.currency import normalize_price_value, set_erc20_allowance
 from thirdweb.common.nft import upload_or_extract_uris
 from thirdweb.common.sign import EIP712StandardDomain
+from thirdweb.constants.chains import ChainId
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
@@ -145,10 +146,9 @@ class ERC1155SignatureMinting:
         parsed_requests = payloads_to_sign
         metadatas = [request.metadata for request in parsed_requests]
         uris = upload_or_extract_uris(metadatas, self._storage)
-
         chain_id = self._contract_wrapper.get_chain_id()
-        signer = self._contract_wrapper.get_signer()
 
+        signer = self._contract_wrapper.get_signer()
         if signer is None:
             raise Exception("No signer found")
 
@@ -193,14 +193,14 @@ class ERC1155SignatureMinting:
 
     def _map_payload_to_contract_struct(
         self, mint_request: PayloadWithUri1155
-    ) -> ISignatureMintMintRequest:
+    ) -> ITokenERC1155MintRequest:
         normalized_price_per_token = normalize_price_value(
             self._contract_wrapper.get_provider(),
             mint_request.price,
             mint_request.currency_address,
         )
 
-        return ISignatureMintMintRequest(
+        return ITokenERC1155MintRequest(
             to=mint_request.to,
             tokenId=mint_request.token_id,
             uri=mint_request.uri,

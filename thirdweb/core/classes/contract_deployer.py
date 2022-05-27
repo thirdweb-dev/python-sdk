@@ -120,9 +120,3 @@ class ContractDeployer(ProviderHandler):
         )
 
         return self.__factory
-
-    def _set_registry(self, registry: ContractRegistry):
-        self.__registry = registry
-
-    def _set_factory(self, factory: ContractFactory):
-        self.__factory = factory

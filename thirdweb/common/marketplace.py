@@ -1,5 +1,5 @@
 from typing import Optional, Union, cast
-from thirdweb.abi import ERC165, IERC721, IERC1155
+from thirdweb.abi import IERC165, IERC721, IERC1155
 from thirdweb.common.currency import fetch_currency_value
 from thirdweb.constants.contract import INTERFACE_ID_IERC1155, INTERFACE_ID_IERC721
 from eth_account.account import LocalAccount
@@ -25,7 +25,7 @@ def is_token_approved_for_marketplace(
     fr: str,
 ) -> bool:
     try:
-        erc165 = ERC165(provider, asset_contract)
+        erc165 = IERC165(provider, asset_contract)
         is_erc721 = erc165.supports_interface.call(INTERFACE_ID_IERC721)
         is_erc1155 = erc165.supports_interface.call(INTERFACE_ID_IERC1155)
 
@@ -59,7 +59,7 @@ def handle_token_approval(
     token_id: int,
     fr: str,
 ):
-    erc165 = ERC165(provider, asset_contract)
+    erc165 = IERC165(provider, asset_contract)
     is_erc721 = erc165.supports_interface.call(INTERFACE_ID_IERC721)
     is_erc1155 = erc165.supports_interface.call(INTERFACE_ID_IERC1155)
 

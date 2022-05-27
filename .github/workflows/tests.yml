@@ -1,5 +1,8 @@
 
 name: Tests
+env:
+  SDK_ALCHEMY_KEY: ${{ secrets.SDK_ALCHEMY_KEY }}
+
 on:
   push:
     branches:

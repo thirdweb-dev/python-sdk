@@ -64,7 +64,6 @@ TMetadataABI = TypeVar(
         Marketplace,
         DropERC721,
         DropERC1155,
-        ThirdwebContract,
     ],
 )
 

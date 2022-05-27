@@ -1,7 +1,7 @@
 from typing import List, Union, cast
 
 from web3 import Web3
-from thirdweb.abi import TokenERC1155, ERC165, TokenERC721
+from thirdweb.abi import TokenERC1155, IERC165, TokenERC721
 from thirdweb.common.error import UploadException
 from thirdweb.constants.contract import INTERFACE_ID_IERC1155, INTERFACE_ID_IERC721
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
@@ -31,7 +31,7 @@ def fetch_token_metadata_for_contract(
     token_id: int,
     storage: IpfsStorage,
 ):
-    erc165 = ERC165(provider, contract_address)
+    erc165 = IERC165(provider, contract_address)
     is_erc721 = erc165.supports_interface.call(INTERFACE_ID_IERC721)
     is_erc1155 = erc165.supports_interface.call(INTERFACE_ID_IERC1155)
 

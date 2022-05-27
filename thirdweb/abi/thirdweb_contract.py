@@ -34,7 +34,9 @@ try:
     )
 except ImportError:
 
-    class ThirdwebContractValidator(Validator):  # type: ignore
+    class ThirdwebContractValidator(  # type: ignore
+        Validator
+    ):
         """No-op input validator."""
 
 
@@ -44,36 +46,13 @@ except ImportError:
     pass
 
 
-class ThirdwebContractThirdwebInfo(TypedDict):
-    """Python representation of a tuple or struct.
-
-    Solidity compiler output does not include the names of structs that appear
-    in method definitions.  A tuple found in an ABI may have been written in
-    Solidity as a literal, anonymous tuple, or it may have been written as a
-    named `struct`:code:, but there is no way to tell from the compiler
-    output.  This class represents a tuple that appeared in a method
-    definition.  Its name is derived from a hash of that tuple's field names,
-    and every method whose ABI refers to a tuple with that same list of field
-    names will have a generated wrapper method that refers to this class.
-
-    Any members of type `bytes`:code: should be encoded as UTF-8, which can be
-    accomplished via `str.encode("utf_8")`:code:
-    """
-
-    publishMetadataUri: str
-
-    contractURI: str
 
 
-class ContractUriMethod(ContractMethod):  # pylint: disable=invalid-name
-    """Various interfaces to the contractURI method."""
 
-    def __init__(
-        self,
-        web3_or_provider: Union[Web3, BaseProvider],
-        contract_address: str,
-        contract_function: ContractFunction,
-    ):
+class OwnerMethod(ContractMethod): # pylint: disable=invalid-name
+    """Various interfaces to the owner method."""
+
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address)
         self._underlying_method = contract_function
@@ -88,9 +67,7 @@ class ContractUriMethod(ContractMethod):  # pylint: disable=invalid-name
         returned = self._underlying_method().call(tx_params.as_dict())
         return str(returned)
 
-    def send_transaction(
-        self, tx_params: Optional[TxParams] = None
-    ) -> Union[HexBytes, bytes]:
+    def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -108,150 +85,122 @@ class ContractUriMethod(ContractMethod):  # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
+class SetOwnerMethod(ContractMethod): # pylint: disable=invalid-name
+    """Various interfaces to the setOwner method."""
 
-class GetPublishMetadataUriMethod(
-    ContractMethod
-):  # pylint: disable=invalid-name
-    """Various interfaces to the getPublishMetadataUri method."""
-
-    def __init__(
-        self,
-        web3_or_provider: Union[Web3, BaseProvider],
-        contract_address: str,
-        contract_function: ContractFunction,
-    ):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address)
-        self._underlying_method = contract_function
-
-    def call(self, tx_params: Optional[TxParams] = None) -> str:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method().call(tx_params.as_dict())
-        return str(returned)
-
-    def send_transaction(
-        self, tx_params: Optional[TxParams] = None
-    ) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().transact(tx_params.as_dict())
-
-    def build_transaction(self, tx_params: Optional[TxParams] = None) -> dict:
-        """Construct calldata to be used as input to the method."""
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().buildTransaction(tx_params.as_dict())
-
-    def estimate_gas(self, tx_params: Optional[TxParams] = None) -> int:
-        """Estimate gas consumption of method call."""
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().estimateGas(tx_params.as_dict())
-
-
-class SetThirdwebInfoMethod(ContractMethod):  # pylint: disable=invalid-name
-    """Various interfaces to the setThirdwebInfo method."""
-
-    def __init__(
-        self,
-        web3_or_provider: Union[Web3, BaseProvider],
-        contract_address: str,
-        contract_function: ContractFunction,
-        validator: Validator = None,
-    ):
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(
-        self, thirdweb_info: ThirdwebContractThirdwebInfo
-    ):
-        """Validate the inputs to the setThirdwebInfo method."""
+    def validate_and_normalize_inputs(self, new_owner: str):
+        """Validate the inputs to the setOwner method."""
         self.validator.assert_valid(
-            method_name="setThirdwebInfo",
-            parameter_name="_thirdwebInfo",
-            argument_value=thirdweb_info,
+            method_name='setOwner',
+            parameter_name='_newOwner',
+            argument_value=new_owner,
         )
-        return thirdweb_info
+        new_owner = self.validate_and_checksum_address(new_owner)
+        return (new_owner)
 
-    def call(
-        self,
-        thirdweb_info: ThirdwebContractThirdwebInfo,
-        tx_params: Optional[TxParams] = None,
-    ) -> None:
+    def call(self, new_owner: str, tx_params: Optional[TxParams] = None) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (thirdweb_info) = self.validate_and_normalize_inputs(thirdweb_info)
+        (new_owner) = self.validate_and_normalize_inputs(new_owner)
         tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(thirdweb_info).call(tx_params.as_dict())
+        self._underlying_method(new_owner).call(tx_params.as_dict())
 
-    def send_transaction(
-        self,
-        thirdweb_info: ThirdwebContractThirdwebInfo,
-        tx_params: Optional[TxParams] = None,
-    ) -> Union[HexBytes, bytes]:
+    def send_transaction(self, new_owner: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (thirdweb_info) = self.validate_and_normalize_inputs(thirdweb_info)
+        (new_owner) = self.validate_and_normalize_inputs(new_owner)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(thirdweb_info).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(new_owner).transact(tx_params.as_dict())
 
-    def build_transaction(
-        self,
-        thirdweb_info: ThirdwebContractThirdwebInfo,
-        tx_params: Optional[TxParams] = None,
-    ) -> dict:
+    def build_transaction(self, new_owner: str, tx_params: Optional[TxParams] = None) -> dict:
         """Construct calldata to be used as input to the method."""
-        (thirdweb_info) = self.validate_and_normalize_inputs(thirdweb_info)
+        (new_owner) = self.validate_and_normalize_inputs(new_owner)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(thirdweb_info).buildTransaction(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(new_owner).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(
-        self,
-        thirdweb_info: ThirdwebContractThirdwebInfo,
-        tx_params: Optional[TxParams] = None,
-    ) -> int:
+    def estimate_gas(self, new_owner: str, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
-        (thirdweb_info) = self.validate_and_normalize_inputs(thirdweb_info)
+        (new_owner) = self.validate_and_normalize_inputs(new_owner)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(thirdweb_info).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(new_owner).estimateGas(tx_params.as_dict())
 
+class TwInitializeOwnerMethod(ContractMethod): # pylint: disable=invalid-name
+    """Various interfaces to the tw_initializeOwner method."""
+
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+        """Persist instance data."""
+        super().__init__(web3_or_provider, contract_address, validator)
+        self._underlying_method = contract_function
+
+    def validate_and_normalize_inputs(self, deployer: str):
+        """Validate the inputs to the tw_initializeOwner method."""
+        self.validator.assert_valid(
+            method_name='tw_initializeOwner',
+            parameter_name='deployer',
+            argument_value=deployer,
+        )
+        deployer = self.validate_and_checksum_address(deployer)
+        return (deployer)
+
+    def call(self, deployer: str, tx_params: Optional[TxParams] = None) -> None:
+        """Execute underlying contract method via eth_call.
+
+        :param tx_params: transaction parameters
+        :returns: the return value of the underlying method.
+        """
+        (deployer) = self.validate_and_normalize_inputs(deployer)
+        tx_params = super().normalize_tx_params(tx_params)
+        self._underlying_method(deployer).call(tx_params.as_dict())
+
+    def send_transaction(self, deployer: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+        """Execute underlying contract method via eth_sendTransaction.
+
+        :param tx_params: transaction parameters
+        """
+        (deployer) = self.validate_and_normalize_inputs(deployer)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(deployer).transact(tx_params.as_dict())
+
+    def build_transaction(self, deployer: str, tx_params: Optional[TxParams] = None) -> dict:
+        """Construct calldata to be used as input to the method."""
+        (deployer) = self.validate_and_normalize_inputs(deployer)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(deployer).buildTransaction(tx_params.as_dict())
+
+    def estimate_gas(self, deployer: str, tx_params: Optional[TxParams] = None) -> int:
+        """Estimate gas consumption of method call."""
+        (deployer) = self.validate_and_normalize_inputs(deployer)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(deployer).estimateGas(tx_params.as_dict())
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
 class ThirdwebContract:
     """Wrapper class for ThirdwebContract Solidity contract."""
-
-    contract_uri: ContractUriMethod
+    owner: OwnerMethod
     """Constructor-initialized instance of
-    :class:`ContractUriMethod`.
+    :class:`OwnerMethod`.
     """
 
-    get_publish_metadata_uri: GetPublishMetadataUriMethod
+    set_owner: SetOwnerMethod
     """Constructor-initialized instance of
-    :class:`GetPublishMetadataUriMethod`.
+    :class:`SetOwnerMethod`.
     """
 
-    set_thirdweb_info: SetThirdwebInfoMethod
+    tw_initialize_owner: TwInitializeOwnerMethod
     """Constructor-initialized instance of
-    :class:`SetThirdwebInfoMethod`.
+    :class:`TwInitializeOwnerMethod`.
     """
+
 
     def __init__(
         self,
@@ -271,9 +220,7 @@ class ThirdwebContract:
         self.contract_address = contract_address
 
         if not validator:
-            validator = ThirdwebContractValidator(
-                web3_or_provider, contract_address
-            )
+            validator = ThirdwebContractValidator(web3_or_provider, contract_address)
 
         web3 = None
         if isinstance(web3_or_provider, BaseProvider):
@@ -295,43 +242,37 @@ class ThirdwebContract:
             try:
                 for middleware in MIDDLEWARE:
                     web3.middleware_onion.inject(
-                        middleware["function"],
-                        layer=middleware["layer"],
+                         middleware['function'], layer=middleware['layer'],
                     )
             except ValueError as value_error:
-                if value_error.args == (
-                    "You can't add the same un-named instance twice",
-                ):
+                if value_error.args == ("You can't add the same un-named instance twice",):
                     pass
 
         self._web3_eth = web3.eth
 
-        functions = self._web3_eth.contract(
-            address=to_checksum_address(contract_address),
-            abi=ThirdwebContract.abi(),
-        ).functions
+        functions = self._web3_eth.contract(address=to_checksum_address(contract_address), abi=ThirdwebContract.abi()).functions
 
-        self.contract_uri = ContractUriMethod(
-            web3_or_provider, contract_address, functions.contractURI
-        )
+        self.owner = OwnerMethod(web3_or_provider, contract_address, functions.owner)
 
-        self.get_publish_metadata_uri = GetPublishMetadataUriMethod(
-            web3_or_provider, contract_address, functions.getPublishMetadataUri
-        )
+        self.set_owner = SetOwnerMethod(web3_or_provider, contract_address, functions.setOwner, validator)
 
-        self.set_thirdweb_info = SetThirdwebInfoMethod(
-            web3_or_provider,
-            contract_address,
-            functions.setThirdwebInfo,
-            validator,
-        )
+        self.tw_initialize_owner = TwInitializeOwnerMethod(web3_or_provider, contract_address, functions.tw_initializeOwner, validator)
+
+    def get_owner_updated_event(
+        self, tx_hash: Union[HexBytes, bytes]
+    ) -> Tuple[AttributeDict]:
+        """Get log entry for OwnerUpdated event.
+
+        :param tx_hash: hash of transaction emitting OwnerUpdated event
+        """
+        tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=ThirdwebContract.abi()).events.OwnerUpdated().processReceipt(tx_receipt)
 
     @staticmethod
     def abi():
         """Return the ABI to the underlying contract."""
         return json.loads(
-            '[{"inputs":[],"name":"contractURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPublishMetadataUri","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"components":[{"internalType":"string","name":"publishMetadataUri","type":"string"},{"internalType":"string","name":"contractURI","type":"string"}],"internalType":"struct ThirdwebContract.ThirdwebInfo","name":"_thirdwebInfo","type":"tuple"}],"name":"setThirdwebInfo","outputs":[],"stateMutability":"nonpayable","type":"function"}]'  # noqa: E501 (line-too-long)
+            '[{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"prevOwner","type":"address"},{"indexed":false,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnerUpdated","type":"event"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_newOwner","type":"address"}],"name":"setOwner","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"deployer","type":"address"}],"name":"tw_initializeOwner","outputs":[],"stateMutability":"nonpayable","type":"function"}]'  # noqa: E501 (line-too-long)
         )
-
 
 # pylint: disable=too-many-lines
