@@ -59,7 +59,6 @@ docs:
 	make snippets
 
 publish:
-	make docs
 	poetry version prerelease
 	rm -rf dist
 	poetry build

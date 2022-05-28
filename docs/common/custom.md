@@ -34,7 +34,7 @@ For example, if I had an NFT custom contract and I wanted to call the `balance` 
 
 ```python
 # Any arguments passed to the balance function go into the args of "call"
-custom.functions.balance().call(1)
+custom.functions.balance(1).call()
 ```
 
 If you want to make a transaction to the blockchain, you can use the `send_transaction` helper.
