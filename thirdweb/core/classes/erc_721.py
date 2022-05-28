@@ -100,7 +100,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
 
         # TODO: Fix when we implement ERC721 feature detection
-        if hasattr(self._contract_wrapper._contract_abi, "token_of_owner_by_index"):
+        if not hasattr(self._contract_wrapper._contract_abi, "token_of_owner_by_index"):
             raise NotImplementedError(
                 "The get_owned functionality is not supported by this contract."
             )
