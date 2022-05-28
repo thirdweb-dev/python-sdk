@@ -12,6 +12,7 @@ from thirdweb.types.contract import ContractType
 from thirdweb.types.sdk import SDKOptions
 from thirdweb.types.settings.metadata import (
     EditionDropContractMetadata,
+    MultiwrapContractMetadata,
     NFTDropContractMetadata,
     EditionContractMetadata,
     MarketplaceContractMetadata,
@@ -77,6 +78,13 @@ class ContractDeployer(ProviderHandler):
         """
 
         return self._deploy_contract(ContractType.EDITION_DROP, metadata.to_json())
+
+    def deploy_multiwrap(self, metadata: MultiwrapContractMetadata) -> str:
+        """
+        Deploy a Multiwrap contract
+        """
+
+        return self._deploy_contract(ContractType.MULTIWRAP, metadata.to_json())
 
     def _deploy_contract(
         self, contract_type: ContractType, contract_metadata: Dict[str, Any]

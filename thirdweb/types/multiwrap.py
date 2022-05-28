@@ -2,11 +2,13 @@ from dataclasses import dataclass
 import dataclasses
 from typing import List
 
+from thirdweb.types.currency import Price
+
 
 @dataclass
 class ERC20Wrappable:
     contract_address: str
-    quantity: float
+    quantity: Price
 
 
 @dataclass
