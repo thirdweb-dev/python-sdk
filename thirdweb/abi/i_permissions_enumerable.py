@@ -34,9 +34,7 @@ try:
     )
 except ImportError:
 
-    class IPermissionsEnumerableValidator(  # type: ignore
-        Validator
-    ):
+    class IPermissionsEnumerableValidator(Validator):  # type: ignore
         """No-op input validator."""
 
 
@@ -46,13 +44,16 @@ except ImportError:
     pass
 
 
-
-
-
-class GetRoleAdminMethod(ContractMethod): # pylint: disable=invalid-name
+class GetRoleAdminMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the getRoleAdmin method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -60,13 +61,15 @@ class GetRoleAdminMethod(ContractMethod): # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, role: Union[bytes, str]):
         """Validate the inputs to the getRoleAdmin method."""
         self.validator.assert_valid(
-            method_name='getRoleAdmin',
-            parameter_name='role',
+            method_name="getRoleAdmin",
+            parameter_name="role",
             argument_value=role,
         )
-        return (role)
+        return role
 
-    def call(self, role: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[bytes, str]:
+    def call(
+        self, role: Union[bytes, str], tx_params: Optional[TxParams] = None
+    ) -> Union[bytes, str]:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -77,7 +80,9 @@ class GetRoleAdminMethod(ContractMethod): # pylint: disable=invalid-name
         returned = self._underlying_method(role).call(tx_params.as_dict())
         return Union[bytes, str](returned)
 
-    def send_transaction(self, role: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, role: Union[bytes, str], tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -86,43 +91,63 @@ class GetRoleAdminMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(role).transact(tx_params.as_dict())
 
-    def build_transaction(self, role: Union[bytes, str], tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self, role: Union[bytes, str], tx_params: Optional[TxParams] = None
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (role) = self.validate_and_normalize_inputs(role)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(role).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, role: Union[bytes, str], tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self, role: Union[bytes, str], tx_params: Optional[TxParams] = None
+    ) -> int:
         """Estimate gas consumption of method call."""
         (role) = self.validate_and_normalize_inputs(role)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(role).estimateGas(tx_params.as_dict())
 
-class GetRoleMemberMethod(ContractMethod): # pylint: disable=invalid-name
+
+class GetRoleMemberMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the getRoleMember method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(self, role: Union[bytes, str], index: int):
+    def validate_and_normalize_inputs(
+        self, role: Union[bytes, str], index: int
+    ):
         """Validate the inputs to the getRoleMember method."""
         self.validator.assert_valid(
-            method_name='getRoleMember',
-            parameter_name='role',
+            method_name="getRoleMember",
+            parameter_name="role",
             argument_value=role,
         )
         self.validator.assert_valid(
-            method_name='getRoleMember',
-            parameter_name='index',
+            method_name="getRoleMember",
+            parameter_name="index",
             argument_value=index,
         )
         # safeguard against fractional inputs
         index = int(index)
         return (role, index)
 
-    def call(self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None) -> str:
+    def call(
+        self,
+        role: Union[bytes, str],
+        index: int,
+        tx_params: Optional[TxParams] = None,
+    ) -> str:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -130,34 +155,64 @@ class GetRoleMemberMethod(ContractMethod): # pylint: disable=invalid-name
         """
         (role, index) = self.validate_and_normalize_inputs(role, index)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(role, index).call(tx_params.as_dict())
+        returned = self._underlying_method(role, index).call(
+            tx_params.as_dict()
+        )
         return str(returned)
 
-    def send_transaction(self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self,
+        role: Union[bytes, str],
+        index: int,
+        tx_params: Optional[TxParams] = None,
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
         (role, index) = self.validate_and_normalize_inputs(role, index)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, index).transact(tx_params.as_dict())
+        return self._underlying_method(role, index).transact(
+            tx_params.as_dict()
+        )
 
-    def build_transaction(self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self,
+        role: Union[bytes, str],
+        index: int,
+        tx_params: Optional[TxParams] = None,
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (role, index) = self.validate_and_normalize_inputs(role, index)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, index).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(role, index).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, role: Union[bytes, str], index: int, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self,
+        role: Union[bytes, str],
+        index: int,
+        tx_params: Optional[TxParams] = None,
+    ) -> int:
         """Estimate gas consumption of method call."""
         (role, index) = self.validate_and_normalize_inputs(role, index)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, index).estimateGas(tx_params.as_dict())
+        return self._underlying_method(role, index).estimateGas(
+            tx_params.as_dict()
+        )
 
-class GetRoleMemberCountMethod(ContractMethod): # pylint: disable=invalid-name
+
+class GetRoleMemberCountMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the getRoleMemberCount method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
@@ -165,13 +220,15 @@ class GetRoleMemberCountMethod(ContractMethod): # pylint: disable=invalid-name
     def validate_and_normalize_inputs(self, role: Union[bytes, str]):
         """Validate the inputs to the getRoleMemberCount method."""
         self.validator.assert_valid(
-            method_name='getRoleMemberCount',
-            parameter_name='role',
+            method_name="getRoleMemberCount",
+            parameter_name="role",
             argument_value=role,
         )
-        return (role)
+        return role
 
-    def call(self, role: Union[bytes, str], tx_params: Optional[TxParams] = None) -> int:
+    def call(
+        self, role: Union[bytes, str], tx_params: Optional[TxParams] = None
+    ) -> int:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -182,7 +239,9 @@ class GetRoleMemberCountMethod(ContractMethod): # pylint: disable=invalid-name
         returned = self._underlying_method(role).call(tx_params.as_dict())
         return int(returned)
 
-    def send_transaction(self, role: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self, role: Union[bytes, str], tx_params: Optional[TxParams] = None
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
@@ -191,42 +250,62 @@ class GetRoleMemberCountMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(role).transact(tx_params.as_dict())
 
-    def build_transaction(self, role: Union[bytes, str], tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self, role: Union[bytes, str], tx_params: Optional[TxParams] = None
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (role) = self.validate_and_normalize_inputs(role)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(role).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, role: Union[bytes, str], tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self, role: Union[bytes, str], tx_params: Optional[TxParams] = None
+    ) -> int:
         """Estimate gas consumption of method call."""
         (role) = self.validate_and_normalize_inputs(role)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(role).estimateGas(tx_params.as_dict())
 
-class GrantRoleMethod(ContractMethod): # pylint: disable=invalid-name
+
+class GrantRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the grantRole method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(self, role: Union[bytes, str], account: str):
+    def validate_and_normalize_inputs(
+        self, role: Union[bytes, str], account: str
+    ):
         """Validate the inputs to the grantRole method."""
         self.validator.assert_valid(
-            method_name='grantRole',
-            parameter_name='role',
+            method_name="grantRole",
+            parameter_name="role",
             argument_value=role,
         )
         self.validator.assert_valid(
-            method_name='grantRole',
-            parameter_name='account',
+            method_name="grantRole",
+            parameter_name="account",
             argument_value=account,
         )
         account = self.validate_and_checksum_address(account)
         return (role, account)
 
-    def call(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> None:
+    def call(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -236,51 +315,86 @@ class GrantRoleMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         self._underlying_method(role, account).call(tx_params.as_dict())
 
-    def send_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).transact(tx_params.as_dict())
+        return self._underlying_method(role, account).transact(
+            tx_params.as_dict()
+        )
 
-    def build_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(role, account).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> int:
         """Estimate gas consumption of method call."""
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
+        return self._underlying_method(role, account).estimateGas(
+            tx_params.as_dict()
+        )
 
-class HasRoleMethod(ContractMethod): # pylint: disable=invalid-name
+
+class HasRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the hasRole method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(self, role: Union[bytes, str], account: str):
+    def validate_and_normalize_inputs(
+        self, role: Union[bytes, str], account: str
+    ):
         """Validate the inputs to the hasRole method."""
         self.validator.assert_valid(
-            method_name='hasRole',
-            parameter_name='role',
+            method_name="hasRole",
+            parameter_name="role",
             argument_value=role,
         )
         self.validator.assert_valid(
-            method_name='hasRole',
-            parameter_name='account',
+            method_name="hasRole",
+            parameter_name="account",
             argument_value=account,
         )
         account = self.validate_and_checksum_address(account)
         return (role, account)
 
-    def call(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> bool:
+    def call(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> bool:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -288,54 +402,91 @@ class HasRoleMethod(ContractMethod): # pylint: disable=invalid-name
         """
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(role, account).call(tx_params.as_dict())
+        returned = self._underlying_method(role, account).call(
+            tx_params.as_dict()
+        )
         return bool(returned)
 
-    def send_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).transact(tx_params.as_dict())
+        return self._underlying_method(role, account).transact(
+            tx_params.as_dict()
+        )
 
-    def build_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(role, account).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> int:
         """Estimate gas consumption of method call."""
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
+        return self._underlying_method(role, account).estimateGas(
+            tx_params.as_dict()
+        )
 
-class RenounceRoleMethod(ContractMethod): # pylint: disable=invalid-name
+
+class RenounceRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the renounceRole method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(self, role: Union[bytes, str], account: str):
+    def validate_and_normalize_inputs(
+        self, role: Union[bytes, str], account: str
+    ):
         """Validate the inputs to the renounceRole method."""
         self.validator.assert_valid(
-            method_name='renounceRole',
-            parameter_name='role',
+            method_name="renounceRole",
+            parameter_name="role",
             argument_value=role,
         )
         self.validator.assert_valid(
-            method_name='renounceRole',
-            parameter_name='account',
+            method_name="renounceRole",
+            parameter_name="account",
             argument_value=account,
         )
         account = self.validate_and_checksum_address(account)
         return (role, account)
 
-    def call(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> None:
+    def call(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -345,51 +496,86 @@ class RenounceRoleMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         self._underlying_method(role, account).call(tx_params.as_dict())
 
-    def send_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).transact(tx_params.as_dict())
+        return self._underlying_method(role, account).transact(
+            tx_params.as_dict()
+        )
 
-    def build_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(role, account).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> int:
         """Estimate gas consumption of method call."""
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
+        return self._underlying_method(role, account).estimateGas(
+            tx_params.as_dict()
+        )
 
-class RevokeRoleMethod(ContractMethod): # pylint: disable=invalid-name
+
+class RevokeRoleMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the revokeRole method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(self, role: Union[bytes, str], account: str):
+    def validate_and_normalize_inputs(
+        self, role: Union[bytes, str], account: str
+    ):
         """Validate the inputs to the revokeRole method."""
         self.validator.assert_valid(
-            method_name='revokeRole',
-            parameter_name='role',
+            method_name="revokeRole",
+            parameter_name="role",
             argument_value=role,
         )
         self.validator.assert_valid(
-            method_name='revokeRole',
-            parameter_name='account',
+            method_name="revokeRole",
+            parameter_name="account",
             argument_value=account,
         )
         account = self.validate_and_checksum_address(account)
         return (role, account)
 
-    def call(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> None:
+    def call(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -399,30 +585,53 @@ class RevokeRoleMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         self._underlying_method(role, account).call(tx_params.as_dict())
 
-    def send_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).transact(tx_params.as_dict())
+        return self._underlying_method(role, account).transact(
+            tx_params.as_dict()
+        )
 
-    def build_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(role, account).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self,
+        role: Union[bytes, str],
+        account: str,
+        tx_params: Optional[TxParams] = None,
+    ) -> int:
         """Estimate gas consumption of method call."""
         (role, account) = self.validate_and_normalize_inputs(role, account)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
+        return self._underlying_method(role, account).estimateGas(
+            tx_params.as_dict()
+        )
+
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
 class IPermissionsEnumerable:
     """Wrapper class for IPermissionsEnumerable Solidity contract."""
+
     get_role_admin: GetRoleAdminMethod
     """Constructor-initialized instance of
     :class:`GetRoleAdminMethod`.
@@ -458,7 +667,6 @@ class IPermissionsEnumerable:
     :class:`RevokeRoleMethod`.
     """
 
-
     def __init__(
         self,
         web3_or_provider: Union[Web3, BaseProvider],
@@ -477,7 +685,9 @@ class IPermissionsEnumerable:
         self.contract_address = contract_address
 
         if not validator:
-            validator = IPermissionsEnumerableValidator(web3_or_provider, contract_address)
+            validator = IPermissionsEnumerableValidator(
+                web3_or_provider, contract_address
+            )
 
         web3 = None
         if isinstance(web3_or_provider, BaseProvider):
@@ -499,29 +709,61 @@ class IPermissionsEnumerable:
             try:
                 for middleware in MIDDLEWARE:
                     web3.middleware_onion.inject(
-                         middleware['function'], layer=middleware['layer'],
+                        middleware["function"],
+                        layer=middleware["layer"],
                     )
             except ValueError as value_error:
-                if value_error.args == ("You can't add the same un-named instance twice",):
+                if value_error.args == (
+                    "You can't add the same un-named instance twice",
+                ):
                     pass
 
         self._web3_eth = web3.eth
 
-        functions = self._web3_eth.contract(address=to_checksum_address(contract_address), abi=IPermissionsEnumerable.abi()).functions
+        functions = self._web3_eth.contract(
+            address=to_checksum_address(contract_address),
+            abi=IPermissionsEnumerable.abi(),
+        ).functions
 
-        self.get_role_admin = GetRoleAdminMethod(web3_or_provider, contract_address, functions.getRoleAdmin, validator)
+        self.get_role_admin = GetRoleAdminMethod(
+            web3_or_provider,
+            contract_address,
+            functions.getRoleAdmin,
+            validator,
+        )
 
-        self.get_role_member = GetRoleMemberMethod(web3_or_provider, contract_address, functions.getRoleMember, validator)
+        self.get_role_member = GetRoleMemberMethod(
+            web3_or_provider,
+            contract_address,
+            functions.getRoleMember,
+            validator,
+        )
 
-        self.get_role_member_count = GetRoleMemberCountMethod(web3_or_provider, contract_address, functions.getRoleMemberCount, validator)
+        self.get_role_member_count = GetRoleMemberCountMethod(
+            web3_or_provider,
+            contract_address,
+            functions.getRoleMemberCount,
+            validator,
+        )
 
-        self.grant_role = GrantRoleMethod(web3_or_provider, contract_address, functions.grantRole, validator)
+        self.grant_role = GrantRoleMethod(
+            web3_or_provider, contract_address, functions.grantRole, validator
+        )
 
-        self.has_role = HasRoleMethod(web3_or_provider, contract_address, functions.hasRole, validator)
+        self.has_role = HasRoleMethod(
+            web3_or_provider, contract_address, functions.hasRole, validator
+        )
 
-        self.renounce_role = RenounceRoleMethod(web3_or_provider, contract_address, functions.renounceRole, validator)
+        self.renounce_role = RenounceRoleMethod(
+            web3_or_provider,
+            contract_address,
+            functions.renounceRole,
+            validator,
+        )
 
-        self.revoke_role = RevokeRoleMethod(web3_or_provider, contract_address, functions.revokeRole, validator)
+        self.revoke_role = RevokeRoleMethod(
+            web3_or_provider, contract_address, functions.revokeRole, validator
+        )
 
     def get_role_admin_changed_event(
         self, tx_hash: Union[HexBytes, bytes]
@@ -531,7 +773,15 @@ class IPermissionsEnumerable:
         :param tx_hash: hash of transaction emitting RoleAdminChanged event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=IPermissionsEnumerable.abi()).events.RoleAdminChanged().processReceipt(tx_receipt)
+        return (
+            self._web3_eth.contract(
+                address=to_checksum_address(self.contract_address),
+                abi=IPermissionsEnumerable.abi(),
+            )
+            .events.RoleAdminChanged()
+            .processReceipt(tx_receipt)
+        )
+
     def get_role_granted_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -540,7 +790,15 @@ class IPermissionsEnumerable:
         :param tx_hash: hash of transaction emitting RoleGranted event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=IPermissionsEnumerable.abi()).events.RoleGranted().processReceipt(tx_receipt)
+        return (
+            self._web3_eth.contract(
+                address=to_checksum_address(self.contract_address),
+                abi=IPermissionsEnumerable.abi(),
+            )
+            .events.RoleGranted()
+            .processReceipt(tx_receipt)
+        )
+
     def get_role_revoked_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -549,7 +807,14 @@ class IPermissionsEnumerable:
         :param tx_hash: hash of transaction emitting RoleRevoked event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=IPermissionsEnumerable.abi()).events.RoleRevoked().processReceipt(tx_receipt)
+        return (
+            self._web3_eth.contract(
+                address=to_checksum_address(self.contract_address),
+                abi=IPermissionsEnumerable.abi(),
+            )
+            .events.RoleRevoked()
+            .processReceipt(tx_receipt)
+        )
 
     @staticmethod
     def abi():
@@ -557,5 +822,6 @@ class IPermissionsEnumerable:
         return json.loads(
             '[{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"previousAdminRole","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"newAdminRole","type":"bytes32"}],"name":"RoleAdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleGranted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleRevoked","type":"event"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleAdmin","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"getRoleMember","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleMemberCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"grantRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"hasRole","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"renounceRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"revokeRole","outputs":[],"stateMutability":"nonpayable","type":"function"}]'  # noqa: E501 (line-too-long)
         )
+
 
 # pylint: disable=too-many-lines

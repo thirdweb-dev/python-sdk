@@ -4,6 +4,7 @@ from .token_erc721 import TokenERC721
 from .token_erc1155 import TokenERC1155
 from .token_erc20 import TokenERC20
 from .marketplace import Marketplace
+from .multiwrap import Multiwrap
 from .ierc20 import IERC20
 from .ierc165 import IERC165
 from .ierc721 import IERC721
