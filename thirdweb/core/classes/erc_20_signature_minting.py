@@ -1,6 +1,5 @@
 from typing import Any, Dict, List
 
-from brownie import chain
 from thirdweb.abi.token_erc20 import ITokenERC20MintRequest
 from thirdweb.common.currency import (
     normalize_price_value,
@@ -9,7 +8,6 @@ from thirdweb.common.currency import (
 )
 from web3.eth import TxReceipt
 from thirdweb.common.sign import EIP712StandardDomain
-from thirdweb.constants.chains import ChainId
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
