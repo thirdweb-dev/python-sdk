@@ -17,9 +17,9 @@ from thirdweb.types.marketplace import (
 MAX_BPS = 10000
 
 
-def is_token_approved_for_marketplace(
+def is_token_approved_for_transfer(
     provider: Web3,
-    marketplace_address: str,
+    transferrer_contract_address: str,
     asset_contract: str,
     token_id: int,
     fr: str,
@@ -31,18 +31,20 @@ def is_token_approved_for_marketplace(
 
         if is_erc721:
             ierc721 = IERC721(provider, asset_contract)
-            approved = ierc721.is_approved_for_all.call(fr, marketplace_address)
+            approved = ierc721.is_approved_for_all.call(
+                fr, transferrer_contract_address
+            )
 
             if approved:
                 return True
 
             return (
                 ierc721.get_approved.call(token_id).lower()
-                == marketplace_address.lower()
+                == transferrer_contract_address.lower()
             )
         elif is_erc1155:
             ierc1155 = IERC1155(provider, asset_contract)
-            return ierc1155.is_approved_for_all.call(fr, marketplace_address)
+            return ierc1155.is_approved_for_all.call(fr, transferrer_contract_address)
         else:
             print("Contract does not implement ERC1155 or ERC721")
             return False

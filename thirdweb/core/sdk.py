@@ -1,15 +1,14 @@
 from eth_account import Account
 from thirdweb.abi.thirdweb_contract import ThirdwebContract
 from thirdweb.common.feature_detection import (
-    fetch_contract_metadata,
     fetch_contract_metadata_from_address,
 )
-from thirdweb.constants.addresses import get_contract_address_by_chain_id
 from thirdweb.constants.urls import get_provider_for_network
 from thirdweb.contracts import Marketplace
 from thirdweb.contracts.custom import CustomContract
 from thirdweb.contracts.edition_drop import EditionDrop
 from thirdweb.contracts.nft_drop import NFTDrop
+from thirdweb.contracts.multiwrap import Multiwrap
 from thirdweb.core.classes.contract_deployer import ContractDeployer
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.provider_handler import ProviderHandler
@@ -36,6 +35,7 @@ class ThirdwebSDK(ProviderHandler):
             Marketplace,
             NFTDrop,
             EditionDrop,
+            Multiwrap,
         ],
     ] = {}
     storage: IpfsStorage
@@ -133,6 +133,16 @@ class ThirdwebSDK(ProviderHandler):
 
         return cast(EditionDrop, self._get_contract(address, EditionDrop))
 
+    def get_multiwrap(self, address: str) -> Multiwrap:
+        """
+        Returns a multiwrap contract SDK instance
+
+        :param address: address of the multiwrap contract
+        :returns: multiwrap contract SDK instance
+        """
+
+        return cast(Multiwrap, self._get_contract(address, Multiwrap))
+
     def get_contract(self, address: str) -> CustomContract:
         """
         Returns a custom contract SDK instance
@@ -208,8 +218,11 @@ class ThirdwebSDK(ProviderHandler):
             Type[Marketplace],
             Type[NFTDrop],
             Type[EditionDrop],
+            Type[Multiwrap],
         ],
-    ) -> Union[NFTCollection, Edition, Token, Marketplace, NFTDrop, EditionDrop]:
+    ) -> Union[
+        NFTCollection, Edition, Token, Marketplace, NFTDrop, EditionDrop, Multiwrap
+    ]:
         if address in self.__contract_cache:
             return self.__contract_cache[address]
 

@@ -99,6 +99,12 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         :return: the token IDs owned by the address
         """
 
+        # TODO: Fix when we implement ERC721 feature detection
+        if hasattr(self._contract_wrapper._contract_abi, "token_of_owner_by_index"):
+            raise NotImplementedError(
+                "The get_owned functionality is not supported by this contract."
+            )
+
         owner = address if address else self._contract_wrapper.get_signer_address()
         balance = self._contract_wrapper._contract_abi.balance_of.call(owner)
         return [
@@ -219,12 +225,23 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
         :param operator: the address of the operator to set the approval for
         :param approved: the address whos assets the operator is approved to manage
-        :returns: transaction receipt of the approval setting
+        :returns: transaction receipt of the approval
         """
 
         return self._contract_wrapper.send_transaction(
             "set_approval_for_all", [operator, approved]
         )
+
+    def set_approval_for_token(self, operator: str, token_id: int) -> TxReceipt:
+        """
+        Approve an operator for the NFT owner, which allows the operator to call transferFrom
+        or safeTransferFrom for the specified token.
+
+        :param operator: the address of the operator to set the approval for
+        :param token_id: the specific token ID to set the approval for
+        :returns: transaction receipt of the approval
+        """
+        return self._contract_wrapper.send_transaction("approve", [operator, token_id])
 
     """
     INTERNAL FUNCTIONS
