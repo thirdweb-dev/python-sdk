@@ -15,7 +15,8 @@ test:
 	poetry run brownie test --network hardhat
 
 abi:
-	abi-gen --language Python -o thirdweb/abi --abis abi/TWRegistry.json && mv thirdweb/abi/t_w_registry/__init__.py thirdweb/abi/t_w_registry.py && rm -rf thirdweb/abi/t_w_registry
+	# If you regenerate registry ABI, you will need to fix a typing error
+	# abi-gen --language Python -o thirdweb/abi --abis abi/TWRegistry.json && mv thirdweb/abi/t_w_registry/__init__.py thirdweb/abi/t_w_registry.py && rm -rf thirdweb/abi/t_w_registry
 	abi-gen --language Python -o thirdweb/abi --abis abi/TWFactory.json && mv thirdweb/abi/t_w_factory/__init__.py thirdweb/abi/t_w_factory.py && rm -rf thirdweb/abi/t_w_factory
 	abi-gen --language Python -o thirdweb/abi --abis abi/TokenERC20.json && mv thirdweb/abi/token_erc20/__init__.py thirdweb/abi/token_erc20.py && rm -rf thirdweb/abi/token_erc20
 	abi-gen --language Python -o thirdweb/abi --abis abi/TokenERC721.json && mv thirdweb/abi/token_erc721/__init__.py thirdweb/abi/token_erc721.py && rm -rf thirdweb/abi/token_erc721
@@ -32,6 +33,7 @@ abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/SignatureMintERC721.json && mv thirdweb/abi/signature_mint_erc721/__init__.py thirdweb/abi/signature_mint_erc721.py && rm -rf thirdweb/abi/signature_mint_erc721
 	abi-gen --language Python -o thirdweb/abi --abis abi/SignatureMintERC1155.json && mv thirdweb/abi/signature_mint_erc1155/__init__.py thirdweb/abi/signature_mint_erc1155.py && rm -rf thirdweb/abi/signature_mint_erc1155
 
+	abi-gen --language Python -o thirdweb/abi --abis abi/ContractMetadataRegistry.json && mv thirdweb/abi/contract_metadata_registry/__init__.py thirdweb/abi/contract_metadata_registry.py && rm -rf thirdweb/abi/contract_metadata_registry
 	abi-gen --language Python -o thirdweb/abi --abis abi/ThirdwebContract.json && mv thirdweb/abi/thirdweb_contract/__init__.py thirdweb/abi/thirdweb_contract.py && rm -rf thirdweb/abi/thirdweb_contract
 
 	abi-gen --language Python -o thirdweb/abi --abis abi/ITokenERC20.json && mv thirdweb/abi/i_token_erc20/__init__.py thirdweb/abi/i_token_erc20.py && rm -rf thirdweb/abi/i_token_erc20
@@ -55,6 +57,12 @@ docs:
 	cp docs/common/index.md docs/docs/index.md
 	cp docs/common/custom.md docs/docs/custom.md
 	make snippets
+
+publish:
+	poetry version prerelease
+	rm -rf dist
+	poetry build
+	poetry publish
 
 live-docs:
 	make docs

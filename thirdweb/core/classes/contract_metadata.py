@@ -1,4 +1,4 @@
-from typing import Any, Dict, Generic
+from typing import Any, Dict, Generic, cast
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import TContractSchema, TMetadataABI
@@ -14,11 +14,11 @@ class ContractMetadata(Generic[TMetadataABI, TContractSchema]):
         self,
         contract_wrapper: ContractWrapper[TMetadataABI],
         storage: IpfsStorage,
-        contract_schema: TContractSchema,
+        contract_schema: Any,
     ):
         self._contract_wrapper = contract_wrapper
         self._storage = storage
-        self._schema = contract_schema
+        self._schema = cast(TContractSchema, contract_schema)
 
     def get(self) -> TContractSchema:
         """
@@ -30,7 +30,7 @@ class ContractMetadata(Generic[TMetadataABI, TContractSchema]):
         abi = self._contract_wrapper._contract_abi
         uri = abi.contract_uri.call()
         data = self._storage.get(uri)
-        return self._schema.from_json(data)
+        return cast(TContractSchema, self._schema.from_json(data))
 
     def set(self, metadata: TContractSchema) -> TxReceipt:
         """

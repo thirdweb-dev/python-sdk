@@ -1,4 +1,3 @@
-"""
 import pytest
 from thirdweb.abi import TokenERC721
 from thirdweb.abi.token_erc20 import TokenERC20
@@ -46,7 +45,7 @@ def token(sdk: ThirdwebSDK, primary_account) -> Token:
 
 @pytest.mark.usefixtures("sdk")
 def test_custom_functions(sdk: ThirdwebSDK, nft_collection: NFTCollection):
-    custom = sdk.get_custom_contract(nft_collection.get_address(), TokenERC721.abi())
+    custom = sdk.get_contract_from_abi(nft_collection.get_address(), TokenERC721.abi())
 
     contract_uri = custom.functions.contractURI().call()
     metadata = sdk.storage.get(contract_uri)  # type: ignore
@@ -57,7 +56,7 @@ def test_custom_functions(sdk: ThirdwebSDK, nft_collection: NFTCollection):
 def test_feature_detection(
     sdk: ThirdwebSDK, nft_collection: NFTCollection, token: Token
 ):
-    custom = sdk.get_custom_contract(nft_collection.get_address(), TokenERC721.abi())
+    custom = sdk.get_contract_from_abi(nft_collection.get_address(), TokenERC721.abi())
 
     assert custom.nft.balance() == 0
 
@@ -67,7 +66,7 @@ def test_feature_detection(
     except:
         assert True
 
-    custom = sdk.get_custom_contract(token.get_address(), TokenERC20.abi())
+    custom = sdk.get_contract_from_abi(token.get_address(), TokenERC20.abi())
 
     assert custom.token.balance().display_value == 0
 
@@ -78,22 +77,10 @@ def test_feature_detection(
         assert True
 
 
-def test_get_abi():
-    RPC_URL = f"https://polygon-mumbai.g.alchemy.com/v2/{DEFAULT_API_KEY}"
-    sdk = ThirdwebSDK(RPC_URL)
-
-    custom = sdk.get_custom_contract("0x87f80ba61BceC41108127991a706EDE2aBBef015")
-
-    contract_uri = custom.functions.contractURI().call()
-    metadata = sdk.storage.get(contract_uri)  # type: ignore
-    assert metadata["name"] == "Ethrone v1.4"
-
-
 @pytest.mark.usefixtures("sdk")
 def test_write(sdk: ThirdwebSDK, nft_collection: NFTCollection):
-    custom = sdk.get_custom_contract(nft_collection.get_address(), TokenERC721.abi())
+    custom = sdk.get_contract_from_abi(nft_collection.get_address(), TokenERC721.abi())
 
     assert custom.functions.totalSupply().call() == 0
     custom.send_transaction("mintTo", [sdk.get_signer().address, "https://example.com"])  # type: ignore
     assert custom.functions.totalSupply().call() == 1
-"""

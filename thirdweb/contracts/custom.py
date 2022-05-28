@@ -39,9 +39,37 @@ from thirdweb.types.settings.metadata import (
 
 
 class CustomContract(BaseContract[ThirdwebContract]):
+    """
+    An SDK interface for a custom contract instance.
+
+    ```python
+    from thirdweb import ThirdwebSDK
+    from eth_account import Account
+
+    # You can customize this to a supported network or your own RPC URL
+    network = "mumbai"
+
+    # This will create a random account to use for signing transactions
+    signer = Account.create()
+
+    sdk = ThirdwebSDK(network, signer)
+    contract = sdk.get_contract("{{contract_address}}")
+
+    # If your contract follows the ERC721 standard, contract.nft will be present
+    nfts = contract.nft.get_all()
+
+    # You can call any contract read function as follows
+    balance = contract.functions.balance().call()
+
+    # And you can also use write functions like this
+    address = "0x..."
+    uri = "ipfs://..."
+    contract.send_transaction("mint", [address, uri])
+    ```
+    """
+
     contract_type: Final[ContractType] = ContractType.CUSTOM
 
-    metadata: ContractMetadata[ThirdwebContract, ContractMetadataSchema]
     functions: ContractFunctions
 
     def __init__(
@@ -61,9 +89,6 @@ class CustomContract(BaseContract[ThirdwebContract]):
         self.functions = contract.functions
 
         self._storage = storage
-        self.metadata = ContractMetadata(
-            contract_wrapper, storage, CustomContractMetadata
-        )
 
         self.roles = self._detect_roles()
         self.royalties = self._detect_royalties()
