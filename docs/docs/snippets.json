@@ -358,5 +358,62 @@
         ],
         "properties": [],
         "reference": "https://docs.thirdweb.com/python/edition-drop"
+    },
+    "Multiwrap": {
+        "name": "Multiwrap",
+        "summary": "Multiwrap lets you wrap any number of ERC20, ERC721, or ERC1155 tokens into    a single wrapped token bundle.",
+        "example": "from thirdweb import ThirdwebSDK\nfrom eth_account import Account\n\n# You can customize this to a supported network or your own RPC URL\nnetwork = \"mumbai\"\n\n# This will create a random account to use for signing transactions\nsigner = Account.create()\n\nsdk = ThirdwebSDK(network, signer)\ncontract = sdk.get_multiwrap(\"{{contract_address}}\")",
+        "methods": [
+            {
+                "name": "balance_of",
+                "summary": "Get the token balance of a specific address",
+                "example": "balance = contract.balance_of(\"{{wallet_address}}\")\nprint(balance)",
+                "reference": "https://docs.thirdweb.com/python/erc721#balance_of"
+            },
+            {
+                "name": "get",
+                "summary": "Get metadata for a token",
+                "example": "nft = contract.get(0)\nprint(nft)",
+                "reference": "https://docs.thirdweb.com/python/erc721#get"
+            },
+            {
+                "name": "get_all",
+                "summary": "Get the metadata of all tokens in the contract",
+                "example": "nfts = contract.get_all()\nprint(nfts)",
+                "reference": "https://docs.thirdweb.com/python/erc721#get_all"
+            },
+            {
+                "name": "get_owned",
+                "summary": "Get the metadata of all tokens owned by a specific address",
+                "example": "nfts = contract.get_owned(\"{{wallet_address}}\")\nprint(nfts)",
+                "reference": "https://docs.thirdweb.com/python/erc721#get_owned"
+            },
+            {
+                "name": "get_wrapped_contents",
+                "summary": "Get the contents of a wrapped token bundle",
+                "example": "contents = contract.get_wrapped_contents(wrapped_token_id)\nprint(contents.erc20_tokens)\nprint(contents.erc721_tokens)\nprint(contents.erc1155_tokens)",
+                "reference": "https://docs.thirdweb.com/python/multiwrap#get_wrapped_contents"
+            },
+            {
+                "name": "transfer",
+                "summary": "Transfer a specified token from the connected wallet to a specified address.",
+                "example": "to = \"{{wallet_address}}\"\ntoken_id = 0\n\nreceipt = contract.transfer(to, token_id)",
+                "reference": "https://docs.thirdweb.com/python/erc721#transfer"
+            },
+            {
+                "name": "unwrap",
+                "summary": "Unwrap a wrapped token bundle",
+                "example": "tx = contract.unwrap(wrapped_token_id, receipientAddress)",
+                "reference": "https://docs.thirdweb.com/python/multiwrap#unwrap"
+            },
+            {
+                "name": "wrap",
+                "summary": "Wrap any number of ERC20, ERC721, or ERC1155 tokens into a single wrapped token",
+                "example": "from thirdweb.types import (\n    TokensToWrap,\n    ERC20Wrappable,\n    ERC721Wrappable,\n    ERC1155Wrappable,\n    NFTMetadataInput,\n)\n\n# Contract setup goes here...\n\ntx = contract.wrap(\n    TokensToWrap(\n        erc20_tokens=[\n            ERC20Wrappable(contract_address=\"0x...\", quantity=0.8),\n        ],\n        erc721_tokens=[\n            ERC721Wrappable(contract_address=\"0x...\", token_id=0),\n        ],\n        erc1155_tokens=[\n            ERC1155Wrappable(contract_address=\"0x...\", token_id=0, quantity=1),\n        ]\n    ),\n    NFTMetadataInput(\n        name=\"Wrapped NFT\",\n        description=\"This is a wrapped bundle of tokens and NFTs\",\n        image=\"ipfs://...\",\n    )\n)\n\nprint(tx.receipt, tx.id)",
+                "reference": "https://docs.thirdweb.com/python/multiwrap#wrap"
+            }
+        ],
+        "properties": [],
+        "reference": "https://docs.thirdweb.com/python/multiwrap"
     }
 }

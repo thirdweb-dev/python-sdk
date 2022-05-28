@@ -32,7 +32,7 @@ from thirdweb.common.currency import (
     has_erc20_allowance,
     normalize_price_value,
 )
-from thirdweb.types.tx import TxResult, TxResultWithId
+from thirdweb.types.tx import TxResultWithId
 
 
 class Multiwrap(ERC721[MultiwrapABI]):
@@ -154,6 +154,16 @@ class Multiwrap(ERC721[MultiwrapABI]):
         Wrap any number of ERC20, ERC721, or ERC1155 tokens into a single wrapped token
 
         ```python
+        from thirdweb.types import (
+            TokensToWrap,
+            ERC20Wrappable,
+            ERC721Wrappable,
+            ERC1155Wrappable,
+            NFTMetadataInput,
+        )
+
+        # Contract setup goes here...
+
         tx = contract.wrap(
             TokensToWrap(
                 erc20_tokens=[
@@ -236,8 +246,8 @@ class Multiwrap(ERC721[MultiwrapABI]):
                 if not has_allowance:
                     raise Exception(
                         (
-                            f"ERC20 with contract address {erc20.contract_address} does not have enough allowance to transfer."
-                            "You can set allowance to the multiwrap contract to transfer these tokens by running:\n\n"
+                            f"ERC20 with contract address {erc20.contract_address} does not have enough allowance to transfer. "
+                            "You can set allowance to the multiwrap contract to transfer these tokens by running:\n"
                             f'sdk.get_token("{erc20.contract_address}").set_allowance("{owner}", {erc20.quantity})'
                         )
                     )
@@ -264,8 +274,8 @@ class Multiwrap(ERC721[MultiwrapABI]):
                 if not is_approved:
                     raise Exception(
                         (
-                            f"ERC721 token {erc721.token_id} with contract address {erc721.contract_address} is not approved for transfer."
-                            "You can approve this token for transfer by running:\n\n"
+                            f"ERC721 token {erc721.token_id} with contract address {erc721.contract_address} is not approved for transfer. "
+                            "You can approve this token for transfer by running:\n"
                             f'sdk.get_nft_collection("{erc721.contract_address}")'
                             f'.set_approval_for_token("{self._contract_wrapper._contract_abi.contract_address}", {erc721.token_id})'
                         )
@@ -293,8 +303,8 @@ class Multiwrap(ERC721[MultiwrapABI]):
                 if not is_approved:
                     raise Exception(
                         (
-                            f"ERC1155 token {erc1155.token_id} with contract address {erc1155.contract_address} is not approved for transfer."
-                            "You can approve this token for transfer by running:\n\n"
+                            f"ERC1155 token {erc1155.token_id} with contract address {erc1155.contract_address} is not approved for transfer. "
+                            "You can approve this token for transfer by running:\n"
                             f'sdk.get_edition("{erc1155.contract_address}")'
                             f'.set_approval_for_all("{self._contract_wrapper._contract_abi.contract_address}", True)'
                         )
