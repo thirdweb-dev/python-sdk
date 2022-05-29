@@ -26,6 +26,7 @@ class NFTMetadataInput:
     animation_url: Optional[str] = None
     background_color: Optional[str] = None
     properties: Optional[Dict[str, Any]] = None
+    attributes: Optional[Dict[str, Any]] = None
 
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "NFTMetadataInput":
@@ -69,6 +70,7 @@ class NFTMetadata:
     animation_url: Optional[str] = None
     background_color: Optional[str] = None
     properties: Optional[Dict[Any, Any]] = None
+    attributes: Optional[Dict[str, Any]] = None
 
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "NFTMetadata":
