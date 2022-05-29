@@ -44,15 +44,16 @@ class CustomContract(BaseContract[ThirdwebContract]):
 
     ```python
     from thirdweb import ThirdwebSDK
-    from eth_account import Account
 
     # You can customize this to a supported network or your own RPC URL
     network = "mumbai"
 
-    # This will create a random account to use for signing transactions
-    signer = Account.create()
+    # Now we can create a new instance of the SDK
+    sdk = ThirdwebSDK(network)
 
-    sdk = ThirdwebSDK(network, signer)
+    # If you want to send transactions, you can instantiate the SDK with a private key instead:
+    #   sdk = ThirdwebSDK.from_private_key(PRIVATE_KEY, network)
+
     contract = sdk.get_contract("{{contract_address}}")
 
     # If your contract follows the ERC721 standard, contract.nft will be present
