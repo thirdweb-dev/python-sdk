@@ -37,8 +37,16 @@ def get_wrapped_contents(wrapped_token_id: int) -> WrappedTokens
 
 Get the contents of a wrapped token bundle
 
+**Arguments**:
+
+- `wrapped_token_id`: The ID of the wrapped token to get the contents of
+
+**Returns**:
+
+The contents of the wrapped token bundle
 ```python
-contents = contract.get_wrapped_contents(wrapped_token_id)
+token_id = 0
+contents = contract.get_wrapped_contents(token_id)
 print(contents.erc20_tokens)
 print(contents.erc721_tokens)
 print(contents.erc1155_tokens)
@@ -58,6 +66,15 @@ def wrap(
 
 Wrap any number of ERC20, ERC721, or ERC1155 tokens into a single wrapped token
 
+**Arguments**:
+
+- `contents`: The tokens to wrap into a single wrapped token
+- `wrapped_token_metadata`: The metadata to use for the wrapped token
+- `recipient_address`: The optional address to send the wrapped token to
+
+**Returns**:
+
+The transaction receipt of the token wrapping
 ```python
 from thirdweb.types import (
     TokensToWrap,
@@ -102,6 +119,14 @@ def unwrap(wrapped_token_id: int,
 
 Unwrap a wrapped token bundle
 
+**Arguments**:
+
+- `wrapped_token_id`: The ID of the wrapped token to unwrap
+- `recipient_address`: The optional address to send the unwrapped tokens to
+
+**Returns**:
+
+The transaction receipt of the token unwrapping
 ```python
 tx = contract.unwrap(wrapped_token_id, receipientAddress)
 ```

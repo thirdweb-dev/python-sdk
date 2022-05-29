@@ -391,7 +391,7 @@
             {
                 "name": "get_wrapped_contents",
                 "summary": "Get the contents of a wrapped token bundle",
-                "example": "contents = contract.get_wrapped_contents(wrapped_token_id)\nprint(contents.erc20_tokens)\nprint(contents.erc721_tokens)\nprint(contents.erc1155_tokens)",
+                "example": "token_id = 0\ncontents = contract.get_wrapped_contents(token_id)\nprint(contents.erc20_tokens)\nprint(contents.erc721_tokens)\nprint(contents.erc1155_tokens)",
                 "reference": "https://docs.thirdweb.com/python/multiwrap#get_wrapped_contents"
             },
             {

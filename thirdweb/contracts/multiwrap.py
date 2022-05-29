@@ -99,8 +99,12 @@ class Multiwrap(ERC721[MultiwrapABI]):
         """
         Get the contents of a wrapped token bundle
 
+        :param wrapped_token_id: The ID of the wrapped token to get the contents of
+        :returns: The contents of the wrapped token bundle
+
         ```python
-        contents = contract.get_wrapped_contents(wrapped_token_id)
+        token_id = 0
+        contents = contract.get_wrapped_contents(token_id)
         print(contents.erc20_tokens)
         print(contents.erc721_tokens)
         print(contents.erc1155_tokens)
@@ -152,6 +156,11 @@ class Multiwrap(ERC721[MultiwrapABI]):
     ) -> TxResultWithId[NFTMetadataOwner]:
         """
         Wrap any number of ERC20, ERC721, or ERC1155 tokens into a single wrapped token
+
+        :param contents: The tokens to wrap into a single wrapped token
+        :param wrapped_token_metadata: The metadata to use for the wrapped token
+        :param recipient_address: The optional address to send the wrapped token to
+        :returns: The transaction receipt of the token wrapping
 
         ```python
         from thirdweb.types import (
@@ -208,6 +217,10 @@ class Multiwrap(ERC721[MultiwrapABI]):
     ) -> TxReceipt:
         """
         Unwrap a wrapped token bundle
+
+        :param wrapped_token_id: The ID of the wrapped token to unwrap
+        :param recipient_address: The optional address to send the unwrapped tokens to
+        :returns: The transaction receipt of the token unwrapping
 
         ```python
         tx = contract.unwrap(wrapped_token_id, receipientAddress)
