@@ -3,7 +3,7 @@
 <a href="https://thirdweb.com"><img src="https://github.com/thirdweb-dev/typescript-sdk/blob/main/logo.svg?raw=true" width="200" alt=""/></a>
 <br />
 </p>
-<h1 align="center">Thirdweb Python SDK</h1>
+<h1 align="center">thirdweb Python SDK</h1>
 <p align="center">
 <a href="https://pypi.org/project/thirdweb-sdk/"><img src="https://img.shields.io/pypi/v/thirdweb-sdk?color=red&logo=pypi&logoColor=red" alt="pypi version"/></a>
 <a href="https://github.com/thirdweb-dev/python-sdk/actions"><img alt="Build Status" src="https://github.com/thirdweb-dev/python-sdk/actions/workflows/tests.yml/badge.svg"/></a>
