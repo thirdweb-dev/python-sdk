@@ -70,3 +70,13 @@ def deploy_edition_drop(metadata: EditionDropContractMetadata) -> str
 
 Deploy an Edition Drop contract
 
+<a id="core.classes.contract_deployer.ContractDeployer.deploy_multiwrap"></a>
+
+#### deploy\_multiwrap
+
+```python
+def deploy_multiwrap(metadata: MultiwrapContractMetadata) -> str
+```
+
+Deploy a Multiwrap contract
+

@@ -36,6 +36,10 @@ renderer:
     name: edition-drop
     contents:
     - contracts.edition_drop.*
+  - title: 'Multiwrap'
+    name: multiwrap
+    contents:
+    - contracts.multiwrap.*
   
   # Signature Minting
   - title: ERC20 Signature Minting

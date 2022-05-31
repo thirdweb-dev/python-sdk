@@ -1,5 +1,4 @@
-from typing import List, Generic, Optional
-from thirdweb.abi import TokenERC721
+from typing import List, Generic
 from thirdweb.common.error import NotFoundException
 from thirdweb.common.nft import fetch_token_metadata
 from thirdweb.constants.currency import ZERO_ADDRESS
@@ -64,7 +63,16 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
 
         max_id = min(query_params.start + query_params.count, self.get_total_count())
-        return [self.get(token_id) for token_id in range(query_params.start, max_id)]
+
+        nfts = []
+        for token_id in range(query_params.start, max_id):
+            try:
+                nft = self.get(token_id)
+                nfts.append(nft)
+            except:
+                pass
+
+        return nfts
 
     def get_total_count(self) -> int:
         """
@@ -74,37 +82,6 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
 
         return self._contract_wrapper._contract_abi.next_token_id_to_mint.call()
-
-    def get_owned(self, address: str = "") -> List[NFTMetadataOwner]:
-        """
-        Get the metadata of all tokens owned by a specific address
-
-        ```python
-        nfts = contract.get_owned("{{wallet_address}}")
-        print(nfts)
-        ```
-
-        :param address: the address to get the metadata for
-        :return: the metadata of all tokens owned by the address
-        """
-
-        token_ids = self.get_owned_token_ids(address)
-        return [self.get(token_id) for token_id in token_ids]
-
-    def get_owned_token_ids(self, address: str = "") -> List[int]:
-        """
-        Get the token IDs owned by a specific address
-
-        :param address: the address to get the token IDs for
-        :return: the token IDs owned by the address
-        """
-
-        owner = address if address else self._contract_wrapper.get_signer_address()
-        balance = self._contract_wrapper._contract_abi.balance_of.call(owner)
-        return [
-            self._contract_wrapper._contract_abi.token_of_owner_by_index.call(owner, i)
-            for i in range(balance)
-        ]
 
     def owner_of(self, token_id: int) -> str:
         """
@@ -219,12 +196,23 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
         :param operator: the address of the operator to set the approval for
         :param approved: the address whos assets the operator is approved to manage
-        :returns: transaction receipt of the approval setting
+        :returns: transaction receipt of the approval
         """
 
         return self._contract_wrapper.send_transaction(
             "set_approval_for_all", [operator, approved]
         )
+
+    def set_approval_for_token(self, operator: str, token_id: int) -> TxReceipt:
+        """
+        Approve an operator for the NFT owner, which allows the operator to call transferFrom
+        or safeTransferFrom for the specified token.
+
+        :param operator: the address of the operator to set the approval for
+        :param token_id: the specific token ID to set the approval for
+        :returns: transaction receipt of the approval
+        """
+        return self._contract_wrapper.send_transaction("approve", [operator, token_id])
 
     """
     INTERNAL FUNCTIONS

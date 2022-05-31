@@ -28,6 +28,7 @@ abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC1155.json && mv thirdweb/abi/ierc1155/__init__.py thirdweb/abi/ierc1155.py && rm -rf thirdweb/abi/ierc1155
 	abi-gen --language Python -o thirdweb/abi --abis abi/DropERC721.json && mv thirdweb/abi/drop_erc721/__init__.py thirdweb/abi/drop_erc721.py && rm -rf thirdweb/abi/drop_erc721
 	abi-gen --language Python -o thirdweb/abi --abis abi/DropERC1155.json && mv thirdweb/abi/drop_erc1155/__init__.py thirdweb/abi/drop_erc1155.py && rm -rf thirdweb/abi/drop_erc1155
+	abi-gen --language Python -o thirdweb/abi --abis abi/Multiwrap.json && mv thirdweb/abi/multiwrap/__init__.py thirdweb/abi/multiwrap.py && rm -rf thirdweb/abi/multiwrap
 	
 	abi-gen --language Python -o thirdweb/abi --abis abi/SignatureMintERC20.json && mv thirdweb/abi/signature_mint_erc20/__init__.py thirdweb/abi/signature_mint_erc20.py && rm -rf thirdweb/abi/signature_mint_erc20
 	abi-gen --language Python -o thirdweb/abi --abis abi/SignatureMintERC721.json && mv thirdweb/abi/signature_mint_erc721/__init__.py thirdweb/abi/signature_mint_erc721.py && rm -rf thirdweb/abi/signature_mint_erc721
@@ -44,6 +45,7 @@ abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/IPrimarySale.json && mv thirdweb/abi/i_primary_sale/__init__.py thirdweb/abi/i_primary_sale.py && rm -rf thirdweb/abi/i_primary_sale
 	abi-gen --language Python -o thirdweb/abi --abis abi/IPlatformFee.json && mv thirdweb/abi/i_platform_fee/__init__.py thirdweb/abi/i_platform_fee.py && rm -rf thirdweb/abi/i_platform_fee
 	abi-gen --language Python -o thirdweb/abi --abis abi/IRoyalty.json && mv thirdweb/abi/i_royalty/__init__.py thirdweb/abi/i_royalty.py && rm -rf thirdweb/abi/i_royalty
+
 
 snippets:
 	poetry run python3 scripts/generate_snippets.py

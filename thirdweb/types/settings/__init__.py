@@ -5,4 +5,5 @@ from .metadata import (
     MarketplaceContractMetadata,
     NFTDropContractMetadata,
     EditionDropContractMetadata,
+    MultiwrapContractMetadata,
 )

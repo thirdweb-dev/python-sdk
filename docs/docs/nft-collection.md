@@ -29,6 +29,47 @@ sdk = ThirdwebSDK(network)
 contract = sdk.get_nft_collection("{{contract_address}}")
 ```
 
+<a id="contracts.nft_collection.NFTCollection.get_owned"></a>
+
+#### get\_owned
+
+```python
+def get_owned(address: str = "") -> List[NFTMetadataOwner]
+```
+
+Get the metadata of all tokens owned by a specific address
+
+```python
+nfts = contract.get_owned("{{wallet_address}}")
+print(nfts)
+```
+
+**Arguments**:
+
+- `address`: the address to get the metadata for
+
+**Returns**:
+
+the metadata of all tokens owned by the address
+
+<a id="contracts.nft_collection.NFTCollection.get_owned_token_ids"></a>
+
+#### get\_owned\_token\_ids
+
+```python
+def get_owned_token_ids(address: str = "") -> List[int]
+```
+
+Get the token IDs owned by a specific address
+
+**Arguments**:
+
+- `address`: the address to get the token IDs for
+
+**Returns**:
+
+the token IDs owned by the address
+
 <a id="contracts.nft_collection.NFTCollection.mint"></a>
 
 #### mint

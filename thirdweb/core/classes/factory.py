@@ -16,6 +16,7 @@ from thirdweb.contracts import (
     NFTDrop,
     EditionDrop,
     Marketplace,
+    Multiwrap,
 )
 from thirdweb.contracts.maps import (
     CONTRACTS_MAP,
@@ -32,6 +33,7 @@ from thirdweb.types.settings.metadata import (
     EditionDropContractMetadata,
     MarketplaceContractMetadata,
     TokenContractMetadata,
+    MultiwrapContractMetadata,
 )
 
 
@@ -120,7 +122,7 @@ class ContractFactory(ContractWrapper[TWFactory]):
             contract_type == Edition.contract_type
             or contract_type == EditionDrop.contract_type
         ):
-            metadata = EditionDropContractMetadata.from_json(contract_metadata)
+            metadata = EditionDropContractMetadata.from_json(contract_metadata)  # type: ignore
             return [
                 self.get_signer_address(),
                 metadata.name,
@@ -134,8 +136,20 @@ class ContractFactory(ContractWrapper[TWFactory]):
                 metadata.platform_fee_recipient,
             ]
 
+        if contract_type == Multiwrap.contract_type:
+            metadata = MultiwrapContractMetadata.from_json(contract_metadata)  # type: ignore
+            return [
+                self.get_signer_address(),
+                metadata.name,
+                metadata.symbol,
+                contract_uri,
+                trusted_forwarders,
+                metadata.fee_recipient,
+                metadata.seller_fee_basis_points,
+            ]
+
         if contract_type == Token.contract_type:
-            metadata = TokenContractMetadata.from_json(contract_metadata)
+            metadata = TokenContractMetadata.from_json(contract_metadata)  # type: ignore
             return [
                 self.get_signer_address(),
                 metadata.name,
@@ -147,7 +161,7 @@ class ContractFactory(ContractWrapper[TWFactory]):
                 metadata.platform_fee_basis_points,
             ]
         if contract_type == Marketplace.contract_type:
-            metadata = MarketplaceContractMetadata.from_json(contract_metadata)
+            metadata = MarketplaceContractMetadata.from_json(contract_metadata)  # type: ignore
 
             return [
                 self.get_signer_address(),

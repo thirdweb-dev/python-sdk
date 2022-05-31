@@ -99,3 +99,16 @@ def approve_erc20_allowance(
 
     if allowance < total_price:
         erc20.send_transaction("approve", [spender, allowance + total_price])
+
+
+def has_erc20_allowance(
+    contract_to_approve: ContractWrapper,
+    currency_address: str,
+    value: int,
+):
+    provider = contract_to_approve.get_provider()
+    erc20 = TokenERC20(provider, currency_address)
+    owner = contract_to_approve.get_signer_address()
+    spender = contract_to_approve._contract_abi.contract_address
+    allowance = erc20.allowance.call(owner, spender)
+    return allowance >= value

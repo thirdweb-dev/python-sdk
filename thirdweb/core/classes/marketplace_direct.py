@@ -17,7 +17,7 @@ from web3.constants import MAX_INT
 from thirdweb.common.error import ListingNotFoundException, WrongListingTypeException
 from thirdweb.common.marketplace import (
     handle_token_approval,
-    is_token_approved_for_marketplace,
+    is_token_approved_for_transfer,
     map_offer,
     validate_new_listing_param,
 )
@@ -336,7 +336,7 @@ class MarketplaceDirect(BaseContract[Marketplace]):
     def _is_still_valid_listing(
         self, listing: DirectListing, quantity: Optional[int] = None
     ) -> bool:
-        approved = is_token_approved_for_marketplace(
+        approved = is_token_approved_for_transfer(
             self._contract_wrapper.get_provider(),
             self.get_address(),
             listing.asset_contract_address,

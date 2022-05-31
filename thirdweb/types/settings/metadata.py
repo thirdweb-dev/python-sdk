@@ -137,6 +137,18 @@ class EditionDropContractMetadata(
 
 
 @dataclass
+class MultiwrapContractMetadata(
+    ContractMetadataSchema,
+    ContractSymbolSchema,
+    ContractRoyaltySchema,
+    ContractTrustedForwarderSchema,
+):
+    @staticmethod
+    def from_json(json: Dict[str, Any]) -> "MultiwrapContractMetadata":
+        return from_dict(MultiwrapContractMetadata, json)
+
+
+@dataclass
 class CustomContractMetadata(ContractMetadataSchema):
     @staticmethod
     def from_json(json: Dict[str, Any]) -> "CustomContractMetadata":

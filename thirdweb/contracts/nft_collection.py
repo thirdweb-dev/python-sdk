@@ -84,6 +84,41 @@ class NFTCollection(ERC721[TokenERC721]):
         self.events = ContractEvents(contract_wrapper)
 
     """
+    READ FUNCTIONS
+    """
+
+    def get_owned(self, address: str = "") -> List[NFTMetadataOwner]:
+        """
+        Get the metadata of all tokens owned by a specific address
+
+        ```python
+        nfts = contract.get_owned("{{wallet_address}}")
+        print(nfts)
+        ```
+
+        :param address: the address to get the metadata for
+        :return: the metadata of all tokens owned by the address
+        """
+
+        token_ids = self.get_owned_token_ids(address)
+        return [self.get(token_id) for token_id in token_ids]
+
+    def get_owned_token_ids(self, address: str = "") -> List[int]:
+        """
+        Get the token IDs owned by a specific address
+
+        :param address: the address to get the token IDs for
+        :return: the token IDs owned by the address
+        """
+
+        owner = address if address else self._contract_wrapper.get_signer_address()
+        balance = self._contract_wrapper._contract_abi.balance_of.call(owner)
+        return [
+            self._contract_wrapper._contract_abi.token_of_owner_by_index.call(owner, i)
+            for i in range(balance)
+        ]
+
+    """
     WRITE FUNCTIONS
     """
 

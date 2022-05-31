@@ -15,6 +15,7 @@ class Role(Enum):
     EDITOR = "editor"
     LISTER = "lister"
     ASSET = "asset"
+    UNWRAP = "unwrap"
 
 
 ROLE_MAP: Dict[Role, str] = {
@@ -25,6 +26,7 @@ ROLE_MAP: Dict[Role, str] = {
     Role.EDITOR: "EDITOR_ROLE",
     Role.LISTER: "LISTER_ROLE",
     Role.ASSET: "ASSET_ROLE",
+    Role.UNWRAP: "UNWRAP_ROLE",
 }
 
 ALL_ROLES = [
@@ -35,6 +37,7 @@ ALL_ROLES = [
     Role.EDITOR,
     Role.LISTER,
     Role.ASSET,
+    Role.UNWRAP,
 ]
 
 
