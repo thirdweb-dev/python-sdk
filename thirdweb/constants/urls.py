@@ -16,7 +16,7 @@ def get_provider_for_network(network: str) -> Web3:
     """
 
     rpc_url = ""
-    if network == "mainnet":
+    if network == "mainnet" or network == "ethereum":
         rpc_url = f"https://eth-mainnet.g.alchemy.com/v2/{DEFAULT_API_KEY}"
     elif network == "rinkeby":
         rpc_url = f"https://eth-rinkeby.g.alchemy.com/v2/{DEFAULT_API_KEY}"
