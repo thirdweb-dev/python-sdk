@@ -241,14 +241,3 @@ class CustomContract(BaseContract[ThirdwebContract]):
             self._contract_wrapper.get_provider(),
             self._contract_wrapper.get_signer(),
         )
-
-    def _normalize_tx_params(self, tx_params) -> TxParams:
-        """Normalize and return the given transaction parameters."""
-        provider = self._contract_wrapper.get_provider()
-        if not tx_params:
-            tx_params = TxParams()
-        if not tx_params.from_:
-            tx_params.from_ = provider.eth.defaultAccount
-        if tx_params.from_:
-            tx_params.from_ = to_checksum_address(tx_params.from_)
-        return tx_params
