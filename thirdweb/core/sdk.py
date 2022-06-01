@@ -150,6 +150,7 @@ class ThirdwebSDK(ProviderHandler):
         :param address: address of the custom contract
         :returns: custom contract SDK instance
         """
+
         if address in self.__contract_cache:
             return cast(CustomContract, self.__contract_cache[address])
 
@@ -158,7 +159,7 @@ class ThirdwebSDK(ProviderHandler):
             abi = fetch_contract_metadata_from_address(address, provider, self.storage)
             return self.get_contract_from_abi(address, abi)
         except:
-            raise Exception(f"fError fetching ABI for this contract\n{address}")
+            raise Exception(f"Error fetching ABI for this contract\n{address}")
 
     def get_contract_from_abi(self, address: str, abi: str) -> CustomContract:
         """
