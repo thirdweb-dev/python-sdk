@@ -3,7 +3,7 @@ from eth_typing import Address
 
 from web3 import Web3
 from web3.eth import TxReceipt
-from web3.contract import ContractFunctions
+from web3.contract import ContractFunctions, ContractFunction
 from thirdweb.abi.i_token_erc1155 import ITokenERC1155
 from thirdweb.abi.i_token_erc20 import ITokenERC20
 from thirdweb.abi.i_token_erc721 import ITokenERC721
@@ -100,21 +100,47 @@ class CustomContract(BaseContract[ThirdwebContract]):
         self.nft = self._detect_erc_721()
         self.edition = self._detect_erc_1155()
 
-        # self.signature_mint = self.detect_signature_mint()
+    def call(self, fn: str, *args) -> Any:
+        func = cast(ContractFunction, getattr(self.functions, fn, None))
+        if func is None:
+            raise Exception(
+                f"Function {fn} not found on contract {self.get_address()}. "
+                + "Check your dashboard for the list of available functions."
+            )
 
-    def send_transaction(self, fn: str, args: List[Any]) -> TxReceipt:
-        provider = self._contract_wrapper.get_provider()
-        signer = self._contract_wrapper.get_signer()
+        # Use
+        func.args = args
+        func.kwargs = {}
+        func._set_function_info()
 
-        nonce = provider.eth.get_transaction_count(signer.address)  # type: ignore
-        tx = getattr(self.functions, fn)(*args).buildTransaction(
-            TxParams(gas_price=provider.eth.gas_price).as_dict()
-        )
-        tx["nonce"] = nonce
+        if len(func.abi["inputs"]) != len(args):
+            signature = (
+                "("
+                + ", ".join(
+                    [(i["name"] + ": " + i["type"]) for i in func.abi["inputs"]]
+                )
+                + ")"
+            )
+            raise Exception(
+                f"Function {fn} expects {len(func.arguments)} arguments, "
+                f"but {len(args)} were provided.\nExpected function signature: {signature}"
+            )
 
-        signed_tx = signer.sign_transaction(tx)  # type: ignore
-        tx_hash = provider.eth.send_raw_transaction(signed_tx.rawTransaction)
-        return provider.eth.wait_for_transaction_receipt(tx_hash)
+        if func.abi["stateMutability"] == "view":
+            return func(*args).call()
+        else:
+            provider = self._contract_wrapper.get_provider()
+            signer = self._contract_wrapper.get_signer()
+
+            nonce = provider.eth.get_transaction_count(signer.address)  # type: ignore
+            tx = func(*args).buildTransaction(
+                TxParams(gas_price=provider.eth.gas_price).as_dict()
+            )
+            tx["nonce"] = nonce
+
+            signed_tx = signer.sign_transaction(tx)  # type: ignore
+            tx_hash = provider.eth.send_raw_transaction(signed_tx.rawTransaction)
+            return provider.eth.wait_for_transaction_receipt(tx_hash)
 
     """
     INTERNAL FUNCTIONS

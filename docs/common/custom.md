@@ -21,7 +21,7 @@ Alternatively, if you didn't publish your contract with the thirdweb CLI, you ca
 
 ```python
 abi = ... # Add or import your contract abi 
-custom = sdk.get_contract_from_abi(<CUSTOM_CONTRACT_ADDRESS>, abi)
+contract = sdk.get_contract_from_abi(<CUSTOM_CONTRACT_ADDRESS>, abi)
 ```
 
 ### Using Contract Functions
@@ -34,7 +34,7 @@ For example, if I had an NFT custom contract and I wanted to call the `balance` 
 
 ```python
 # Any arguments passed to the balance function go into the args of "call"
-custom.functions.balance(1).call()
+contract.functions.balance(1).call()
 ```
 
 If you want to make a transaction to the blockchain, you can use the `send_transaction` helper.
@@ -44,14 +44,14 @@ For example, if I want to mint an NFT on my custom contract, I would want to use
 ```python
 # The first argument is the function name
 # And the second argument is a list of the parameters to pass to the function
-custom.send_transaction("mintTo", [<EXAMPLE_ADDRESS>, <EXAMPLE_URI>])
+contract.send_transaction("mintTo", [<EXAMPLE_ADDRESS>, <EXAMPLE_URI>])
 ```
 
 Even better, if you're contract implements common interfaces recognized by the thirdweb SDK, we'll give you even nicer convenience functions to make this function calls. For example, let's say my contract implements the `ERC721` interface. If I want to call the `balance` function, I could also do the following:
 
 ```python
 # ERC721 functions are scoped to the "nft" name space
-custom.nft.balance()
+contract.nft.balance()
 ```
 
 ### Supported Interfaces
