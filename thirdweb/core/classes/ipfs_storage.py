@@ -44,16 +44,17 @@ class IpfsStorage(ABC):
     def __init__(self, gateway_url=DEFAULT_IPFS_GATEWAY):
         self._gateway_url = re.sub(r"\/$", "", gateway_url) + "/"
 
-    def get(self, hash: str) -> Dict[str, Any]:
+    def get(self, hash: str) -> Any:
         """
-        Gets IPFS data at a given hash and returns it as a dictionary.
+        Gets IPFS data at a given hash and returns the data.
 
         :param hash: hash of the data to get.
-        :returns: dictionary of the data.
+        :returns: dictionary of the data if JSON, otherwise raw data.
         """
 
         res = self._get(hash)
         data = res.json()
+
         return replace_hash_with_gateway_url(data, "ipfs://", self._gateway_url)
 
     def get_upload_token(self, contract_address: str) -> str:

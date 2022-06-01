@@ -29,10 +29,10 @@ sdk.storage.get("<IPFS_HASH>")
 #### get
 
 ```python
-def get(hash: str) -> Dict[str, Any]
+def get(hash: str) -> Any
 ```
 
-Gets IPFS data at a given hash and returns it as a dictionary.
+Gets IPFS data at a given hash and returns the data.
 
 **Arguments**:
 
@@ -40,7 +40,7 @@ Gets IPFS data at a given hash and returns it as a dictionary.
 
 **Returns**:
 
-dictionary of the data.
+dictionary of the data if JSON, otherwise raw data.
 
 <a id="core.classes.ipfs_storage.IpfsStorage.get_upload_token"></a>
 

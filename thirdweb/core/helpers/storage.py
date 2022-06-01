@@ -44,9 +44,16 @@ def replace_hash_with_gateway_url(
         if isinstance(val, dict):
             object[key] = replace_hash_with_gateway_url(val, scheme, gateway_url)
         elif isinstance(val, list):
-            object[key] = [
-                replace_hash_with_gateway_url(item, scheme, gateway_url) for item in val
-            ]
+            data = []
+            for item in val:
+                if isinstance(item, dict):
+                    data.append(
+                        replace_hash_with_gateway_url(item, scheme, gateway_url)
+                    )
+                else:
+                    data.append(resolve_gateway_url(item, scheme, gateway_url))
+
+            object[key] = data
         elif isinstance(val, str):
             object[key] = resolve_gateway_url(val, scheme, gateway_url)
 
