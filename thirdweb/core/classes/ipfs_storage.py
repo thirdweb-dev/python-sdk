@@ -53,12 +53,7 @@ class IpfsStorage(ABC):
         """
 
         res = self._get(hash)
-
-        # If the data is not JSON, return it raw
-        try:
-            data = res.json()
-        except Exception:
-            return data
+        data = res.json()
 
         return replace_hash_with_gateway_url(data, "ipfs://", self._gateway_url)
 
