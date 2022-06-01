@@ -110,7 +110,7 @@ class CustomContract(BaseContract[ThirdwebContract]):
                 + "Check your dashboard for the list of available functions."
             )
 
-        # Use
+        # We need this to set params properly on func + throws good errors
         func.args = args
         func.kwargs = {}
         func._set_function_info()
@@ -129,12 +129,8 @@ class CustomContract(BaseContract[ThirdwebContract]):
             )
 
         if func.abi["stateMutability"] == "view":
-            func = cast(ContractFunction, getattr(self.functions, fn, None))
-
             return func(*args).call()
         else:
-            func = cast(ContractFunction, getattr(self.functions, fn, None))
-
             provider = self._contract_wrapper.get_provider()
             signer = self._contract_wrapper.get_signer()
 
