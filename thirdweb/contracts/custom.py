@@ -1,5 +1,6 @@
 from typing import Any, Final, List, Optional, cast
 from eth_typing import Address
+from eth_utils import to_checksum_address
 
 from web3 import Web3
 from web3.eth import TxReceipt
@@ -7,6 +8,7 @@ from web3.contract import ContractFunctions, ContractFunction
 from thirdweb.abi.i_token_erc1155 import ITokenERC1155
 from thirdweb.abi.i_token_erc20 import ITokenERC20
 from thirdweb.abi.i_token_erc721 import ITokenERC721
+from thirdweb.common.error import NoSignerException
 from thirdweb.common.feature_detection import matches_interface
 from thirdweb.constants.role import ALL_ROLES
 from thirdweb.core.classes.base_contract import BaseContract
@@ -127,12 +129,20 @@ class CustomContract(BaseContract[ThirdwebContract]):
             )
 
         if func.abi["stateMutability"] == "view":
+            func = cast(ContractFunction, getattr(self.functions, fn, None))
+
             return func(*args).call()
         else:
+            func = cast(ContractFunction, getattr(self.functions, fn, None))
+
             provider = self._contract_wrapper.get_provider()
             signer = self._contract_wrapper.get_signer()
 
+            if signer is None:
+                raise NoSignerException
+
             nonce = provider.eth.get_transaction_count(signer.address)  # type: ignore
+
             tx = func(*args).buildTransaction(
                 TxParams(gas_price=provider.eth.gas_price).as_dict()
             )
@@ -140,6 +150,7 @@ class CustomContract(BaseContract[ThirdwebContract]):
 
             signed_tx = signer.sign_transaction(tx)  # type: ignore
             tx_hash = provider.eth.send_raw_transaction(signed_tx.rawTransaction)
+
             return provider.eth.wait_for_transaction_receipt(tx_hash)
 
     """
@@ -230,3 +241,14 @@ class CustomContract(BaseContract[ThirdwebContract]):
             self._contract_wrapper.get_provider(),
             self._contract_wrapper.get_signer(),
         )
+
+    def _normalize_tx_params(self, tx_params) -> TxParams:
+        """Normalize and return the given transaction parameters."""
+        provider = self._contract_wrapper.get_provider()
+        if not tx_params:
+            tx_params = TxParams()
+        if not tx_params.from_:
+            tx_params.from_ = provider.eth.defaultAccount
+        if tx_params.from_:
+            tx_params.from_ = to_checksum_address(tx_params.from_)
+        return tx_params
