@@ -60,12 +60,23 @@ def replace_hash_with_gateway_url(
     return object
 
 
-def resolve_gateway_url(ipfs_hash: T, scheme: str, gateway_url: str) -> T:
+def resolve_gateway_url(data: T, scheme: str, gateway_url: str) -> T:
     """
-    Resolves the gateway url for the given hash.
+    Resolves the gateway url for the given hash or returns back data.
     """
 
-    if not isinstance(ipfs_hash, str):
-        return ipfs_hash
+    if isinstance(data, str):
+        return cast(T, data.replace(scheme, gateway_url))
 
-    return cast(T, cast(str, ipfs_hash).replace(scheme, gateway_url))
+    return data
+
+
+def to_ipfs_hash(data: T, scheme: str, gateway_url: str) -> T:
+    """
+    Resolves the gateway url for the given hash or returns back data.
+    """
+
+    if isinstance(data, str):
+        return cast(T, data.replace(gateway_url, scheme))
+
+    return data
