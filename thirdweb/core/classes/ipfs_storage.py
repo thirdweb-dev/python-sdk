@@ -16,6 +16,7 @@ from thirdweb.constants.urls import (
 )
 from thirdweb.core.helpers.storage import (
     replace_file_properties_with_hashes,
+    replace_gateway_url_with_hash,
     replace_hash_with_gateway_url,
     resolve_gateway_url,
 )
@@ -185,13 +186,19 @@ class IpfsStorage(ABC):
         return res
 
     def _batch_upload_properties(self, metadatas: Sequence[Dict[str, Any]]):
+        sanitized_metadatas = [
+            replace_gateway_url_with_hash(metadatas, "ipfs://", self._gateway_url)
+            for metadatas in metadatas
+        ]
+
         file_lists = [
-            self._build_file_properties_map(metadata, []) for metadata in metadatas
+            self._build_file_properties_map(metadata, [])
+            for metadata in sanitized_metadatas
         ]
         files_to_upload = [file for file_list in file_lists for file in file_list]
 
         if len(files_to_upload) == 0:
-            return metadatas
+            return sanitized_metadatas
 
         cid_with_filename = self._upload_batch_with_cid(
             cast(List[Union[TextIO, BinaryIO, str, Dict[str, Any]]], files_to_upload)

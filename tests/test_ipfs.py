@@ -116,7 +116,8 @@ def test_replace_gateway_urls(storage: IpfsStorage):
             "svg": f"{DEFAULT_IPFS_GATEWAY}QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/backgrounds/SVG/Asset%20501.svg",
         }
     )
-    other_storage = IpfsStorage(gateway_url="https://cloudflare-ipfs.com/ipfs/")
+
+    other_storage = IpfsStorage(gateway_url="https://ipfs.thirdweb.com/ipfs/")
     downloaded = other_storage.get(upload)
 
-    assert downloaded["svg"].startswith("https://cloudflare-ipfs.com/ipfs/")
+    assert downloaded["svg"].startswith("https://ipfs.thirdweb.com/ipfs/")
