@@ -33,6 +33,33 @@ def replace_file_properties_with_hashes(
     return object
 
 
+def replace_gateway_url_with_hash(
+    object: Dict[str, Any], scheme: str, gateway_url: str
+) -> Dict[str, Any]:
+    """
+    Replaces all hashes in an object with gateway URLs
+    """
+
+    for key, val in object.items():
+        if isinstance(val, dict):
+            object[key] = replace_gateway_url_with_hash(val, scheme, gateway_url)
+        elif isinstance(val, list):
+            data = []
+            for item in val:
+                if isinstance(item, dict):
+                    data.append(
+                        replace_gateway_url_with_hash(item, scheme, gateway_url)
+                    )
+                else:
+                    data.append(to_ipfs_hash(item, scheme, gateway_url))
+
+            object[key] = data
+        elif isinstance(val, str):
+            object[key] = to_ipfs_hash(val, scheme, gateway_url)
+
+    return object
+
+
 def replace_hash_with_gateway_url(
     object: Dict[str, Any], scheme: str, gateway_url: str
 ) -> Dict[str, Any]:
@@ -60,12 +87,23 @@ def replace_hash_with_gateway_url(
     return object
 
 
-def resolve_gateway_url(ipfs_hash: T, scheme: str, gateway_url: str) -> T:
+def resolve_gateway_url(data: T, scheme: str, gateway_url: str) -> T:
     """
-    Resolves the gateway url for the given hash.
+    Resolves the gateway url for the given hash or returns back data.
     """
 
-    if not isinstance(ipfs_hash, str):
-        return ipfs_hash
+    if isinstance(data, str):
+        return cast(T, data.replace(scheme, gateway_url))
 
-    return cast(T, cast(str, ipfs_hash).replace(scheme, gateway_url))
+    return data
+
+
+def to_ipfs_hash(data: T, scheme: str, gateway_url: str) -> T:
+    """
+    Resolves the gateway url for the given hash or returns back data.
+    """
+
+    if isinstance(data, str):
+        return cast(T, data.replace(gateway_url, scheme))
+
+    return data

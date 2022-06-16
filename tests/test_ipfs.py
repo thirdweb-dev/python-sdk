@@ -1,6 +1,7 @@
 import pytest
 from requests import get
 from thirdweb.common.error import DuplicateFileNameException
+from thirdweb.constants.urls import DEFAULT_IPFS_GATEWAY
 
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.sdk import ThirdwebSDK
@@ -107,3 +108,16 @@ def test_upload_and_resolve(storage: IpfsStorage):
 
     assert meta["description"].startswith("made with python sdk")
     assert "ipfs" in meta["animation_url"]
+
+
+def test_replace_gateway_urls(storage: IpfsStorage):
+    upload = storage.upload_metadata(
+        {
+            "svg": f"{DEFAULT_IPFS_GATEWAY}QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/backgrounds/SVG/Asset%20501.svg",
+        }
+    )
+
+    other_storage = IpfsStorage(gateway_url="https://ipfs.thirdweb.com/ipfs/")
+    downloaded = other_storage.get(upload)
+
+    assert downloaded["svg"].startswith("https://ipfs.thirdweb.com/ipfs/")
