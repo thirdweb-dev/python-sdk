@@ -129,7 +129,7 @@ renderer:
   - title: Wallet Authenticator
     name: wallet-authenticator
     contents:
-    - core.classes.wallet_authenticator.*
+    - core.auth.wallet_authenticator.*
 
   mkdocs_config:
     site_name: Thirdweb Python SDK

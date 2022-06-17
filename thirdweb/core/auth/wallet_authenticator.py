@@ -21,6 +21,9 @@ from eth_account.datastructures import SignedMessage
 
 class WalletAuthenticator(ProviderHandler):
     """
+    > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+    >
+
     The wallet authenticator enables server-side applications to securely identify the
     connected wallet address of users on the client-side, and also enables users to authenticate
     to any backend using just their wallet. It implements the JSON Web Token (JWT) authentication
@@ -62,7 +65,7 @@ class WalletAuthenticator(ProviderHandler):
         Generates a login payload that can be sent to the server-side for verification or authentication.
 
         ```python
-        #  Add the domain of the application that you want to log in to
+        # Add the domain of the application that you want to log in to
         domain = "thirdweb.com"
 
         # Generate a signed login payload for the connected wallet to authenticate with
@@ -70,7 +73,7 @@ class WalletAuthenticator(ProviderHandler):
         ```
 
         :param domain: The domain of the application that you want to log in to
-        :param options: Optionional configuration options for the login payload
+        :param options: Optional configuration options for the login payload
         :return: A login payload that can be sent to the server-side for verification or authentication
         """
 
