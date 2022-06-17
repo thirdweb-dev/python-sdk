@@ -38,7 +38,7 @@ class WalletAuthenticator(ProviderHandler):
     address = sdk.auth.verify(domain, payload)
 
     # And we can also generate an authentication token to send back to the original payload sender
-    token = sdk.auth.generate(domain, payload)
+    token = sdk.auth.generate_auth_token(domain, payload)
 
     # Finally, the token can be use dby the original payload sender to authenticate to the backend
     # And the server can use the following function to authenticate the token and verify the address
