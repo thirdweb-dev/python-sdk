@@ -187,8 +187,8 @@ class WalletAuthenticator(ProviderHandler):
         )
 
         # Configure json.dumps to work exactly as JSON.stringify works for compatibility
-        message = self._stringify(payload_data.__dict__)
-        signature = self._sign_message(message)
+        data = self._stringify(payload_data.__dict__)
+        signature = self._sign_message(data)
 
         # Header used for JWT token specifying hash algorithm
         header = {
@@ -198,7 +198,7 @@ class WalletAuthenticator(ProviderHandler):
         }
 
         encoded_header = self._base64encode(self._stringify(header))
-        encoded_data = self._base64encode(self._stringify(payload_data.__dict__))
+        encoded_data = self._base64encode(data)
         encoded_signature = self._base64encode(signature)
 
         # Generate a JWT token with base64 encoded header, payload, and signature
