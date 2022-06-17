@@ -35,34 +35,9 @@ class ProviderHandler(EventEmitter):
 
         super().__init__()
 
-        self.update_provider(provider)
-        self.update_signer(signer)
+        self._update_provider(provider)
+        self._update_signer(signer)
         self.__options = options
-
-    def update_provider(self, provider: Web3):
-        """
-        Update the active provider.
-
-        :param provider: web3 provider instance to use
-        """
-
-        self.__provider = provider
-
-        self.__provider.middleware_onion.clear()
-        self.__provider.middleware_onion.inject(geth_poa_middleware, layer=0)
-
-    def update_signer(self, signer: Optional[LocalAccount] = None):
-        """
-        Update the active signer.
-
-        :param signer: optional account to use for signing transactions
-        """
-
-        self.__signer = signer
-
-        if signer is not None:
-            provider = self.get_provider()
-            provider.eth.default_account = signer.address
 
     def is_read_only(self):
         """
@@ -91,6 +66,28 @@ class ProviderHandler(EventEmitter):
 
     def get_options(self) -> SDKOptions:
         return self.__options
+
+    def _update_provider(self, provider: Web3):
+        """
+        Update the active provider.
+
+        :param provider: web3 provider instance to use
+        """
+
+        self.__provider = provider
+
+    def _update_signer(self, signer: Optional[LocalAccount] = None):
+        """
+        Update the active signer.
+
+        :param signer: optional account to use for signing transactions
+        """
+
+        self.__signer = signer
+
+        if signer is not None:
+            provider = self.get_provider()
+            provider.eth.default_account = signer.address
 
     def _get_default_provider(self, chain_id: ChainId) -> Optional[Web3]:
         """

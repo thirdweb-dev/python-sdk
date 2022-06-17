@@ -79,7 +79,7 @@ class WalletAuthenticator(ProviderHandler):
             domain=domain,
             expirationTime=options.expirationTime
             if options.expirationTime is not None
-            else datetime.utcnow(),
+            else datetime.utcnow() + timedelta(minutes=5),
             address=signer_address,
             nonce=options.nonce if options.nonce is not None else str(uuid4()),
             chainId=options.chainId,
@@ -119,7 +119,7 @@ class WalletAuthenticator(ProviderHandler):
         # Check that the intended domain matches the domain of the payload
         if payload.payload.domain != domain:
             raise Exception(
-                f"Expected domain {domain} did not match domain on payload {payload.payload.domain}"
+                f"Expected domain '{domain}' does not match domain on payload '{payload.payload.domain}'"
             )
 
         # Check that the payload hasn't expired
@@ -130,7 +130,7 @@ class WalletAuthenticator(ProviderHandler):
         # If chain ID is specified, check that it matches the chain ID of the signature
         if options.chainId is not None and options.chainId != payload.payload.chainId:
             raise Exception(
-                f"Chain ID {options.chainId} did not match payload chain ID {payload.payload.chainId}"
+                f"Chain ID '{options.chainId}' does not match payload chain ID '{payload.payload.chainId}'"
             )
 
         # Check that the signing address is the claimed wallet address
@@ -138,12 +138,12 @@ class WalletAuthenticator(ProviderHandler):
         user_address = self._recover_address(message, payload.signature)
         if user_address.lower() != payload.payload.address.lower():
             raise Exception(
-                f"Signer address {user_address.lower()} does not match payload address {payload.payload.address.lower()}"
+                f"Signer address '{user_address.lower()}' does not match payload address '{payload.payload.address.lower()}'"
             )
 
         return user_address
 
-    def generate(
+    def generate_auth_token(
         self,
         domain: str,
         payload: LoginPayload,
@@ -158,7 +158,7 @@ class WalletAuthenticator(ProviderHandler):
         payload = sdk.auth.login(domain)
 
         # Generate an authentication token for the logged in wallet
-        token = sdk.auth.generate(domain, payload)
+        token = sdk.auth.generate_auth_token(domain, payload)
         ```
 
         :param domain: The domain of the application to authenticate to
@@ -184,7 +184,7 @@ class WalletAuthenticator(ProviderHandler):
         )
 
         # Configure json.dumps to work exactly as JSON.stringify works for compatibility
-        message = self._stringify(payload_data)
+        message = self._stringify(payload_data.__dict__)
         signature = self._sign_message(message)
 
         # Header used for JWT token specifying hash algorithm
@@ -195,7 +195,7 @@ class WalletAuthenticator(ProviderHandler):
         }
 
         encoded_header = self._base64encode(self._stringify(header))
-        encoded_data = self._base64encode(self._stringify(payload_data))
+        encoded_data = self._base64encode(self._stringify(payload_data.__dict__))
         encoded_signature = self._base64encode(signature)
 
         # Generate a JWT token with base64 encoded header, payload, and signature
@@ -215,7 +215,7 @@ class WalletAuthenticator(ProviderHandler):
         ```python
         domain = "thirdweb.com"
         payload = sdk.auth.login(domain)
-        token = sdk.auth.generate(domain, payload)
+        token = sdk.auth.generate_auth_token(domain, payload)
 
         # Authenticate the token and get the address of the authenticating wallet
         address = sdk.auth.authenticate(domain, token)
@@ -235,33 +235,35 @@ class WalletAuthenticator(ProviderHandler):
         # Check that the intended audience matches the domain
         if payload.aud != domain:
             raise Exception(
-                f"Expected token to be for the domain {domain}, but found token with domain {payload.aud}"
+                f"Expected token to be for the domain '{domain}', but found token with domain '{payload.aud}'"
             )
 
         # Check that the token is past the invalid before time
         current_time = datetime.utcnow()
         if current_time < datetime.fromtimestamp(payload.nbf):
             raise Exception(
-                f"The token is invalid before epoch time {payload.nbf}, current epoch time is {current_time.timestamp()}"
+                f"This token is invalid before epoch time '{payload.nbf}', current epoch time is '{int(current_time.timestamp())}'"
             )
 
         # Check that the token hasn't expired
         if current_time > datetime.fromtimestamp(payload.exp):
             raise Exception(
-                f"The token expired at epoch time {payload.exp}, current epoch time is {current_time.timestamp()}"
+                f"This token expired at epoch time '{payload.exp}', current epoch time is '{int(current_time.timestamp())}'"
             )
 
         # Check that the connected wallet matches the token issuer
         if self._require_signer().address.lower() != payload.iss.lower():
             raise Exception(
-                f"Expected the connected wallet address {self._require_signer().address} to match the token issuer address {payload.iss}"
+                f"Expected the connected wallet address '{self._require_signer().address}' to match the token issuer address '{payload.iss}'"
             )
 
         # Check that the connected wallet signed the token
-        admin_address = self._recover_address(self._stringify(payload), signature)
+        admin_address = self._recover_address(
+            self._stringify(payload.__dict__), signature
+        )
         if admin_address.lower() != self._require_signer().address.lower():
             raise Exception(
-                f"The connected wallet address {self._require_signer().address} did not sign the token"
+                f"The connected wallet address '{self._require_signer().address}' did not sign the token"
             )
 
         return payload.sub
@@ -323,11 +325,10 @@ class WalletAuthenticator(ProviderHandler):
         Sign a message with the connected wallet
         """
 
-        self._require_signer()
-
+        signer = self._require_signer()
         provider = self.get_provider()
         message_hash = encode_defunct(text=message)
-        signature = provider.eth.account.sign_message(message_hash)
+        signature = provider.eth.account.sign_message(message_hash, signer._private_key)
 
         return cast(SignedMessage, signature).signature.hex()
 
