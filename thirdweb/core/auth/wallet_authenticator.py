@@ -318,7 +318,7 @@ class WalletAuthenticator(ProviderHandler):
         signer = self.get_signer()
         if signer is None:
             raise Exception(
-                "This action requires a connected wallet. Please pass a valid signer to the SDK."
+                "This action requires a connected wallet. Please pass a valid signer or private key to the SDK."
             )
 
         return signer
