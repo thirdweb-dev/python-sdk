@@ -141,7 +141,7 @@ class WalletAuthenticator(ProviderHandler):
         user_address = self._recover_address(message, payload.signature)
         if user_address.lower() != payload.payload.address.lower():
             raise Exception(
-                f"Signer address '{user_address.lower()}' does not match payload address '{payload.payload.address.lower()}'"
+                f"The intended payload address '{payload.payload.address.lower()}' is not the payload signer"
             )
 
         return user_address

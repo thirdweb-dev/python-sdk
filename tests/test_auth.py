@@ -93,7 +93,10 @@ def test_reject_incorrect_signer(sdk: ThirdwebSDK, primary_account, secondary_ac
         sdk.auth.verify(domain, payload)
         assert False
     except Exception as e:
-        assert "does not match payload address" in str(e)
+        assert (
+            str(e)
+            == f"The intended payload address '{secondary_account.address.lower()}' is not the payload signer"
+        )
 
 
 @pytest.mark.usefixtures("sdk", "primary_account", "secondary_account")
