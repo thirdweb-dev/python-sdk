@@ -288,7 +288,7 @@ class ERC20(BaseContract[TokenERC20]):
         )
 
     """
-    PROTECTED FUNCTIONS
+    INTERNAL FUNCTIONS
     """
 
     def _get_value(self, value: PriceWei) -> CurrencyValue:

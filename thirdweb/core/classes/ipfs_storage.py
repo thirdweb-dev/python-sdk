@@ -173,7 +173,7 @@ class IpfsStorage(ABC):
         return UriWithMetadata(base_uri, metadata_uris)
 
     """
-    PROTECTED FUNCTIONS
+    INTERNAL FUNCTIONS
     """
 
     def _get(self, hash: str) -> Response:

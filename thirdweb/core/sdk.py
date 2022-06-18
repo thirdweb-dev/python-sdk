@@ -9,6 +9,7 @@ from thirdweb.contracts.custom import CustomContract
 from thirdweb.contracts.edition_drop import EditionDrop
 from thirdweb.contracts.nft_drop import NFTDrop
 from thirdweb.contracts.multiwrap import Multiwrap
+from thirdweb.core.auth.wallet_authenticator import WalletAuthenticator
 from thirdweb.core.classes.contract_deployer import ContractDeployer
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.provider_handler import ProviderHandler
@@ -39,7 +40,7 @@ class ThirdwebSDK(ProviderHandler):
         ],
     ] = {}
     storage: IpfsStorage
-
+    auth: WalletAuthenticator
     deployer: ContractDeployer
 
     @staticmethod
@@ -70,8 +71,10 @@ class ThirdwebSDK(ProviderHandler):
 
         provider = get_provider_for_network(network)
         super().__init__(provider, signer, options)
-        self.storage = storage
+
+        self.auth = WalletAuthenticator(provider, signer, options)
         self.deployer = ContractDeployer(provider, signer, options, storage)
+        self.storage = storage
 
     def get_nft_collection(self, address: str) -> NFTCollection:
         """
@@ -192,7 +195,9 @@ class ThirdwebSDK(ProviderHandler):
         :param provider: web3 provider instance to use for getting on-chain data
         """
 
-        super().update_provider(provider)
+        super()._update_provider(provider)
+        self.auth._update_provider(provider)
+        self.deployer._update_provider(provider)
 
         for contract in self.__contract_cache.values():
             contract.on_provider_updated(provider)
@@ -204,7 +209,9 @@ class ThirdwebSDK(ProviderHandler):
         :param signer: signer to use for sending transactions
         """
 
-        super().update_signer(signer)
+        super()._update_signer(signer)
+        self.auth._update_signer(signer)
+        self.deployer._update_signer(signer)
 
         for contract in self.__contract_cache.values():
             contract.on_signer_updated(signer)

@@ -24,7 +24,7 @@ class BaseContract(Generic[TContractABI]):
         :param provider: web3 provider instance to use
         """
 
-        self._contract_wrapper.update_provider(provider)
+        self._contract_wrapper._update_provider(provider)
 
     def on_signer_updated(self, signer: Optional[LocalAccount] = None):
         """
@@ -33,7 +33,7 @@ class BaseContract(Generic[TContractABI]):
         :param signer: optional account to use for signing transactions
         """
 
-        self._contract_wrapper.update_signer(signer)
+        self._contract_wrapper._update_signer(signer)
 
     def get_address(self) -> str:
         """
