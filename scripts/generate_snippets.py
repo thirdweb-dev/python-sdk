@@ -25,6 +25,7 @@ DOC_NAMES = {
     "ERC20": "erc20",
     "ERC721": "erc721",
     "ERC1155": "erc1155",
+    "WalletAuthenticator": "wallet-authenticator",
 }
 
 
@@ -128,6 +129,9 @@ def generate():
     for contract in CONTRACTS:
         cls = getattr(thirdweb.contracts, contract)
         data[contract] = describe(cls)
+
+    cls = thirdweb.core.auth.WalletAuthenticator
+    data["WalletAuthenticator"] = describe(cls)
 
     with open("docs/docs/snippets.json", "w") as f:
         j = json.dumps(data, indent=4)
