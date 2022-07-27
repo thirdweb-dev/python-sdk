@@ -1301,7 +1301,7 @@ numpy-style = ["docstring_parser (>=0.7)"]
 name = "pytz"
 version = "2022.1"
 description = "World timezone definitions, modern and historical"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -1818,7 +1818,7 @@ novella = []
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1"
-content-hash = "0e2bf8a2adcc056d2b96e259aefe15d11ab319154200af51fcbefd7f0063bf68"
+content-hash = "cf27370d4d881cbc5a64e33e460669da8705bf5d44858042ad68fc0e54197714"
 
 [metadata.files]
 aiohttp = [

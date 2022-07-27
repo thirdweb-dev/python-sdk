@@ -23,7 +23,7 @@ def test_verify_with_params(sdk: ThirdwebSDK, primary_account, secondary_account
     payload = sdk.auth.login(
         domain,
         LoginOptions(
-            expirationTime=datetime.utcnow() + timedelta(hours=5), chainId=137
+            expiration_time=datetime.utcnow() + timedelta(hours=5), chain_id=137
         ),
     )
 
@@ -32,7 +32,7 @@ def test_verify_with_params(sdk: ThirdwebSDK, primary_account, secondary_account
         domain,
         payload,
         VerifyOptions(
-            chainId=137,
+            chain_id=137,
         ),
     )
 
@@ -56,7 +56,7 @@ def test_reject_incorrect_domain(sdk: ThirdwebSDK, primary_account, secondary_ac
 def test_reject_expired_payload(sdk: ThirdwebSDK, primary_account, secondary_account):
     sdk.update_signer(primary_account)
     payload = sdk.auth.login(
-        domain, LoginOptions(expirationTime=datetime.utcnow() - timedelta(hours=5))
+        domain, LoginOptions(expiration_time=datetime.utcnow() - timedelta(hours=5))
     )
 
     sdk.update_signer(secondary_account)
@@ -72,11 +72,11 @@ def test_reject_incorrect_chain_id(
     sdk: ThirdwebSDK, primary_account, secondary_account
 ):
     sdk.update_signer(primary_account)
-    payload = sdk.auth.login(domain, LoginOptions(chainId=1))
+    payload = sdk.auth.login(domain, LoginOptions(chain_id=1))
 
     sdk.update_signer(secondary_account)
     try:
-        sdk.auth.verify(domain, payload, VerifyOptions(chainId=137))
+        sdk.auth.verify(domain, payload, VerifyOptions(chain_id=137))
         assert False
     except Exception as e:
         assert "Chain ID '137' does not match payload chain ID '1'" in str(e)
@@ -138,7 +138,7 @@ def test_reject_token_before_invalid(
     token = sdk.auth.generate_auth_token(
         domain,
         payload,
-        AuthenticationOptions(invalidBefore=datetime.utcnow() + timedelta(hours=5)),
+        AuthenticationOptions(invalid_before=datetime.utcnow() + timedelta(hours=5)),
     )
     try:
         sdk.auth.authenticate(domain, token)
@@ -156,7 +156,7 @@ def test_reject_expired_token(sdk: ThirdwebSDK, primary_account, secondary_accou
     token = sdk.auth.generate_auth_token(
         domain,
         payload,
-        AuthenticationOptions(expirationTime=datetime.utcnow() - timedelta(hours=5)),
+        AuthenticationOptions(expiration_time=datetime.utcnow() - timedelta(hours=5)),
     )
     try:
         sdk.auth.authenticate(domain, token)

@@ -17,6 +17,7 @@ from thirdweb.types.auth import (
 from thirdweb.types.sdk import SDKOptions
 from eth_account.messages import encode_defunct
 from eth_account.datastructures import SignedMessage
+import pytz
 
 
 class WalletAuthenticator(ProviderHandler):
@@ -80,12 +81,12 @@ class WalletAuthenticator(ProviderHandler):
         signer_address = self._require_signer().address
         payload_data = LoginPayloadData(
             domain=domain,
-            expirationTime=options.expirationTime
-            if options.expirationTime is not None
+            expiration_time=options.expiration_time
+            if options.expiration_time is not None
             else datetime.utcnow() + timedelta(minutes=5),
             address=signer_address,
             nonce=options.nonce if options.nonce is not None else str(uuid4()),
-            chainId=options.chainId,
+            chain_id=options.chain_id,
         )
 
         message = self._generate_message(payload_data)
@@ -127,13 +128,18 @@ class WalletAuthenticator(ProviderHandler):
 
         # Check that the payload hasn't expired
         current_time = datetime.utcnow()
-        if current_time > payload.payload.expirationTime:
+        if current_time.replace(
+            tzinfo=pytz.utc
+        ) > payload.payload.expiration_time.replace(tzinfo=pytz.utc):
             raise Exception(f"Login request has expired")
 
         # If chain ID is specified, check that it matches the chain ID of the signature
-        if options.chainId is not None and options.chainId != payload.payload.chainId:
+        if (
+            options.chain_id is not None
+            and options.chain_id != payload.payload.chain_id
+        ):
             raise Exception(
-                f"Chain ID '{options.chainId}' does not match payload chain ID '{payload.payload.chainId}'"
+                f"Chain ID '{options.chain_id}' does not match payload chain ID '{payload.payload.chain_id}'"
             )
 
         # Check that the signing address is the claimed wallet address
@@ -176,11 +182,11 @@ class WalletAuthenticator(ProviderHandler):
             iss=admin_address,
             sub=user_address,
             aud=domain,
-            nbf=int(options.invalidBefore.timestamp())
-            if options.invalidBefore is not None
+            nbf=int(options.invalid_before.timestamp())
+            if options.invalid_before is not None
             else int(datetime.utcnow().timestamp()),
-            exp=int(options.expirationTime.timestamp())
-            if options.expirationTime is not None
+            exp=int(options.expiration_time.timestamp())
+            if options.expiration_time is not None
             else int((datetime.utcnow() + timedelta(hours=5)).timestamp()),
             iat=int(datetime.utcnow().timestamp()),
             jti=str(uuid4()),
@@ -243,13 +249,17 @@ class WalletAuthenticator(ProviderHandler):
 
         # Check that the token is past the invalid before time
         current_time = datetime.utcnow()
-        if current_time < datetime.fromtimestamp(payload.nbf):
+        if current_time.replace(tzinfo=pytz.utc) < datetime.fromtimestamp(
+            payload.nbf
+        ).replace(tzinfo=pytz.utc):
             raise Exception(
                 f"This token is invalid before epoch time '{payload.nbf}', current epoch time is '{int(current_time.timestamp())}'"
             )
 
         # Check that the token hasn't expired
-        if current_time > datetime.fromtimestamp(payload.exp):
+        if current_time.replace(tzinfo=pytz.utc) > datetime.fromtimestamp(
+            payload.exp
+        ).replace(tzinfo=pytz.utc):
             raise Exception(
                 f"This token expired at epoch time '{payload.exp}', current epoch time is '{int(current_time.timestamp())}'"
             )
@@ -289,11 +299,15 @@ class WalletAuthenticator(ProviderHandler):
         message += "Make sure that the requesting domain above matches the URL of the current website.\n\n"
 
         # Add data fields in compliance with the EIP-4361 standard
-        if payload.chainId is not None:
-            message += f"Chain ID: {payload.chainId}\n"
+        if payload.chain_id is not None:
+            message += f"Chain ID: {payload.chain_id}\n"
 
         message += f"Nonce: {payload.nonce}\n"
-        message += f"Expiration Time: {payload.expirationTime.isoformat()}\n"
+
+        time = payload.expiration_time.strftime("%Y-%m-%dT%H:%M:%S")
+        microseconds = payload.expiration_time.strftime("%f")[0:3]
+        formatted_time = f"{time}.{microseconds}Z"
+        message += f"Expiration Time: {formatted_time}\n"
 
         return message
 
