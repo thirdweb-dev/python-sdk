@@ -32,7 +32,7 @@ class WalletAuthenticator(ProviderHandler):
 
     ```python
     # We specify the domain of the application to authenticate to
-    domain = "thirdweb.com"
+    domain = "example.com"
 
     # We can then generate a payload for the connected wallet to login
     # This can also be done on the client side with the thirdweb TypeScript SDK
@@ -67,7 +67,7 @@ class WalletAuthenticator(ProviderHandler):
 
         ```python
         # Add the domain of the application that you want to log in to
-        domain = "thirdweb.com"
+        domain = "example.com"
 
         # Generate a signed login payload for the connected wallet to authenticate with
         payload = sdk.auth.login(domain)
@@ -108,7 +108,7 @@ class WalletAuthenticator(ProviderHandler):
         by validating the provided client-side login request.
 
         ```python
-        domain = "thirdweb.com"
+        domain = "example.com"
         payload = sdk.auth.login(domain)
 
         # Verify the login request
@@ -163,7 +163,7 @@ class WalletAuthenticator(ProviderHandler):
         client-side wallet can use to authenticate to the server-side application.
 
         ```python
-        domain = "thirdweb.com"
+        domain = "example.com"
         payload = sdk.auth.login(domain)
 
         # Generate an authentication token for the logged in wallet
@@ -222,7 +222,7 @@ class WalletAuthenticator(ProviderHandler):
         the provided authentication token is valid and returns the address of the authenticated wallet.
 
         ```python
-        domain = "thirdweb.com"
+        domain = "example.com"
         payload = sdk.auth.login(domain)
         token = sdk.auth.generate_auth_token(domain, payload)
 

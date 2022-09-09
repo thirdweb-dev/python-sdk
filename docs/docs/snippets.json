@@ -413,30 +413,30 @@
     "WalletAuthenticator": {
         "name": "WalletAuthenticator",
         "summary": "> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.    >",
-        "example": "# We specify the domain of the application to authenticate to\ndomain = \"thirdweb.com\"\n\n# We can then generate a payload for the connected wallet to login\n# This can also be done on the client side with the thirdweb TypeScript SDK\npayload = sdk.auth.login(domain)\n\n# Then, on the server, we can securely verify the connected address that signed the payload\naddress = sdk.auth.verify(domain, payload)\n\n# And we can also generate an authentication token to send back to the original payload sender\ntoken = sdk.auth.generate_auth_token(domain, payload)\n\n# Finally, the token can be use dby the original payload sender to authenticate to the backend\n# And the server can use the following function to authenticate the token and verify the address\naddress = sdk.auth.authenticate(domain, token)",
+        "example": "# We specify the domain of the application to authenticate to\ndomain = \"example.com\"\n\n# We can then generate a payload for the connected wallet to login\n# This can also be done on the client side with the thirdweb TypeScript SDK\npayload = sdk.auth.login(domain)\n\n# Then, on the server, we can securely verify the connected address that signed the payload\naddress = sdk.auth.verify(domain, payload)\n\n# And we can also generate an authentication token to send back to the original payload sender\ntoken = sdk.auth.generate_auth_token(domain, payload)\n\n# Finally, the token can be use dby the original payload sender to authenticate to the backend\n# And the server can use the following function to authenticate the token and verify the address\naddress = sdk.auth.authenticate(domain, token)",
         "methods": [
             {
                 "name": "authenticate",
                 "summary": "Server-side function that authenticates the provided JWT token. This function verifies that        the provided authentication token is valid and returns the address of the authenticated wallet.",
-                "example": "domain = \"thirdweb.com\"\npayload = sdk.auth.login(domain)\ntoken = sdk.auth.generate_auth_token(domain, payload)\n\n# Authenticate the token and get the address of the authenticating wallet\naddress = sdk.auth.authenticate(domain, token)",
+                "example": "domain = \"example.com\"\npayload = sdk.auth.login(domain)\ntoken = sdk.auth.generate_auth_token(domain, payload)\n\n# Authenticate the token and get the address of the authenticating wallet\naddress = sdk.auth.authenticate(domain, token)",
                 "reference": "https://docs.thirdweb.com/python/wallet-authenticator#authenticate"
             },
             {
                 "name": "generate_auth_token",
                 "summary": "Server-side function that generates a JWT token from the provided login request that the        client-side wallet can use to authenticate to the server-side application.",
-                "example": "domain = \"thirdweb.com\"\npayload = sdk.auth.login(domain)\n\n# Generate an authentication token for the logged in wallet\ntoken = sdk.auth.generate_auth_token(domain, payload)",
+                "example": "domain = \"example.com\"\npayload = sdk.auth.login(domain)\n\n# Generate an authentication token for the logged in wallet\ntoken = sdk.auth.generate_auth_token(domain, payload)",
                 "reference": "https://docs.thirdweb.com/python/wallet-authenticator#generate_auth_token"
             },
             {
                 "name": "login",
                 "summary": "Client-side function that allows the connected wallet to login to a server-side application.        Generates a login payload that can be sent to the server-side for verification or authentication.",
-                "example": "# Add the domain of the application that you want to log in to\ndomain = \"thirdweb.com\"\n\n# Generate a signed login payload for the connected wallet to authenticate with\npayload = sdk.auth.login(domain)",
+                "example": "# Add the domain of the application that you want to log in to\ndomain = \"example.com\"\n\n# Generate a signed login payload for the connected wallet to authenticate with\npayload = sdk.auth.login(domain)",
                 "reference": "https://docs.thirdweb.com/python/wallet-authenticator#login"
             },
             {
                 "name": "verify",
                 "summary": "Server-side function to securely verify the address of the logged in client-side wallet        by validating the provided client-side login request.",
-                "example": "domain = \"thirdweb.com\"\npayload = sdk.auth.login(domain)\n\n# Verify the login request\naddress = sdk.auth.verify(domain, payload)",
+                "example": "domain = \"example.com\"\npayload = sdk.auth.login(domain)\n\n# Verify the login request\naddress = sdk.auth.verify(domain, payload)",
                 "reference": "https://docs.thirdweb.com/python/wallet-authenticator#verify"
             }
         ],
