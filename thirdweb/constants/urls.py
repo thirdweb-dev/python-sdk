@@ -7,8 +7,10 @@ TW_IPFS_SERVER_URL = "https://upload.nftlabs.co"
 
 PINATA_IPFS_URL = "https://api.pinata.cloud/pinning/pinFileToIPFS"
 
-DEFAULT_API_KEY = "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC"
+DEFAULT_API_KEY = "39a3c037d7a88e6692c6681bccfd1f1cf36370324c4051a83acd0edcffb20708"
 
+def get_rpc_url(network: str) -> str:
+  return f"https://{network}.rpc.thirdweb.com/{DEFAULT_API_KEY}"
 
 def get_provider_for_network(network: str) -> Web3:
     """
@@ -17,19 +19,25 @@ def get_provider_for_network(network: str) -> Web3:
 
     rpc_url = ""
     if network == "mainnet" or network == "ethereum":
-        rpc_url = f"https://eth-mainnet.g.alchemy.com/v2/{DEFAULT_API_KEY}"
-    elif network == "rinkeby":
-        rpc_url = f"https://eth-rinkeby.g.alchemy.com/v2/{DEFAULT_API_KEY}"
+        rpc_url = get_rpc_url("ethereum")
     elif network == "goerli":
-        rpc_url = f"https://eth-goerli.g.alchemy.com/v2/{DEFAULT_API_KEY}"
+        rpc_url = get_rpc_url("goerli")
     elif network == "polygon":
-        rpc_url = f"https://polygon-mainnet.g.alchemy.com/v2/{DEFAULT_API_KEY}"
+        rpc_url = get_rpc_url("polygon")
     elif network == "mumbai":
-        rpc_url = f"https://polygon-mumbai.g.alchemy.com/v2/{DEFAULT_API_KEY}"
+        rpc_url = get_rpc_url("mumbai")
+    elif network == "optimism":
+      rpc_url = getRpcUrl("optimism");
+    elif network == "optimism-goerli":
+      rpc_url = getRpcUrl("optimism-goerli");
+    elif network == "arbitrum":
+      rpc_url = getRpcUrl("arbitrum");
+    elif network == "arbitrum-goerli":
+      rpc_url = getRpcUrl("arbitrum-goerli");
     elif network == "fantom":
-        rpc_url = "rpc.ftm.tools"
+        rpc_url = get_rpc_url("fantom")
     elif network == "avalanche":
-        rpc_url = "https://rpc.ankr.com/avalanche"
+        rpc_url = get_rpc_url("avalanche")
     else:
         if network.startswith("http"):
             rpc_url = network
