@@ -20,5 +20,5 @@ class SignatureEvent:
 @dataclass
 class EventQueryOptions:
     filters: Dict[str, Any] = dataclasses.field(default_factory=dict)
-    to_block: Optional[BlockIdentifier] = None
-    from_block: Optional[BlockIdentifier] = None
+    from_block: Optional[BlockIdentifier] = "earliest"
+    to_block: Optional[BlockIdentifier] = "latest"
