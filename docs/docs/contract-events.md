@@ -81,3 +81,24 @@ def remove_all_listeners()
 
 Remove all event listeners from this contract.
 
+<a id="core.classes.contract_events.ContractEvents.get_events"></a>
+
+#### get\_events
+
+```python
+def get_events(
+    event_name: str, options: EventQueryOptions = EventQueryOptions()
+) -> Tuple[AttributeDict]
+```
+
+Query past events of a specific type on the contract.
+
+**Arguments**:
+
+- `event_name`: The name of the event to query.
+- `options`: The options to use when querying for events, including block range specifications and filters
+
+**Returns**:
+
+A list of events.
+

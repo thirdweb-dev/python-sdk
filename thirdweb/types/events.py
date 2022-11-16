@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from typing import Union
-
+import dataclasses
+from typing import Any, Dict, Optional, Union
 from thirdweb.constants.events import EventStatus
+from web3.types import BlockIdentifier
 
 
 @dataclass
@@ -15,3 +16,9 @@ class SignatureEvent:
     status: EventStatus
     message: str
     signature: Union[str, bytes]
+
+@dataclass
+class EventQueryOptions:
+    filters: Dict[str, Any] = dataclasses.field(default_factory=dict)
+    to_block: Optional[BlockIdentifier] = None
+    from_block: Optional[BlockIdentifier] = None
