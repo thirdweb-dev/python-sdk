@@ -1,10 +1,9 @@
-from typing import Any, Callable, Dict, Generic
+from typing import Any, Callable, Dict, Generic, Tuple
 from thirdweb.constants.events import EventType
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.types.contract import TContractABI
-from thirdweb.types.events import TxEvent
-
-
+from thirdweb.types.events import EventQueryOptions, TxEvent
+from web3.datastructures import AttributeDict
 class ContractEvents(Generic[TContractABI]):
     _contract_wrapper: ContractWrapper[TContractABI]
 
@@ -71,3 +70,16 @@ class ContractEvents(Generic[TContractABI]):
         """
 
         self._contract_wrapper.remove_all_listeners()
+
+    def get_events(self, event_name: str, options: EventQueryOptions = EventQueryOptions()) -> Tuple[AttributeDict]:
+        """
+        Query past events of a specific type on the contract.
+
+        :param event_name: The name of the event to query.
+        :param options: The options to use when querying for events, including block range specifications and filters
+        :return: A list of events.
+        """
+
+        events_interface = self._contract_wrapper.get_contract_interface().events[event_name]
+        return events_interface.getLogs(options.filters, options.from_block, options.to_block)
+
