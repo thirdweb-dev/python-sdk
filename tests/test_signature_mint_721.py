@@ -119,7 +119,6 @@ def test_claiming(
     assert nft_collection.get(tx[0].id).metadata.name == "OUCH VOUCH"
     assert nft_collection.balance_of(accounts[0].address) == 10
 
-
 @pytest.mark.usefixtures("sdk", "primary_account", "secondary_account")
 def test_custom_token(
     sdk: ThirdwebSDK,
