@@ -1,29 +1,24 @@
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 from web3 import Web3
-from thirdweb.abi.drop_erc721 import IDropClaimConditionClaimCondition
-from thirdweb.common.snapshots import create_snapshot
+from thirdweb.abi.drop_erc721 import IDropClaimCondition_V2ClaimCondition
 from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
-from thirdweb.constants.currency import NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS
+from thirdweb.constants.currency import ZERO_ADDRESS
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.common.currency import (
     approve_erc20_allowance,
     fetch_currency_value,
     is_native_token,
-    normalize_price_value,
     parse_units,
 )
 
 from thirdweb.types.contracts.claim_conditions import (
     ClaimCondition,
-    ClaimConditionInput,
     ClaimConditionOutput,
     ClaimVerification,
-    FilledConditionInput,
     Snapshot,
-    SnapshotInfo,
     SnapshotProof,
 )
 
@@ -130,63 +125,10 @@ def get_claimer_proofs(
     )
 
 
-def process_claim_condition_inputs(
-    claim_condition_inputs: List[ClaimConditionInput],
-    token_decimals: int,
-    provider: Web3,
-    storage: IpfsStorage,
-) -> Tuple[List[SnapshotInfo], List[IDropClaimConditionClaimCondition]]:
-    snapshot_infos: List[SnapshotInfo] = []
-    inputs_with_snapshots: List[ClaimConditionInput] = []
-    for condition_input in claim_condition_inputs:
-        if condition_input.snapshot:
-            snapshot_info = create_snapshot(
-                condition_input.snapshot, token_decimals, storage
-            )
-            snapshot_infos.append(snapshot_info)
-            condition_input.merkle_root_hash = snapshot_info.merkle_root
-
-        inputs_with_snapshots.append(condition_input)
-
-    parsed_inputs = inputs_with_snapshots
-
-    sorted_conditions = sorted(
-        [convert_to_contract_model(c, token_decimals, provider) for c in parsed_inputs],
-        key=lambda x: x["startTimestamp"],
-    )
-
-    return (snapshot_infos, sorted_conditions)
-
-
-def convert_to_contract_model(
-    c: FilledConditionInput, token_decimals: int, provider: Web3
-) -> IDropClaimConditionClaimCondition:
-    currency = (
-        NATIVE_TOKEN_ADDRESS
-        if ZERO_ADDRESS == c.currency_address
-        else c.currency_address
-    )
-
-    # TODO: Include unlimited here and change types
-    max_claimable_supply = parse_units(c.max_quantity, token_decimals)
-    quantity_limit_per_transaction = parse_units(
-        c.quantity_limit_per_transaction, token_decimals
-    )
-
-    return IDropClaimConditionClaimCondition(
-        startTimestamp=c.start_time,
-        maxClaimableSupply=max_claimable_supply,
-        supplyClaimed=0,
-        quantityLimitPerTransaction=quantity_limit_per_transaction,
-        waitTimeInSecondsBetweenClaims=c.wait_in_seconds,
-        pricePerToken=normalize_price_value(provider, c.price, currency),
-        currency=currency,
-        merkleRoot=c.merkle_root_hash,
-    )
 
 
 def transform_result_to_claim_condition(
-    pm: IDropClaimConditionClaimCondition,
+    pm: IDropClaimCondition_V2ClaimCondition,
     provider: Web3,
     merkle_metadata: Dict[str, str],
     storage: IpfsStorage,
