@@ -9,7 +9,7 @@ from thirdweb.types.nft import NFTMetadataInput
 
 @dataclass
 class BaseSignaturePayloadInput:
-    to: str = ZERO_ADDRESS
+    to: str
     price: Price = 0
     currency_address: str = NATIVE_TOKEN_ADDRESS
     mint_start_time: int = int(time())
@@ -34,10 +34,10 @@ class Signature20PayloadOutput(Signature20PayloadInput):
 
 @dataclass
 class Signature721PayloadInput:
+    to: str
     metadata: NFTMetadataInput
     royalty_recipient: str = ZERO_ADDRESS
     royalty_bps: int = 0
-    to: str = ZERO_ADDRESS
     price: Price = 0
     currency_address: str = NATIVE_TOKEN_ADDRESS
     mint_start_time: int = int(time())
@@ -52,11 +52,11 @@ class Signature721PayloadInput:
 
 @dataclass
 class Signature721PayloadOutput:
+    to: str
     metadata: NFTMetadataInput
     royalty_recipient: str = ZERO_ADDRESS
     royalty_bps: int = 0
     uri: str = ""
-    to: str = ZERO_ADDRESS
     price: Price = 0
     currency_address: str = NATIVE_TOKEN_ADDRESS
     mint_start_time: int = int(time())
@@ -71,12 +71,12 @@ class Signature721PayloadOutput:
 
 @dataclass
 class Signature1155PayloadInput:
+    to: str
     metadata: NFTMetadataInput
     token_id: int
     quantity: int
     royalty_recipient: str = ZERO_ADDRESS
     royalty_bps: int = 0
-    to: str = ZERO_ADDRESS
     price: Price = 0
     currency_address: str = NATIVE_TOKEN_ADDRESS
     mint_start_time: int = int(time())
@@ -91,13 +91,13 @@ class Signature1155PayloadInput:
 
 @dataclass
 class Signature1155PayloadOutput:
+    to: str
     metadata: NFTMetadataInput
     royalty_bps: int
     royalty_recipient: str
     uri: str
     token_id: int
     quantity: int
-    to: str = ZERO_ADDRESS
     price: Price = 0
     currency_address: str = NATIVE_TOKEN_ADDRESS
     mint_start_time: int = int(time())
