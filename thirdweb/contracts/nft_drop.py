@@ -1,5 +1,5 @@
 from typing import Final, List, Optional
-from thirdweb.abi import DropERC721
+from thirdweb.abi import DropERC721_V3
 from thirdweb.common.claim_conditions import prepare_claim
 from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
 from thirdweb.constants.role import Role
@@ -29,7 +29,7 @@ from web3 import Web3
 from thirdweb.types.tx import TxResultWithId
 
 
-class NFTDrop(ERC721[DropERC721]):
+class NFTDrop(ERC721[DropERC721_V3]):
     """
     Setup a collection of one-of-one NFTs that are minted as users claim them.
 
@@ -49,18 +49,18 @@ class NFTDrop(ERC721[DropERC721]):
     ```
     """
 
-    _abi_type = DropERC721
+    _abi_type = DropERC721_V3
 
     contract_type: Final[ContractType] = ContractType.NFT_DROP
     contract_roles: Final[List[Role]] = [Role.ADMIN, Role.MINTER, Role.TRANSFER]
 
-    metadata: ContractMetadata[DropERC721, NFTDropContractMetadata]
+    metadata: ContractMetadata[DropERC721_V3, NFTDropContractMetadata]
     roles: ContractRoles
-    primary_sale: ContractPrimarySale[DropERC721]
-    platform_fee: ContractPlatformFee[DropERC721]
-    royalty: ContractRoyalty[DropERC721]
+    primary_sale: ContractPrimarySale[DropERC721_V3]
+    platform_fee: ContractPlatformFee[DropERC721_V3]
+    royalty: ContractRoyalty[DropERC721_V3]
     claim_conditions: DropClaimConditions
-    events: ContractEvents[DropERC721]
+    events: ContractEvents[DropERC721_V3]
 
     def __init__(
         self,
@@ -70,7 +70,7 @@ class NFTDrop(ERC721[DropERC721]):
         signer: Optional[LocalAccount] = None,
         options: SDKOptions = SDKOptions(),
     ):
-        abi = DropERC721(provider, address)
+        abi = DropERC721_V3(provider, address)
         contract_wrapper = ContractWrapper(abi, provider, signer, options)
         super().__init__(contract_wrapper, storage)
 

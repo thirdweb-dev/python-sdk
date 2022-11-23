@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from time import time
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List
 from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
 from thirdweb.constants.currency import NATIVE_TOKEN_ADDRESS
 from thirdweb.types.currency import Amount, CurrencyValue, Price

@@ -1,37 +1,26 @@
-from typing import Any, Dict, List, Optional, cast
-from thirdweb.abi.drop_erc1155 import DropERC1155
-from thirdweb.abi.drop_erc721 import DropERC721
-from thirdweb.abi.ierc20 import IERC20
+from typing import List
+from thirdweb.abi.drop_erc1155 import DropERC1155_V2
 from thirdweb.common.claim_conditions import (
-    get_claimer_proofs,
-    process_claim_condition_inputs,
     transform_result_to_claim_condition,
 )
-from thirdweb.common.currency import is_native_token, parse_units
-from thirdweb.common.error import includes_error_message
-from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
 from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contracts.claim_conditions import (
     ClaimCondition,
 )
-from thirdweb.types.currency import Amount
 from thirdweb.types.settings.metadata import EditionDropContractMetadata
-from web3.eth import TxReceipt
-from web3.constants import MAX_INT
-from time import time
 
 
 class DropERC1155ClaimConditions:
-    _contract_wrapper: ContractWrapper[DropERC1155]
-    _metadata: ContractMetadata[DropERC1155, EditionDropContractMetadata]
+    _contract_wrapper: ContractWrapper[DropERC1155_V2]
+    _metadata: ContractMetadata[DropERC1155_V2, EditionDropContractMetadata]
     _storage: IpfsStorage
 
     def __init__(
         self,
-        contract_wrapper: ContractWrapper[DropERC1155],
-        metadata: ContractMetadata[DropERC1155, EditionDropContractMetadata],
+        contract_wrapper: ContractWrapper[DropERC1155_V2],
+        metadata: ContractMetadata[DropERC1155_V2, EditionDropContractMetadata],
         storage: IpfsStorage,
     ):
         self._contract_wrapper = contract_wrapper
