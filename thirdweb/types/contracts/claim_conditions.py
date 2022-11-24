@@ -3,86 +3,74 @@ from time import time
 from typing import Any, Dict, List
 from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
 from thirdweb.constants.currency import NATIVE_TOKEN_ADDRESS
-from thirdweb.types.currency import Amount, CurrencyValue, Price
-from web3.constants import MAX_INT
+from thirdweb.types.currency import CurrencyValue
+from web3.constants import ADDRESS_ZERO
 from enum import Enum
 
-
 @dataclass
-class SnapshotAddressInput:
+class SnapshotEntry:
     address: str
-    max_claimable: int = 0
-
+    max_claimable: str
+    price: str
+    currency_address: str = ADDRESS_ZERO
 
 @dataclass
-class SnapshotProof:
-    proof: str
+class SnapshotEntryWithProof:
     address: str
-    max_claimable: int = 0
-    timestamp: int = int(time())
-
+    max_claimable: str
+    price: str
+    proof: List[str]
+    currency_address: str = ADDRESS_ZERO
 
 @dataclass
-class Snapshot:
-    merkle_root: str
-    claims: List[SnapshotProof]
+class ShardData:
+    proofs: List[str]
+    entries: List[SnapshotEntry]
 
     @staticmethod
-    def from_json(self, json: Dict[str, Any]) -> "Snapshot":
-        return Snapshot(
-            merkle_root=json["merkleRoot"],
-            claims=[
-                SnapshotProof(
-                    address=proof["address"],
-                    max_claimable=proof["maxClaimable"],
-                    proof=proof["proof"],
-                    timestamp=proof["timestamp"],
-                )
-                for proof in json["claims"]
-            ],
+    def from_json(json: Dict[str, Any]) -> "ShardData":
+        entries = [
+            SnapshotEntry(
+                entry.get("address", ""),
+                entry.get("maxClaimable", ""),
+                entry.get("price", ""),
+                entry.get("currencyAddress", ""),
+            ) 
+            for entry in json["entries"]
+        ]
+        return ShardData(
+            json["proofs"],
+            entries
         )
 
-
 @dataclass
-class SnapshotInfo:
+class ShardedMerkleTreeInfo:
     merkle_root: str
-    snapshot_uri: str
-    snapshot: Snapshot
+    base_uri: str
+    original_entries_uri: str 
+    shard_nybbles: int 
+    token_decimals: int
 
-
-SnapshotInputSchema = List[SnapshotAddressInput]
-SnapshotInput = SnapshotInputSchema
-SnapshotSchema = Snapshot
-
-
-@dataclass
-class ClaimConditionInput:
-    start_time: int = int(time()) - 1
-    quantity_limit_per_transaction: Amount = int(MAX_INT, 0)
-    max_quantity: Amount = int(MAX_INT, 0)
-    wait_in_seconds: int = 0
-    currency_address: str = NATIVE_TOKEN_ADDRESS
-    price: Price = 0
-    merkle_root_hash: str = DEFAULT_MERKLE_ROOT
-    snapshot: List[SnapshotAddressInput] = field(default_factory=lambda: [])
-
-    def set_snapshot(self, addresses: List[str]) -> "ClaimConditionInput":
-        self.snapshot = [SnapshotAddressInput(address=address) for address in addresses]
-        return self
-
-
-ClaimConditionInputList = List[ClaimConditionInput]
-FilledConditionInput = ClaimConditionInput
+    @staticmethod
+    def from_json(json: Dict[str, Any]) -> "ShardedMerkleTreeInfo":
+        return ShardedMerkleTreeInfo(
+            json["merkleRoot"],
+            json["baseUri"],
+            json["originalEntriesUri"],
+            json["shardNybbles"],
+            json["tokenDecimals"],
+        )
 
 
 @dataclass
 class ClaimConditionOutput:
     price: int
-    max_quantity: int
-    quantity_limit_per_tranaction: int
+    max_claimable_supply: int
+    max_claimable_per_wallet: int
+    currency_mint_supply: int
     wait_in_seconds: int
+    available_supply: int
     start_time: int = int(time()) - 1
-    available_supply: str = ""
     currency_metadata: CurrencyValue = field(
         default_factory=lambda: CurrencyValue(
             value=0,
@@ -94,7 +82,6 @@ class ClaimConditionOutput:
     )
     currency_address: str = NATIVE_TOKEN_ADDRESS
     merkle_root_hash: str = DEFAULT_MERKLE_ROOT
-    snapshot: List[SnapshotInput] = field(default_factory=lambda: [])
 
 
 ClaimCondition = ClaimConditionOutput
@@ -102,11 +89,13 @@ ClaimCondition = ClaimConditionOutput
 
 @dataclass
 class ClaimVerification:
-    # TODO: OVERRIDES
+    value: int
     proofs: List[str]
-    max_quantity_per_transaction: int
+    max_claimable: int
     price: int
     currency_address: str
+    price_in_proof: int
+    currency_address_in_proof: str
 
 
 class ClaimEligibility(Enum):

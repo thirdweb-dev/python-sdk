@@ -1,4 +1,4 @@
-"""Generated wrapper for DropERC721_V3 Solidity contract."""
+"""Generated wrapper for DropERC721 Solidity contract."""
 
 # pylint: disable=too-many-arguments
 
@@ -25,16 +25,16 @@ from zero_ex.contract_wrappers.tx_params import TxParams
 
 # Try to import a custom validator class definition; if there isn't one,
 # declare one that we can instantiate for the default argument to the
-# constructor for DropERC721_V3 below.
+# constructor for DropERC721 below.
 try:
     # both mypy and pylint complain about what we're doing here, but this
     # works just fine, so their messages have been disabled here.
     from . import (  # type: ignore # pylint: disable=import-self
-        DropERC721_V3Validator,
+        DropERC721Validator,
     )
 except ImportError:
 
-    class DropERC721_V3Validator(  # type: ignore
+    class DropERC721Validator(  # type: ignore
         Validator
     ):
         """No-op input validator."""
@@ -46,7 +46,7 @@ except ImportError:
     pass
 
 
-class IDropClaimCondition_V2ClaimCondition(TypedDict):
+class IClaimConditionClaimCondition(TypedDict):
     """Python representation of a tuple or struct.
 
     Solidity compiler output does not include the names of structs that appear
@@ -68,11 +68,36 @@ class IDropClaimCondition_V2ClaimCondition(TypedDict):
 
     supplyClaimed: int
 
-    quantityLimitPerTransaction: int
-
-    waitTimeInSecondsBetweenClaims: int
+    quantityLimitPerWallet: int
 
     merkleRoot: Union[bytes, str]
+
+    pricePerToken: int
+
+    currency: str
+
+    metadata: str
+
+
+class IDropAllowlistProof(TypedDict):
+    """Python representation of a tuple or struct.
+
+    Solidity compiler output does not include the names of structs that appear
+    in method definitions.  A tuple found in an ABI may have been written in
+    Solidity as a literal, anonymous tuple, or it may have been written as a
+    named `struct`:code:, but there is no way to tell from the compiler
+    output.  This class represents a tuple that appeared in a method
+    definition.  Its name is derived from a hash of that tuple's field names,
+    and every method whose ABI refers to a tuple with that same list of field
+    names will have a generated wrapper method that refers to this class.
+
+    Any members of type `bytes`:code: should be encoded as UTF-8, which can be
+    accomplished via `str.encode("utf_8")`:code:
+    """
+
+    proof: List[Union[bytes, str]]
+
+    quantityLimitPerWallet: int
 
     pricePerToken: int
 
@@ -221,57 +246,6 @@ class BalanceOfMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(owner).estimateGas(tx_params.as_dict())
 
-class BaseUriIndicesMethod(ContractMethod): # pylint: disable=invalid-name
-    """Various interfaces to the baseURIIndices method."""
-
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
-        self._underlying_method = contract_function
-
-    def validate_and_normalize_inputs(self, index_0: int):
-        """Validate the inputs to the baseURIIndices method."""
-        self.validator.assert_valid(
-            method_name='baseURIIndices',
-            parameter_name='index_0',
-            argument_value=index_0,
-        )
-        # safeguard against fractional inputs
-        index_0 = int(index_0)
-        return (index_0)
-
-    def call(self, index_0: int, tx_params: Optional[TxParams] = None) -> int:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        (index_0) = self.validate_and_normalize_inputs(index_0)
-        tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(index_0).call(tx_params.as_dict())
-        return int(returned)
-
-    def send_transaction(self, index_0: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        (index_0) = self.validate_and_normalize_inputs(index_0)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index_0).transact(tx_params.as_dict())
-
-    def build_transaction(self, index_0: int, tx_params: Optional[TxParams] = None) -> dict:
-        """Construct calldata to be used as input to the method."""
-        (index_0) = self.validate_and_normalize_inputs(index_0)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index_0).buildTransaction(tx_params.as_dict())
-
-    def estimate_gas(self, index_0: int, tx_params: Optional[TxParams] = None) -> int:
-        """Estimate gas consumption of method call."""
-        (index_0) = self.validate_and_normalize_inputs(index_0)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index_0).estimateGas(tx_params.as_dict())
-
 class BurnMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the burn method."""
 
@@ -330,7 +304,7 @@ class ClaimMethod(ContractMethod): # pylint: disable=invalid-name
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(self, receiver: str, quantity: int, currency: str, price_per_token: int, proofs: List[Union[bytes, str]], proof_max_quantity_per_transaction: int):
+    def validate_and_normalize_inputs(self, receiver: str, quantity: int, currency: str, price_per_token: int, allowlist_proof: IDropAllowlistProof, data: Union[bytes, str]):
         """Validate the inputs to the claim method."""
         self.validator.assert_valid(
             method_name='claim',
@@ -360,48 +334,46 @@ class ClaimMethod(ContractMethod): # pylint: disable=invalid-name
         price_per_token = int(price_per_token)
         self.validator.assert_valid(
             method_name='claim',
-            parameter_name='_proofs',
-            argument_value=proofs,
+            parameter_name='_allowlistProof',
+            argument_value=allowlist_proof,
         )
         self.validator.assert_valid(
             method_name='claim',
-            parameter_name='_proofMaxQuantityPerTransaction',
-            argument_value=proof_max_quantity_per_transaction,
+            parameter_name='_data',
+            argument_value=data,
         )
-        # safeguard against fractional inputs
-        proof_max_quantity_per_transaction = int(proof_max_quantity_per_transaction)
-        return (receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction)
+        return (receiver, quantity, currency, price_per_token, allowlist_proof, data)
 
-    def call(self, receiver: str, quantity: int, currency: str, price_per_token: int, proofs: List[Union[bytes, str]], proof_max_quantity_per_transaction: int, tx_params: Optional[TxParams] = None) -> None:
+    def call(self, receiver: str, quantity: int, currency: str, price_per_token: int, allowlist_proof: IDropAllowlistProof, data: Union[bytes, str], tx_params: Optional[TxParams] = None) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction) = self.validate_and_normalize_inputs(receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction)
+        (receiver, quantity, currency, price_per_token, allowlist_proof, data) = self.validate_and_normalize_inputs(receiver, quantity, currency, price_per_token, allowlist_proof, data)
         tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction).call(tx_params.as_dict())
+        self._underlying_method(receiver, quantity, currency, price_per_token, allowlist_proof, data).call(tx_params.as_dict())
 
-    def send_transaction(self, receiver: str, quantity: int, currency: str, price_per_token: int, proofs: List[Union[bytes, str]], proof_max_quantity_per_transaction: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(self, receiver: str, quantity: int, currency: str, price_per_token: int, allowlist_proof: IDropAllowlistProof, data: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction) = self.validate_and_normalize_inputs(receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction)
+        (receiver, quantity, currency, price_per_token, allowlist_proof, data) = self.validate_and_normalize_inputs(receiver, quantity, currency, price_per_token, allowlist_proof, data)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction).transact(tx_params.as_dict())
+        return self._underlying_method(receiver, quantity, currency, price_per_token, allowlist_proof, data).transact(tx_params.as_dict())
 
-    def build_transaction(self, receiver: str, quantity: int, currency: str, price_per_token: int, proofs: List[Union[bytes, str]], proof_max_quantity_per_transaction: int, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(self, receiver: str, quantity: int, currency: str, price_per_token: int, allowlist_proof: IDropAllowlistProof, data: Union[bytes, str], tx_params: Optional[TxParams] = None) -> dict:
         """Construct calldata to be used as input to the method."""
-        (receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction) = self.validate_and_normalize_inputs(receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction)
+        (receiver, quantity, currency, price_per_token, allowlist_proof, data) = self.validate_and_normalize_inputs(receiver, quantity, currency, price_per_token, allowlist_proof, data)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(receiver, quantity, currency, price_per_token, allowlist_proof, data).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(self, receiver: str, quantity: int, currency: str, price_per_token: int, proofs: List[Union[bytes, str]], proof_max_quantity_per_transaction: int, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(self, receiver: str, quantity: int, currency: str, price_per_token: int, allowlist_proof: IDropAllowlistProof, data: Union[bytes, str], tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
-        (receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction) = self.validate_and_normalize_inputs(receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction)
+        (receiver, quantity, currency, price_per_token, allowlist_proof, data) = self.validate_and_normalize_inputs(receiver, quantity, currency, price_per_token, allowlist_proof, data)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(receiver, quantity, currency, price_per_token, proofs, proof_max_quantity_per_transaction).estimateGas(tx_params.as_dict())
+        return self._underlying_method(receiver, quantity, currency, price_per_token, allowlist_proof, data).estimateGas(tx_params.as_dict())
 
 class ClaimConditionMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the claimCondition method."""
@@ -775,6 +747,57 @@ class GetBaseUriCountMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
+class GetBatchIdAtIndexMethod(ContractMethod): # pylint: disable=invalid-name
+    """Various interfaces to the getBatchIdAtIndex method."""
+
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+        """Persist instance data."""
+        super().__init__(web3_or_provider, contract_address, validator)
+        self._underlying_method = contract_function
+
+    def validate_and_normalize_inputs(self, index: int):
+        """Validate the inputs to the getBatchIdAtIndex method."""
+        self.validator.assert_valid(
+            method_name='getBatchIdAtIndex',
+            parameter_name='_index',
+            argument_value=index,
+        )
+        # safeguard against fractional inputs
+        index = int(index)
+        return (index)
+
+    def call(self, index: int, tx_params: Optional[TxParams] = None) -> int:
+        """Execute underlying contract method via eth_call.
+
+        :param tx_params: transaction parameters
+        :returns: the return value of the underlying method.
+        """
+        (index) = self.validate_and_normalize_inputs(index)
+        tx_params = super().normalize_tx_params(tx_params)
+        returned = self._underlying_method(index).call(tx_params.as_dict())
+        return int(returned)
+
+    def send_transaction(self, index: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+        """Execute underlying contract method via eth_sendTransaction.
+
+        :param tx_params: transaction parameters
+        """
+        (index) = self.validate_and_normalize_inputs(index)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(index).transact(tx_params.as_dict())
+
+    def build_transaction(self, index: int, tx_params: Optional[TxParams] = None) -> dict:
+        """Construct calldata to be used as input to the method."""
+        (index) = self.validate_and_normalize_inputs(index)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(index).buildTransaction(tx_params.as_dict())
+
+    def estimate_gas(self, index: int, tx_params: Optional[TxParams] = None) -> int:
+        """Estimate gas consumption of method call."""
+        (index) = self.validate_and_normalize_inputs(index)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(index).estimateGas(tx_params.as_dict())
+
 class GetClaimConditionByIdMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the getClaimConditionById method."""
 
@@ -794,7 +817,7 @@ class GetClaimConditionByIdMethod(ContractMethod): # pylint: disable=invalid-nam
         condition_id = int(condition_id)
         return (condition_id)
 
-    def call(self, condition_id: int, tx_params: Optional[TxParams] = None) -> IDropClaimCondition_V2ClaimCondition:
+    def call(self, condition_id: int, tx_params: Optional[TxParams] = None) -> IClaimConditionClaimCondition:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -803,7 +826,7 @@ class GetClaimConditionByIdMethod(ContractMethod): # pylint: disable=invalid-nam
         (condition_id) = self.validate_and_normalize_inputs(condition_id)
         tx_params = super().normalize_tx_params(tx_params)
         returned = self._underlying_method(condition_id).call(tx_params.as_dict())
-        return IDropClaimCondition_V2ClaimCondition(startTimestamp=returned[0],maxClaimableSupply=returned[1],supplyClaimed=returned[2],quantityLimitPerTransaction=returned[3],waitTimeInSecondsBetweenClaims=returned[4],merkleRoot=returned[5],pricePerToken=returned[6],currency=returned[7],)
+        return IClaimConditionClaimCondition(startTimestamp=returned[0],maxClaimableSupply=returned[1],supplyClaimed=returned[2],quantityLimitPerWallet=returned[3],merkleRoot=returned[4],pricePerToken=returned[5],currency=returned[6],metadata=returned[7],)
 
     def send_transaction(self, condition_id: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -825,63 +848,6 @@ class GetClaimConditionByIdMethod(ContractMethod): # pylint: disable=invalid-nam
         (condition_id) = self.validate_and_normalize_inputs(condition_id)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(condition_id).estimateGas(tx_params.as_dict())
-
-class GetClaimTimestampMethod(ContractMethod): # pylint: disable=invalid-name
-    """Various interfaces to the getClaimTimestamp method."""
-
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
-        self._underlying_method = contract_function
-
-    def validate_and_normalize_inputs(self, condition_id: int, claimer: str):
-        """Validate the inputs to the getClaimTimestamp method."""
-        self.validator.assert_valid(
-            method_name='getClaimTimestamp',
-            parameter_name='_conditionId',
-            argument_value=condition_id,
-        )
-        # safeguard against fractional inputs
-        condition_id = int(condition_id)
-        self.validator.assert_valid(
-            method_name='getClaimTimestamp',
-            parameter_name='_claimer',
-            argument_value=claimer,
-        )
-        claimer = self.validate_and_checksum_address(claimer)
-        return (condition_id, claimer)
-
-    def call(self, condition_id: int, claimer: str, tx_params: Optional[TxParams] = None) -> Tuple[int, int]:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        (condition_id, claimer) = self.validate_and_normalize_inputs(condition_id, claimer)
-        tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(condition_id, claimer).call(tx_params.as_dict())
-        return (returned[0],returned[1],)
-
-    def send_transaction(self, condition_id: int, claimer: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        (condition_id, claimer) = self.validate_and_normalize_inputs(condition_id, claimer)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(condition_id, claimer).transact(tx_params.as_dict())
-
-    def build_transaction(self, condition_id: int, claimer: str, tx_params: Optional[TxParams] = None) -> dict:
-        """Construct calldata to be used as input to the method."""
-        (condition_id, claimer) = self.validate_and_normalize_inputs(condition_id, claimer)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(condition_id, claimer).buildTransaction(tx_params.as_dict())
-
-    def estimate_gas(self, condition_id: int, claimer: str, tx_params: Optional[TxParams] = None) -> int:
-        """Estimate gas consumption of method call."""
-        (condition_id, claimer) = self.validate_and_normalize_inputs(condition_id, claimer)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(condition_id, claimer).estimateGas(tx_params.as_dict())
 
 class GetDefaultRoyaltyInfoMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the getDefaultRoyaltyInfo method."""
@@ -954,6 +920,62 @@ class GetPlatformFeeInfoMethod(ContractMethod): # pylint: disable=invalid-name
         """Estimate gas consumption of method call."""
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
+
+class GetRevealUriMethod(ContractMethod): # pylint: disable=invalid-name
+    """Various interfaces to the getRevealURI method."""
+
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+        """Persist instance data."""
+        super().__init__(web3_or_provider, contract_address, validator)
+        self._underlying_method = contract_function
+
+    def validate_and_normalize_inputs(self, batch_id: int, key: Union[bytes, str]):
+        """Validate the inputs to the getRevealURI method."""
+        self.validator.assert_valid(
+            method_name='getRevealURI',
+            parameter_name='_batchId',
+            argument_value=batch_id,
+        )
+        # safeguard against fractional inputs
+        batch_id = int(batch_id)
+        self.validator.assert_valid(
+            method_name='getRevealURI',
+            parameter_name='_key',
+            argument_value=key,
+        )
+        return (batch_id, key)
+
+    def call(self, batch_id: int, key: Union[bytes, str], tx_params: Optional[TxParams] = None) -> str:
+        """Execute underlying contract method via eth_call.
+
+        :param tx_params: transaction parameters
+        :returns: the return value of the underlying method.
+        """
+        (batch_id, key) = self.validate_and_normalize_inputs(batch_id, key)
+        tx_params = super().normalize_tx_params(tx_params)
+        returned = self._underlying_method(batch_id, key).call(tx_params.as_dict())
+        return str(returned)
+
+    def send_transaction(self, batch_id: int, key: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+        """Execute underlying contract method via eth_sendTransaction.
+
+        :param tx_params: transaction parameters
+        """
+        (batch_id, key) = self.validate_and_normalize_inputs(batch_id, key)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(batch_id, key).transact(tx_params.as_dict())
+
+    def build_transaction(self, batch_id: int, key: Union[bytes, str], tx_params: Optional[TxParams] = None) -> dict:
+        """Construct calldata to be used as input to the method."""
+        (batch_id, key) = self.validate_and_normalize_inputs(batch_id, key)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(batch_id, key).buildTransaction(tx_params.as_dict())
+
+    def estimate_gas(self, batch_id: int, key: Union[bytes, str], tx_params: Optional[TxParams] = None) -> int:
+        """Estimate gas consumption of method call."""
+        (batch_id, key) = self.validate_and_normalize_inputs(batch_id, key)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(batch_id, key).estimateGas(tx_params.as_dict())
 
 class GetRoleAdminMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the getRoleAdmin method."""
@@ -1160,6 +1182,63 @@ class GetRoyaltyInfoForTokenMethod(ContractMethod): # pylint: disable=invalid-na
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(token_id).estimateGas(tx_params.as_dict())
 
+class GetSupplyClaimedByWalletMethod(ContractMethod): # pylint: disable=invalid-name
+    """Various interfaces to the getSupplyClaimedByWallet method."""
+
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+        """Persist instance data."""
+        super().__init__(web3_or_provider, contract_address, validator)
+        self._underlying_method = contract_function
+
+    def validate_and_normalize_inputs(self, condition_id: int, claimer: str):
+        """Validate the inputs to the getSupplyClaimedByWallet method."""
+        self.validator.assert_valid(
+            method_name='getSupplyClaimedByWallet',
+            parameter_name='_conditionId',
+            argument_value=condition_id,
+        )
+        # safeguard against fractional inputs
+        condition_id = int(condition_id)
+        self.validator.assert_valid(
+            method_name='getSupplyClaimedByWallet',
+            parameter_name='_claimer',
+            argument_value=claimer,
+        )
+        claimer = self.validate_and_checksum_address(claimer)
+        return (condition_id, claimer)
+
+    def call(self, condition_id: int, claimer: str, tx_params: Optional[TxParams] = None) -> int:
+        """Execute underlying contract method via eth_call.
+
+        :param tx_params: transaction parameters
+        :returns: the return value of the underlying method.
+        """
+        (condition_id, claimer) = self.validate_and_normalize_inputs(condition_id, claimer)
+        tx_params = super().normalize_tx_params(tx_params)
+        returned = self._underlying_method(condition_id, claimer).call(tx_params.as_dict())
+        return int(returned)
+
+    def send_transaction(self, condition_id: int, claimer: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+        """Execute underlying contract method via eth_sendTransaction.
+
+        :param tx_params: transaction parameters
+        """
+        (condition_id, claimer) = self.validate_and_normalize_inputs(condition_id, claimer)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(condition_id, claimer).transact(tx_params.as_dict())
+
+    def build_transaction(self, condition_id: int, claimer: str, tx_params: Optional[TxParams] = None) -> dict:
+        """Construct calldata to be used as input to the method."""
+        (condition_id, claimer) = self.validate_and_normalize_inputs(condition_id, claimer)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(condition_id, claimer).buildTransaction(tx_params.as_dict())
+
+    def estimate_gas(self, condition_id: int, claimer: str, tx_params: Optional[TxParams] = None) -> int:
+        """Estimate gas consumption of method call."""
+        (condition_id, claimer) = self.validate_and_normalize_inputs(condition_id, claimer)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(condition_id, claimer).estimateGas(tx_params.as_dict())
+
 class GrantRoleMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the grantRole method."""
 
@@ -1231,6 +1310,61 @@ class HasRoleMethod(ContractMethod): # pylint: disable=invalid-name
         )
         self.validator.assert_valid(
             method_name='hasRole',
+            parameter_name='account',
+            argument_value=account,
+        )
+        account = self.validate_and_checksum_address(account)
+        return (role, account)
+
+    def call(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> bool:
+        """Execute underlying contract method via eth_call.
+
+        :param tx_params: transaction parameters
+        :returns: the return value of the underlying method.
+        """
+        (role, account) = self.validate_and_normalize_inputs(role, account)
+        tx_params = super().normalize_tx_params(tx_params)
+        returned = self._underlying_method(role, account).call(tx_params.as_dict())
+        return bool(returned)
+
+    def send_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+        """Execute underlying contract method via eth_sendTransaction.
+
+        :param tx_params: transaction parameters
+        """
+        (role, account) = self.validate_and_normalize_inputs(role, account)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(role, account).transact(tx_params.as_dict())
+
+    def build_transaction(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> dict:
+        """Construct calldata to be used as input to the method."""
+        (role, account) = self.validate_and_normalize_inputs(role, account)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(role, account).buildTransaction(tx_params.as_dict())
+
+    def estimate_gas(self, role: Union[bytes, str], account: str, tx_params: Optional[TxParams] = None) -> int:
+        """Estimate gas consumption of method call."""
+        (role, account) = self.validate_and_normalize_inputs(role, account)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(role, account).estimateGas(tx_params.as_dict())
+
+class HasRoleWithSwitchMethod(ContractMethod): # pylint: disable=invalid-name
+    """Various interfaces to the hasRoleWithSwitch method."""
+
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+        """Persist instance data."""
+        super().__init__(web3_or_provider, contract_address, validator)
+        self._underlying_method = contract_function
+
+    def validate_and_normalize_inputs(self, role: Union[bytes, str], account: str):
+        """Validate the inputs to the hasRoleWithSwitch method."""
+        self.validator.assert_valid(
+            method_name='hasRoleWithSwitch',
+            parameter_name='role',
+            argument_value=role,
+        )
+        self.validator.assert_valid(
+            method_name='hasRoleWithSwitch',
             parameter_name='account',
             argument_value=account,
         )
@@ -1422,6 +1556,57 @@ class IsApprovedForAllMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(owner, operator).estimateGas(tx_params.as_dict())
 
+class IsEncryptedBatchMethod(ContractMethod): # pylint: disable=invalid-name
+    """Various interfaces to the isEncryptedBatch method."""
+
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+        """Persist instance data."""
+        super().__init__(web3_or_provider, contract_address, validator)
+        self._underlying_method = contract_function
+
+    def validate_and_normalize_inputs(self, batch_id: int):
+        """Validate the inputs to the isEncryptedBatch method."""
+        self.validator.assert_valid(
+            method_name='isEncryptedBatch',
+            parameter_name='_batchId',
+            argument_value=batch_id,
+        )
+        # safeguard against fractional inputs
+        batch_id = int(batch_id)
+        return (batch_id)
+
+    def call(self, batch_id: int, tx_params: Optional[TxParams] = None) -> bool:
+        """Execute underlying contract method via eth_call.
+
+        :param tx_params: transaction parameters
+        :returns: the return value of the underlying method.
+        """
+        (batch_id) = self.validate_and_normalize_inputs(batch_id)
+        tx_params = super().normalize_tx_params(tx_params)
+        returned = self._underlying_method(batch_id).call(tx_params.as_dict())
+        return bool(returned)
+
+    def send_transaction(self, batch_id: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+        """Execute underlying contract method via eth_sendTransaction.
+
+        :param tx_params: transaction parameters
+        """
+        (batch_id) = self.validate_and_normalize_inputs(batch_id)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(batch_id).transact(tx_params.as_dict())
+
+    def build_transaction(self, batch_id: int, tx_params: Optional[TxParams] = None) -> dict:
+        """Construct calldata to be used as input to the method."""
+        (batch_id) = self.validate_and_normalize_inputs(batch_id)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(batch_id).buildTransaction(tx_params.as_dict())
+
+    def estimate_gas(self, batch_id: int, tx_params: Optional[TxParams] = None) -> int:
+        """Estimate gas consumption of method call."""
+        (batch_id) = self.validate_and_normalize_inputs(batch_id)
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method(batch_id).estimateGas(tx_params.as_dict())
+
 class IsTrustedForwarderMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the isTrustedForwarder method."""
 
@@ -1501,7 +1686,7 @@ class LazyMintMethod(ContractMethod): # pylint: disable=invalid-name
         )
         return (amount, base_uri_for_tokens, data)
 
-    def call(self, amount: int, base_uri_for_tokens: str, data: Union[bytes, str], tx_params: Optional[TxParams] = None) -> None:
+    def call(self, amount: int, base_uri_for_tokens: str, data: Union[bytes, str], tx_params: Optional[TxParams] = None) -> int:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -1509,7 +1694,8 @@ class LazyMintMethod(ContractMethod): # pylint: disable=invalid-name
         """
         (amount, base_uri_for_tokens, data) = self.validate_and_normalize_inputs(amount, base_uri_for_tokens, data)
         tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(amount, base_uri_for_tokens, data).call(tx_params.as_dict())
+        returned = self._underlying_method(amount, base_uri_for_tokens, data).call(tx_params.as_dict())
+        return int(returned)
 
     def send_transaction(self, amount: int, base_uri_for_tokens: str, data: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
@@ -1534,42 +1720,6 @@ class LazyMintMethod(ContractMethod): # pylint: disable=invalid-name
 
 class MaxTotalSupplyMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the maxTotalSupply method."""
-
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address)
-        self._underlying_method = contract_function
-
-    def call(self, tx_params: Optional[TxParams] = None) -> int:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method().call(tx_params.as_dict())
-        return int(returned)
-
-    def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().transact(tx_params.as_dict())
-
-    def build_transaction(self, tx_params: Optional[TxParams] = None) -> dict:
-        """Construct calldata to be used as input to the method."""
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().buildTransaction(tx_params.as_dict())
-
-    def estimate_gas(self, tx_params: Optional[TxParams] = None) -> int:
-        """Estimate gas consumption of method call."""
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method().estimateGas(tx_params.as_dict())
-
-class MaxWalletClaimCountMethod(ContractMethod): # pylint: disable=invalid-name
-    """Various interfaces to the maxWalletClaimCount method."""
 
     def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
         """Persist instance data."""
@@ -1950,7 +2100,7 @@ class RevealMethod(ContractMethod): # pylint: disable=invalid-name
         """Validate the inputs to the reveal method."""
         self.validator.assert_valid(
             method_name='reveal',
-            parameter_name='index',
+            parameter_name='_index',
             argument_value=index,
         )
         # safeguard against fractional inputs
@@ -2199,7 +2349,7 @@ class SafeTransferFrom2Method(ContractMethod): # pylint: disable=invalid-name
         token_id = int(token_id)
         self.validator.assert_valid(
             method_name='safeTransferFrom',
-            parameter_name='data',
+            parameter_name='_data',
             argument_value=data,
         )
         return (_from, to, token_id, data)
@@ -2297,50 +2447,50 @@ class SetClaimConditionsMethod(ContractMethod): # pylint: disable=invalid-name
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(self, phases: List[IDropClaimCondition_V2ClaimCondition], reset_claim_eligibility: bool):
+    def validate_and_normalize_inputs(self, conditions: List[IClaimConditionClaimCondition], reset_claim_eligibility: bool):
         """Validate the inputs to the setClaimConditions method."""
         self.validator.assert_valid(
             method_name='setClaimConditions',
-            parameter_name='_phases',
-            argument_value=phases,
+            parameter_name='_conditions',
+            argument_value=conditions,
         )
         self.validator.assert_valid(
             method_name='setClaimConditions',
             parameter_name='_resetClaimEligibility',
             argument_value=reset_claim_eligibility,
         )
-        return (phases, reset_claim_eligibility)
+        return (conditions, reset_claim_eligibility)
 
-    def call(self, phases: List[IDropClaimCondition_V2ClaimCondition], reset_claim_eligibility: bool, tx_params: Optional[TxParams] = None) -> None:
+    def call(self, conditions: List[IClaimConditionClaimCondition], reset_claim_eligibility: bool, tx_params: Optional[TxParams] = None) -> None:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (phases, reset_claim_eligibility) = self.validate_and_normalize_inputs(phases, reset_claim_eligibility)
+        (conditions, reset_claim_eligibility) = self.validate_and_normalize_inputs(conditions, reset_claim_eligibility)
         tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(phases, reset_claim_eligibility).call(tx_params.as_dict())
+        self._underlying_method(conditions, reset_claim_eligibility).call(tx_params.as_dict())
 
-    def send_transaction(self, phases: List[IDropClaimCondition_V2ClaimCondition], reset_claim_eligibility: bool, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(self, conditions: List[IClaimConditionClaimCondition], reset_claim_eligibility: bool, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (phases, reset_claim_eligibility) = self.validate_and_normalize_inputs(phases, reset_claim_eligibility)
+        (conditions, reset_claim_eligibility) = self.validate_and_normalize_inputs(conditions, reset_claim_eligibility)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(phases, reset_claim_eligibility).transact(tx_params.as_dict())
+        return self._underlying_method(conditions, reset_claim_eligibility).transact(tx_params.as_dict())
 
-    def build_transaction(self, phases: List[IDropClaimCondition_V2ClaimCondition], reset_claim_eligibility: bool, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(self, conditions: List[IClaimConditionClaimCondition], reset_claim_eligibility: bool, tx_params: Optional[TxParams] = None) -> dict:
         """Construct calldata to be used as input to the method."""
-        (phases, reset_claim_eligibility) = self.validate_and_normalize_inputs(phases, reset_claim_eligibility)
+        (conditions, reset_claim_eligibility) = self.validate_and_normalize_inputs(conditions, reset_claim_eligibility)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(phases, reset_claim_eligibility).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(conditions, reset_claim_eligibility).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(self, phases: List[IDropClaimCondition_V2ClaimCondition], reset_claim_eligibility: bool, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(self, conditions: List[IClaimConditionClaimCondition], reset_claim_eligibility: bool, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
-        (phases, reset_claim_eligibility) = self.validate_and_normalize_inputs(phases, reset_claim_eligibility)
+        (conditions, reset_claim_eligibility) = self.validate_and_normalize_inputs(conditions, reset_claim_eligibility)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(phases, reset_claim_eligibility).estimateGas(tx_params.as_dict())
+        return self._underlying_method(conditions, reset_claim_eligibility).estimateGas(tx_params.as_dict())
 
 class SetContractUriMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the setContractURI method."""
@@ -2495,56 +2645,6 @@ class SetMaxTotalSupplyMethod(ContractMethod): # pylint: disable=invalid-name
         (max_total_supply) = self.validate_and_normalize_inputs(max_total_supply)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(max_total_supply).estimateGas(tx_params.as_dict())
-
-class SetMaxWalletClaimCountMethod(ContractMethod): # pylint: disable=invalid-name
-    """Various interfaces to the setMaxWalletClaimCount method."""
-
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
-        self._underlying_method = contract_function
-
-    def validate_and_normalize_inputs(self, count: int):
-        """Validate the inputs to the setMaxWalletClaimCount method."""
-        self.validator.assert_valid(
-            method_name='setMaxWalletClaimCount',
-            parameter_name='_count',
-            argument_value=count,
-        )
-        # safeguard against fractional inputs
-        count = int(count)
-        return (count)
-
-    def call(self, count: int, tx_params: Optional[TxParams] = None) -> None:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        (count) = self.validate_and_normalize_inputs(count)
-        tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(count).call(tx_params.as_dict())
-
-    def send_transaction(self, count: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        (count) = self.validate_and_normalize_inputs(count)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(count).transact(tx_params.as_dict())
-
-    def build_transaction(self, count: int, tx_params: Optional[TxParams] = None) -> dict:
-        """Construct calldata to be used as input to the method."""
-        (count) = self.validate_and_normalize_inputs(count)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(count).buildTransaction(tx_params.as_dict())
-
-    def estimate_gas(self, count: int, tx_params: Optional[TxParams] = None) -> int:
-        """Estimate gas consumption of method call."""
-        (count) = self.validate_and_normalize_inputs(count)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(count).estimateGas(tx_params.as_dict())
 
 class SetOwnerMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the setOwner method."""
@@ -2763,62 +2863,6 @@ class SetRoyaltyInfoForTokenMethod(ContractMethod): # pylint: disable=invalid-na
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(token_id, recipient, bps).estimateGas(tx_params.as_dict())
 
-class SetWalletClaimCountMethod(ContractMethod): # pylint: disable=invalid-name
-    """Various interfaces to the setWalletClaimCount method."""
-
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
-        self._underlying_method = contract_function
-
-    def validate_and_normalize_inputs(self, claimer: str, count: int):
-        """Validate the inputs to the setWalletClaimCount method."""
-        self.validator.assert_valid(
-            method_name='setWalletClaimCount',
-            parameter_name='_claimer',
-            argument_value=claimer,
-        )
-        claimer = self.validate_and_checksum_address(claimer)
-        self.validator.assert_valid(
-            method_name='setWalletClaimCount',
-            parameter_name='_count',
-            argument_value=count,
-        )
-        # safeguard against fractional inputs
-        count = int(count)
-        return (claimer, count)
-
-    def call(self, claimer: str, count: int, tx_params: Optional[TxParams] = None) -> None:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        (claimer, count) = self.validate_and_normalize_inputs(claimer, count)
-        tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(claimer, count).call(tx_params.as_dict())
-
-    def send_transaction(self, claimer: str, count: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        (claimer, count) = self.validate_and_normalize_inputs(claimer, count)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(claimer, count).transact(tx_params.as_dict())
-
-    def build_transaction(self, claimer: str, count: int, tx_params: Optional[TxParams] = None) -> dict:
-        """Construct calldata to be used as input to the method."""
-        (claimer, count) = self.validate_and_normalize_inputs(claimer, count)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(claimer, count).buildTransaction(tx_params.as_dict())
-
-    def estimate_gas(self, claimer: str, count: int, tx_params: Optional[TxParams] = None) -> int:
-        """Estimate gas consumption of method call."""
-        (claimer, count) = self.validate_and_normalize_inputs(claimer, count)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(claimer, count).estimateGas(tx_params.as_dict())
-
 class SupportsInterfaceMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the supportsInterface method."""
 
@@ -2904,114 +2948,6 @@ class SymbolMethod(ContractMethod): # pylint: disable=invalid-name
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
-class TokenByIndexMethod(ContractMethod): # pylint: disable=invalid-name
-    """Various interfaces to the tokenByIndex method."""
-
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
-        self._underlying_method = contract_function
-
-    def validate_and_normalize_inputs(self, index: int):
-        """Validate the inputs to the tokenByIndex method."""
-        self.validator.assert_valid(
-            method_name='tokenByIndex',
-            parameter_name='index',
-            argument_value=index,
-        )
-        # safeguard against fractional inputs
-        index = int(index)
-        return (index)
-
-    def call(self, index: int, tx_params: Optional[TxParams] = None) -> int:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        (index) = self.validate_and_normalize_inputs(index)
-        tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(index).call(tx_params.as_dict())
-        return int(returned)
-
-    def send_transaction(self, index: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        (index) = self.validate_and_normalize_inputs(index)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index).transact(tx_params.as_dict())
-
-    def build_transaction(self, index: int, tx_params: Optional[TxParams] = None) -> dict:
-        """Construct calldata to be used as input to the method."""
-        (index) = self.validate_and_normalize_inputs(index)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index).buildTransaction(tx_params.as_dict())
-
-    def estimate_gas(self, index: int, tx_params: Optional[TxParams] = None) -> int:
-        """Estimate gas consumption of method call."""
-        (index) = self.validate_and_normalize_inputs(index)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index).estimateGas(tx_params.as_dict())
-
-class TokenOfOwnerByIndexMethod(ContractMethod): # pylint: disable=invalid-name
-    """Various interfaces to the tokenOfOwnerByIndex method."""
-
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
-        self._underlying_method = contract_function
-
-    def validate_and_normalize_inputs(self, owner: str, index: int):
-        """Validate the inputs to the tokenOfOwnerByIndex method."""
-        self.validator.assert_valid(
-            method_name='tokenOfOwnerByIndex',
-            parameter_name='owner',
-            argument_value=owner,
-        )
-        owner = self.validate_and_checksum_address(owner)
-        self.validator.assert_valid(
-            method_name='tokenOfOwnerByIndex',
-            parameter_name='index',
-            argument_value=index,
-        )
-        # safeguard against fractional inputs
-        index = int(index)
-        return (owner, index)
-
-    def call(self, owner: str, index: int, tx_params: Optional[TxParams] = None) -> int:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        (owner, index) = self.validate_and_normalize_inputs(owner, index)
-        tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(owner, index).call(tx_params.as_dict())
-        return int(returned)
-
-    def send_transaction(self, owner: str, index: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        (owner, index) = self.validate_and_normalize_inputs(owner, index)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(owner, index).transact(tx_params.as_dict())
-
-    def build_transaction(self, owner: str, index: int, tx_params: Optional[TxParams] = None) -> dict:
-        """Construct calldata to be used as input to the method."""
-        (owner, index) = self.validate_and_normalize_inputs(owner, index)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(owner, index).buildTransaction(tx_params.as_dict())
-
-    def estimate_gas(self, owner: str, index: int, tx_params: Optional[TxParams] = None) -> int:
-        """Estimate gas consumption of method call."""
-        (owner, index) = self.validate_and_normalize_inputs(owner, index)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(owner, index).estimateGas(tx_params.as_dict())
-
 class TokenUriMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the tokenURI method."""
 
@@ -3062,6 +2998,42 @@ class TokenUriMethod(ContractMethod): # pylint: disable=invalid-name
         (token_id) = self.validate_and_normalize_inputs(token_id)
         tx_params = super().normalize_tx_params(tx_params)
         return self._underlying_method(token_id).estimateGas(tx_params.as_dict())
+
+class TotalMintedMethod(ContractMethod): # pylint: disable=invalid-name
+    """Various interfaces to the totalMinted method."""
+
+    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction):
+        """Persist instance data."""
+        super().__init__(web3_or_provider, contract_address)
+        self._underlying_method = contract_function
+
+    def call(self, tx_params: Optional[TxParams] = None) -> int:
+        """Execute underlying contract method via eth_call.
+
+        :param tx_params: transaction parameters
+        :returns: the return value of the underlying method.
+        """
+        tx_params = super().normalize_tx_params(tx_params)
+        returned = self._underlying_method().call(tx_params.as_dict())
+        return int(returned)
+
+    def send_transaction(self, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+        """Execute underlying contract method via eth_sendTransaction.
+
+        :param tx_params: transaction parameters
+        """
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().transact(tx_params.as_dict())
+
+    def build_transaction(self, tx_params: Optional[TxParams] = None) -> dict:
+        """Construct calldata to be used as input to the method."""
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().buildTransaction(tx_params.as_dict())
+
+    def estimate_gas(self, tx_params: Optional[TxParams] = None) -> int:
+        """Estimate gas consumption of method call."""
+        tx_params = super().normalize_tx_params(tx_params)
+        return self._underlying_method().estimateGas(tx_params.as_dict())
 
 class TotalSupplyMethod(ContractMethod): # pylint: disable=invalid-name
     """Various interfaces to the totalSupply method."""
@@ -3169,7 +3141,7 @@ class VerifyClaimMethod(ContractMethod): # pylint: disable=invalid-name
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(self, condition_id: int, claimer: str, quantity: int, currency: str, price_per_token: int, verify_max_quantity_per_transaction: bool):
+    def validate_and_normalize_inputs(self, condition_id: int, claimer: str, quantity: int, currency: str, price_per_token: int, allowlist_proof: IDropAllowlistProof):
         """Validate the inputs to the verifyClaim method."""
         self.validator.assert_valid(
             method_name='verifyClaim',
@@ -3206,171 +3178,46 @@ class VerifyClaimMethod(ContractMethod): # pylint: disable=invalid-name
         price_per_token = int(price_per_token)
         self.validator.assert_valid(
             method_name='verifyClaim',
-            parameter_name='verifyMaxQuantityPerTransaction',
-            argument_value=verify_max_quantity_per_transaction,
+            parameter_name='_allowlistProof',
+            argument_value=allowlist_proof,
         )
-        return (condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction)
+        return (condition_id, claimer, quantity, currency, price_per_token, allowlist_proof)
 
-    def call(self, condition_id: int, claimer: str, quantity: int, currency: str, price_per_token: int, verify_max_quantity_per_transaction: bool, tx_params: Optional[TxParams] = None) -> None:
+    def call(self, condition_id: int, claimer: str, quantity: int, currency: str, price_per_token: int, allowlist_proof: IDropAllowlistProof, tx_params: Optional[TxParams] = None) -> bool:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction) = self.validate_and_normalize_inputs(condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction)
+        (condition_id, claimer, quantity, currency, price_per_token, allowlist_proof) = self.validate_and_normalize_inputs(condition_id, claimer, quantity, currency, price_per_token, allowlist_proof)
         tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction).call(tx_params.as_dict())
+        returned = self._underlying_method(condition_id, claimer, quantity, currency, price_per_token, allowlist_proof).call(tx_params.as_dict())
+        return bool(returned)
 
-    def send_transaction(self, condition_id: int, claimer: str, quantity: int, currency: str, price_per_token: int, verify_max_quantity_per_transaction: bool, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(self, condition_id: int, claimer: str, quantity: int, currency: str, price_per_token: int, allowlist_proof: IDropAllowlistProof, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction) = self.validate_and_normalize_inputs(condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction)
+        (condition_id, claimer, quantity, currency, price_per_token, allowlist_proof) = self.validate_and_normalize_inputs(condition_id, claimer, quantity, currency, price_per_token, allowlist_proof)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction).transact(tx_params.as_dict())
+        return self._underlying_method(condition_id, claimer, quantity, currency, price_per_token, allowlist_proof).transact(tx_params.as_dict())
 
-    def build_transaction(self, condition_id: int, claimer: str, quantity: int, currency: str, price_per_token: int, verify_max_quantity_per_transaction: bool, tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(self, condition_id: int, claimer: str, quantity: int, currency: str, price_per_token: int, allowlist_proof: IDropAllowlistProof, tx_params: Optional[TxParams] = None) -> dict:
         """Construct calldata to be used as input to the method."""
-        (condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction) = self.validate_and_normalize_inputs(condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction)
+        (condition_id, claimer, quantity, currency, price_per_token, allowlist_proof) = self.validate_and_normalize_inputs(condition_id, claimer, quantity, currency, price_per_token, allowlist_proof)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(condition_id, claimer, quantity, currency, price_per_token, allowlist_proof).buildTransaction(tx_params.as_dict())
 
-    def estimate_gas(self, condition_id: int, claimer: str, quantity: int, currency: str, price_per_token: int, verify_max_quantity_per_transaction: bool, tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(self, condition_id: int, claimer: str, quantity: int, currency: str, price_per_token: int, allowlist_proof: IDropAllowlistProof, tx_params: Optional[TxParams] = None) -> int:
         """Estimate gas consumption of method call."""
-        (condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction) = self.validate_and_normalize_inputs(condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction)
+        (condition_id, claimer, quantity, currency, price_per_token, allowlist_proof) = self.validate_and_normalize_inputs(condition_id, claimer, quantity, currency, price_per_token, allowlist_proof)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(condition_id, claimer, quantity, currency, price_per_token, verify_max_quantity_per_transaction).estimateGas(tx_params.as_dict())
-
-class VerifyClaimMerkleProofMethod(ContractMethod): # pylint: disable=invalid-name
-    """Various interfaces to the verifyClaimMerkleProof method."""
-
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
-        self._underlying_method = contract_function
-
-    def validate_and_normalize_inputs(self, condition_id: int, claimer: str, quantity: int, proofs: List[Union[bytes, str]], proof_max_quantity_per_transaction: int):
-        """Validate the inputs to the verifyClaimMerkleProof method."""
-        self.validator.assert_valid(
-            method_name='verifyClaimMerkleProof',
-            parameter_name='_conditionId',
-            argument_value=condition_id,
-        )
-        # safeguard against fractional inputs
-        condition_id = int(condition_id)
-        self.validator.assert_valid(
-            method_name='verifyClaimMerkleProof',
-            parameter_name='_claimer',
-            argument_value=claimer,
-        )
-        claimer = self.validate_and_checksum_address(claimer)
-        self.validator.assert_valid(
-            method_name='verifyClaimMerkleProof',
-            parameter_name='_quantity',
-            argument_value=quantity,
-        )
-        # safeguard against fractional inputs
-        quantity = int(quantity)
-        self.validator.assert_valid(
-            method_name='verifyClaimMerkleProof',
-            parameter_name='_proofs',
-            argument_value=proofs,
-        )
-        self.validator.assert_valid(
-            method_name='verifyClaimMerkleProof',
-            parameter_name='_proofMaxQuantityPerTransaction',
-            argument_value=proof_max_quantity_per_transaction,
-        )
-        # safeguard against fractional inputs
-        proof_max_quantity_per_transaction = int(proof_max_quantity_per_transaction)
-        return (condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction)
-
-    def call(self, condition_id: int, claimer: str, quantity: int, proofs: List[Union[bytes, str]], proof_max_quantity_per_transaction: int, tx_params: Optional[TxParams] = None) -> Tuple[bool, int]:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        (condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction) = self.validate_and_normalize_inputs(condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction)
-        tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction).call(tx_params.as_dict())
-        return (returned[0],returned[1],)
-
-    def send_transaction(self, condition_id: int, claimer: str, quantity: int, proofs: List[Union[bytes, str]], proof_max_quantity_per_transaction: int, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        (condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction) = self.validate_and_normalize_inputs(condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction).transact(tx_params.as_dict())
-
-    def build_transaction(self, condition_id: int, claimer: str, quantity: int, proofs: List[Union[bytes, str]], proof_max_quantity_per_transaction: int, tx_params: Optional[TxParams] = None) -> dict:
-        """Construct calldata to be used as input to the method."""
-        (condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction) = self.validate_and_normalize_inputs(condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction).buildTransaction(tx_params.as_dict())
-
-    def estimate_gas(self, condition_id: int, claimer: str, quantity: int, proofs: List[Union[bytes, str]], proof_max_quantity_per_transaction: int, tx_params: Optional[TxParams] = None) -> int:
-        """Estimate gas consumption of method call."""
-        (condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction) = self.validate_and_normalize_inputs(condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(condition_id, claimer, quantity, proofs, proof_max_quantity_per_transaction).estimateGas(tx_params.as_dict())
-
-class WalletClaimCountMethod(ContractMethod): # pylint: disable=invalid-name
-    """Various interfaces to the walletClaimCount method."""
-
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
-        """Persist instance data."""
-        super().__init__(web3_or_provider, contract_address, validator)
-        self._underlying_method = contract_function
-
-    def validate_and_normalize_inputs(self, index_0: str):
-        """Validate the inputs to the walletClaimCount method."""
-        self.validator.assert_valid(
-            method_name='walletClaimCount',
-            parameter_name='index_0',
-            argument_value=index_0,
-        )
-        index_0 = self.validate_and_checksum_address(index_0)
-        return (index_0)
-
-    def call(self, index_0: str, tx_params: Optional[TxParams] = None) -> int:
-        """Execute underlying contract method via eth_call.
-
-        :param tx_params: transaction parameters
-        :returns: the return value of the underlying method.
-        """
-        (index_0) = self.validate_and_normalize_inputs(index_0)
-        tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(index_0).call(tx_params.as_dict())
-        return int(returned)
-
-    def send_transaction(self, index_0: str, tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
-        """Execute underlying contract method via eth_sendTransaction.
-
-        :param tx_params: transaction parameters
-        """
-        (index_0) = self.validate_and_normalize_inputs(index_0)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index_0).transact(tx_params.as_dict())
-
-    def build_transaction(self, index_0: str, tx_params: Optional[TxParams] = None) -> dict:
-        """Construct calldata to be used as input to the method."""
-        (index_0) = self.validate_and_normalize_inputs(index_0)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index_0).buildTransaction(tx_params.as_dict())
-
-    def estimate_gas(self, index_0: str, tx_params: Optional[TxParams] = None) -> int:
-        """Estimate gas consumption of method call."""
-        (index_0) = self.validate_and_normalize_inputs(index_0)
-        tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(index_0).estimateGas(tx_params.as_dict())
+        return self._underlying_method(condition_id, claimer, quantity, currency, price_per_token, allowlist_proof).estimateGas(tx_params.as_dict())
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
-class DropERC721_V3:
-    """Wrapper class for DropERC721_V3 Solidity contract.
+class DropERC721:
+    """Wrapper class for DropERC721 Solidity contract.
 
     All method parameters of type `bytes`:code: should be encoded as UTF-8,
     which can be accomplished via `str.encode("utf_8")`:code:.
@@ -3388,11 +3235,6 @@ class DropERC721_V3:
     balance_of: BalanceOfMethod
     """Constructor-initialized instance of
     :class:`BalanceOfMethod`.
-    """
-
-    base_uri_indices: BaseUriIndicesMethod
-    """Constructor-initialized instance of
-    :class:`BaseUriIndicesMethod`.
     """
 
     burn: BurnMethod
@@ -3450,14 +3292,14 @@ class DropERC721_V3:
     :class:`GetBaseUriCountMethod`.
     """
 
+    get_batch_id_at_index: GetBatchIdAtIndexMethod
+    """Constructor-initialized instance of
+    :class:`GetBatchIdAtIndexMethod`.
+    """
+
     get_claim_condition_by_id: GetClaimConditionByIdMethod
     """Constructor-initialized instance of
     :class:`GetClaimConditionByIdMethod`.
-    """
-
-    get_claim_timestamp: GetClaimTimestampMethod
-    """Constructor-initialized instance of
-    :class:`GetClaimTimestampMethod`.
     """
 
     get_default_royalty_info: GetDefaultRoyaltyInfoMethod
@@ -3468,6 +3310,11 @@ class DropERC721_V3:
     get_platform_fee_info: GetPlatformFeeInfoMethod
     """Constructor-initialized instance of
     :class:`GetPlatformFeeInfoMethod`.
+    """
+
+    get_reveal_uri: GetRevealUriMethod
+    """Constructor-initialized instance of
+    :class:`GetRevealUriMethod`.
     """
 
     get_role_admin: GetRoleAdminMethod
@@ -3490,6 +3337,11 @@ class DropERC721_V3:
     :class:`GetRoyaltyInfoForTokenMethod`.
     """
 
+    get_supply_claimed_by_wallet: GetSupplyClaimedByWalletMethod
+    """Constructor-initialized instance of
+    :class:`GetSupplyClaimedByWalletMethod`.
+    """
+
     grant_role: GrantRoleMethod
     """Constructor-initialized instance of
     :class:`GrantRoleMethod`.
@@ -3500,6 +3352,11 @@ class DropERC721_V3:
     :class:`HasRoleMethod`.
     """
 
+    has_role_with_switch: HasRoleWithSwitchMethod
+    """Constructor-initialized instance of
+    :class:`HasRoleWithSwitchMethod`.
+    """
+
     initialize: InitializeMethod
     """Constructor-initialized instance of
     :class:`InitializeMethod`.
@@ -3508,6 +3365,11 @@ class DropERC721_V3:
     is_approved_for_all: IsApprovedForAllMethod
     """Constructor-initialized instance of
     :class:`IsApprovedForAllMethod`.
+    """
+
+    is_encrypted_batch: IsEncryptedBatchMethod
+    """Constructor-initialized instance of
+    :class:`IsEncryptedBatchMethod`.
     """
 
     is_trusted_forwarder: IsTrustedForwarderMethod
@@ -3523,11 +3385,6 @@ class DropERC721_V3:
     max_total_supply: MaxTotalSupplyMethod
     """Constructor-initialized instance of
     :class:`MaxTotalSupplyMethod`.
-    """
-
-    max_wallet_claim_count: MaxWalletClaimCountMethod
-    """Constructor-initialized instance of
-    :class:`MaxWalletClaimCountMethod`.
     """
 
     multicall: MulticallMethod
@@ -3620,11 +3477,6 @@ class DropERC721_V3:
     :class:`SetMaxTotalSupplyMethod`.
     """
 
-    set_max_wallet_claim_count: SetMaxWalletClaimCountMethod
-    """Constructor-initialized instance of
-    :class:`SetMaxWalletClaimCountMethod`.
-    """
-
     set_owner: SetOwnerMethod
     """Constructor-initialized instance of
     :class:`SetOwnerMethod`.
@@ -3645,11 +3497,6 @@ class DropERC721_V3:
     :class:`SetRoyaltyInfoForTokenMethod`.
     """
 
-    set_wallet_claim_count: SetWalletClaimCountMethod
-    """Constructor-initialized instance of
-    :class:`SetWalletClaimCountMethod`.
-    """
-
     supports_interface: SupportsInterfaceMethod
     """Constructor-initialized instance of
     :class:`SupportsInterfaceMethod`.
@@ -3660,19 +3507,14 @@ class DropERC721_V3:
     :class:`SymbolMethod`.
     """
 
-    token_by_index: TokenByIndexMethod
-    """Constructor-initialized instance of
-    :class:`TokenByIndexMethod`.
-    """
-
-    token_of_owner_by_index: TokenOfOwnerByIndexMethod
-    """Constructor-initialized instance of
-    :class:`TokenOfOwnerByIndexMethod`.
-    """
-
     token_uri: TokenUriMethod
     """Constructor-initialized instance of
     :class:`TokenUriMethod`.
+    """
+
+    total_minted: TotalMintedMethod
+    """Constructor-initialized instance of
+    :class:`TotalMintedMethod`.
     """
 
     total_supply: TotalSupplyMethod
@@ -3690,22 +3532,12 @@ class DropERC721_V3:
     :class:`VerifyClaimMethod`.
     """
 
-    verify_claim_merkle_proof: VerifyClaimMerkleProofMethod
-    """Constructor-initialized instance of
-    :class:`VerifyClaimMerkleProofMethod`.
-    """
-
-    wallet_claim_count: WalletClaimCountMethod
-    """Constructor-initialized instance of
-    :class:`WalletClaimCountMethod`.
-    """
-
 
     def __init__(
         self,
         web3_or_provider: Union[Web3, BaseProvider],
         contract_address: str,
-        validator: DropERC721_V3Validator = None,
+        validator: DropERC721Validator = None,
     ):
         """Get an instance of wrapper for smart contract.
 
@@ -3719,7 +3551,7 @@ class DropERC721_V3:
         self.contract_address = contract_address
 
         if not validator:
-            validator = DropERC721_V3Validator(web3_or_provider, contract_address)
+            validator = DropERC721Validator(web3_or_provider, contract_address)
 
         web3 = None
         if isinstance(web3_or_provider, BaseProvider):
@@ -3749,15 +3581,13 @@ class DropERC721_V3:
 
         self._web3_eth = web3.eth
 
-        functions = self._web3_eth.contract(address=to_checksum_address(contract_address), abi=DropERC721_V3.abi()).functions
+        functions = self._web3_eth.contract(address=to_checksum_address(contract_address), abi=DropERC721.abi()).functions
 
         self.default_admin_role = DefaultAdminRoleMethod(web3_or_provider, contract_address, functions.DEFAULT_ADMIN_ROLE)
 
         self.approve = ApproveMethod(web3_or_provider, contract_address, functions.approve, validator)
 
         self.balance_of = BalanceOfMethod(web3_or_provider, contract_address, functions.balanceOf, validator)
-
-        self.base_uri_indices = BaseUriIndicesMethod(web3_or_provider, contract_address, functions.baseURIIndices, validator)
 
         self.burn = BurnMethod(web3_or_provider, contract_address, functions.burn, validator)
 
@@ -3781,13 +3611,15 @@ class DropERC721_V3:
 
         self.get_base_uri_count = GetBaseUriCountMethod(web3_or_provider, contract_address, functions.getBaseURICount)
 
-        self.get_claim_condition_by_id = GetClaimConditionByIdMethod(web3_or_provider, contract_address, functions.getClaimConditionById, validator)
+        self.get_batch_id_at_index = GetBatchIdAtIndexMethod(web3_or_provider, contract_address, functions.getBatchIdAtIndex, validator)
 
-        self.get_claim_timestamp = GetClaimTimestampMethod(web3_or_provider, contract_address, functions.getClaimTimestamp, validator)
+        self.get_claim_condition_by_id = GetClaimConditionByIdMethod(web3_or_provider, contract_address, functions.getClaimConditionById, validator)
 
         self.get_default_royalty_info = GetDefaultRoyaltyInfoMethod(web3_or_provider, contract_address, functions.getDefaultRoyaltyInfo)
 
         self.get_platform_fee_info = GetPlatformFeeInfoMethod(web3_or_provider, contract_address, functions.getPlatformFeeInfo)
+
+        self.get_reveal_uri = GetRevealUriMethod(web3_or_provider, contract_address, functions.getRevealURI, validator)
 
         self.get_role_admin = GetRoleAdminMethod(web3_or_provider, contract_address, functions.getRoleAdmin, validator)
 
@@ -3797,21 +3629,25 @@ class DropERC721_V3:
 
         self.get_royalty_info_for_token = GetRoyaltyInfoForTokenMethod(web3_or_provider, contract_address, functions.getRoyaltyInfoForToken, validator)
 
+        self.get_supply_claimed_by_wallet = GetSupplyClaimedByWalletMethod(web3_or_provider, contract_address, functions.getSupplyClaimedByWallet, validator)
+
         self.grant_role = GrantRoleMethod(web3_or_provider, contract_address, functions.grantRole, validator)
 
         self.has_role = HasRoleMethod(web3_or_provider, contract_address, functions.hasRole, validator)
 
+        self.has_role_with_switch = HasRoleWithSwitchMethod(web3_or_provider, contract_address, functions.hasRoleWithSwitch, validator)
+
         self.initialize = InitializeMethod(web3_or_provider, contract_address, functions.initialize, validator)
 
         self.is_approved_for_all = IsApprovedForAllMethod(web3_or_provider, contract_address, functions.isApprovedForAll, validator)
+
+        self.is_encrypted_batch = IsEncryptedBatchMethod(web3_or_provider, contract_address, functions.isEncryptedBatch, validator)
 
         self.is_trusted_forwarder = IsTrustedForwarderMethod(web3_or_provider, contract_address, functions.isTrustedForwarder, validator)
 
         self.lazy_mint = LazyMintMethod(web3_or_provider, contract_address, functions.lazyMint, validator)
 
         self.max_total_supply = MaxTotalSupplyMethod(web3_or_provider, contract_address, functions.maxTotalSupply)
-
-        self.max_wallet_claim_count = MaxWalletClaimCountMethod(web3_or_provider, contract_address, functions.maxWalletClaimCount)
 
         self.multicall = MulticallMethod(web3_or_provider, contract_address, functions.multicall, validator)
 
@@ -3849,8 +3685,6 @@ class DropERC721_V3:
 
         self.set_max_total_supply = SetMaxTotalSupplyMethod(web3_or_provider, contract_address, functions.setMaxTotalSupply, validator)
 
-        self.set_max_wallet_claim_count = SetMaxWalletClaimCountMethod(web3_or_provider, contract_address, functions.setMaxWalletClaimCount, validator)
-
         self.set_owner = SetOwnerMethod(web3_or_provider, contract_address, functions.setOwner, validator)
 
         self.set_platform_fee_info = SetPlatformFeeInfoMethod(web3_or_provider, contract_address, functions.setPlatformFeeInfo, validator)
@@ -3859,27 +3693,19 @@ class DropERC721_V3:
 
         self.set_royalty_info_for_token = SetRoyaltyInfoForTokenMethod(web3_or_provider, contract_address, functions.setRoyaltyInfoForToken, validator)
 
-        self.set_wallet_claim_count = SetWalletClaimCountMethod(web3_or_provider, contract_address, functions.setWalletClaimCount, validator)
-
         self.supports_interface = SupportsInterfaceMethod(web3_or_provider, contract_address, functions.supportsInterface, validator)
 
         self.symbol = SymbolMethod(web3_or_provider, contract_address, functions.symbol)
 
-        self.token_by_index = TokenByIndexMethod(web3_or_provider, contract_address, functions.tokenByIndex, validator)
-
-        self.token_of_owner_by_index = TokenOfOwnerByIndexMethod(web3_or_provider, contract_address, functions.tokenOfOwnerByIndex, validator)
-
         self.token_uri = TokenUriMethod(web3_or_provider, contract_address, functions.tokenURI, validator)
+
+        self.total_minted = TotalMintedMethod(web3_or_provider, contract_address, functions.totalMinted)
 
         self.total_supply = TotalSupplyMethod(web3_or_provider, contract_address, functions.totalSupply)
 
         self.transfer_from = TransferFromMethod(web3_or_provider, contract_address, functions.transferFrom, validator)
 
         self.verify_claim = VerifyClaimMethod(web3_or_provider, contract_address, functions.verifyClaim, validator)
-
-        self.verify_claim_merkle_proof = VerifyClaimMerkleProofMethod(web3_or_provider, contract_address, functions.verifyClaimMerkleProof, validator)
-
-        self.wallet_claim_count = WalletClaimCountMethod(web3_or_provider, contract_address, functions.walletClaimCount, validator)
 
     def get_approval_event(
         self, tx_hash: Union[HexBytes, bytes]
@@ -3889,7 +3715,7 @@ class DropERC721_V3:
         :param tx_hash: hash of transaction emitting Approval event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.Approval().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.Approval().processReceipt(tx_receipt)
     def get_approval_for_all_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -3898,7 +3724,7 @@ class DropERC721_V3:
         :param tx_hash: hash of transaction emitting ApprovalForAll event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.ApprovalForAll().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.ApprovalForAll().processReceipt(tx_receipt)
     def get_claim_conditions_updated_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -3908,7 +3734,16 @@ class DropERC721_V3:
             event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.ClaimConditionsUpdated().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.ClaimConditionsUpdated().processReceipt(tx_receipt)
+    def get_contract_uri_updated_event(
+        self, tx_hash: Union[HexBytes, bytes]
+    ) -> Tuple[AttributeDict]:
+        """Get log entry for ContractURIUpdated event.
+
+        :param tx_hash: hash of transaction emitting ContractURIUpdated event
+        """
+        tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.ContractURIUpdated().processReceipt(tx_receipt)
     def get_default_royalty_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -3917,7 +3752,7 @@ class DropERC721_V3:
         :param tx_hash: hash of transaction emitting DefaultRoyalty event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.DefaultRoyalty().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.DefaultRoyalty().processReceipt(tx_receipt)
     def get_initialized_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -3926,7 +3761,7 @@ class DropERC721_V3:
         :param tx_hash: hash of transaction emitting Initialized event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.Initialized().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.Initialized().processReceipt(tx_receipt)
     def get_max_total_supply_updated_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -3936,26 +3771,7 @@ class DropERC721_V3:
             event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.MaxTotalSupplyUpdated().processReceipt(tx_receipt)
-    def get_max_wallet_claim_count_updated_event(
-        self, tx_hash: Union[HexBytes, bytes]
-    ) -> Tuple[AttributeDict]:
-        """Get log entry for MaxWalletClaimCountUpdated event.
-
-        :param tx_hash: hash of transaction emitting MaxWalletClaimCountUpdated
-            event
-        """
-        tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.MaxWalletClaimCountUpdated().processReceipt(tx_receipt)
-    def get_nft_revealed_event(
-        self, tx_hash: Union[HexBytes, bytes]
-    ) -> Tuple[AttributeDict]:
-        """Get log entry for NFTRevealed event.
-
-        :param tx_hash: hash of transaction emitting NFTRevealed event
-        """
-        tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.NFTRevealed().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.MaxTotalSupplyUpdated().processReceipt(tx_receipt)
     def get_owner_updated_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -3964,7 +3780,7 @@ class DropERC721_V3:
         :param tx_hash: hash of transaction emitting OwnerUpdated event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.OwnerUpdated().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.OwnerUpdated().processReceipt(tx_receipt)
     def get_platform_fee_info_updated_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -3974,7 +3790,7 @@ class DropERC721_V3:
             event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.PlatformFeeInfoUpdated().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.PlatformFeeInfoUpdated().processReceipt(tx_receipt)
     def get_primary_sale_recipient_updated_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -3984,7 +3800,7 @@ class DropERC721_V3:
             PrimarySaleRecipientUpdated event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.PrimarySaleRecipientUpdated().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.PrimarySaleRecipientUpdated().processReceipt(tx_receipt)
     def get_role_admin_changed_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -3993,7 +3809,7 @@ class DropERC721_V3:
         :param tx_hash: hash of transaction emitting RoleAdminChanged event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.RoleAdminChanged().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.RoleAdminChanged().processReceipt(tx_receipt)
     def get_role_granted_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -4002,7 +3818,7 @@ class DropERC721_V3:
         :param tx_hash: hash of transaction emitting RoleGranted event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.RoleGranted().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.RoleGranted().processReceipt(tx_receipt)
     def get_role_revoked_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -4011,7 +3827,7 @@ class DropERC721_V3:
         :param tx_hash: hash of transaction emitting RoleRevoked event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.RoleRevoked().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.RoleRevoked().processReceipt(tx_receipt)
     def get_royalty_for_token_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -4020,7 +3836,16 @@ class DropERC721_V3:
         :param tx_hash: hash of transaction emitting RoyaltyForToken event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.RoyaltyForToken().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.RoyaltyForToken().processReceipt(tx_receipt)
+    def get_token_uri_revealed_event(
+        self, tx_hash: Union[HexBytes, bytes]
+    ) -> Tuple[AttributeDict]:
+        """Get log entry for TokenURIRevealed event.
+
+        :param tx_hash: hash of transaction emitting TokenURIRevealed event
+        """
+        tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.TokenURIRevealed().processReceipt(tx_receipt)
     def get_tokens_claimed_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -4029,7 +3854,7 @@ class DropERC721_V3:
         :param tx_hash: hash of transaction emitting TokensClaimed event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.TokensClaimed().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.TokensClaimed().processReceipt(tx_receipt)
     def get_tokens_lazy_minted_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -4038,7 +3863,7 @@ class DropERC721_V3:
         :param tx_hash: hash of transaction emitting TokensLazyMinted event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.TokensLazyMinted().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.TokensLazyMinted().processReceipt(tx_receipt)
     def get_transfer_event(
         self, tx_hash: Union[HexBytes, bytes]
     ) -> Tuple[AttributeDict]:
@@ -4047,23 +3872,13 @@ class DropERC721_V3:
         :param tx_hash: hash of transaction emitting Transfer event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.Transfer().processReceipt(tx_receipt)
-    def get_wallet_claim_count_updated_event(
-        self, tx_hash: Union[HexBytes, bytes]
-    ) -> Tuple[AttributeDict]:
-        """Get log entry for WalletClaimCountUpdated event.
-
-        :param tx_hash: hash of transaction emitting WalletClaimCountUpdated
-            event
-        """
-        tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721_V3.abi()).events.WalletClaimCountUpdated().processReceipt(tx_receipt)
+        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=DropERC721.abi()).events.Transfer().processReceipt(tx_receipt)
 
     @staticmethod
     def abi():
         """Return the ABI to the underlying contract."""
         return json.loads(
-            '[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"approved","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":false,"internalType":"bool","name":"approved","type":"bool"}],"name":"ApprovalForAll","type":"event"},{"anonymous":false,"inputs":[{"components":[{"internalType":"uint256","name":"startTimestamp","type":"uint256"},{"internalType":"uint256","name":"maxClaimableSupply","type":"uint256"},{"internalType":"uint256","name":"supplyClaimed","type":"uint256"},{"internalType":"uint256","name":"quantityLimitPerTransaction","type":"uint256"},{"internalType":"uint256","name":"waitTimeInSecondsBetweenClaims","type":"uint256"},{"internalType":"bytes32","name":"merkleRoot","type":"bytes32"},{"internalType":"uint256","name":"pricePerToken","type":"uint256"},{"internalType":"address","name":"currency","type":"address"}],"indexed":false,"internalType":"struct IDropClaimCondition_V2.ClaimCondition[]","name":"claimConditions","type":"tuple[]"}],"name":"ClaimConditionsUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"newRoyaltyRecipient","type":"address"},{"indexed":false,"internalType":"uint256","name":"newRoyaltyBps","type":"uint256"}],"name":"DefaultRoyalty","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint8","name":"version","type":"uint8"}],"name":"Initialized","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"maxTotalSupply","type":"uint256"}],"name":"MaxTotalSupplyUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"count","type":"uint256"}],"name":"MaxWalletClaimCountUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"endTokenId","type":"uint256"},{"indexed":false,"internalType":"string","name":"revealedURI","type":"string"}],"name":"NFTRevealed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"prevOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnerUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"platformFeeRecipient","type":"address"},{"indexed":false,"internalType":"uint256","name":"platformFeeBps","type":"uint256"}],"name":"PlatformFeeInfoUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"recipient","type":"address"}],"name":"PrimarySaleRecipientUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"previousAdminRole","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"newAdminRole","type":"bytes32"}],"name":"RoleAdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleGranted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleRevoked","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"},{"indexed":true,"internalType":"address","name":"royaltyRecipient","type":"address"},{"indexed":false,"internalType":"uint256","name":"royaltyBps","type":"uint256"}],"name":"RoyaltyForToken","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"claimConditionIndex","type":"uint256"},{"indexed":true,"internalType":"address","name":"claimer","type":"address"},{"indexed":true,"internalType":"address","name":"receiver","type":"address"},{"indexed":false,"internalType":"uint256","name":"startTokenId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"quantityClaimed","type":"uint256"}],"name":"TokensClaimed","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"startTokenId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"endTokenId","type":"uint256"},{"indexed":false,"internalType":"string","name":"baseURI","type":"string"},{"indexed":false,"internalType":"bytes","name":"encryptedBaseURI","type":"bytes"}],"name":"TokensLazyMinted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"wallet","type":"address"},{"indexed":false,"internalType":"uint256","name":"count","type":"uint256"}],"name":"WalletClaimCountUpdated","type":"event"},{"inputs":[],"name":"DEFAULT_ADMIN_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"approve","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"index_0","type":"uint256"}],"name":"baseURIIndices","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_receiver","type":"address"},{"internalType":"uint256","name":"_quantity","type":"uint256"},{"internalType":"address","name":"_currency","type":"address"},{"internalType":"uint256","name":"_pricePerToken","type":"uint256"},{"internalType":"bytes32[]","name":"_proofs","type":"bytes32[]"},{"internalType":"uint256","name":"_proofMaxQuantityPerTransaction","type":"uint256"}],"name":"claim","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"claimCondition","outputs":[{"internalType":"uint256","name":"currentStartId","type":"uint256"},{"internalType":"uint256","name":"count","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"contractType","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"pure","type":"function"},{"inputs":[],"name":"contractURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"contractVersion","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"bytes","name":"data","type":"bytes"},{"internalType":"bytes","name":"key","type":"bytes"}],"name":"encryptDecrypt","outputs":[{"internalType":"bytes","name":"result","type":"bytes"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"uint256","name":"index_0","type":"uint256"}],"name":"encryptedData","outputs":[{"internalType":"bytes","name":"","type":"bytes"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getActiveClaimConditionId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"getApproved","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getBaseURICount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_conditionId","type":"uint256"}],"name":"getClaimConditionById","outputs":[{"components":[{"internalType":"uint256","name":"startTimestamp","type":"uint256"},{"internalType":"uint256","name":"maxClaimableSupply","type":"uint256"},{"internalType":"uint256","name":"supplyClaimed","type":"uint256"},{"internalType":"uint256","name":"quantityLimitPerTransaction","type":"uint256"},{"internalType":"uint256","name":"waitTimeInSecondsBetweenClaims","type":"uint256"},{"internalType":"bytes32","name":"merkleRoot","type":"bytes32"},{"internalType":"uint256","name":"pricePerToken","type":"uint256"},{"internalType":"address","name":"currency","type":"address"}],"internalType":"struct IDropClaimCondition_V2.ClaimCondition","name":"condition","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_conditionId","type":"uint256"},{"internalType":"address","name":"_claimer","type":"address"}],"name":"getClaimTimestamp","outputs":[{"internalType":"uint256","name":"lastClaimTimestamp","type":"uint256"},{"internalType":"uint256","name":"nextValidClaimTimestamp","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getDefaultRoyaltyInfo","outputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPlatformFeeInfo","outputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleAdmin","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"getRoleMember","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleMemberCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"getRoyaltyInfoForToken","outputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"grantRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"hasRole","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_defaultAdmin","type":"address"},{"internalType":"string","name":"_name","type":"string"},{"internalType":"string","name":"_symbol","type":"string"},{"internalType":"string","name":"_contractURI","type":"string"},{"internalType":"address[]","name":"_trustedForwarders","type":"address[]"},{"internalType":"address","name":"_saleRecipient","type":"address"},{"internalType":"address","name":"_royaltyRecipient","type":"address"},{"internalType":"uint128","name":"_royaltyBps","type":"uint128"},{"internalType":"uint128","name":"_platformFeeBps","type":"uint128"},{"internalType":"address","name":"_platformFeeRecipient","type":"address"}],"name":"initialize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"operator","type":"address"}],"name":"isApprovedForAll","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"forwarder","type":"address"}],"name":"isTrustedForwarder","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"},{"internalType":"string","name":"_baseURIForTokens","type":"string"},{"internalType":"bytes","name":"_data","type":"bytes"}],"name":"lazyMint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"maxTotalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"maxWalletClaimCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes[]","name":"data","type":"bytes[]"}],"name":"multicall","outputs":[{"internalType":"bytes[]","name":"results","type":"bytes[]"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextTokenIdToClaim","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextTokenIdToMint","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"primarySaleRecipient","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"renounceRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"index","type":"uint256"},{"internalType":"bytes","name":"_key","type":"bytes"}],"name":"reveal","outputs":[{"internalType":"string","name":"revealedURI","type":"string"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"revokeRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"uint256","name":"salePrice","type":"uint256"}],"name":"royaltyInfo","outputs":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"royaltyAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"operator","type":"address"},{"internalType":"bool","name":"approved","type":"bool"}],"name":"setApprovalForAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"uint256","name":"startTimestamp","type":"uint256"},{"internalType":"uint256","name":"maxClaimableSupply","type":"uint256"},{"internalType":"uint256","name":"supplyClaimed","type":"uint256"},{"internalType":"uint256","name":"quantityLimitPerTransaction","type":"uint256"},{"internalType":"uint256","name":"waitTimeInSecondsBetweenClaims","type":"uint256"},{"internalType":"bytes32","name":"merkleRoot","type":"bytes32"},{"internalType":"uint256","name":"pricePerToken","type":"uint256"},{"internalType":"address","name":"currency","type":"address"}],"internalType":"struct IDropClaimCondition_V2.ClaimCondition[]","name":"_phases","type":"tuple[]"},{"internalType":"bool","name":"_resetClaimEligibility","type":"bool"}],"name":"setClaimConditions","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_uri","type":"string"}],"name":"setContractURI","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_royaltyRecipient","type":"address"},{"internalType":"uint256","name":"_royaltyBps","type":"uint256"}],"name":"setDefaultRoyaltyInfo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_maxTotalSupply","type":"uint256"}],"name":"setMaxTotalSupply","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_count","type":"uint256"}],"name":"setMaxWalletClaimCount","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newOwner","type":"address"}],"name":"setOwner","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_platformFeeRecipient","type":"address"},{"internalType":"uint256","name":"_platformFeeBps","type":"uint256"}],"name":"setPlatformFeeInfo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_saleRecipient","type":"address"}],"name":"setPrimarySaleRecipient","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenId","type":"uint256"},{"internalType":"address","name":"_recipient","type":"address"},{"internalType":"uint256","name":"_bps","type":"uint256"}],"name":"setRoyaltyInfoForToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_claimer","type":"address"},{"internalType":"uint256","name":"_count","type":"uint256"}],"name":"setWalletClaimCount","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"index","type":"uint256"}],"name":"tokenByIndex","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"tokenOfOwnerByIndex","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"transferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_conditionId","type":"uint256"},{"internalType":"address","name":"_claimer","type":"address"},{"internalType":"uint256","name":"_quantity","type":"uint256"},{"internalType":"address","name":"_currency","type":"address"},{"internalType":"uint256","name":"_pricePerToken","type":"uint256"},{"internalType":"bool","name":"verifyMaxQuantityPerTransaction","type":"bool"}],"name":"verifyClaim","outputs":[],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_conditionId","type":"uint256"},{"internalType":"address","name":"_claimer","type":"address"},{"internalType":"uint256","name":"_quantity","type":"uint256"},{"internalType":"bytes32[]","name":"_proofs","type":"bytes32[]"},{"internalType":"uint256","name":"_proofMaxQuantityPerTransaction","type":"uint256"}],"name":"verifyClaimMerkleProof","outputs":[{"internalType":"bool","name":"validMerkleProof","type":"bool"},{"internalType":"uint256","name":"merkleProofIndex","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"index_0","type":"address"}],"name":"walletClaimCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]'  # noqa: E501 (line-too-long)
+            '[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"ApprovalCallerNotOwnerNorApproved","type":"error"},{"inputs":[],"name":"ApprovalQueryForNonexistentToken","type":"error"},{"inputs":[],"name":"ApprovalToCurrentOwner","type":"error"},{"inputs":[],"name":"ApproveToCaller","type":"error"},{"inputs":[],"name":"BalanceQueryForZeroAddress","type":"error"},{"inputs":[],"name":"MintToZeroAddress","type":"error"},{"inputs":[],"name":"MintZeroQuantity","type":"error"},{"inputs":[],"name":"OwnerQueryForNonexistentToken","type":"error"},{"inputs":[],"name":"TransferCallerNotOwnerNorApproved","type":"error"},{"inputs":[],"name":"TransferFromIncorrectOwner","type":"error"},{"inputs":[],"name":"TransferToNonERC721ReceiverImplementer","type":"error"},{"inputs":[],"name":"TransferToZeroAddress","type":"error"},{"inputs":[],"name":"URIQueryForNonexistentToken","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"approved","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":false,"internalType":"bool","name":"approved","type":"bool"}],"name":"ApprovalForAll","type":"event"},{"anonymous":false,"inputs":[{"components":[{"internalType":"uint256","name":"startTimestamp","type":"uint256"},{"internalType":"uint256","name":"maxClaimableSupply","type":"uint256"},{"internalType":"uint256","name":"supplyClaimed","type":"uint256"},{"internalType":"uint256","name":"quantityLimitPerWallet","type":"uint256"},{"internalType":"bytes32","name":"merkleRoot","type":"bytes32"},{"internalType":"uint256","name":"pricePerToken","type":"uint256"},{"internalType":"address","name":"currency","type":"address"},{"internalType":"string","name":"metadata","type":"string"}],"indexed":false,"internalType":"struct IClaimCondition.ClaimCondition[]","name":"claimConditions","type":"tuple[]"},{"indexed":false,"internalType":"bool","name":"resetEligibility","type":"bool"}],"name":"ClaimConditionsUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"prevURI","type":"string"},{"indexed":false,"internalType":"string","name":"newURI","type":"string"}],"name":"ContractURIUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"newRoyaltyRecipient","type":"address"},{"indexed":false,"internalType":"uint256","name":"newRoyaltyBps","type":"uint256"}],"name":"DefaultRoyalty","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint8","name":"version","type":"uint8"}],"name":"Initialized","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"maxTotalSupply","type":"uint256"}],"name":"MaxTotalSupplyUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"prevOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnerUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"platformFeeRecipient","type":"address"},{"indexed":false,"internalType":"uint256","name":"platformFeeBps","type":"uint256"}],"name":"PlatformFeeInfoUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"recipient","type":"address"}],"name":"PrimarySaleRecipientUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"previousAdminRole","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"newAdminRole","type":"bytes32"}],"name":"RoleAdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleGranted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleRevoked","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"},{"indexed":true,"internalType":"address","name":"royaltyRecipient","type":"address"},{"indexed":false,"internalType":"uint256","name":"royaltyBps","type":"uint256"}],"name":"RoyaltyForToken","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"index","type":"uint256"},{"indexed":false,"internalType":"string","name":"revealedURI","type":"string"}],"name":"TokenURIRevealed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"claimConditionIndex","type":"uint256"},{"indexed":true,"internalType":"address","name":"claimer","type":"address"},{"indexed":true,"internalType":"address","name":"receiver","type":"address"},{"indexed":false,"internalType":"uint256","name":"startTokenId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"quantityClaimed","type":"uint256"}],"name":"TokensClaimed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"startTokenId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"endTokenId","type":"uint256"},{"indexed":false,"internalType":"string","name":"baseURI","type":"string"},{"indexed":false,"internalType":"bytes","name":"encryptedBaseURI","type":"bytes"}],"name":"TokensLazyMinted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[],"name":"DEFAULT_ADMIN_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"approve","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_receiver","type":"address"},{"internalType":"uint256","name":"_quantity","type":"uint256"},{"internalType":"address","name":"_currency","type":"address"},{"internalType":"uint256","name":"_pricePerToken","type":"uint256"},{"components":[{"internalType":"bytes32[]","name":"proof","type":"bytes32[]"},{"internalType":"uint256","name":"quantityLimitPerWallet","type":"uint256"},{"internalType":"uint256","name":"pricePerToken","type":"uint256"},{"internalType":"address","name":"currency","type":"address"}],"internalType":"struct IDrop.AllowlistProof","name":"_allowlistProof","type":"tuple"},{"internalType":"bytes","name":"_data","type":"bytes"}],"name":"claim","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"claimCondition","outputs":[{"internalType":"uint256","name":"currentStartId","type":"uint256"},{"internalType":"uint256","name":"count","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"contractType","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"pure","type":"function"},{"inputs":[],"name":"contractURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"contractVersion","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"bytes","name":"data","type":"bytes"},{"internalType":"bytes","name":"key","type":"bytes"}],"name":"encryptDecrypt","outputs":[{"internalType":"bytes","name":"result","type":"bytes"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"uint256","name":"index_0","type":"uint256"}],"name":"encryptedData","outputs":[{"internalType":"bytes","name":"","type":"bytes"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getActiveClaimConditionId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"getApproved","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getBaseURICount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_index","type":"uint256"}],"name":"getBatchIdAtIndex","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_conditionId","type":"uint256"}],"name":"getClaimConditionById","outputs":[{"components":[{"internalType":"uint256","name":"startTimestamp","type":"uint256"},{"internalType":"uint256","name":"maxClaimableSupply","type":"uint256"},{"internalType":"uint256","name":"supplyClaimed","type":"uint256"},{"internalType":"uint256","name":"quantityLimitPerWallet","type":"uint256"},{"internalType":"bytes32","name":"merkleRoot","type":"bytes32"},{"internalType":"uint256","name":"pricePerToken","type":"uint256"},{"internalType":"address","name":"currency","type":"address"},{"internalType":"string","name":"metadata","type":"string"}],"internalType":"struct IClaimCondition.ClaimCondition","name":"condition","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getDefaultRoyaltyInfo","outputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getPlatformFeeInfo","outputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_batchId","type":"uint256"},{"internalType":"bytes","name":"_key","type":"bytes"}],"name":"getRevealURI","outputs":[{"internalType":"string","name":"revealedURI","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleAdmin","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"uint256","name":"index","type":"uint256"}],"name":"getRoleMember","outputs":[{"internalType":"address","name":"member","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleMemberCount","outputs":[{"internalType":"uint256","name":"count","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"getRoyaltyInfoForToken","outputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_conditionId","type":"uint256"},{"internalType":"address","name":"_claimer","type":"address"}],"name":"getSupplyClaimedByWallet","outputs":[{"internalType":"uint256","name":"supplyClaimedByWallet","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"grantRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"hasRole","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"hasRoleWithSwitch","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_defaultAdmin","type":"address"},{"internalType":"string","name":"_name","type":"string"},{"internalType":"string","name":"_symbol","type":"string"},{"internalType":"string","name":"_contractURI","type":"string"},{"internalType":"address[]","name":"_trustedForwarders","type":"address[]"},{"internalType":"address","name":"_saleRecipient","type":"address"},{"internalType":"address","name":"_royaltyRecipient","type":"address"},{"internalType":"uint128","name":"_royaltyBps","type":"uint128"},{"internalType":"uint128","name":"_platformFeeBps","type":"uint128"},{"internalType":"address","name":"_platformFeeRecipient","type":"address"}],"name":"initialize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"operator","type":"address"}],"name":"isApprovedForAll","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_batchId","type":"uint256"}],"name":"isEncryptedBatch","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"forwarder","type":"address"}],"name":"isTrustedForwarder","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"},{"internalType":"string","name":"_baseURIForTokens","type":"string"},{"internalType":"bytes","name":"_data","type":"bytes"}],"name":"lazyMint","outputs":[{"internalType":"uint256","name":"batchId","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"maxTotalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes[]","name":"data","type":"bytes[]"}],"name":"multicall","outputs":[{"internalType":"bytes[]","name":"results","type":"bytes[]"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextTokenIdToClaim","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nextTokenIdToMint","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"primarySaleRecipient","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"renounceRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_index","type":"uint256"},{"internalType":"bytes","name":"_key","type":"bytes"}],"name":"reveal","outputs":[{"internalType":"string","name":"revealedURI","type":"string"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"revokeRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"uint256","name":"salePrice","type":"uint256"}],"name":"royaltyInfo","outputs":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"royaltyAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"bytes","name":"_data","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"operator","type":"address"},{"internalType":"bool","name":"approved","type":"bool"}],"name":"setApprovalForAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"components":[{"internalType":"uint256","name":"startTimestamp","type":"uint256"},{"internalType":"uint256","name":"maxClaimableSupply","type":"uint256"},{"internalType":"uint256","name":"supplyClaimed","type":"uint256"},{"internalType":"uint256","name":"quantityLimitPerWallet","type":"uint256"},{"internalType":"bytes32","name":"merkleRoot","type":"bytes32"},{"internalType":"uint256","name":"pricePerToken","type":"uint256"},{"internalType":"address","name":"currency","type":"address"},{"internalType":"string","name":"metadata","type":"string"}],"internalType":"struct IClaimCondition.ClaimCondition[]","name":"_conditions","type":"tuple[]"},{"internalType":"bool","name":"_resetClaimEligibility","type":"bool"}],"name":"setClaimConditions","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"_uri","type":"string"}],"name":"setContractURI","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_royaltyRecipient","type":"address"},{"internalType":"uint256","name":"_royaltyBps","type":"uint256"}],"name":"setDefaultRoyaltyInfo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_maxTotalSupply","type":"uint256"}],"name":"setMaxTotalSupply","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newOwner","type":"address"}],"name":"setOwner","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_platformFeeRecipient","type":"address"},{"internalType":"uint256","name":"_platformFeeBps","type":"uint256"}],"name":"setPlatformFeeInfo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_saleRecipient","type":"address"}],"name":"setPrimarySaleRecipient","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenId","type":"uint256"},{"internalType":"address","name":"_recipient","type":"address"},{"internalType":"uint256","name":"_bps","type":"uint256"}],"name":"setRoyaltyInfoForToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalMinted","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"transferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_conditionId","type":"uint256"},{"internalType":"address","name":"_claimer","type":"address"},{"internalType":"uint256","name":"_quantity","type":"uint256"},{"internalType":"address","name":"_currency","type":"address"},{"internalType":"uint256","name":"_pricePerToken","type":"uint256"},{"components":[{"internalType":"bytes32[]","name":"proof","type":"bytes32[]"},{"internalType":"uint256","name":"quantityLimitPerWallet","type":"uint256"},{"internalType":"uint256","name":"pricePerToken","type":"uint256"},{"internalType":"address","name":"currency","type":"address"}],"internalType":"struct IDrop.AllowlistProof","name":"_allowlistProof","type":"tuple"}],"name":"verifyClaim","outputs":[{"internalType":"bool","name":"isOverride","type":"bool"}],"stateMutability":"view","type":"function"}]'  # noqa: E501 (line-too-long)
         )
 
 # pylint: disable=too-many-lines

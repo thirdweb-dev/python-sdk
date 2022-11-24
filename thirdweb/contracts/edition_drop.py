@@ -1,9 +1,9 @@
 from typing import Final, List, Optional
 
 from web3 import Web3
-from thirdweb.abi import DropERC1155_V2
+from thirdweb.abi import DropERC1155
+from thirdweb.abi.drop_erc721 import IDropAllowlistProof
 from thirdweb.common.claim_conditions import prepare_claim
-from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.contract_events import ContractEvents
 from thirdweb.core.classes.contract_metadata import ContractMetadata
@@ -23,11 +23,12 @@ from eth_account.account import LocalAccount
 from thirdweb.core.classes.drop_erc1155_claim_conditions import (
     DropERC1155ClaimConditions,
 )
+from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.types.tx import TxResultWithId
 from web3.eth import TxReceipt
 
 
-class EditionDrop(ERC1155[DropERC1155_V2]):
+class EditionDrop(ERC1155[DropERC1155]):
     """
     Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
 
@@ -47,18 +48,18 @@ class EditionDrop(ERC1155[DropERC1155_V2]):
     ```
     """
 
-    _abi_type = DropERC1155_V2
+    _abi_type = DropERC1155
 
     contract_type: Final[ContractType] = ContractType.EDITION_DROP
     contract_roles: Final[List[Role]] = [Role.ADMIN, Role.MINTER, Role.TRANSFER]
 
-    metadata: ContractMetadata[DropERC1155_V2, EditionDropContractMetadata]
+    metadata: ContractMetadata[DropERC1155, EditionDropContractMetadata]
     roles: ContractRoles
-    primary_sale: ContractPrimarySale[DropERC1155_V2]
-    platform_fee: ContractPlatformFee[DropERC1155_V2]
-    royalty: ContractRoyalty[DropERC1155_V2]
+    primary_sale: ContractPrimarySale[DropERC1155]
+    platform_fee: ContractPlatformFee[DropERC1155]
+    royalty: ContractRoyalty[DropERC1155]
     claim_conditions: DropERC1155ClaimConditions
-    events: ContractEvents[DropERC1155_V2]
+    events: ContractEvents[DropERC1155]
 
     def __init__(
         self,
@@ -68,7 +69,7 @@ class EditionDrop(ERC1155[DropERC1155_V2]):
         signer: Optional[LocalAccount] = None,
         options: SDKOptions = SDKOptions(),
     ):
-        abi = DropERC1155_V2(provider, address)
+        abi = DropERC1155(provider, address)
         contract_wrapper = ContractWrapper(abi, provider, signer, options)
         super().__init__(contract_wrapper, storage)
 
@@ -162,7 +163,6 @@ class EditionDrop(ERC1155[DropERC1155_V2]):
         destination_address: str,
         token_id: int,
         quantity: int,
-        proofs: List[str] = [DEFAULT_MERKLE_ROOT],
     ) -> TxReceipt:
         """
         Claim NFTs to a destination address.
@@ -185,7 +185,16 @@ class EditionDrop(ERC1155[DropERC1155_V2]):
         :return: tx receipt of the claim
         """
 
-        claim_verification = self._prepare_claim(token_id, quantity, proofs)
+        claim_verification = self._prepare_claim(destination_address, token_id, quantity)
+        overrides: TxParams = TxParams(value=claim_verification.value)
+
+        proof = IDropAllowlistProof(
+            proof=claim_verification.proofs,
+            quantityLimitPerWallet=claim_verification.max_claimable,
+            pricePerToken=claim_verification.price_in_proof,
+            currency=claim_verification.currency_address_in_proof
+        )
+
         return self._contract_wrapper.send_transaction(
             "claim",
             [
@@ -194,16 +203,16 @@ class EditionDrop(ERC1155[DropERC1155_V2]):
                 quantity,
                 claim_verification.currency_address,
                 claim_verification.price,
-                claim_verification.proofs,
-                claim_verification.max_quantity_per_transaction,
+                proof,
+                "",
             ],
+            overrides
         )
 
     def claim(
         self,
         token_id: int,
         quantity: int,
-        proofs: List[str] = [DEFAULT_MERKLE_ROOT],
     ) -> TxReceipt:
         """
         Claim NFTs.
@@ -217,7 +226,6 @@ class EditionDrop(ERC1155[DropERC1155_V2]):
             self._contract_wrapper.get_signer_address(),
             token_id,
             quantity,
-            proofs,
         )
 
     """
@@ -226,15 +234,18 @@ class EditionDrop(ERC1155[DropERC1155_V2]):
 
     def _prepare_claim(
         self,
+        destination_address: str,
         token_id: int,
         quantity: int,
-        proofs: List[str] = [DEFAULT_MERKLE_ROOT],
     ) -> ClaimVerification:
+        active = self.claim_conditions.get_active(token_id)
+        merkle_metadata = self.metadata.get().merkle
+
         return prepare_claim(
+            destination_address,
             quantity,
-            self.claim_conditions.get_active(token_id),
-            self.metadata.get().merkle,
+            active,
+            merkle_metadata,
             self._contract_wrapper,
             self._storage,
-            proofs,
         )

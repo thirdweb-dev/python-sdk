@@ -95,7 +95,7 @@ class ContractWrapper(Generic[TContractABI], ProviderHandler):
             .processReceipt(receipt, errors=EventLogErrorFlags.Discard)
         )
 
-    def send_transaction(self, fn: str, args: List[Any]) -> TxReceipt:
+    def send_transaction(self, fn: str, args: List[Any], overrides: TxParams = None) -> TxReceipt:
         """
         Send and execute a transaction and return the receipt.
 
@@ -109,9 +109,13 @@ class ContractWrapper(Generic[TContractABI], ProviderHandler):
         if signer is None:
             raise NoSignerException
 
+        if overrides is None:
+            overrides = TxParams()
+        overrides.gas_price = provider.eth.gas_price
+        
         nonce = provider.eth.get_transaction_count(signer.address)
         tx = getattr(self._contract_abi, fn).build_transaction(
-            *args, tx_params=TxParams(gas_price=provider.eth.gas_price)
+            *args, tx_params=overrides
         )
         tx["nonce"] = nonce
 

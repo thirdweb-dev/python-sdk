@@ -1,7 +1,7 @@
 from typing import Final, List, Optional
-from thirdweb.abi import DropERC721_V3
+from thirdweb.abi import DropERC721
+from thirdweb.abi.drop_erc721 import IDropAllowlistProof
 from thirdweb.common.claim_conditions import prepare_claim
-from thirdweb.constants.addresses import DEFAULT_MERKLE_ROOT
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.contract_events import ContractEvents
 from thirdweb.core.classes.contract_metadata import ContractMetadata
@@ -15,6 +15,7 @@ from thirdweb.core.classes.erc_721 import ERC721
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
 from thirdweb.types.contracts.claim_conditions import ClaimVerification
+from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.types.nft import (
     NFTMetadata,
     NFTMetadataInput,
@@ -29,7 +30,7 @@ from web3 import Web3
 from thirdweb.types.tx import TxResultWithId
 
 
-class NFTDrop(ERC721[DropERC721_V3]):
+class NFTDrop(ERC721[DropERC721]):
     """
     Setup a collection of one-of-one NFTs that are minted as users claim them.
 
@@ -49,18 +50,18 @@ class NFTDrop(ERC721[DropERC721_V3]):
     ```
     """
 
-    _abi_type = DropERC721_V3
+    _abi_type = DropERC721
 
     contract_type: Final[ContractType] = ContractType.NFT_DROP
     contract_roles: Final[List[Role]] = [Role.ADMIN, Role.MINTER, Role.TRANSFER]
 
-    metadata: ContractMetadata[DropERC721_V3, NFTDropContractMetadata]
+    metadata: ContractMetadata[DropERC721, NFTDropContractMetadata]
     roles: ContractRoles
-    primary_sale: ContractPrimarySale[DropERC721_V3]
-    platform_fee: ContractPlatformFee[DropERC721_V3]
-    royalty: ContractRoyalty[DropERC721_V3]
+    primary_sale: ContractPrimarySale[DropERC721]
+    platform_fee: ContractPlatformFee[DropERC721]
+    royalty: ContractRoyalty[DropERC721]
     claim_conditions: DropClaimConditions
-    events: ContractEvents[DropERC721_V3]
+    events: ContractEvents[DropERC721]
 
     def __init__(
         self,
@@ -70,7 +71,7 @@ class NFTDrop(ERC721[DropERC721_V3]):
         signer: Optional[LocalAccount] = None,
         options: SDKOptions = SDKOptions(),
     ):
-        abi = DropERC721_V3(provider, address)
+        abi = DropERC721(provider, address)
         contract_wrapper = ContractWrapper(abi, provider, signer, options)
         super().__init__(contract_wrapper, storage)
 
@@ -111,11 +112,14 @@ class NFTDrop(ERC721[DropERC721_V3]):
         """
 
         owner = address if address else self._contract_wrapper.get_signer_address()
-        balance = self._contract_wrapper._contract_abi.balance_of.call(owner)
-        return [
-            self._contract_wrapper._contract_abi.token_of_owner_by_index.call(owner, i)
-            for i in range(balance)
-        ]
+
+        total_count = self._contract_wrapper._contract_abi.next_token_id_to_mint.call()
+        token_ids = []
+        for i in range(total_count):
+            if self._contract_wrapper._contract_abi.owner_of.call(i).lower() == owner.lower():
+                token_ids.append(i)
+
+        return token_ids
 
     def get_all_claimed(
         self, query_params: QueryAllParams = QueryAllParams()
@@ -265,7 +269,6 @@ class NFTDrop(ERC721[DropERC721_V3]):
         self,
         destination_address: str,
         quantity: int,
-        proofs: List[str] = [DEFAULT_MERKLE_ROOT],
     ) -> List[TxResultWithId[NFTMetadata]]:
         """
         Claim NFTs to a destination address.
@@ -287,7 +290,16 @@ class NFTDrop(ERC721[DropERC721_V3]):
         """
 
         # TODO: OVERRIDES
-        claim_verification = self._prepare_claim(quantity, proofs)
+        claim_verification = self._prepare_claim(destination_address, quantity)
+        overrides: TxParams = TxParams(value=claim_verification.value)
+
+        proof = IDropAllowlistProof(
+            proof=claim_verification.proofs,
+            quantityLimitPerWallet=claim_verification.max_claimable,
+            pricePerToken=claim_verification.price_in_proof,
+            currency=claim_verification.currency_address_in_proof
+        )
+
         receipt = self._contract_wrapper.send_transaction(
             "claim",
             [
@@ -295,9 +307,10 @@ class NFTDrop(ERC721[DropERC721_V3]):
                 quantity,
                 claim_verification.currency_address,
                 claim_verification.price,
-                claim_verification.proofs,
-                claim_verification.max_quantity_per_transaction,
+                proof,
+                "",
             ],
+            overrides
         )
 
         events = self._contract_wrapper.get_events("TokensClaimed", receipt)
@@ -319,7 +332,6 @@ class NFTDrop(ERC721[DropERC721_V3]):
     def claim(
         self,
         quantity: int,
-        proofs: List[str] = [DEFAULT_MERKLE_ROOT],
     ) -> List[TxResultWithId[NFTMetadata]]:
         """
         Claim NFTs.
@@ -331,7 +343,6 @@ class NFTDrop(ERC721[DropERC721_V3]):
         return self.claim_to(
             self._contract_wrapper.get_signer_address(),
             quantity,
-            proofs,
         )
 
     """
@@ -340,14 +351,17 @@ class NFTDrop(ERC721[DropERC721_V3]):
 
     def _prepare_claim(
         self,
+        destination_address: str,
         quantity: int,
-        proofs: List[str] = [DEFAULT_MERKLE_ROOT],
     ) -> ClaimVerification:
+        active = self.claim_conditions.get_active()
+        merkle_metadata = self.metadata.get().merkle
+
         return prepare_claim(
+            destination_address,
             quantity,
-            self.claim_conditions.get_active(),
-            self.metadata.get().merkle,
+            active,
+            merkle_metadata,
             self._contract_wrapper,
             self._storage,
-            proofs,
         )
