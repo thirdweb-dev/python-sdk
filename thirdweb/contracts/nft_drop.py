@@ -290,7 +290,7 @@ class NFTDrop(ERC721[DropERC721]):
         """
 
         # TODO: OVERRIDES
-        claim_verification = self._prepare_claim(destination_address, quantity)
+        claim_verification = self._prepare_claim(quantity)
         overrides: TxParams = TxParams(value=claim_verification.value)
 
         proof = IDropAllowlistProof(
@@ -351,14 +351,14 @@ class NFTDrop(ERC721[DropERC721]):
 
     def _prepare_claim(
         self,
-        destination_address: str,
         quantity: int,
     ) -> ClaimVerification:
+        address_to_claim = self._contract_wrapper.get_signer_address()
         active = self.claim_conditions.get_active()
         merkle_metadata = self.metadata.get().merkle
 
         return prepare_claim(
-            destination_address,
+            address_to_claim,
             quantity,
             active,
             merkle_metadata,

@@ -185,7 +185,7 @@ class EditionDrop(ERC1155[DropERC1155]):
         :return: tx receipt of the claim
         """
 
-        claim_verification = self._prepare_claim(destination_address, token_id, quantity)
+        claim_verification = self._prepare_claim(token_id, quantity)
         overrides: TxParams = TxParams(value=claim_verification.value)
 
         proof = IDropAllowlistProof(
@@ -234,15 +234,15 @@ class EditionDrop(ERC1155[DropERC1155]):
 
     def _prepare_claim(
         self,
-        destination_address: str,
         token_id: int,
         quantity: int,
     ) -> ClaimVerification:
+        address_to_claim = self._contract_wrapper.get_signer_address()
         active = self.claim_conditions.get_active(token_id)
         merkle_metadata = self.metadata.get().merkle
 
         return prepare_claim(
-            destination_address,
+            address_to_claim,
             quantity,
             active,
             merkle_metadata,
