@@ -1,5 +1,4 @@
 from eth_account import Account
-from thirdweb.abi.thirdweb_contract import ThirdwebContract
 from thirdweb.common.feature_detection import (
     fetch_contract_metadata_from_address,
 )

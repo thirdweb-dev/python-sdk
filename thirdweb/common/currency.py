@@ -1,4 +1,3 @@
-from typing import Any
 from thirdweb.constants.chains import ChainId
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.types.currency import Currency, CurrencyValue, Price, PriceWei
@@ -8,6 +7,8 @@ from thirdweb.constants.currency import (
     ZERO_ADDRESS,
     get_native_token_by_chain_id,
 )
+from web3.constants import MAX_INT
+from zero_ex.contract_wrappers.tx_params import TxParams
 
 from web3 import Web3
 
@@ -47,6 +48,17 @@ def fetch_currency_value(provider: Web3, asset: str, price: PriceWei) -> Currenc
         format_units(price, metadata.decimals),
     )
 
+def convert_to_readable_quantity(value: int, decimals: int) -> str:
+    if value == int(MAX_INT, 0):
+        return "unlimited"
+    return str(format_units(value, decimals))
+
+def convert_quantity_to_number(quantity: str, decimals: int) -> int:
+    if quantity == "unlimited":
+        return int(MAX_INT, 0)
+    return parse_units(float(quantity), decimals)
+
+
 
 def normalize_price_value(
     provider: Web3, input_price: Price, currency_address: str
@@ -59,10 +71,10 @@ def set_erc20_allowance(
     contract_to_approve: ContractWrapper,
     value: int,
     currency_address: str,
-    overrides: Any,
+    overrides: TxParams,
 ):
     if is_native_token(currency_address):
-        overrides["value"] = value
+        overrides.value = value
     else:
         signer = contract_to_approve.get_signer()
         provider = contract_to_approve.get_provider()

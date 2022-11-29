@@ -28,6 +28,7 @@ from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.currency import Price
+from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.types.marketplace import (
     ContractListing,
     ContractOffer,
@@ -176,23 +177,12 @@ class MarketplaceDirect(BaseContract[Marketplace]):
         except:
             raise ListingNotFoundException(listing_id)
 
-        overrides: Dict[Any, Any] = {}
+        overrides: TxParams = TxParams()
         set_erc20_allowance(
             self._contract_wrapper,
             quantity_desired * normalized_price,
             currency_contract_address,
             overrides,
-        )
-
-        print(
-            "PARAMS: ",
-            [
-                listing_id,
-                quantity_desired,
-                currency_contract_address,
-                normalized_price,
-                expiration_date,
-            ],
         )
 
         # TODO: Add OVERRIDES
@@ -205,6 +195,7 @@ class MarketplaceDirect(BaseContract[Marketplace]):
                 normalized_price,
                 expiration_date,
             ],
+            overrides
         )
 
     def accept_offer(self, listing_id: int, address_or_offerror: str) -> TxReceipt:
@@ -248,7 +239,7 @@ class MarketplaceDirect(BaseContract[Marketplace]):
 
         buy_for = receiver if receiver else self._contract_wrapper.get_signer_address()
 
-        overrides: Dict[Any, Any] = {}
+        overrides: TxParams = TxParams()
         set_erc20_allowance(
             self._contract_wrapper,
             listing.buyout_price * quantity_desired,
@@ -266,6 +257,7 @@ class MarketplaceDirect(BaseContract[Marketplace]):
                 listing.currency_contract_address,
                 listing.buyout_price * quantity_desired,
             ],
+            overrides
         )
 
     def update_listing(self, listing: DirectListing) -> TxReceipt:

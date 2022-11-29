@@ -10,6 +10,7 @@ from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.contract_roles import ContractRoles
 from thirdweb.abi import TokenERC1155
 from thirdweb.types.tx import TxResultWithId
+from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.types.contracts.signature import (
     EIP712DomainType,
     MintRequest1155,
@@ -48,7 +49,7 @@ class ERC1155SignatureMinting:
         message = self._map_payload_to_contract_struct(mint_request)
 
         # TODO: OVERRIDES
-        overrides: Dict[str, Any] = {}
+        overrides: TxParams = TxParams()
         set_erc20_allowance(
             self._contract_wrapper,
             message["pricePerToken"] * message["quantity"],
@@ -56,7 +57,7 @@ class ERC1155SignatureMinting:
             overrides,
         )
         receipt = self._contract_wrapper.send_transaction(
-            "mint_with_signature", [message, signature]
+            "mint_with_signature", [message, signature], overrides
         )
         events = self._contract_wrapper.get_events("TokensMintedWithSignature", receipt)
 

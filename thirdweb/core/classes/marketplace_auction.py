@@ -9,6 +9,7 @@ from thirdweb.common.currency import (
     normalize_price_value,
     set_erc20_allowance,
 )
+from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.common.error import (
     AuctionAlreadyStartedException,
     ListingNotFoundException,
@@ -214,7 +215,7 @@ class MarketplaceAuction(BaseContract[Marketplace]):
         quantity = listing.quantity
         value = normalized_price * quantity
 
-        overrides: Dict[Any, Any] = {}
+        overrides: TxParams = TxParams()
         set_erc20_allowance(
             self._contract_wrapper, value, listing.currency_contract_address, overrides
         )
@@ -227,6 +228,7 @@ class MarketplaceAuction(BaseContract[Marketplace]):
                 listing.currency_contract_address,
                 normalized_price,
             ],
+            overrides
         )
 
     def cancel_listing(self, listing_id: int) -> TxReceipt:
