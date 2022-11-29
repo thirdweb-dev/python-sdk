@@ -139,6 +139,7 @@ class EditionDrop(ERC1155[DropERC1155]):
             [
                 len(batch.metadata_uris),
                 base_uri if base_uri.endswith("/") else base_uri + "/",
+                Web3.toBytes(text=""),
             ],
         )
 
