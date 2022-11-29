@@ -1,14 +1,9 @@
-from time import time
-from brownie import accounts
 import pytest
 from thirdweb.constants.currency import ZERO_ADDRESS
 from thirdweb.constants.role import Role
 from thirdweb.contracts.nft_drop import NFTDrop
 
 from thirdweb.core.sdk import ThirdwebSDK
-from thirdweb.types.contracts.claim_conditions import (
-    SnapshotAddressInput,
-)
 from thirdweb.types.nft import NFTMetadataInput
 from thirdweb.types.settings.metadata import NFTDropContractMetadata
 
