@@ -12,7 +12,6 @@ from thirdweb.abi import (
     IERC1155,
     DropERC721,
     DropERC1155,
-    ThirdwebContract,
     Multiwrap,
 )
 from thirdweb.types.settings.metadata import ContractMetadataSchema
@@ -33,7 +32,6 @@ TContractABI = TypeVar(
         DropERC721,
         DropERC1155,
         Multiwrap,
-        ThirdwebContract,
     ],
 )
 

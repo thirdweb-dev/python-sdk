@@ -1,13 +1,12 @@
-from typing import Any, Final, List, Optional, cast
+from typing import Any, Final, Optional, cast
 from eth_typing import Address
-from eth_utils import to_checksum_address
 
 from web3 import Web3
-from web3.eth import TxReceipt
 from web3.contract import ContractFunctions, ContractFunction
 from thirdweb.abi.i_token_erc1155 import ITokenERC1155
 from thirdweb.abi.i_token_erc20 import ITokenERC20
 from thirdweb.abi.i_token_erc721 import ITokenERC721
+from thirdweb.abi.token_erc721 import TokenERC721
 from thirdweb.common.error import NoSignerException
 from thirdweb.common.feature_detection import matches_interface
 from thirdweb.constants.role import ALL_ROLES
@@ -26,7 +25,6 @@ from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.types.contract import ContractType
 from eth_account.account import LocalAccount
 from thirdweb.abi import (
-    ThirdwebContract,
     IPermissionsEnumerable,
     IRoyalty,
     IPrimarySale,
@@ -35,12 +33,11 @@ from thirdweb.abi import (
 
 from thirdweb.types.sdk import SDKOptions
 from thirdweb.types.settings.metadata import (
-    ContractMetadataSchema,
     CustomContractMetadata,
 )
 
 
-class CustomContract(BaseContract[ThirdwebContract]):
+class CustomContract(BaseContract[Any]):
     """
     An SDK interface for a custom contract instance.
 
@@ -84,7 +81,9 @@ class CustomContract(BaseContract[ThirdwebContract]):
         signer: Optional[LocalAccount] = None,
         options: SDKOptions = SDKOptions(),
     ):
-        contract_abi = ThirdwebContract(provider, address)
+        # Temporarily use this ABI (none of the specific functions are used) so any ABi will use
+        # Until we refactor the contract wrapper to require a web3py ABI instead of a generated one
+        contract_abi = TokenERC721(provider, address)
         contract_wrapper = ContractWrapper(contract_abi, provider, signer, options)
         super().__init__(contract_wrapper)
 
