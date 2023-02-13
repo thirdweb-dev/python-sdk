@@ -31,9 +31,43 @@ def fetch_contract_metadata_from_address(
 
     return fetch_contract_metadata(metadata_uri, storage)
 
+def extract_minimal_proxy_implementation_address(bytecode: HexBytes) -> str:
+    #  EIP-1167 clone minimal proxy - https://eips.ethereum.org/EIPS/eip-1167
+    if bytecode.hex().startswith("0x363d3d373d3d3d363d73"):
+        implementation_address = bytecode.hex()[22:22 + 40]
+        return "0x" + implementation_address
+    
+    # Minimal Proxy with receive() from 0xSplits - https://github.com/0xSplits/splits-contracts/blob/c7b741926ec9746182d0d1e2c4c2046102e5d337/contracts/libraries/Clones.sol
+    if bytecode.hex().startswith("0x36603057343d5230"):
+        implementation_address = bytecode.hex()[122:122 + 40]
+        return "0x" + implementation_address
+    
+    # 0age's minimal proxy - https://medium.com/coinmonks/the-more-minimal-proxy-5756ae08ee48
+    if bytecode.hex().startswith("0x3d3d3d3d363d3d37363d73"):
+        implementation_address = bytecode.hex()[24:24 + 40]
+        return "0x" + implementation_address
+    
+    # vyper's minimal proxy (uniswap v1) - https://etherscan.io/address/0x09cabec1ead1c0ba254b09efb3ee13841712be14#code
+    if bytecode.hex().startswith("0x366000600037611000600036600073"):
+        implementation_address = bytecode.hex()[32:32 + 40]
+        return "0x" + implementation_address
+
+    return ""
+
 
 def resolve_contract_uri_from_address(address: str, provider: Web3) -> str:
     bytecode = provider.eth.get_code(address)
+    if bytecode.hex() == "0x":
+        raise Exception(f"Contract at '{address}' does not exist")
+    
+    try:
+        implementation_address = extract_minimal_proxy_implementation_address(bytecode)
+        if implementation_address:
+            checksum_implementation_address = provider.toChecksumAddress(implementation_address)
+            return resolve_contract_uri_from_address(checksum_implementation_address, provider)
+    except:
+        pass
+
     return extract_ipfs_hash_from_bytecode(bytecode)
 
 

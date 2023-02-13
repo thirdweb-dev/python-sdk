@@ -127,7 +127,7 @@ class CustomContract(BaseContract[Any]):
                 f"but {len(args)} were provided.\nExpected function signature: {signature}"
             )
 
-        if func.abi["stateMutability"] == "view":
+        if func.abi["stateMutability"] == "view" or func.abi["stateMutability"] == "pure":
             return func(*args).call()
         else:
             provider = self._contract_wrapper.get_provider()
