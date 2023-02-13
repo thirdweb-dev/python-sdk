@@ -1,5 +1,5 @@
 from typing import List
-from thirdweb.abi.drop_erc721 import DropERC721_V3
+from thirdweb.abi.drop_erc721 import DropERC721
 from thirdweb.common.claim_conditions import (
     transform_result_to_claim_condition,
 )
@@ -13,14 +13,14 @@ from thirdweb.types.settings.metadata import NFTDropContractMetadata
 
 
 class DropClaimConditions:
-    _contract_wrapper: ContractWrapper[DropERC721_V3]
-    _metadata: ContractMetadata[DropERC721_V3, NFTDropContractMetadata]
+    _contract_wrapper: ContractWrapper[DropERC721]
+    _metadata: ContractMetadata[DropERC721, NFTDropContractMetadata]
     _storage: IpfsStorage
 
     def __init__(
         self,
-        contract_wrapper: ContractWrapper[DropERC721_V3],
-        metadata: ContractMetadata[DropERC721_V3, NFTDropContractMetadata],
+        contract_wrapper: ContractWrapper[DropERC721],
+        metadata: ContractMetadata[DropERC721, NFTDropContractMetadata],
         storage: IpfsStorage,
     ):
         self._contract_wrapper = contract_wrapper

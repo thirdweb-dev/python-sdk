@@ -26,8 +26,8 @@ abi:
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC20.json && mv thirdweb/abi/ierc20/__init__.py thirdweb/abi/ierc20.py && rm -rf thirdweb/abi/ierc20
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC721.json && mv thirdweb/abi/ierc721/__init__.py thirdweb/abi/ierc721.py && rm -rf thirdweb/abi/ierc721
 	abi-gen --language Python -o thirdweb/abi --abis abi/IERC1155.json && mv thirdweb/abi/ierc1155/__init__.py thirdweb/abi/ierc1155.py && rm -rf thirdweb/abi/ierc1155
-	abi-gen --language Python -o thirdweb/abi --abis abi/DropERC721_V3.json && mv thirdweb/abi/droperc721_v3/__init__.py thirdweb/abi/drop_erc721.py && rm -rf thirdweb/abi/droperc721_v3
-	abi-gen --language Python -o thirdweb/abi --abis abi/DropERC1155_V2.json && mv thirdweb/abi/droperc1155_v2/__init__.py thirdweb/abi/drop_erc1155.py && rm -rf thirdweb/abi/droperc1155_v2
+	abi-gen --language Python -o thirdweb/abi --abis abi/DropERC721.json && mv thirdweb/abi/drop_erc721/__init__.py thirdweb/abi/drop_erc721.py && rm -rf thirdweb/abi/drop_erc721
+	abi-gen --language Python -o thirdweb/abi --abis abi/DropERC1155.json && mv thirdweb/abi/drop_erc1155/__init__.py thirdweb/abi/drop_erc1155.py && rm -rf thirdweb/abi/drop_erc1155
 	abi-gen --language Python -o thirdweb/abi --abis abi/Multiwrap.json && mv thirdweb/abi/multiwrap/__init__.py thirdweb/abi/multiwrap.py && rm -rf thirdweb/abi/multiwrap
 	
 	abi-gen --language Python -o thirdweb/abi --abis abi/SignatureMintERC20.json && mv thirdweb/abi/signature_mint_erc20/__init__.py thirdweb/abi/signature_mint_erc20.py && rm -rf thirdweb/abi/signature_mint_erc20

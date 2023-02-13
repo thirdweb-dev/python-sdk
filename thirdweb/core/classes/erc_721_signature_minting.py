@@ -18,6 +18,7 @@ from thirdweb.types.contracts.signature import (
     SignedPayload721,
 )
 from thirdweb.types.tx import TxResultWithId
+from zero_ex.contract_wrappers.tx_params import TxParams
 
 
 class ERC721SignatureMinting:
@@ -49,7 +50,7 @@ class ERC721SignatureMinting:
         message = self._map_payload_to_contract_struct(mint_request)
 
         # TODO: OVERRIDES
-        overrides: Dict[str, Any] = {}
+        overrides: TxParams = TxParams()
         set_erc20_allowance(
             self._contract_wrapper,
             message["price"],
@@ -57,7 +58,7 @@ class ERC721SignatureMinting:
             overrides,
         )
         receipt = self._contract_wrapper.send_transaction(
-            "mint_with_signature", [message, signature]
+            "mint_with_signature", [message, signature], overrides
         )
         events = self._contract_wrapper.get_events("TokensMintedWithSignature", receipt)
 

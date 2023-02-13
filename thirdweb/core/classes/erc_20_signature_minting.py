@@ -6,6 +6,7 @@ from thirdweb.common.currency import (
     parse_units,
     set_erc20_allowance,
 )
+from zero_ex.contract_wrappers.tx_params import TxParams
 from web3.eth import TxReceipt
 from thirdweb.common.sign import EIP712StandardDomain
 from thirdweb.constants.role import Role
@@ -51,7 +52,7 @@ class ERC20SignatureMinting:
         message = self._map_payload_to_contract_struct(mint_request)
 
         # TODO: OVERRIDES
-        overrides: Dict[str, Any] = {}
+        overrides: TxParams = TxParams()
         set_erc20_allowance(
             self._contract_wrapper,
             message["price"],
@@ -60,7 +61,7 @@ class ERC20SignatureMinting:
         )
 
         return self._contract_wrapper.send_transaction(
-            "mint_with_signature", [message, signature]
+            "mint_with_signature", [message, signature], overrides
         )
 
     def mint_batch(self, signed_payloads: List[SignedPayload20]) -> TxReceipt:
