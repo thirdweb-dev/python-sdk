@@ -164,12 +164,12 @@ class NFTCollection(ERC721[TokenERC721]):
 
         uri = upload_or_extract_uri(metadata, self._storage)
         receipt = self._contract_wrapper.send_transaction("mint_to", [to, uri])
-        events = self._contract_wrapper.get_events("TokensMinted", receipt)
+        events = self._contract_wrapper.get_events("Transfer", receipt)
 
         if len(events) == 0:
-            raise Exception("No TokensMinted event found")
+            raise Exception("No Transfer event found")
 
-        id = events[0].get("args").get("tokenIdMinted")  # type: ignore
+        id = events[0].get("args").get("tokenId")  # type: ignore
 
         return TxResultWithId(receipt, id=id, data=lambda: self.get(id))
 

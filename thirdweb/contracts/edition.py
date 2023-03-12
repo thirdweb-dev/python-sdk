@@ -133,12 +133,12 @@ class Edition(ERC1155[TokenERC1155]):
         receipt = self._contract_wrapper.send_transaction(
             "mint_to", [to, int(MAX_INT, 16), uri, metadata_with_supply.supply]
         )
-        events = self._contract_wrapper.get_events("TokensMinted", receipt)
+        events = self._contract_wrapper.get_events("TransferSingle", receipt)
 
         if len(events) == 0:
-            raise Exception("No TokensMinted event found")
+            raise Exception("No TransferSingle event found")
 
-        id = events[0].get("args").get("tokenIdMinted")  # type: ignore
+        id = events[0].get("args").get("id")  # type: ignore
 
         return TxResultWithId(receipt, id=id, data=lambda: self.get(id))
 
