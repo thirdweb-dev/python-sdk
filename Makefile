@@ -7,6 +7,7 @@ clean-env:
 	poetry shell
 
 init:
+	# Setup poetry first: https://python-poetry.org/docs/
 	poetry install
 	poetry run yarn add hardhat
 	poetry run pip3 install eth-brownie
