@@ -99,32 +99,15 @@ If you want to work with this repository, make sure to setup [Poetry](https://py
 Assuming you've installed and setup poetry, you can setup this repository with:
 
 ```bash
-$ poetry shell
-$ poetry install
-$ poetry run yarn global add ganache
-$ poetry run yarn add hardhat
-```
-
-Alternatively, if your system can run .sh files, you can set everything up by running the following bash script:
-
-```bash
-$ bash scripts/env/setup.sh
+$ make init
 ```
 
 ### Running Tests
 
-Before running tests, make sure you've already run `poetry shell` and are in the poetry virutal environment with all dependencies installed.
-
-Once you have checked that this you have all the dependencies, you can run the following:
+Once you have run the initialization step, you can run the following to run all tests:
 
 ```bash
-$ poetry run brownie test --network hardhat
-```
-
-To properly setup testing, you'll also need to add your private key to the `.env` file as follows (do NOT use a private key of one of your actual wallets):
-
-```.env
-PRIVATE_KEY=...
+$ make test
 ```
 
 ### Code Style Setup
