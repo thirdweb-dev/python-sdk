@@ -6,6 +6,8 @@ from web3.contract import ContractFunctions, ContractFunction
 from thirdweb.abi.i_token_erc1155 import ITokenERC1155
 from thirdweb.abi.i_token_erc20 import ITokenERC20
 from thirdweb.abi.i_token_erc721 import ITokenERC721
+from thirdweb.abi.token_erc1155 import TokenERC1155
+from thirdweb.abi.token_erc20 import TokenERC20
 from thirdweb.abi.token_erc721 import TokenERC721
 from thirdweb.common.error import NoSignerException
 from thirdweb.common.feature_detection import matches_interface
@@ -97,9 +99,9 @@ class CustomContract(BaseContract[Any]):
         self.sales = self._detect_primary_sales()
         self.platform_fee = self._detect_platform_fee()
 
-        self.token = self._detect_erc_20()
-        self.nft = self._detect_erc_721()
-        self.edition = self._detect_erc_1155()
+        self.erc20 = self._detect_erc_20()
+        self.erc721 = self._detect_erc_721()
+        self.erc1155 = self._detect_erc_1155()
 
     def call(self, fn: str, *args) -> Any:
         func = cast(ContractFunction, getattr(self.functions, fn, None))
@@ -190,26 +192,26 @@ class CustomContract(BaseContract[Any]):
         return None
 
     def _detect_erc_20(self):
-        interface_to_match = self._get_interface_functions(ITokenERC20.abi())
+        interface_to_match = self._get_interface_functions(TokenERC20.abi())
 
         if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(ITokenERC20)
+            contract_wrapper = self._get_contract_wrapper(TokenERC20)
             return ERC20(contract_wrapper, self._storage)
         return None
 
     def _detect_erc_721(self):
-        interface_to_match = self._get_interface_functions(ITokenERC721.abi())
+        interface_to_match = self._get_interface_functions(TokenERC721.abi())
 
         if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(ITokenERC721)
+            contract_wrapper = self._get_contract_wrapper(TokenERC721)
             return ERC721(contract_wrapper, self._storage)
         return None
 
     def _detect_erc_1155(self):
-        interface_to_match = self._get_interface_functions(ITokenERC1155.abi())
+        interface_to_match = self._get_interface_functions(TokenERC1155.abi())
 
         if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(ITokenERC1155)
+            contract_wrapper = self._get_contract_wrapper(TokenERC1155)
             return ERC1155(contract_wrapper, self._storage)
         return None
 

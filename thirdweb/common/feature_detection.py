@@ -56,7 +56,7 @@ def extract_minimal_proxy_implementation_address(bytecode: HexBytes) -> str:
 
 
 def resolve_contract_uri_from_address(address: str, provider: Web3) -> str:
-    bytecode = provider.eth.get_code(address)
+    bytecode = provider.eth.get_code(provider.toChecksumAddress(address))
     if bytecode.hex() == "0x":
         raise Exception(f"Contract at '{address}' does not exist")
     
@@ -65,6 +65,21 @@ def resolve_contract_uri_from_address(address: str, provider: Web3) -> str:
         if implementation_address:
             checksum_implementation_address = provider.toChecksumAddress(implementation_address)
             return resolve_contract_uri_from_address(checksum_implementation_address, provider)
+    except:
+        pass
+
+    try:
+        proxy_storage = provider.eth.get_storage_at(
+            provider.toChecksumAddress(address), 
+            # hex: 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc
+            24440054405305269366569402256811496959409073762505157381672968839269610695612
+        )
+        implementation_address = "0x" + proxy_storage.hex().replace("0x", "").lstrip("0")
+        if implementation_address != "0x":
+            return resolve_contract_uri_from_address(
+                implementation_address,
+                provider,
+            )
     except:
         pass
 
