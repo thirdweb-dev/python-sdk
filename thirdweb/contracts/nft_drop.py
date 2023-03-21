@@ -11,7 +11,7 @@ from thirdweb.core.classes.contract_royalty import ContractRoyalty
 from thirdweb.core.classes.contract_sales import ContractPrimarySale
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.drop_claim_conditions import DropClaimConditions
-from thirdweb.core.classes.erc_721 import ERC721
+from thirdweb.core.classes.erc_721_standard import ERC721Standard
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
 from thirdweb.types.contracts.claim_conditions import ClaimVerification
@@ -30,7 +30,7 @@ from web3 import Web3
 from thirdweb.types.tx import TxResultWithId
 
 
-class NFTDrop(ERC721[DropERC721]):
+class NFTDrop(ERC721Standard[DropERC721]):
     """
     Setup a collection of one-of-one NFTs that are minted as users claim them.
 

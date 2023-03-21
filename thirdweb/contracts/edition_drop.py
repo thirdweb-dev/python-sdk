@@ -12,7 +12,7 @@ from thirdweb.core.classes.contract_roles import ContractRoles
 from thirdweb.core.classes.contract_royalty import ContractRoyalty
 from thirdweb.core.classes.contract_sales import ContractPrimarySale
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
-from thirdweb.core.classes.erc_1155 import ERC1155
+from thirdweb.core.classes.erc_1155_standard import ERC1155Standard
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
 from thirdweb.types.contracts.claim_conditions import ClaimVerification
@@ -28,7 +28,7 @@ from thirdweb.types.tx import TxResultWithId
 from web3.eth import TxReceipt
 
 
-class EditionDrop(ERC1155[DropERC1155]):
+class EditionDrop(ERC1155Standard[DropERC1155]):
     """
     Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
 
@@ -153,7 +153,7 @@ class EditionDrop(ERC1155[DropERC1155]):
                 TxResultWithId(
                     receipt,
                     id=id,
-                    data=lambda: self._get_token_metadata(id),
+                    data=lambda: self._erc1155._get_token_metadata(id),
                 )
             )
 

@@ -9,7 +9,7 @@ from thirdweb.core.classes.contract_roles import ContractRoles
 from thirdweb.core.classes.contract_royalty import ContractRoyalty
 from thirdweb.core.classes.contract_sales import ContractPrimarySale
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
-from thirdweb.core.classes.erc_1155 import ERC1155
+from thirdweb.core.classes.erc_1155_standard import ERC1155Standard
 from thirdweb.core.classes.erc_1155_signature_minting import ERC1155SignatureMinting
 from thirdweb.abi import TokenERC1155
 
@@ -27,7 +27,7 @@ from thirdweb.types.settings.metadata import EditionContractMetadata
 from thirdweb.types.tx import TxResultWithId
 
 
-class Edition(ERC1155[TokenERC1155]):
+class Edition(ERC1155Standard[TokenERC1155]):
     """
     Create a collection of NFTs that lets you mint multiple copies of each NFT.
 
@@ -169,7 +169,7 @@ class Edition(ERC1155[TokenERC1155]):
         :returns: receipt, id, and metadata of the mint
         """
 
-        metadata = self._get_token_metadata(token_id)
+        metadata = self._erc1155._get_token_metadata(token_id)
         receipt = self._contract_wrapper.send_transaction(
             "mint_to", [to, token_id, metadata.uri, additional_supply]
         )

@@ -12,7 +12,7 @@ from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_roles import ContractRoles
 from thirdweb.core.classes.contract_royalty import ContractRoyalty
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
-from thirdweb.core.classes.erc_721 import ERC721
+from thirdweb.core.classes.erc_721_standard import ERC721Standard
 from thirdweb.abi import Multiwrap as MultiwrapABI
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
@@ -35,7 +35,7 @@ from thirdweb.common.currency import (
 from thirdweb.types.tx import TxResultWithId
 
 
-class Multiwrap(ERC721[MultiwrapABI]):
+class Multiwrap(ERC721Standard[MultiwrapABI]):
     """
     Multiwrap lets you wrap any number of ERC20, ERC721, or ERC1155 tokens into
     a single wrapped token bundle.
