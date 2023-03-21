@@ -1,4 +1,4 @@
-"""Generated wrapper for IThirdwebRoyalty Solidity contract."""
+"""Generated wrapper for Royalty Solidity contract."""
 
 # pylint: disable=too-many-arguments
 
@@ -25,16 +25,16 @@ from zero_ex.contract_wrappers.tx_params import TxParams
 
 # Try to import a custom validator class definition; if there isn't one,
 # declare one that we can instantiate for the default argument to the
-# constructor for IThirdwebRoyalty below.
+# constructor for Royalty below.
 try:
     # both mypy and pylint complain about what we're doing here, but this
     # works just fine, so their messages have been disabled here.
     from . import (  # type: ignore # pylint: disable=import-self
-        IThirdwebRoyaltyValidator,
+        RoyaltyValidator,
     )
 except ImportError:
 
-    class IThirdwebRoyaltyValidator(Validator):  # type: ignore
+    class RoyaltyValidator(Validator):  # type: ignore
         """No-op input validator."""
 
 
@@ -113,7 +113,7 @@ class GetRoyaltyInfoForTokenMethod(
         """Validate the inputs to the getRoyaltyInfoForToken method."""
         self.validator.assert_valid(
             method_name="getRoyaltyInfoForToken",
-            parameter_name="tokenId",
+            parameter_name="_tokenId",
             argument_value=token_id,
         )
         # safeguard against fractional inputs
@@ -399,20 +399,20 @@ class SetRoyaltyInfoForTokenMethod(
         """Validate the inputs to the setRoyaltyInfoForToken method."""
         self.validator.assert_valid(
             method_name="setRoyaltyInfoForToken",
-            parameter_name="tokenId",
+            parameter_name="_tokenId",
             argument_value=token_id,
         )
         # safeguard against fractional inputs
         token_id = int(token_id)
         self.validator.assert_valid(
             method_name="setRoyaltyInfoForToken",
-            parameter_name="recipient",
+            parameter_name="_recipient",
             argument_value=recipient,
         )
         recipient = self.validate_and_checksum_address(recipient)
         self.validator.assert_valid(
             method_name="setRoyaltyInfoForToken",
-            parameter_name="bps",
+            parameter_name="_bps",
             argument_value=bps,
         )
         # safeguard against fractional inputs
@@ -572,8 +572,8 @@ class SupportsInterfaceMethod(ContractMethod):  # pylint: disable=invalid-name
 
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
-class IThirdwebRoyalty:
-    """Wrapper class for IThirdwebRoyalty Solidity contract."""
+class Royalty:
+    """Wrapper class for Royalty Solidity contract."""
 
     get_default_royalty_info: GetDefaultRoyaltyInfoMethod
     """Constructor-initialized instance of
@@ -609,7 +609,7 @@ class IThirdwebRoyalty:
         self,
         web3_or_provider: Union[Web3, BaseProvider],
         contract_address: str,
-        validator: IThirdwebRoyaltyValidator = None,
+        validator: RoyaltyValidator = None,
     ):
         """Get an instance of wrapper for smart contract.
 
@@ -623,9 +623,7 @@ class IThirdwebRoyalty:
         self.contract_address = contract_address
 
         if not validator:
-            validator = IThirdwebRoyaltyValidator(
-                web3_or_provider, contract_address
-            )
+            validator = RoyaltyValidator(web3_or_provider, contract_address)
 
         web3 = None
         if isinstance(web3_or_provider, BaseProvider):
@@ -659,8 +657,7 @@ class IThirdwebRoyalty:
         self._web3_eth = web3.eth
 
         functions = self._web3_eth.contract(
-            address=to_checksum_address(contract_address),
-            abi=IThirdwebRoyalty.abi(),
+            address=to_checksum_address(contract_address), abi=Royalty.abi()
         ).functions
 
         self.get_default_royalty_info = GetDefaultRoyaltyInfoMethod(
@@ -713,7 +710,7 @@ class IThirdwebRoyalty:
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=IThirdwebRoyalty.abi(),
+                abi=Royalty.abi(),
             )
             .events.DefaultRoyalty()
             .processReceipt(tx_receipt)
@@ -730,7 +727,7 @@ class IThirdwebRoyalty:
         return (
             self._web3_eth.contract(
                 address=to_checksum_address(self.contract_address),
-                abi=IThirdwebRoyalty.abi(),
+                abi=Royalty.abi(),
             )
             .events.RoyaltyForToken()
             .processReceipt(tx_receipt)
@@ -740,7 +737,7 @@ class IThirdwebRoyalty:
     def abi():
         """Return the ABI to the underlying contract."""
         return json.loads(
-            '[{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"newRoyaltyRecipient","type":"address"},{"indexed":false,"internalType":"uint256","name":"newRoyaltyBps","type":"uint256"}],"name":"DefaultRoyalty","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"},{"indexed":false,"internalType":"address","name":"royaltyRecipient","type":"address"},{"indexed":false,"internalType":"uint256","name":"royaltyBps","type":"uint256"}],"name":"RoyaltyForToken","type":"event"},{"inputs":[],"name":"getDefaultRoyaltyInfo","outputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"getRoyaltyInfoForToken","outputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"uint256","name":"salePrice","type":"uint256"}],"name":"royaltyInfo","outputs":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"royaltyAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_royaltyRecipient","type":"address"},{"internalType":"uint256","name":"_royaltyBps","type":"uint256"}],"name":"setDefaultRoyaltyInfo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"bps","type":"uint256"}],"name":"setRoyaltyInfoForToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"}]'  # noqa: E501 (line-too-long)
+            '[{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"newRoyaltyRecipient","type":"address"},{"indexed":false,"internalType":"uint256","name":"newRoyaltyBps","type":"uint256"}],"name":"DefaultRoyalty","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"},{"indexed":true,"internalType":"address","name":"royaltyRecipient","type":"address"},{"indexed":false,"internalType":"uint256","name":"royaltyBps","type":"uint256"}],"name":"RoyaltyForToken","type":"event"},{"inputs":[],"name":"getDefaultRoyaltyInfo","outputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"getRoyaltyInfoForToken","outputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint16","name":"","type":"uint16"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"uint256","name":"salePrice","type":"uint256"}],"name":"royaltyInfo","outputs":[{"internalType":"address","name":"receiver","type":"address"},{"internalType":"uint256","name":"royaltyAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_royaltyRecipient","type":"address"},{"internalType":"uint256","name":"_royaltyBps","type":"uint256"}],"name":"setDefaultRoyaltyInfo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenId","type":"uint256"},{"internalType":"address","name":"_recipient","type":"address"},{"internalType":"uint256","name":"_bps","type":"uint256"}],"name":"setRoyaltyInfoForToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"}]'  # noqa: E501 (line-too-long)
         )
 
 

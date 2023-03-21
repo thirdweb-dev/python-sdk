@@ -14,7 +14,7 @@ for filename in os.listdir(directory):
         path = os.path.join(directory, filename)
         output = subprocess.check_output(f"abi-gen --language Python -o {output_path} --abis {path}", shell=True).decode()
         generated_path = output.replace("\n", "").replace("\"", "").split("Created: ")[1]
-        binding_path = generated_path.split("/")[1]
+        binding_path = generated_path.split("/")[2]
         os.system(f"mv {generated_path} {output_path}/{binding_path}.py")
         os.system(f"rm -rf {output_path}/{binding_path}")
         generated_abis[filename.replace(".json", "")] = binding_path

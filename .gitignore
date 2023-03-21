@@ -13,7 +13,6 @@
 
 Dockerfile
 
-/abis
 /abi
 /env
 /dist
