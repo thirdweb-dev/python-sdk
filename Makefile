@@ -11,9 +11,14 @@ init:
 	poetry install
 	poetry run yarn add hardhat
 	poetry run pip3 install eth-brownie
+	npm install -g @0x/abi-gen
+	yarn
 
 test:
 	poetry run brownie test --network hardhat
+
+abis:
+	python3 scripts/generate_abis.py
 
 abi:
 	# If you regenerate registry ABI, you will need to fix a typing error
