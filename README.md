@@ -110,6 +110,20 @@ Once you have run the initialization step, you can run the following to run all 
 $ make test
 ```
 
+### Publishing the Package
+
+To make a build & publish the package, you need to have a `pypi` account with permission to edit the `thirdweb-sdk` pypi package. You can authenticate your pypi account with poetry with the following command:
+
+```bash
+poetry config pypi-token.pypi pypi-token-here
+```
+
+Then, you can build and release a prerelease version with the following command:
+
+```bash
+make publish
+```
+
 ### Code Style Setup
 
 Make sure you have `mypy`, `pylint`, and `black` installed (all included in the dev dependencies with `poetry install`.
