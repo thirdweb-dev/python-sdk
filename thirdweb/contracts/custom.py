@@ -3,9 +3,6 @@ from eth_typing import Address
 
 from web3 import Web3
 from web3.contract import ContractFunctions, ContractFunction
-from thirdweb.abi.i_token_erc1155 import ITokenERC1155
-from thirdweb.abi.i_token_erc20 import ITokenERC20
-from thirdweb.abi.i_token_erc721 import ITokenERC721
 from thirdweb.abi.token_erc1155 import TokenERC1155
 from thirdweb.abi.token_erc20 import TokenERC20
 from thirdweb.abi.token_erc721 import TokenERC721
