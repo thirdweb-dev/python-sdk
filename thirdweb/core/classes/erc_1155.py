@@ -1,5 +1,4 @@
-from typing import Any, Generic, List, Optional, Union, cast
-from thirdweb.abi import TokenERC1155
+from typing import Generic, List, Union
 from thirdweb.common.error import NotFoundException
 from thirdweb.common.nft import fetch_token_metadata
 from thirdweb.constants.currency import ZERO_ADDRESS

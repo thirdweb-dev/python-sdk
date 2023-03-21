@@ -12,7 +12,7 @@ from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_platform_fee import ContractPlatformFee
 from thirdweb.core.classes.contract_roles import ContractRoles
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
-from thirdweb.core.classes.erc_20 import ERC20
+from thirdweb.core.classes.erc_20_standard import ERC20Standard
 from thirdweb.core.classes.erc_20_signature_minting import ERC20SignatureMinting
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
@@ -22,7 +22,7 @@ from thirdweb.types.sdk import SDKOptions
 from thirdweb.types.settings.metadata import TokenContractMetadata
 
 
-class Token(ERC20):
+class Token(ERC20Standard):
     """
     Create a standard crypto token or cryptocurrency.
 
@@ -96,7 +96,7 @@ class Token(ERC20):
         :returns: vote balance of the specified wallet
         """
 
-        return self._get_value(
+        return self._erc20._get_value(
             self._contract_wrapper._contract_abi.get_votes.call(account)
         )
 
