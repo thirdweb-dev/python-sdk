@@ -34,9 +34,7 @@ try:
     )
 except ImportError:
 
-    class SignatureMintERC1155Validator(  # type: ignore
-        Validator
-    ):
+    class SignatureMintERC1155Validator(Validator):  # type: ignore
         """No-op input validator."""
 
 
@@ -87,29 +85,44 @@ class ISignatureMintERC1155MintRequest(TypedDict):
     uid: Union[bytes, str]
 
 
-class MintWithSignatureMethod(ContractMethod): # pylint: disable=invalid-name
+class MintWithSignatureMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the mintWithSignature method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(self, req: ISignatureMintERC1155MintRequest, signature: Union[bytes, str]):
+    def validate_and_normalize_inputs(
+        self,
+        req: ISignatureMintERC1155MintRequest,
+        signature: Union[bytes, str],
+    ):
         """Validate the inputs to the mintWithSignature method."""
         self.validator.assert_valid(
-            method_name='mintWithSignature',
-            parameter_name='req',
+            method_name="mintWithSignature",
+            parameter_name="req",
             argument_value=req,
         )
         self.validator.assert_valid(
-            method_name='mintWithSignature',
-            parameter_name='signature',
+            method_name="mintWithSignature",
+            parameter_name="signature",
             argument_value=signature,
         )
         return (req, signature)
 
-    def call(self, req: ISignatureMintERC1155MintRequest, signature: Union[bytes, str], tx_params: Optional[TxParams] = None) -> str:
+    def call(
+        self,
+        req: ISignatureMintERC1155MintRequest,
+        signature: Union[bytes, str],
+        tx_params: Optional[TxParams] = None,
+    ) -> str:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -117,53 +130,92 @@ class MintWithSignatureMethod(ContractMethod): # pylint: disable=invalid-name
         """
         (req, signature) = self.validate_and_normalize_inputs(req, signature)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(req, signature).call(tx_params.as_dict())
+        returned = self._underlying_method(req, signature).call(
+            tx_params.as_dict()
+        )
         return str(returned)
 
-    def send_transaction(self, req: ISignatureMintERC1155MintRequest, signature: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self,
+        req: ISignatureMintERC1155MintRequest,
+        signature: Union[bytes, str],
+        tx_params: Optional[TxParams] = None,
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
         (req, signature) = self.validate_and_normalize_inputs(req, signature)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(req, signature).transact(tx_params.as_dict())
+        return self._underlying_method(req, signature).transact(
+            tx_params.as_dict()
+        )
 
-    def build_transaction(self, req: ISignatureMintERC1155MintRequest, signature: Union[bytes, str], tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self,
+        req: ISignatureMintERC1155MintRequest,
+        signature: Union[bytes, str],
+        tx_params: Optional[TxParams] = None,
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (req, signature) = self.validate_and_normalize_inputs(req, signature)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(req, signature).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(req, signature).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, req: ISignatureMintERC1155MintRequest, signature: Union[bytes, str], tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self,
+        req: ISignatureMintERC1155MintRequest,
+        signature: Union[bytes, str],
+        tx_params: Optional[TxParams] = None,
+    ) -> int:
         """Estimate gas consumption of method call."""
         (req, signature) = self.validate_and_normalize_inputs(req, signature)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(req, signature).estimateGas(tx_params.as_dict())
+        return self._underlying_method(req, signature).estimateGas(
+            tx_params.as_dict()
+        )
 
-class VerifyMethod(ContractMethod): # pylint: disable=invalid-name
+
+class VerifyMethod(ContractMethod):  # pylint: disable=invalid-name
     """Various interfaces to the verify method."""
 
-    def __init__(self, web3_or_provider: Union[Web3, BaseProvider], contract_address: str, contract_function: ContractFunction, validator: Validator=None):
+    def __init__(
+        self,
+        web3_or_provider: Union[Web3, BaseProvider],
+        contract_address: str,
+        contract_function: ContractFunction,
+        validator: Validator = None,
+    ):
         """Persist instance data."""
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(self, req: ISignatureMintERC1155MintRequest, signature: Union[bytes, str]):
+    def validate_and_normalize_inputs(
+        self,
+        req: ISignatureMintERC1155MintRequest,
+        signature: Union[bytes, str],
+    ):
         """Validate the inputs to the verify method."""
         self.validator.assert_valid(
-            method_name='verify',
-            parameter_name='_req',
+            method_name="verify",
+            parameter_name="_req",
             argument_value=req,
         )
         self.validator.assert_valid(
-            method_name='verify',
-            parameter_name='_signature',
+            method_name="verify",
+            parameter_name="_signature",
             argument_value=signature,
         )
         return (req, signature)
 
-    def call(self, req: ISignatureMintERC1155MintRequest, signature: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Tuple[bool, str]:
+    def call(
+        self,
+        req: ISignatureMintERC1155MintRequest,
+        signature: Union[bytes, str],
+        tx_params: Optional[TxParams] = None,
+    ) -> Tuple[bool, str]:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -171,29 +223,56 @@ class VerifyMethod(ContractMethod): # pylint: disable=invalid-name
         """
         (req, signature) = self.validate_and_normalize_inputs(req, signature)
         tx_params = super().normalize_tx_params(tx_params)
-        returned = self._underlying_method(req, signature).call(tx_params.as_dict())
-        return (returned[0],returned[1],)
+        returned = self._underlying_method(req, signature).call(
+            tx_params.as_dict()
+        )
+        return (
+            returned[0],
+            returned[1],
+        )
 
-    def send_transaction(self, req: ISignatureMintERC1155MintRequest, signature: Union[bytes, str], tx_params: Optional[TxParams] = None) -> Union[HexBytes, bytes]:
+    def send_transaction(
+        self,
+        req: ISignatureMintERC1155MintRequest,
+        signature: Union[bytes, str],
+        tx_params: Optional[TxParams] = None,
+    ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
         (req, signature) = self.validate_and_normalize_inputs(req, signature)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(req, signature).transact(tx_params.as_dict())
+        return self._underlying_method(req, signature).transact(
+            tx_params.as_dict()
+        )
 
-    def build_transaction(self, req: ISignatureMintERC1155MintRequest, signature: Union[bytes, str], tx_params: Optional[TxParams] = None) -> dict:
+    def build_transaction(
+        self,
+        req: ISignatureMintERC1155MintRequest,
+        signature: Union[bytes, str],
+        tx_params: Optional[TxParams] = None,
+    ) -> dict:
         """Construct calldata to be used as input to the method."""
         (req, signature) = self.validate_and_normalize_inputs(req, signature)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(req, signature).buildTransaction(tx_params.as_dict())
+        return self._underlying_method(req, signature).buildTransaction(
+            tx_params.as_dict()
+        )
 
-    def estimate_gas(self, req: ISignatureMintERC1155MintRequest, signature: Union[bytes, str], tx_params: Optional[TxParams] = None) -> int:
+    def estimate_gas(
+        self,
+        req: ISignatureMintERC1155MintRequest,
+        signature: Union[bytes, str],
+        tx_params: Optional[TxParams] = None,
+    ) -> int:
         """Estimate gas consumption of method call."""
         (req, signature) = self.validate_and_normalize_inputs(req, signature)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(req, signature).estimateGas(tx_params.as_dict())
+        return self._underlying_method(req, signature).estimateGas(
+            tx_params.as_dict()
+        )
+
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
 class SignatureMintERC1155:
@@ -202,6 +281,7 @@ class SignatureMintERC1155:
     All method parameters of type `bytes`:code: should be encoded as UTF-8,
     which can be accomplished via `str.encode("utf_8")`:code:.
     """
+
     mint_with_signature: MintWithSignatureMethod
     """Constructor-initialized instance of
     :class:`MintWithSignatureMethod`.
@@ -211,7 +291,6 @@ class SignatureMintERC1155:
     """Constructor-initialized instance of
     :class:`VerifyMethod`.
     """
-
 
     def __init__(
         self,
@@ -231,7 +310,9 @@ class SignatureMintERC1155:
         self.contract_address = contract_address
 
         if not validator:
-            validator = SignatureMintERC1155Validator(web3_or_provider, contract_address)
+            validator = SignatureMintERC1155Validator(
+                web3_or_provider, contract_address
+            )
 
         web3 = None
         if isinstance(web3_or_provider, BaseProvider):
@@ -253,19 +334,32 @@ class SignatureMintERC1155:
             try:
                 for middleware in MIDDLEWARE:
                     web3.middleware_onion.inject(
-                         middleware['function'], layer=middleware['layer'],
+                        middleware["function"],
+                        layer=middleware["layer"],
                     )
             except ValueError as value_error:
-                if value_error.args == ("You can't add the same un-named instance twice",):
+                if value_error.args == (
+                    "You can't add the same un-named instance twice",
+                ):
                     pass
 
         self._web3_eth = web3.eth
 
-        functions = self._web3_eth.contract(address=to_checksum_address(contract_address), abi=SignatureMintERC1155.abi()).functions
+        functions = self._web3_eth.contract(
+            address=to_checksum_address(contract_address),
+            abi=SignatureMintERC1155.abi(),
+        ).functions
 
-        self.mint_with_signature = MintWithSignatureMethod(web3_or_provider, contract_address, functions.mintWithSignature, validator)
+        self.mint_with_signature = MintWithSignatureMethod(
+            web3_or_provider,
+            contract_address,
+            functions.mintWithSignature,
+            validator,
+        )
 
-        self.verify = VerifyMethod(web3_or_provider, contract_address, functions.verify, validator)
+        self.verify = VerifyMethod(
+            web3_or_provider, contract_address, functions.verify, validator
+        )
 
     def get_tokens_minted_with_signature_event(
         self, tx_hash: Union[HexBytes, bytes]
@@ -276,7 +370,14 @@ class SignatureMintERC1155:
             event
         """
         tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return self._web3_eth.contract(address=to_checksum_address(self.contract_address), abi=SignatureMintERC1155.abi()).events.TokensMintedWithSignature().processReceipt(tx_receipt)
+        return (
+            self._web3_eth.contract(
+                address=to_checksum_address(self.contract_address),
+                abi=SignatureMintERC1155.abi(),
+            )
+            .events.TokensMintedWithSignature()
+            .processReceipt(tx_receipt)
+        )
 
     @staticmethod
     def abi():
@@ -284,5 +385,6 @@ class SignatureMintERC1155:
         return json.loads(
             '[{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"signer","type":"address"},{"indexed":true,"internalType":"address","name":"mintedTo","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenIdMinted","type":"uint256"},{"components":[{"internalType":"address","name":"to","type":"address"},{"internalType":"address","name":"royaltyRecipient","type":"address"},{"internalType":"uint256","name":"royaltyBps","type":"uint256"},{"internalType":"address","name":"primarySaleRecipient","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"string","name":"uri","type":"string"},{"internalType":"uint256","name":"quantity","type":"uint256"},{"internalType":"uint256","name":"pricePerToken","type":"uint256"},{"internalType":"address","name":"currency","type":"address"},{"internalType":"uint128","name":"validityStartTimestamp","type":"uint128"},{"internalType":"uint128","name":"validityEndTimestamp","type":"uint128"},{"internalType":"bytes32","name":"uid","type":"bytes32"}],"indexed":false,"internalType":"struct ISignatureMintERC1155.MintRequest","name":"mintRequest","type":"tuple"}],"name":"TokensMintedWithSignature","type":"event"},{"inputs":[{"components":[{"internalType":"address","name":"to","type":"address"},{"internalType":"address","name":"royaltyRecipient","type":"address"},{"internalType":"uint256","name":"royaltyBps","type":"uint256"},{"internalType":"address","name":"primarySaleRecipient","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"string","name":"uri","type":"string"},{"internalType":"uint256","name":"quantity","type":"uint256"},{"internalType":"uint256","name":"pricePerToken","type":"uint256"},{"internalType":"address","name":"currency","type":"address"},{"internalType":"uint128","name":"validityStartTimestamp","type":"uint128"},{"internalType":"uint128","name":"validityEndTimestamp","type":"uint128"},{"internalType":"bytes32","name":"uid","type":"bytes32"}],"internalType":"struct ISignatureMintERC1155.MintRequest","name":"req","type":"tuple"},{"internalType":"bytes","name":"signature","type":"bytes"}],"name":"mintWithSignature","outputs":[{"internalType":"address","name":"signer","type":"address"}],"stateMutability":"payable","type":"function"},{"inputs":[{"components":[{"internalType":"address","name":"to","type":"address"},{"internalType":"address","name":"royaltyRecipient","type":"address"},{"internalType":"uint256","name":"royaltyBps","type":"uint256"},{"internalType":"address","name":"primarySaleRecipient","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"string","name":"uri","type":"string"},{"internalType":"uint256","name":"quantity","type":"uint256"},{"internalType":"uint256","name":"pricePerToken","type":"uint256"},{"internalType":"address","name":"currency","type":"address"},{"internalType":"uint128","name":"validityStartTimestamp","type":"uint128"},{"internalType":"uint128","name":"validityEndTimestamp","type":"uint128"},{"internalType":"bytes32","name":"uid","type":"bytes32"}],"internalType":"struct ISignatureMintERC1155.MintRequest","name":"_req","type":"tuple"},{"internalType":"bytes","name":"_signature","type":"bytes"}],"name":"verify","outputs":[{"internalType":"bool","name":"success","type":"bool"},{"internalType":"address","name":"signer","type":"address"}],"stateMutability":"view","type":"function"}]'  # noqa: E501 (line-too-long)
         )
+
 
 # pylint: disable=too-many-lines

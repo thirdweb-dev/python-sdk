@@ -1,4 +1,4 @@
-"""Generated wrapper for IThirdwebPrimarySale Solidity contract."""
+"""Generated wrapper for BatchMintMetadata Solidity contract."""
 
 # pylint: disable=too-many-arguments
 
@@ -25,16 +25,16 @@ from zero_ex.contract_wrappers.tx_params import TxParams
 
 # Try to import a custom validator class definition; if there isn't one,
 # declare one that we can instantiate for the default argument to the
-# constructor for IThirdwebPrimarySale below.
+# constructor for BatchMintMetadata below.
 try:
     # both mypy and pylint complain about what we're doing here, but this
     # works just fine, so their messages have been disabled here.
     from . import (  # type: ignore # pylint: disable=import-self
-        IThirdwebPrimarySaleValidator,
+        BatchMintMetadataValidator,
     )
 except ImportError:
 
-    class IThirdwebPrimarySaleValidator(Validator):  # type: ignore
+    class BatchMintMetadataValidator(Validator):  # type: ignore
         """No-op input validator."""
 
 
@@ -44,10 +44,8 @@ except ImportError:
     pass
 
 
-class PrimarySaleRecipientMethod(
-    ContractMethod
-):  # pylint: disable=invalid-name
-    """Various interfaces to the primarySaleRecipient method."""
+class GetBaseUriCountMethod(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the getBaseURICount method."""
 
     def __init__(
         self,
@@ -59,7 +57,7 @@ class PrimarySaleRecipientMethod(
         super().__init__(web3_or_provider, contract_address)
         self._underlying_method = contract_function
 
-    def call(self, tx_params: Optional[TxParams] = None) -> str:
+    def call(self, tx_params: Optional[TxParams] = None) -> int:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
@@ -67,7 +65,7 @@ class PrimarySaleRecipientMethod(
         """
         tx_params = super().normalize_tx_params(tx_params)
         returned = self._underlying_method().call(tx_params.as_dict())
-        return str(returned)
+        return int(returned)
 
     def send_transaction(
         self, tx_params: Optional[TxParams] = None
@@ -90,10 +88,8 @@ class PrimarySaleRecipientMethod(
         return self._underlying_method().estimateGas(tx_params.as_dict())
 
 
-class SetPrimarySaleRecipientMethod(
-    ContractMethod
-):  # pylint: disable=invalid-name
-    """Various interfaces to the setPrimarySaleRecipient method."""
+class GetBatchIdAtIndexMethod(ContractMethod):  # pylint: disable=invalid-name
+    """Various interfaces to the getBatchIdAtIndex method."""
 
     def __init__(
         self,
@@ -106,81 +102,77 @@ class SetPrimarySaleRecipientMethod(
         super().__init__(web3_or_provider, contract_address, validator)
         self._underlying_method = contract_function
 
-    def validate_and_normalize_inputs(self, sale_recipient: str):
-        """Validate the inputs to the setPrimarySaleRecipient method."""
+    def validate_and_normalize_inputs(self, index: int):
+        """Validate the inputs to the getBatchIdAtIndex method."""
         self.validator.assert_valid(
-            method_name="setPrimarySaleRecipient",
-            parameter_name="_saleRecipient",
-            argument_value=sale_recipient,
+            method_name="getBatchIdAtIndex",
+            parameter_name="_index",
+            argument_value=index,
         )
-        sale_recipient = self.validate_and_checksum_address(sale_recipient)
-        return sale_recipient
+        # safeguard against fractional inputs
+        index = int(index)
+        return index
 
-    def call(
-        self, sale_recipient: str, tx_params: Optional[TxParams] = None
-    ) -> None:
+    def call(self, index: int, tx_params: Optional[TxParams] = None) -> int:
         """Execute underlying contract method via eth_call.
 
         :param tx_params: transaction parameters
         :returns: the return value of the underlying method.
         """
-        (sale_recipient) = self.validate_and_normalize_inputs(sale_recipient)
+        (index) = self.validate_and_normalize_inputs(index)
         tx_params = super().normalize_tx_params(tx_params)
-        self._underlying_method(sale_recipient).call(tx_params.as_dict())
+        returned = self._underlying_method(index).call(tx_params.as_dict())
+        return int(returned)
 
     def send_transaction(
-        self, sale_recipient: str, tx_params: Optional[TxParams] = None
+        self, index: int, tx_params: Optional[TxParams] = None
     ) -> Union[HexBytes, bytes]:
         """Execute underlying contract method via eth_sendTransaction.
 
         :param tx_params: transaction parameters
         """
-        (sale_recipient) = self.validate_and_normalize_inputs(sale_recipient)
+        (index) = self.validate_and_normalize_inputs(index)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(sale_recipient).transact(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(index).transact(tx_params.as_dict())
 
     def build_transaction(
-        self, sale_recipient: str, tx_params: Optional[TxParams] = None
+        self, index: int, tx_params: Optional[TxParams] = None
     ) -> dict:
         """Construct calldata to be used as input to the method."""
-        (sale_recipient) = self.validate_and_normalize_inputs(sale_recipient)
+        (index) = self.validate_and_normalize_inputs(index)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(sale_recipient).buildTransaction(
+        return self._underlying_method(index).buildTransaction(
             tx_params.as_dict()
         )
 
     def estimate_gas(
-        self, sale_recipient: str, tx_params: Optional[TxParams] = None
+        self, index: int, tx_params: Optional[TxParams] = None
     ) -> int:
         """Estimate gas consumption of method call."""
-        (sale_recipient) = self.validate_and_normalize_inputs(sale_recipient)
+        (index) = self.validate_and_normalize_inputs(index)
         tx_params = super().normalize_tx_params(tx_params)
-        return self._underlying_method(sale_recipient).estimateGas(
-            tx_params.as_dict()
-        )
+        return self._underlying_method(index).estimateGas(tx_params.as_dict())
 
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
-class IThirdwebPrimarySale:
-    """Wrapper class for IThirdwebPrimarySale Solidity contract."""
+class BatchMintMetadata:
+    """Wrapper class for BatchMintMetadata Solidity contract."""
 
-    primary_sale_recipient: PrimarySaleRecipientMethod
+    get_base_uri_count: GetBaseUriCountMethod
     """Constructor-initialized instance of
-    :class:`PrimarySaleRecipientMethod`.
+    :class:`GetBaseUriCountMethod`.
     """
 
-    set_primary_sale_recipient: SetPrimarySaleRecipientMethod
+    get_batch_id_at_index: GetBatchIdAtIndexMethod
     """Constructor-initialized instance of
-    :class:`SetPrimarySaleRecipientMethod`.
+    :class:`GetBatchIdAtIndexMethod`.
     """
 
     def __init__(
         self,
         web3_or_provider: Union[Web3, BaseProvider],
         contract_address: str,
-        validator: IThirdwebPrimarySaleValidator = None,
+        validator: BatchMintMetadataValidator = None,
     ):
         """Get an instance of wrapper for smart contract.
 
@@ -194,7 +186,7 @@ class IThirdwebPrimarySale:
         self.contract_address = contract_address
 
         if not validator:
-            validator = IThirdwebPrimarySaleValidator(
+            validator = BatchMintMetadataValidator(
                 web3_or_provider, contract_address
             )
 
@@ -231,43 +223,25 @@ class IThirdwebPrimarySale:
 
         functions = self._web3_eth.contract(
             address=to_checksum_address(contract_address),
-            abi=IThirdwebPrimarySale.abi(),
+            abi=BatchMintMetadata.abi(),
         ).functions
 
-        self.primary_sale_recipient = PrimarySaleRecipientMethod(
-            web3_or_provider, contract_address, functions.primarySaleRecipient
+        self.get_base_uri_count = GetBaseUriCountMethod(
+            web3_or_provider, contract_address, functions.getBaseURICount
         )
 
-        self.set_primary_sale_recipient = SetPrimarySaleRecipientMethod(
+        self.get_batch_id_at_index = GetBatchIdAtIndexMethod(
             web3_or_provider,
             contract_address,
-            functions.setPrimarySaleRecipient,
+            functions.getBatchIdAtIndex,
             validator,
-        )
-
-    def get_primary_sale_recipient_updated_event(
-        self, tx_hash: Union[HexBytes, bytes]
-    ) -> Tuple[AttributeDict]:
-        """Get log entry for PrimarySaleRecipientUpdated event.
-
-        :param tx_hash: hash of transaction emitting
-            PrimarySaleRecipientUpdated event
-        """
-        tx_receipt = self._web3_eth.getTransactionReceipt(tx_hash)
-        return (
-            self._web3_eth.contract(
-                address=to_checksum_address(self.contract_address),
-                abi=IThirdwebPrimarySale.abi(),
-            )
-            .events.PrimarySaleRecipientUpdated()
-            .processReceipt(tx_receipt)
         )
 
     @staticmethod
     def abi():
         """Return the ABI to the underlying contract."""
         return json.loads(
-            '[{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"recipient","type":"address"}],"name":"PrimarySaleRecipientUpdated","type":"event"},{"inputs":[],"name":"primarySaleRecipient","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_saleRecipient","type":"address"}],"name":"setPrimarySaleRecipient","outputs":[],"stateMutability":"nonpayable","type":"function"}]'  # noqa: E501 (line-too-long)
+            '[{"inputs":[],"name":"getBaseURICount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_index","type":"uint256"}],"name":"getBatchIdAtIndex","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]'  # noqa: E501 (line-too-long)
         )
 
 
