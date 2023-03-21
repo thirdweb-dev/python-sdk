@@ -15,8 +15,8 @@ class ERC721Standard(Generic[TERC721], BaseContract[TERC721]):
         contract_wrapper: ContractWrapper,
         storage: IpfsStorage,
     ):
-        super(contract_wrapper)
-        self.storage = storage
+        super().__init__(contract_wrapper)
+        self._storage = storage
 
         self._erc721 = ERC721(contract_wrapper, storage)
         self.get = self._erc721.get

@@ -11,7 +11,7 @@ class ERC1155Standard(Generic[TERC1155], BaseContract[TERC1155]):
     _erc1155: ERC1155
 
     def __init__(self, contract_wrapper: ContractWrapper, storage: IpfsStorage):
-        super(contract_wrapper)
+        super().__init__(contract_wrapper)
         self._storage = storage
 
         self._erc1155 = ERC1155(contract_wrapper, storage)

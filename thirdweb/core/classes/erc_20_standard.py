@@ -10,7 +10,7 @@ class ERC20Standard(BaseContract[TokenERC20]):
     _erc20: ERC20
 
     def __init__(self, contract_wrapper: ContractWrapper, storage: IpfsStorage):
-        super(contract_wrapper)
+        super().__init__(contract_wrapper)
         self._storage = storage
 
         self._erc20 = ERC20(contract_wrapper, storage)
