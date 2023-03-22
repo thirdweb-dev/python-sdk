@@ -134,7 +134,7 @@ class NFTDrop(ERC721Standard[DropERC721]):
         :return: List of nft metadatas and owners for claimed nfts.
         """
 
-        return self.get_all_claimed(query_params)
+        return self._erc721.get_all_claimed(query_params)
 
     def get_all_unclaimed(
         self, query_params: QueryAllParams = QueryAllParams()
@@ -151,7 +151,7 @@ class NFTDrop(ERC721Standard[DropERC721]):
         :return: List of nft metadatas.
         """
 
-        return self.get_all_unclaimed(query_params)
+        return self._erc721.get_all_unclaimed(query_params)
 
     def total_claimed_supply(self) -> int:
         """
@@ -163,7 +163,7 @@ class NFTDrop(ERC721Standard[DropERC721]):
 
         :return: Total number of NFTs claimed from this contract
         """
-        return self.total_claimed_supply()
+        return self._erc721.total_claimed_supply()
 
     def total_unclaimed_supply(self) -> int:
         """
@@ -175,7 +175,7 @@ class NFTDrop(ERC721Standard[DropERC721]):
 
         :return: Total number of unclaimed NFTs in this contract
         """
-        return self.total_unclaimed_supply()
+        return self._erc721.total_unclaimed_supply()
 
     def create_batch(
         self, metadatas: List[NFTMetadataInput]

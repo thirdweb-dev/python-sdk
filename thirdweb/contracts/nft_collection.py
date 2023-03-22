@@ -174,7 +174,7 @@ class NFTCollection(ERC721Standard[TokenERC721]):
         :returns: receipts, ids, and metadatas for each mint
         """
 
-        return self.mint_batch(metadatas)
+        return self._erc721.mint_batch(metadatas)
 
     def mint_batch_to(
         self, to: str, metadatas: List[Union[NFTMetadataInput, str]]

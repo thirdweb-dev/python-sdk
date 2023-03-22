@@ -140,7 +140,7 @@ class Edition(ERC1155Standard[TokenERC1155]):
         :returns: receipt, id, and metadata of the mint
         """
 
-        return self.mint_additional_supply(token_id, additional_supply)
+        return self._erc1155.mint_additional_supply(token_id, additional_supply)
 
     def mint_additional_supply_to(
         self, to: str, token_id: int, additional_supply: int
@@ -166,7 +166,7 @@ class Edition(ERC1155Standard[TokenERC1155]):
         :returns: receipts, ids, and metadatas of the mint
         """
 
-        return self.mint_batch(metadatas_with_supply)
+        return self._erc1155.mint_batch(metadatas_with_supply)
 
     def mint_batch_to(
         self, to: str, metadatas_with_supply: List[EditionMetadataInput]
