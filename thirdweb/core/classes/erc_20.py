@@ -40,7 +40,7 @@ class ERC20(BaseContract[TokenERC20]):
         Get the token metadata including name, symbol, decimals, etc.
 
         ```python
-        token = contract.get()
+        token = contract.erc20.get()
         print(token)
         ```
 
@@ -56,7 +56,7 @@ class ERC20(BaseContract[TokenERC20]):
         Get the token balance of the connected wallet.
 
         ```python
-        balance = contract.balance()
+        balance = contract.erc20.balance()
         print(balance)
         ```
 
@@ -71,7 +71,7 @@ class ERC20(BaseContract[TokenERC20]):
 
         ```python
         address = "{{wallet_address}}"
-        balance = contract.balance_of(address)
+        balance = contract.erc20.balance_of(address)
         print(balance)
         ```
 
@@ -87,6 +87,11 @@ class ERC20(BaseContract[TokenERC20]):
         """
         Get the total minted supply of the token.
 
+        ```python
+        supply = contract.erc20.total_supply()
+        print(supply)
+        ```
+
         :returns: total minted supply of the token
         """
 
@@ -98,7 +103,8 @@ class ERC20(BaseContract[TokenERC20]):
 
         ```python
         spender = "{{wallet_address}}"
-        allowance = contract.allowance(spender)
+        allowance = contract.erc20.allowance(spender)
+        print(allowance)
         ```
 
         :param spender: wallet address to check the allowance of
@@ -118,7 +124,7 @@ class ERC20(BaseContract[TokenERC20]):
         # Address of the wallet to check the token allowance
         spender = "0x..."
 
-        allowance = contract.allowance_of(address, spender)
+        allowance = contract.erc20.allowance_of(address, spender)
         print(allowance)
         ```
 
@@ -134,6 +140,11 @@ class ERC20(BaseContract[TokenERC20]):
     def is_transfer_restricted(self) -> bool:
         """
         Check whether transfer is restricted for tokens in this module.
+
+        ```python
+        is_restricted = contract.erc20.is_transfer_restricted()
+        print(is_restricted)
+        ```
 
         :returns: True if transfer is restricted, False otherwise
         """
@@ -159,7 +170,7 @@ class ERC20(BaseContract[TokenERC20]):
         # Amount of tokens to transfer
         amount = 0.1
 
-        contract.transfer(to, amount)
+        contract.erc20.transfer(to, amount)
         ```
 
         :param to: wallet address to transfer the tokens to
@@ -186,7 +197,7 @@ class ERC20(BaseContract[TokenERC20]):
         # Amount of tokens to transfer
         amount = 0.1
 
-        contract.transfer_from(fr, to, amount)
+        contract.erc20.transfer_from(fr, to, amount)
         ```
 
         :param fr: wallet address to transfer the tokens from
@@ -208,7 +219,7 @@ class ERC20(BaseContract[TokenERC20]):
         ```python
         spender = "0x..."
         amount = 100
-        contract.set_allowance(spender, amount)
+        contract.erc20.set_allowance(spender, amount)
         ```
 
         :param spender: wallet address to set the allowance of
@@ -233,7 +244,7 @@ class ERC20(BaseContract[TokenERC20]):
             TokenAmount("0x...", 0.2),
         ]
 
-        contract.transfer_batch(data)
+        contract.erc20.transfer_batch(data)
         ```
 
         :param args: list of token amounts and addressed to transfer to
@@ -257,7 +268,7 @@ class ERC20(BaseContract[TokenERC20]):
 
         ```python
         amount = 0.1
-        contract.burn(amount)
+        contract.erc20.burn(amount)
         ```
 
         :param amount: amount of tokens to burn
@@ -274,7 +285,7 @@ class ERC20(BaseContract[TokenERC20]):
         ```python
         holder = "{{wallet_address}}"
         amount = 0.1
-        contract.burn_from(holder, amount)
+        contract.erc20.burn_from(holder, amount)
         ```
 
         :param holder: wallet address to burn the tokens from

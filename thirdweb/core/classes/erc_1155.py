@@ -85,7 +85,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         Get metadata for a token
 
         ```python
-        nft = contract.get(0)
+        nft = contract.erc1155.get(0)
         print(nft)
         ```
 
@@ -108,7 +108,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         Get the metadata for all tokens on the contract
 
         ```python
-        metadatas = contract.get_all()
+        metadatas = contract.erc1155.get_all()
         print(metadatas)
         ```
 
@@ -123,6 +123,11 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         """
         Get the total number of NFTs on the contract
 
+        ```python
+        total_count = contract.erc1155.get_total_count()
+        print(total_count)
+        ```
+
         :return: total number of tokens on the contract
         """
 
@@ -134,7 +139,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
 
         ```python
         address = "{{wallet_address}}"
-        owned = contract.get_owned(address)
+        owned = contract.erc1155.get_owned(address)
         print(owned)
         ```
 
@@ -162,6 +167,13 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         """
         Get the total number of tokens on the contract
 
+        ```python
+        token_id = 0
+
+        total_supply = contract.erc1155.total_supply(token_id)
+        print(total_supply)
+        ```
+
         :return: total number of tokens on the contract
         """
 
@@ -170,6 +182,13 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
     def balance(self, token_id: int) -> int:
         """
         Get the connected wallets balance of a specific token
+
+        ```python
+        token_id = 0
+
+        balance = contract.erc1155.balance(token_id)
+        print(balance)
+        ```
 
         :param token_id: token ID to check the balance for
         :return: balance of the token
@@ -185,7 +204,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         address = "{{wallet_address}}"
         token_id = 0
 
-        balance = contract.balance_of(address, token_id)
+        balance = contract.erc1155.balance_of(address, token_id)
         ```
 
         :param address: address to check the balance for
@@ -199,6 +218,11 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         """
         Check if the contract is restricted so transfers can only be made by admins
 
+        ```python
+        is_restricted = contract.erc1155.is_transfer_restricted()
+        print(is_restricted)
+        ```
+
         :return: True if the contract is restricted, False otherwise
         """
 
@@ -211,6 +235,14 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
     def is_approved(self, address: str, operator: str) -> bool:
         """
         Check if an operator address is approved to manage a target addresses assets
+
+        ```python
+        address = "{{wallet_address}}"
+        operator = "0x..."
+
+        is_approved = contract.erc1155.is_approved(address, operator)
+        print(is_approved)
+        ```
 
         :param address: address whose assets to check the approval of
         :param operator: operator address to check the approval for
@@ -236,7 +268,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         token_id = 0
         amount = 1
 
-        receipt = contract.transfer(to, token_id, amount)
+        receipt = contract.erc1155.transfer(to, token_id, amount)
         ```
 
         :param to: wallet address to transfer the tokens to
@@ -255,6 +287,13 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         """
         Burn a specified amount of tokens from the connected wallet.
 
+        ```python
+        token_id = 0
+        amount = 1
+
+        receipt = contract.erc1155.burn(token_id, amount)
+        ```
+
         :param amount: amount of tokens to burn
         :returns: transaction receipt of the burn
         """
@@ -267,6 +306,13 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
     def set_approval_for_all(self, operator: str, approved: bool) -> TxReceipt:
         """
         Set the approval for an operator address to manage the connected wallets assets
+
+        ```python
+        operator = "{{wallet_address}}"
+        approved = "0x..."
+
+        receipt = contract.erc1155.set_approval_for_all(operator, approved)
+        ```
 
         :param operator: operator address to set the approval for
         :param approved: True if the operator is approved, False otherwise
@@ -281,6 +327,26 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
     ) -> TxResultWithId[EditionMetadata]:
         """
         Mint a new NFT to the connected wallet
+
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput
+
+        # Note that you can customize this metadata however you like
+        metadata_with_supply = EditionMetadataInput(
+            NFTMetadataInput.from_json({
+                "name": "Cool NFT",
+                "description": "This is a cool NFT",
+                "image": open("path/to/file.jpg", "rb"),
+            }),
+            100
+        )
+
+        # You can pass in any address here to mint the NFT to
+        tx = contract.erc1155.mint(metadata_with_supply)
+        receipt = tx.receipt
+        token_id = tx.id
+        nft = tx.data()
+        ```
 
         :param metadata_with_supply: EditionMetadataInput for the NFT to mint
         :returns: receipt, id, and metadata of the mint
@@ -310,7 +376,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         )
 
         # You can pass in any address here to mint the NFT to
-        tx = contract.mint_to("{{wallet_address}}", metadata_with_supply)
+        tx = contract.erc1155.mint_to("{{wallet_address}}", metadata_with_supply)
         receipt = tx.receipt
         token_id = tx.id
         nft = tx.data()
@@ -340,6 +406,16 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         """
         Mint additional supply of a token to the connected wallet
 
+        ```python
+        token_id = 0
+        additional_supply = 1
+
+        tx = contract.erc1155.mint_additional_supply(token_id, additional_supply)
+        receipt = tx.receipt
+        token_id = tx.id
+        nft = tx.data()
+        ```
+
         :param token_id: token ID to mint additional supply of
         :param additional_supply: additional supply to mint
         :returns: receipt, id, and metadata of the mint
@@ -354,6 +430,17 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
     ) -> TxResultWithId[EditionMetadata]:
         """
         Mint additional supply of a token to the specified wallet
+
+        ```python
+        to = "{{wallet_address}}"
+        token_id = 0
+        additional_supply = 1
+
+        tx = contract.erc1155.mint_additional_supply_to(to, token_id, additional_supply)
+        receipt = tx.receipt
+        token_id = tx.id
+        nft = tx.data()
+        ```
 
         :param to: wallet address to mint additional supply to
         :param token_id: token ID to mint additional supply of
@@ -372,6 +459,36 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
     ) -> List[TxResultWithId[EditionMetadata]]:
         """
         Mint a batch of NFTs to the connected wallet
+
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput
+
+        # Note that you can customize this metadata however you like
+        metadatas_with_supply = [
+            EditionMetadataInput(
+                NFTMetadataInput.from_json({
+                    "name": "Cool NFT",
+                    "description": "This is a cool NFT",
+                    "image": open("path/to/file.jpg", "rb"),
+                }),
+                100
+            ),
+            EditionMetadataInput(
+                NFTMetadataInput.from_json({
+                    "name": "Cooler NFT",
+                    "description": "This is a cooler NFT",
+                    "image": open("path/to/file.jpg", "rb"),
+                }),
+                100
+            )
+        ]
+
+        # You can pass in any address here to mint the NFT to
+        txs = contract.erc1155.mint_batch(metadatas_with_supply)
+        receipt = txs[0].receipt
+        token_id = txs[0].id
+        nft = txs[0].data()
+        ```
 
         :param metadatas_with_supply: list of EditionMetadataInput for the NFTs to mint
         :returns: receipts, ids, and metadatas of the mint
@@ -411,7 +528,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         ]
 
         # You can pass in any address here to mint the NFT to
-        txs = contract.mint_batch_to("{{wallet_address}}", metadatas_with_supply)
+        txs = contract.erc1155.mint_batch_to("{{wallet_address}}", metadatas_with_supply)
         receipt = txs[0].receipt
         token_id = txs[0].id
         nft = txs[0].data()
@@ -477,7 +594,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
             )
         ]
 
-        txs = contract.create_batch(metadata_with_supply)
+        txs = contract.erc1155.create_batch(metadata_with_supply)
         first_token_id = txs[0].id
         first_nft = txs[0].data()
         ```
@@ -536,7 +653,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         token_id = 0
         quantity = 1
 
-        tx = contract.claim_to(address, token_id, quantity)
+        tx = contract.erc1155.claim_to(address, token_id, quantity)
         receipt = tx.receipt
         claimed_token_id = tx.id
         claimed_nft = tx.data()
@@ -580,6 +697,16 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
     ) -> TxReceipt:
         """
         Claim NFTs.
+
+        ```python
+        token_id = 0
+        quantity = 1
+
+        tx = contract.erc1155.claim(token_id, quantity)
+        receipt = tx.receipt
+        claimed_token_id = tx.id
+        claimed_nft = tx.data()
+        ```
 
         :param quantity: Number of NFTs to claim.
         :param token_id: token ID of the token to claim.

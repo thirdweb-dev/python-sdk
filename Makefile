@@ -13,6 +13,9 @@ init:
 	poetry run pip3 install eth-brownie
 	npm install -g @0x/abi-gen
 	yarn
+	poetry shell
+	pip3 install pydoc-markdown
+	pip3 install 0x-order-utils
 
 test:
 	poetry run brownie test --network hardhat

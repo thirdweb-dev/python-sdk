@@ -9,7 +9,7 @@ Interface for interacting with an nft collection contract
 ## NFTCollection Objects
 
 ```python
-class NFTCollection(ERC721[TokenERC721])
+class NFTCollection(ERC721Standard[TokenERC721])
 ```
 
 Create a collection of one-of-one NFTs.
