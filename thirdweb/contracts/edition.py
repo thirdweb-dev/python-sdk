@@ -94,9 +94,7 @@ class Edition(ERC1155Standard[TokenERC1155]):
         :returns: receipt, id, and metadata of the mint
         """
 
-        return self.mint_to(
-            self._contract_wrapper.get_signer_address(), metadata_with_supply
-        )
+        return self._erc1155.mint(metadata_with_supply)
 
     def mint_to(
         self, to: str, metadata_with_supply: EditionMetadataInput
@@ -129,18 +127,7 @@ class Edition(ERC1155Standard[TokenERC1155]):
         :returns: receipt, id, and metadata of the mint
         """
 
-        uri = upload_or_extract_uri(metadata_with_supply.metadata, self._storage)
-        receipt = self._contract_wrapper.send_transaction(
-            "mint_to", [to, int(MAX_INT, 16), uri, metadata_with_supply.supply]
-        )
-        events = self._contract_wrapper.get_events("TransferSingle", receipt)
-
-        if len(events) == 0:
-            raise Exception("No TransferSingle event found")
-
-        id = events[0].get("args").get("id")  # type: ignore
-
-        return TxResultWithId(receipt, id=id, data=lambda: self.get(id))
+        return self._erc1155.mint_to(to, metadata_with_supply)
 
     def mint_additional_supply(
         self, token_id: int, additional_supply: int
@@ -153,9 +140,7 @@ class Edition(ERC1155Standard[TokenERC1155]):
         :returns: receipt, id, and metadata of the mint
         """
 
-        return self.mint_additional_supply_to(
-            self._contract_wrapper.get_signer_address(), token_id, additional_supply
-        )
+        return self._erc1155.mint_additional_supply(token_id, additional_supply)
 
     def mint_additional_supply_to(
         self, to: str, token_id: int, additional_supply: int
@@ -169,11 +154,7 @@ class Edition(ERC1155Standard[TokenERC1155]):
         :returns: receipt, id, and metadata of the mint
         """
 
-        metadata = self._erc1155._get_token_metadata(token_id)
-        receipt = self._contract_wrapper.send_transaction(
-            "mint_to", [to, token_id, metadata.uri, additional_supply]
-        )
-        return TxResultWithId(receipt, id=token_id, data=lambda: self.get(token_id))
+        return self._erc1155.mint_additional_supply_to(to, token_id, additional_supply)
 
     def mint_batch(
         self, metadatas_with_supply: List[EditionMetadataInput]
@@ -185,9 +166,7 @@ class Edition(ERC1155Standard[TokenERC1155]):
         :returns: receipts, ids, and metadatas of the mint
         """
 
-        return self.mint_batch_to(
-            self._contract_wrapper.get_signer_address(), metadatas_with_supply
-        )
+        return self._erc1155.mint_batch(metadatas_with_supply)
 
     def mint_batch_to(
         self, to: str, metadatas_with_supply: List[EditionMetadataInput]
@@ -230,28 +209,4 @@ class Edition(ERC1155Standard[TokenERC1155]):
         :returns: receipts, ids, and metadatas of the mint
         """
 
-        metadatas = [a.metadata for a in metadatas_with_supply]
-        supplies = [a.supply for a in metadatas_with_supply]
-        uris = upload_or_extract_uris(metadatas, self._storage)
-
-        encoded = []
-        interface = self._contract_wrapper.get_contract_interface()
-        for index, uri in enumerate(uris):
-            encoded.append(
-                interface.encodeABI(
-                    "mintTo", [to, int(MAX_INT, 16), uri, supplies[index]]
-                )
-            )
-
-        receipt = self._contract_wrapper.multi_call(encoded)
-        events = self._contract_wrapper.get_events("TokensMinted", receipt)
-
-        if len(events) == 0 and len(events) < len(metadatas):
-            raise Exception("No TokensMinted event found, minting failed")
-
-        results = []
-        for event in events:
-            id = event.get("args").get("tokenIdMinted")  # type: ignore
-            results.append(TxResultWithId(receipt, id=id, data=lambda: self.get(id)))
-
-        return results
+        return self._erc1155.mint_batch_to(to, metadatas_with_supply)

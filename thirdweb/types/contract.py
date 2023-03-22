@@ -14,8 +14,8 @@ from thirdweb.abi import (
     DropERC1155,
     Multiwrap,
 )
+from thirdweb.abi.i_mintable_erc20 import IMintableERC20
 from thirdweb.types.settings.metadata import ContractMetadataSchema
-
 
 TContractABI = TypeVar(
     "TContractABI",
@@ -32,6 +32,7 @@ TContractABI = TypeVar(
         DropERC721,
         DropERC1155,
         Multiwrap,
+        IMintableERC20
     ],
 )
 
@@ -69,7 +70,6 @@ TMetadataABI = TypeVar(
 )
 
 TContractSchema = TypeVar("TContractSchema", bound=ContractMetadataSchema)
-
 
 class ContractType(Enum):
     NFT_COLLECTION = "nft-collection"

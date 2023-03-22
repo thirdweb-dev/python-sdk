@@ -2,8 +2,6 @@ from typing import Final, List, Optional
 
 from web3 import Web3
 from thirdweb.abi import DropERC1155
-from thirdweb.abi.drop_erc721 import IDropAllowlistProof
-from thirdweb.common.claim_conditions import prepare_claim
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.contract_events import ContractEvents
 from thirdweb.core.classes.contract_metadata import ContractMetadata
@@ -15,7 +13,6 @@ from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.core.classes.erc_1155_standard import ERC1155Standard
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
-from thirdweb.types.contracts.claim_conditions import ClaimVerification
 from thirdweb.types.nft import NFTMetadata, NFTMetadataInput
 from thirdweb.types.sdk import SDKOptions
 from thirdweb.types.settings.metadata import EditionDropContractMetadata
@@ -23,7 +20,6 @@ from eth_account.account import LocalAccount
 from thirdweb.core.classes.drop_erc1155_claim_conditions import (
     DropERC1155ClaimConditions,
 )
-from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.types.tx import TxResultWithId
 from web3.eth import TxReceipt
 
@@ -123,41 +119,7 @@ class EditionDrop(ERC1155Standard[DropERC1155]):
         :return: List of tx results with ids for created NFTs.
         """
 
-        start_file_number = (
-            self._contract_wrapper._contract_abi.next_token_id_to_mint.call()
-        )
-        batch = self._storage.upload_metadata_batch(
-            [metadata.to_json() for metadata in metadatas],
-            start_file_number,
-            self._contract_wrapper._contract_abi.contract_address,
-            self._contract_wrapper.get_signer_address(),
-        )
-        base_uri = batch.base_uri
-
-        receipt = self._contract_wrapper.send_transaction(
-            "lazy_mint",
-            [
-                len(batch.metadata_uris),
-                base_uri if base_uri.endswith("/") else base_uri + "/",
-                Web3.toBytes(text=""),
-            ],
-        )
-
-        events = self._contract_wrapper.get_events("TokensLazyMinted", receipt)
-        start_index = events[0].get("args").get("startTokenId")  # type: ignore
-        ending_index = events[0].get("args").get("endTokenId")  # type: ignore
-        results = []
-
-        for id in range(start_index, ending_index + 1):
-            results.append(
-                TxResultWithId(
-                    receipt,
-                    id=id,
-                    data=lambda: self._erc1155._get_token_metadata(id),
-                )
-            )
-
-        return results
+        return self._erc1155.create_batch(metadatas)
 
     def claim_to(
         self,
@@ -186,29 +148,7 @@ class EditionDrop(ERC1155Standard[DropERC1155]):
         :return: tx receipt of the claim
         """
 
-        claim_verification = self._prepare_claim(token_id, quantity)
-        overrides: TxParams = TxParams(value=claim_verification.value)
-
-        proof = IDropAllowlistProof(
-            proof=claim_verification.proofs,
-            quantityLimitPerWallet=claim_verification.max_claimable,
-            pricePerToken=claim_verification.price_in_proof,
-            currency=claim_verification.currency_address_in_proof
-        )
-
-        return self._contract_wrapper.send_transaction(
-            "claim",
-            [
-                destination_address,
-                token_id,
-                quantity,
-                claim_verification.currency_address,
-                claim_verification.price,
-                proof,
-                "",
-            ],
-            overrides
-        )
+        return self._erc1155.claim_to(destination_address, token_id, quantity)
 
     def claim(
         self,
@@ -223,30 +163,4 @@ class EditionDrop(ERC1155Standard[DropERC1155]):
         :param proofs: List of merkle proofs.
         :return: tx receipt of the claim
         """
-        return self.claim_to(
-            self._contract_wrapper.get_signer_address(),
-            token_id,
-            quantity,
-        )
-
-    """
-    INTERNAL FUNCTIONS
-    """
-
-    def _prepare_claim(
-        self,
-        token_id: int,
-        quantity: int,
-    ) -> ClaimVerification:
-        address_to_claim = self._contract_wrapper.get_signer_address()
-        active = self.claim_conditions.get_active(token_id)
-        merkle_metadata = self.metadata.get().merkle
-
-        return prepare_claim(
-            address_to_claim,
-            quantity,
-            active,
-            merkle_metadata,
-            self._contract_wrapper,
-            self._storage,
-        )
+        return self._erc1155.claim(token_id, quantity)

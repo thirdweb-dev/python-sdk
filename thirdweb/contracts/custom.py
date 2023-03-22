@@ -7,7 +7,6 @@ from thirdweb.abi.token_erc1155 import TokenERC1155
 from thirdweb.abi.token_erc20 import TokenERC20
 from thirdweb.abi.token_erc721 import TokenERC721
 from thirdweb.common.error import NoSignerException
-from thirdweb.common.feature_detection import matches_interface
 from thirdweb.constants.role import ALL_ROLES
 from thirdweb.core.classes.base_contract import BaseContract
 from thirdweb.core.classes.contract_metadata import ContractMetadata
@@ -152,65 +151,37 @@ class CustomContract(BaseContract[Any]):
     """
 
     def _detect_roles(self):
-        interface_to_match = self._get_interface_functions(IPermissionsEnumerable.abi())
-
-        if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(IPermissionsEnumerable)
-            return ContractRoles(contract_wrapper, ALL_ROLES)
-        return None
+        contract_wrapper = self._get_contract_wrapper(IPermissionsEnumerable)
+        return ContractRoles(contract_wrapper, ALL_ROLES)
 
     def _detect_royalties(self):
-        interface_to_match = self._get_interface_functions(IRoyalty.abi())
-
-        if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(IRoyalty)
-            metadata = ContractMetadata(
-                contract_wrapper,
-                self._storage,
-                CustomContractMetadata,
-            )
-            return ContractRoyalty(contract_wrapper, metadata)
-        return None
+        contract_wrapper = self._get_contract_wrapper(IRoyalty)
+        metadata = ContractMetadata(
+            contract_wrapper,
+            self._storage,
+            CustomContractMetadata,
+        )
+        return ContractRoyalty(contract_wrapper, metadata)
 
     def _detect_primary_sales(self):
-        interface_to_match = self._get_interface_functions(IPrimarySale.abi())
-
-        if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(IPrimarySale)
-            return ContractPrimarySale(contract_wrapper)
-        return None
+        contract_wrapper = self._get_contract_wrapper(IPrimarySale)
+        return ContractPrimarySale(contract_wrapper)
 
     def _detect_platform_fee(self):
-        interface_to_match = self._get_interface_functions(IPlatformFee.abi())
-
-        if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(IPlatformFee)
-            return ContractPlatformFee(contract_wrapper)
-        return None
+        contract_wrapper = self._get_contract_wrapper(IPlatformFee)
+        return ContractPlatformFee(contract_wrapper)
 
     def _detect_erc_20(self):
-        interface_to_match = self._get_interface_functions(TokenERC20.abi())
-
-        if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(TokenERC20)
-            return ERC20(contract_wrapper, self._storage)
-        return None
+        contract_wrapper = self._get_contract_wrapper(TokenERC20)
+        return ERC20(contract_wrapper, self._storage)
 
     def _detect_erc_721(self):
-        interface_to_match = self._get_interface_functions(TokenERC721.abi())
-
-        if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(TokenERC721)
-            return ERC721(contract_wrapper, self._storage)
-        return None
+        contract_wrapper = self._get_contract_wrapper(TokenERC721)
+        return ERC721(contract_wrapper, self._storage)
 
     def _detect_erc_1155(self):
-        interface_to_match = self._get_interface_functions(TokenERC1155.abi())
-
-        if matches_interface(self.functions, interface_to_match):
-            contract_wrapper = self._get_contract_wrapper(TokenERC1155)
-            return ERC1155(contract_wrapper, self._storage)
-        return None
+        contract_wrapper = self._get_contract_wrapper(TokenERC1155)
+        return ERC1155(contract_wrapper, self._storage)
 
     def _get_interface_functions(self, abi: str) -> ContractFunctions:
         return (

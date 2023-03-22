@@ -1,22 +1,67 @@
-from typing import Generic, List
+from typing import Generic, List, Union
+
+from web3 import Web3
+from thirdweb.abi.drop_erc721 import DropERC721, IDropAllowlistProof
+from thirdweb.abi.token_erc721 import TokenERC721
+from thirdweb.common.claim_conditions import prepare_claim
 from thirdweb.common.error import NotFoundException
-from thirdweb.common.nft import fetch_token_metadata
+from thirdweb.common.nft import fetch_token_metadata, upload_or_extract_uri, upload_or_extract_uris
 from thirdweb.constants.currency import ZERO_ADDRESS
 from thirdweb.constants.role import Role, get_role_hash
 from thirdweb.core.classes.base_contract import BaseContract
+from thirdweb.core.classes.contract_metadata import ContractMetadata
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
+from thirdweb.core.classes.drop_claim_conditions import DropClaimConditions
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import TERC721
-from thirdweb.types.nft import NFTMetadata, NFTMetadataOwner, QueryAllParams
+from zero_ex.contract_wrappers.tx_params import TxParams
+from thirdweb.types.contracts.claim_conditions import ClaimVerification
+from thirdweb.types.nft import NFTMetadata, NFTMetadataInput, NFTMetadataOwner, QueryAllParams
 from web3.eth import TxReceipt
+from thirdweb.types.settings.metadata import NFTDropContractMetadata
+
+from thirdweb.types.tx import TxResultWithId
 
 
 class ERC721(Generic[TERC721], BaseContract[TERC721]):
     _storage: IpfsStorage
+    _token: ContractWrapper[TokenERC721]
+    _drop: ContractWrapper[DropERC721]
+    _metadata: ContractMetadata
 
-    def __init__(self, contract_wrapper: ContractWrapper, storage: IpfsStorage):
+    claim_conditions: DropClaimConditions
+
+    def __init__(self, contract_wrapper: ContractWrapper[TERC721], storage: IpfsStorage):
         super().__init__(contract_wrapper)
         self._storage = storage
+
+        address = contract_wrapper._contract_abi.contract_address
+        provider = contract_wrapper.get_provider()
+        signer = contract_wrapper.get_signer()
+        options = contract_wrapper.get_options()
+
+        token_abi = TokenERC721(provider, address)
+        self._token = ContractWrapper(
+            token_abi,
+            provider,
+            signer,
+            options
+        )
+
+        drop_abi = DropERC721(provider, address)
+        self._drop = ContractWrapper(
+            drop_abi,
+            provider,
+            signer,
+            options
+        )
+
+        self._metadata: ContractMetadata = ContractMetadata(
+            self._drop, storage, NFTDropContractMetadata
+        )
+        self.claim_conditions = DropClaimConditions(
+            self._drop, self._metadata, self._storage
+        )
 
     """
     READ FUNCTIONS
@@ -69,6 +114,81 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
                 pass
 
         return nfts
+    
+    def get_all_claimed(
+        self, query_params: QueryAllParams = QueryAllParams()
+    ) -> List[NFTMetadataOwner]:
+        """
+        Get all claimed NFTs.
+
+        ```python
+        claimed_nfts = contract.get_all_claimed()
+        first_owner = claimed_nfts[0].owner
+        ```
+
+        :param query_params: Query parameters.
+        :return: List of nft metadatas and owners for claimed nfts.
+        """
+
+        max_id = min(
+            self._drop._contract_abi.next_token_id_to_claim.call(),
+            query_params.start + query_params.count,
+        )
+
+        return [self.get(token_id) for token_id in range(query_params.start, max_id)]
+
+    def get_all_unclaimed(
+        self, query_params: QueryAllParams = QueryAllParams()
+    ) -> List[NFTMetadata]:
+        """
+        Get all unclaimed NFTs.
+
+        ```python
+        unclaimed_nfts = contract.get_all_unclaimed()
+        first_nft_name = unclaimed_nfts[0].name
+        ```
+
+        :param query_params: Query parameters.
+        :return: List of nft metadatas.
+        """
+
+        max_id = min(
+            self._drop._contract_abi.next_token_id_to_mint.call(),
+            query_params.start + query_params.count,
+        )
+        unminted_id = self._drop._contract_abi.next_token_id_to_claim.call()
+
+        return [
+            self._get_token_metadata(unminted_id + i)
+            for i in range(max_id - unminted_id)
+        ]
+
+    def total_claimed_supply(self) -> int:
+        """
+        Get the total number of NFTs claimed from this contract
+
+        ```python
+        total_claimed = contract.total_claimed_supply()
+        ```
+
+        :return: Total number of NFTs claimed from this contract
+        """
+        return self._drop._contract_abi.next_token_id_to_claim.call()
+
+    def total_unclaimed_supply(self) -> int:
+        """
+        Get the total number of unclaimed NFTs in this contract
+
+        ```python
+        total_unclaimed = contract.total_unclaimed_supply()
+        ```
+
+        :return: Total number of unclaimed NFTs in this contract
+        """
+        return (
+            self._drop._contract_abi.next_token_id_to_mint.call()
+            - self.total_claimed_supply()
+        )
 
     def get_total_count(self) -> int:
         """
@@ -210,6 +330,275 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         return self._contract_wrapper.send_transaction("approve", [operator, token_id])
 
+    def mint(
+        self, metadata: Union[NFTMetadataInput, str]
+    ) -> TxResultWithId[NFTMetadataOwner]:
+        """
+        Mint a new NFT to the connected wallet
+
+        :param metadata: metadata of the NFT to mint
+        :returns: receipt, id, and metadata for the mint
+        """
+
+        return self.mint_to(self._contract_wrapper.get_signer_address(), metadata)
+
+    def mint_to(
+        self, to: str, metadata: Union[NFTMetadataInput, str]
+    ) -> TxResultWithId[NFTMetadataOwner]:
+        """
+        Mint a new NFT to the specified wallet
+
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput
+
+        # Note that you can customize this metadata however you like
+        metadata = NFTMetadataInput.from_json({
+            "name": "Cool NFT",
+            "description": "This is a cool NFT",
+            "image": open("path/to/file.jpg", "rb"),
+        })
+
+        # You can pass in any address here to mint the NFT to
+        tx = contract.mint_to("{{wallet_address}}", metadata)
+        receipt = tx.receipt
+        token_id = tx.id
+        nft = tx.data()
+        ```
+
+        :param to: wallet address to mint the NFT to
+        :param metadata: metadata of the NFT to mint
+        :returns: receipt, id, and metadata for the mint
+        """
+
+        uri = upload_or_extract_uri(metadata, self._storage)
+        receipt = self._token.send_transaction("mint_to", [to, uri])
+        events = self._token.get_events("Transfer", receipt)
+
+        if len(events) == 0:
+            raise Exception("No Transfer event found")
+
+        id = events[0].get("args").get("tokenId")  # type: ignore
+
+        return TxResultWithId(receipt, id=id, data=lambda: self.get(id))
+
+    def mint_batch(
+        self, metadatas: List[Union[NFTMetadataInput, str]]
+    ) -> List[TxResultWithId[NFTMetadataOwner]]:
+        """
+        Mint a batch of new NFTs to the connected wallet
+
+        :param metadatas: list of metadata of the NFTs to mint
+        :returns: receipts, ids, and metadatas for each mint
+        """
+
+        return self.mint_batch_to(
+            self._contract_wrapper.get_signer_address(), metadatas
+        )
+
+    def mint_batch_to(
+        self, to: str, metadatas: List[Union[NFTMetadataInput, str]]
+    ) -> List[TxResultWithId[NFTMetadataOwner]]:
+        """
+        Mint a batch of new NFTs to the specified wallet
+
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput
+
+        # You can customize this metadata however you like
+        metadatas = [
+            NFTMetadataInput.from_json({
+                "name": "Cool NFT",
+                "description": "This is a cool NFT",
+                "image": open("path/to/file.jpg", "rb"),
+            }),
+            NFTMetadataInput.from_json({
+                "name": "Cooler NFT",
+                "description": "This is a cooler NFT",
+                "image": open("path/to/file.jpg", "rb"),
+            }),
+        ]
+
+        # You can pass in any address here to mint the NFT to
+        txs = contract.mint_batch_to("{{wallet_address}}", metadatas)
+        receipt = txs[0].receipt
+        first_token_id = txs[0].id
+        first_nft = txs[0].data()
+        ```
+
+        :param to: wallet address to mint the NFTs to
+        :param metadatas: list of metadata of the NFTs to mint
+        :returns: receipts, ids, and metadatas for each mint
+        """
+
+        uris = upload_or_extract_uris(metadatas, self._storage)
+
+        encoded = []
+        interface = self._token.get_contract_interface()
+        for uri in uris:
+            encoded.append(interface.encodeABI("mintTo", [to, uri]))
+
+        receipt = self._token.multi_call(encoded)
+        events = self._token.get_events("TokensMinted", receipt)
+
+        if len(events) == 0 or len(events) < len(metadatas):
+            raise Exception("No TokensMinted event found, minting failed")
+
+        results = []
+        for event in events:
+            id = event.get("args").get("tokenIdMinted")  # type: ignore
+            results.append(TxResultWithId(receipt, id=id, data=lambda: self.get(id)))
+
+        return results
+
+    def create_batch(
+        self, metadatas: List[NFTMetadataInput]
+    ) -> List[TxResultWithId[NFTMetadata]]:
+        """
+        Create a batch of NFTs.
+
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput
+
+        # You can customize this metadata however you like
+        metadatas = [
+            NFTMetadataInput.from_json({
+                "name": "Cool NFT",
+                "description": "This is a cool NFT",
+                "image": open("path/to/file.jpg", "rb"),
+            }),
+            NFTMetadataInput.from_json({
+                "name": "Cooler NFT",
+                "description": "This is a cooler NFT",
+                "image": open("path/to/file.jpg", "rb"),
+            }),
+        ]
+
+        txs = contract.create_batch(metadatas)
+        first_token_id = txs[0].id
+        first_nft = txs[0].data()
+        ```
+
+
+        :param metadatas: List of NFT metadata inputs.
+        :return: List of tx results with ids for created NFTs.
+        """
+
+        start_file_number = (
+            self._drop._contract_abi.next_token_id_to_mint.call()
+        )
+        batch = self._storage.upload_metadata_batch(
+            [metadata.to_json() for metadata in metadatas],
+            start_file_number,
+            self._drop._contract_abi.contract_address,
+            self._drop.get_signer_address(),
+        )
+        base_uri = batch.base_uri
+
+        receipt = self._drop.send_transaction(
+            "lazy_mint",
+            [
+                len(batch.metadata_uris),
+                base_uri if base_uri.endswith("/") else base_uri + "/",
+                Web3.toBytes(text=""),
+            ],
+        )
+
+        events = self._drop.get_events("TokensLazyMinted", receipt)
+        start_index = events[0].get("args").get("startTokenId")  # type: ignore
+        ending_index = events[0].get("args").get("endTokenId")  # type: ignore
+        results = []
+
+        for id in range(start_index, ending_index + 1):
+            results.append(
+                TxResultWithId(
+                    receipt,
+                    id=id,
+                    data=lambda: self._get_token_metadata(id),
+                )
+            )
+
+        return results
+
+    def claim_to(
+        self,
+        destination_address: str,
+        quantity: int,
+    ) -> List[TxResultWithId[NFTMetadata]]:
+        """
+        Claim NFTs to a destination address.
+
+        ```python
+        address = {{wallet_address}}
+        quantity = 1
+
+        tx = contract.claim_to(address, quantity)
+        receipt = tx.receipt
+        claimed_token_id = tx.id
+        claimed_nft = tx.data()
+        ```
+
+        :param destination_address: Destination address to claim to.
+        :param quantity: Number of NFTs to claim.
+        :param proofs: List of merkle proofs.
+        :return: List of tx results with ids for claimed NFTs.
+        """
+
+        # TODO: OVERRIDES
+        claim_verification = self._prepare_claim(quantity)
+        overrides: TxParams = TxParams(value=claim_verification.value)
+
+        proof = IDropAllowlistProof(
+            proof=claim_verification.proofs,
+            quantityLimitPerWallet=claim_verification.max_claimable,
+            pricePerToken=claim_verification.price_in_proof,
+            currency=claim_verification.currency_address_in_proof
+        )
+
+        receipt = self._drop.send_transaction(
+            "claim",
+            [
+                destination_address,
+                quantity,
+                claim_verification.currency_address,
+                claim_verification.price,
+                proof,
+                "",
+            ],
+            overrides
+        )
+
+        events = self._drop.get_events("TokensClaimed", receipt)
+        start_index = events[0].get("args").get("startTokenId")  # type: ignore
+        ending_index = start_index + quantity
+
+        results = []
+        for id in range(start_index, ending_index + 1):
+            results.append(
+                TxResultWithId(
+                    receipt,
+                    id=id,
+                    data=lambda: self._get_token_metadata(id),
+                )
+            )
+
+        return results
+
+    def claim(
+        self,
+        quantity: int,
+    ) -> List[TxResultWithId[NFTMetadata]]:
+        """
+        Claim NFTs.
+
+        :param quantity: Number of NFTs to claim.
+        :param proofs: List of merkle proofs.
+        :return: List of tx results with ids for claimed NFTs.
+        """
+        return self.claim_to(
+            self._contract_wrapper.get_signer_address(),
+            quantity,
+        )
+
     """
     INTERNAL FUNCTIONS
     """
@@ -221,3 +610,20 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
             raise NotFoundException(str(token_id))
 
         return fetch_token_metadata(token_id, token_uri, self._storage)
+    
+    def _prepare_claim(
+        self,
+        quantity: int,
+    ) -> ClaimVerification:
+        address_to_claim = self._drop.get_signer_address()
+        active = self.claim_conditions.get_active()
+        merkle_metadata = self._metadata.get().merkle
+
+        return prepare_claim(
+            address_to_claim,
+            quantity,
+            active,
+            merkle_metadata,
+            self._drop,
+            self._storage,
+        )
