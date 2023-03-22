@@ -1,7 +1,6 @@
 from typing import Final, List, Optional
 from thirdweb.abi import DropERC721
 from thirdweb.abi.drop_erc721 import IDropAllowlistProof
-from thirdweb.common.claim_conditions import prepare_claim
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.contract_events import ContractEvents
 from thirdweb.core.classes.contract_metadata import ContractMetadata
@@ -14,7 +13,6 @@ from thirdweb.core.classes.drop_claim_conditions import DropClaimConditions
 from thirdweb.core.classes.erc_721_standard import ERC721Standard
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
-from thirdweb.types.contracts.claim_conditions import ClaimVerification
 from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.types.nft import (
     NFTMetadata,
@@ -136,12 +134,7 @@ class NFTDrop(ERC721Standard[DropERC721]):
         :return: List of nft metadatas and owners for claimed nfts.
         """
 
-        max_id = min(
-            self._contract_wrapper._contract_abi.next_token_id_to_claim.call(),
-            query_params.start + query_params.count,
-        )
-
-        return [self.get(token_id) for token_id in range(query_params.start, max_id)]
+        return self.get_all_claimed(query_params)
 
     def get_all_unclaimed(
         self, query_params: QueryAllParams = QueryAllParams()
@@ -158,16 +151,7 @@ class NFTDrop(ERC721Standard[DropERC721]):
         :return: List of nft metadatas.
         """
 
-        max_id = min(
-            self._contract_wrapper._contract_abi.next_token_id_to_mint.call(),
-            query_params.start + query_params.count,
-        )
-        unminted_id = self._contract_wrapper._contract_abi.next_token_id_to_claim.call()
-
-        return [
-            self._get_token_metadata(unminted_id + i)
-            for i in range(max_id - unminted_id)
-        ]
+        return self.get_all_unclaimed(query_params)
 
     def total_claimed_supply(self) -> int:
         """
@@ -179,7 +163,7 @@ class NFTDrop(ERC721Standard[DropERC721]):
 
         :return: Total number of NFTs claimed from this contract
         """
-        return self._contract_wrapper._contract_abi.next_token_id_to_claim.call()
+        return self.total_claimed_supply()
 
     def total_unclaimed_supply(self) -> int:
         """
@@ -191,10 +175,7 @@ class NFTDrop(ERC721Standard[DropERC721]):
 
         :return: Total number of unclaimed NFTs in this contract
         """
-        return (
-            self._contract_wrapper._contract_abi.next_token_id_to_mint.call()
-            - self.total_claimed_supply()
-        )
+        return self.total_unclaimed_supply()
 
     def create_batch(
         self, metadatas: List[NFTMetadataInput]
@@ -229,41 +210,7 @@ class NFTDrop(ERC721Standard[DropERC721]):
         :return: List of tx results with ids for created NFTs.
         """
 
-        start_file_number = (
-            self._contract_wrapper._contract_abi.next_token_id_to_mint.call()
-        )
-        batch = self._storage.upload_metadata_batch(
-            [metadata.to_json() for metadata in metadatas],
-            start_file_number,
-            self._contract_wrapper._contract_abi.contract_address,
-            self._contract_wrapper.get_signer_address(),
-        )
-        base_uri = batch.base_uri
-
-        receipt = self._contract_wrapper.send_transaction(
-            "lazy_mint",
-            [
-                len(batch.metadata_uris),
-                base_uri if base_uri.endswith("/") else base_uri + "/",
-                Web3.toBytes(text=""),
-            ],
-        )
-
-        events = self._contract_wrapper.get_events("TokensLazyMinted", receipt)
-        start_index = events[0].get("args").get("startTokenId")  # type: ignore
-        ending_index = events[0].get("args").get("endTokenId")  # type: ignore
-        results = []
-
-        for id in range(start_index, ending_index + 1):
-            results.append(
-                TxResultWithId(
-                    receipt,
-                    id=id,
-                    data=lambda: self._get_token_metadata(id),
-                )
-            )
-
-        return results
+        return self._erc721.create_batch(metadatas)
 
     def claim_to(
         self,
@@ -289,45 +236,7 @@ class NFTDrop(ERC721Standard[DropERC721]):
         :return: List of tx results with ids for claimed NFTs.
         """
 
-        # TODO: OVERRIDES
-        claim_verification = self._prepare_claim(quantity)
-        overrides: TxParams = TxParams(value=claim_verification.value)
-
-        proof = IDropAllowlistProof(
-            proof=claim_verification.proofs,
-            quantityLimitPerWallet=claim_verification.max_claimable,
-            pricePerToken=claim_verification.price_in_proof,
-            currency=claim_verification.currency_address_in_proof
-        )
-
-        receipt = self._contract_wrapper.send_transaction(
-            "claim",
-            [
-                destination_address,
-                quantity,
-                claim_verification.currency_address,
-                claim_verification.price,
-                proof,
-                "",
-            ],
-            overrides
-        )
-
-        events = self._contract_wrapper.get_events("TokensClaimed", receipt)
-        start_index = events[0].get("args").get("startTokenId")  # type: ignore
-        ending_index = start_index + quantity
-
-        results = []
-        for id in range(start_index, ending_index + 1):
-            results.append(
-                TxResultWithId(
-                    receipt,
-                    id=id,
-                    data=lambda: self._get_token_metadata(id),
-                )
-            )
-
-        return results
+        return self._erc721.claim_to(destination_address, quantity)
 
     def claim(
         self,
@@ -340,28 +249,4 @@ class NFTDrop(ERC721Standard[DropERC721]):
         :param proofs: List of merkle proofs.
         :return: List of tx results with ids for claimed NFTs.
         """
-        return self.claim_to(
-            self._contract_wrapper.get_signer_address(),
-            quantity,
-        )
-
-    """
-    INTERNAL FUNCTIONS
-    """
-
-    def _prepare_claim(
-        self,
-        quantity: int,
-    ) -> ClaimVerification:
-        address_to_claim = self._contract_wrapper.get_signer_address()
-        active = self.claim_conditions.get_active()
-        merkle_metadata = self.metadata.get().merkle
-
-        return prepare_claim(
-            address_to_claim,
-            quantity,
-            active,
-            merkle_metadata,
-            self._contract_wrapper,
-            self._storage,
-        )
+        return self._erc721.claim(quantity)

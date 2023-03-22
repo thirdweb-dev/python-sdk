@@ -132,7 +132,7 @@ class NFTCollection(ERC721Standard[TokenERC721]):
         :returns: receipt, id, and metadata for the mint
         """
 
-        return self.mint_to(self._contract_wrapper.get_signer_address(), metadata)
+        return self._erc721.mint(metadata)
 
     def mint_to(
         self, to: str, metadata: Union[NFTMetadataInput, str]
@@ -162,16 +162,7 @@ class NFTCollection(ERC721Standard[TokenERC721]):
         :returns: receipt, id, and metadata for the mint
         """
 
-        uri = upload_or_extract_uri(metadata, self._storage)
-        receipt = self._contract_wrapper.send_transaction("mint_to", [to, uri])
-        events = self._contract_wrapper.get_events("Transfer", receipt)
-
-        if len(events) == 0:
-            raise Exception("No Transfer event found")
-
-        id = events[0].get("args").get("tokenId")  # type: ignore
-
-        return TxResultWithId(receipt, id=id, data=lambda: self.get(id))
+        return self._erc721.mint_to(to, metadata)
 
     def mint_batch(
         self, metadatas: List[Union[NFTMetadataInput, str]]
@@ -183,9 +174,7 @@ class NFTCollection(ERC721Standard[TokenERC721]):
         :returns: receipts, ids, and metadatas for each mint
         """
 
-        return self.mint_batch_to(
-            self._contract_wrapper.get_signer_address(), metadatas
-        )
+        return self.mint_batch(metadatas)
 
     def mint_batch_to(
         self, to: str, metadatas: List[Union[NFTMetadataInput, str]]
@@ -222,22 +211,4 @@ class NFTCollection(ERC721Standard[TokenERC721]):
         :returns: receipts, ids, and metadatas for each mint
         """
 
-        uris = upload_or_extract_uris(metadatas, self._storage)
-
-        encoded = []
-        interface = self._contract_wrapper.get_contract_interface()
-        for uri in uris:
-            encoded.append(interface.encodeABI("mintTo", [to, uri]))
-
-        receipt = self._contract_wrapper.multi_call(encoded)
-        events = self._contract_wrapper.get_events("TokensMinted", receipt)
-
-        if len(events) == 0 or len(events) < len(metadatas):
-            raise Exception("No TokensMinted event found, minting failed")
-
-        results = []
-        for event in events:
-            id = event.get("args").get("tokenIdMinted")  # type: ignore
-            results.append(TxResultWithId(receipt, id=id, data=lambda: self.get(id)))
-
-        return results
+        return self._erc721.mint_batch_to(to, metadatas)

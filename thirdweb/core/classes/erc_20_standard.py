@@ -12,7 +12,6 @@ from thirdweb.types.currency import (
 )
 from web3.eth import TxReceipt
 
-
 class ERC20Standard(BaseContract[TokenERC20]):
     _storage: IpfsStorage
     _erc20: ERC20
