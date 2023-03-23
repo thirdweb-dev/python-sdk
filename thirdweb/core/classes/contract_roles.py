@@ -21,6 +21,12 @@ class ContractRoles:
         """
         Get all role members on this contract.
 
+        ```python
+        all_role_members = contract.roles.get_all()
+        print(all_role_members)
+        ```
+
+        :extension: PermissionsEnumerable
         :returns: a dictionary of role members for each role
         """
 
@@ -32,11 +38,22 @@ class ContractRoles:
             roles[role] = self.get(role)
 
         return roles
-
+    
     def get(self, role: Role) -> List[str]:
         """
         Get all members of a role on this contract.
 
+        ```python
+        from thirdweb.constants.role import Role
+
+        # Select any role to filter by
+        role = Role.ADMIN
+
+        role_members = contract.roles.get(role)
+        print(role_members)
+        ```
+
+        :extension: Permissions
         :param role: role to get members of
         :returns: list of members of the role
         """
@@ -68,6 +85,16 @@ class ContractRoles:
         """
         Grant a role to an address.
 
+        ```python
+        from thirdweb.constants.role import Role
+
+        address = "{{wallet_address}}" # Address to grant a role
+        role = Role.ADMIN # Select a role to grant
+
+        receipt = contract.roles.grant(role, address)
+        ```
+
+        :extension: Permissions
         :param role: role to grant
         :param address: address to grant the role to
         :returns: transaction receipt of granting the role
@@ -85,6 +112,16 @@ class ContractRoles:
         """
         Revoke a role from an address.
 
+        ```python
+        from thirdweb.constants.role import Role
+
+        address = "{{wallet_address}}" # Address to revoke a role from
+        role = Role.MINTER # The role to revoke
+
+        receipt = contract.roles.revoke(role, address)
+        ```
+
+        :extensions: Permissions
         :param role: role to revoke
         :param address: address to revoke the role from
         :returns: transaction receipt of revoking the role

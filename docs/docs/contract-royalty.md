@@ -20,6 +20,11 @@ def get_default_royalty_info() -> ContractRoyaltySchema
 
 Get the default royalty information for this contract.
 
+```python
+royalty_info = contract.royalties.get_default_royalty_info()
+print(royalty_info)
+```
+
 **Returns**:
 
 the default royalty information.
@@ -33,6 +38,13 @@ def get_token_royalty_info(token_id: int) -> ContractRoyaltySchema
 ```
 
 Get the royalty information for a specific token.
+
+```python
+token_id = 0
+
+royalty_info = contract.royalties.get_token_royalty_info(token_id)
+print(royalty_info)
+```
 
 **Arguments**:
 
@@ -52,6 +64,17 @@ def set_default_royalty_info(royalty_data: ContractRoyaltySchema) -> TxReceipt
 
 Set the default royalty information for this contract.
 
+```python
+from thirdweb.types import ContractRoyaltySchema
+
+royalty_data = ContractRoyaltySchema(
+    seller_fee_basis_points=100,
+    fee_recipient="{{wallet_address}}"
+)
+
+receipt = contract.royalties.set_default_royalty_info()
+```
+
 **Arguments**:
 
 - `royalty_data`: the default royalty information.
@@ -70,6 +93,18 @@ def set_token_royalty_info(token_id: int,
 ```
 
 Set the royalty information for a specific token.
+
+```python
+from thirdweb.types import ContractRoyaltySchema
+
+token_id = 0
+royalty_data = ContractRoyaltySchema(
+    seller_fee_basis_points=100,
+    fee_recipient="{{wallet_address}}"
+)
+
+receipt = contract.royalties.set_token_royalty_info(token_id, royalty_data)
+```
 
 **Arguments**:
 

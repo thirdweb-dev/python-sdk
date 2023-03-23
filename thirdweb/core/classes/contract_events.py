@@ -4,6 +4,7 @@ from thirdweb.core.classes.contract_wrapper import ContractWrapper
 from thirdweb.types.contract import TContractABI
 from thirdweb.types.events import EventQueryOptions, TxEvent
 from web3.datastructures import AttributeDict
+
 class ContractEvents(Generic[TContractABI]):
     _contract_wrapper: ContractWrapper[TContractABI]
 

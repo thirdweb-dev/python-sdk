@@ -15,6 +15,13 @@ class ContractPlatformFee(Generic[TPlatformFeeABI]):
         """
         Get the platform fee of this contract.
 
+        ```python
+        platform_fees = contract.platform_fee.get()
+        print(platform_fees.platform_fee_basis_points)
+        print(platform_fees.platform_fee_recipient)
+        ```
+
+        :extension: PlatformFee
         :returns: the platform fee.
         """
 
@@ -22,12 +29,24 @@ class ContractPlatformFee(Generic[TPlatformFeeABI]):
             platform_fee_recipient,
             platform_fee_bps,
         ) = self._contract_wrapper._contract_abi.get_platform_fee_info.call()
-        return ContractPlatformFeeSchema(platform_fee_recipient, platform_fee_bps)
+        return ContractPlatformFeeSchema(platform_fee_bps, platform_fee_recipient)
 
     def set(self, platform_fee_info: ContractPlatformFeeSchema) -> TxReceipt:
         """
         Set the platform fee of this contract.
 
+        ```python
+        from thirdweb.types import ContractPlatformFeeSchema
+
+        platform_fee_info = ContractPlatformFeeSchema(
+            platform_fee_basis_points=100 # 1%
+            platform_fee_receipient="{{wallet_address}}"
+        )
+
+        receipt = contract.platform_fee.set(platform_fee_info)
+        ```
+
+        :extension: PlatformFee
         :param platform_fee_info: the platform fee info to set.
         :returns: the transaction receipt of setting the platform fee.
         """

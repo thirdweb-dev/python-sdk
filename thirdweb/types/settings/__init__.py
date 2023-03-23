@@ -6,4 +6,7 @@ from .metadata import (
     NFTDropContractMetadata,
     EditionDropContractMetadata,
     MultiwrapContractMetadata,
+    ContractMetadataSchema,
+    ContractPlatformFeeSchema,
+    ContractRoyaltySchema,
 )

@@ -7,7 +7,7 @@
 ## EditionDrop Objects
 
 ```python
-class EditionDrop(ERC1155[DropERC1155])
+class EditionDrop(ERC1155Standard[DropERC1155])
 ```
 
 Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -80,10 +80,8 @@ List of tx results with ids for created NFTs.
 #### claim\_to
 
 ```python
-def claim_to(destination_address: str,
-             token_id: int,
-             quantity: int,
-             proofs: List[str] = [DEFAULT_MERKLE_ROOT]) -> TxReceipt
+def claim_to(destination_address: str, token_id: int,
+             quantity: int) -> TxReceipt
 ```
 
 Claim NFTs to a destination address.
@@ -115,9 +113,7 @@ tx receipt of the claim
 #### claim
 
 ```python
-def claim(token_id: int,
-          quantity: int,
-          proofs: List[str] = [DEFAULT_MERKLE_ROOT]) -> TxReceipt
+def claim(token_id: int, quantity: int) -> TxReceipt
 ```
 
 Claim NFTs.

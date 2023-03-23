@@ -9,7 +9,7 @@ Interface for interacting with a token contract
 ## Token Objects
 
 ```python
-class Token(ERC20)
+class Token(ERC20Standard)
 ```
 
 Create a standard crypto token or cryptocurrency.

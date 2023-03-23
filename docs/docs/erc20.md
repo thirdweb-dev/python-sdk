@@ -21,7 +21,7 @@ def get() -> Currency
 Get the token metadata including name, symbol, decimals, etc.
 
 ```python
-token = contract.get()
+token = contract.erc20.get()
 print(token)
 ```
 
@@ -40,7 +40,7 @@ def balance() -> CurrencyValue
 Get the token balance of the connected wallet.
 
 ```python
-balance = contract.balance()
+balance = contract.erc20.balance()
 print(balance)
 ```
 
@@ -60,7 +60,7 @@ Get the balance of the specified wallet
 
 ```python
 address = "{{wallet_address}}"
-balance = contract.balance_of(address)
+balance = contract.erc20.balance_of(address)
 print(balance)
 ```
 
@@ -82,6 +82,11 @@ def total_supply() -> CurrencyValue
 
 Get the total minted supply of the token.
 
+```python
+supply = contract.erc20.total_supply()
+print(supply)
+```
+
 **Returns**:
 
 total minted supply of the token
@@ -98,7 +103,8 @@ Get a specific spenders allowance of this token for the connected wallet.
 
 ```python
 spender = "{{wallet_address}}"
-allowance = contract.allowance(spender)
+allowance = contract.erc20.allowance(spender)
+print(allowance)
 ```
 
 **Arguments**:
@@ -126,7 +132,7 @@ address = "{{wallet_address}}"
 # Address of the wallet to check the token allowance
 spender = "0x..."
 
-allowance = contract.allowance_of(address, spender)
+allowance = contract.erc20.allowance_of(address, spender)
 print(allowance)
 ```
 
@@ -149,9 +155,91 @@ def is_transfer_restricted() -> bool
 
 Check whether transfer is restricted for tokens in this module.
 
+```python
+is_restricted = contract.erc20.is_transfer_restricted()
+print(is_restricted)
+```
+
 **Returns**:
 
 True if transfer is restricted, False otherwise
+
+<a id="core.classes.erc_20.ERC20.mint"></a>
+
+#### mint
+
+```python
+def mint(amount: Price) -> TxReceipt
+```
+
+Mint tokens to the connected wallet.
+
+```python
+address = "{{wallet_address}}"
+amount = 100
+
+receipt = contract.erc20.mint(amount)
+```
+
+**Arguments**:
+
+- `amount`: amount of tokens to mint
+
+**Returns**:
+
+transaction receipt of the mint
+
+<a id="core.classes.erc_20.ERC20.mint_to"></a>
+
+#### mint\_to
+
+```python
+def mint_to(to: str, amount: Price) -> TxReceipt
+```
+
+Mint tokens to a specified wallet.
+
+```python
+address = "{{wallet_address}}"
+amount = 100
+
+receipt = contract.erc20.mint_to(address, amount)
+```
+
+**Arguments**:
+
+- `to`: wallet address to mint tokens to
+- `amount`: amount of tokens to mint
+
+**Returns**:
+
+transaction receipt of the mint
+
+<a id="core.classes.erc_20.ERC20.mint_batch_to"></a>
+
+#### mint\_batch\_to
+
+```python
+def mint_batch_to(args: List[TokenAmount]) -> TxReceipt
+```
+
+Mint tokens to a list of wallets.
+
+```python
+from thirdweb.types.currency import TokenAmount
+
+args = [
+    TokenAmount("{{wallet_address}}", 1),
+    TokenAmount("{{wallet_address}}", 2),
+]
+
+**Arguments**:
+
+- `args`: list of wallet addresses and amounts to mint
+
+**Returns**:
+
+transaction receipt of the mint
 
 <a id="core.classes.erc_20.ERC20.transfer"></a>
 
@@ -170,7 +258,7 @@ to = "0x...
 # Amount of tokens to transfer
 amount = 0.1
 
-contract.transfer(to, amount)
+contract.erc20.transfer(to, amount)
 ```
 
 **Arguments**:
@@ -202,7 +290,7 @@ to = "0x..."
 # Amount of tokens to transfer
 amount = 0.1
 
-contract.transfer_from(fr, to, amount)
+contract.erc20.transfer_from(fr, to, amount)
 ```
 
 **Arguments**:
@@ -230,7 +318,7 @@ a specified amount.
 ```python
 spender = "0x..."
 amount = 100
-contract.set_allowance(spender, amount)
+contract.erc20.set_allowance(spender, amount)
 ```
 
 **Arguments**:
@@ -260,7 +348,7 @@ data = [
     TokenAmount("0x...", 0.2),
 ]
 
-contract.transfer_batch(data)
+contract.erc20.transfer_batch(data)
 ```
 
 **Arguments**:
@@ -283,7 +371,7 @@ Burn a specified amount of tokens from the connected wallet.
 
 ```python
 amount = 0.1
-contract.burn(amount)
+contract.erc20.burn(amount)
 ```
 
 **Arguments**:
@@ -307,7 +395,7 @@ Burn a specified amount of tokens from a specified wallet.
 ```python
 holder = "{{wallet_address}}"
 amount = 0.1
-contract.burn_from(holder, amount)
+contract.erc20.burn_from(holder, amount)
 ```
 
 **Arguments**:

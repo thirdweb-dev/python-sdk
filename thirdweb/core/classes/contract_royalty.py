@@ -20,6 +20,12 @@ class ContractRoyalty(Generic[TRoyaltyABI]):
         """
         Get the default royalty information for this contract.
 
+        ```python
+        royalty_info = contract.royalties.get_default_royalty_info()
+        print(royalty_info)
+        ```
+
+        :extension: Royalty
         :returns: the default royalty information.
         """
 
@@ -27,12 +33,20 @@ class ContractRoyalty(Generic[TRoyaltyABI]):
             royalty_recipient,
             royalty_bps,
         ) = self._contract_wrapper._contract_abi.get_default_royalty_info.call()
-        return ContractRoyaltySchema(royalty_recipient, royalty_bps)
+        return ContractRoyaltySchema(royalty_bps, royalty_recipient)
 
     def get_token_royalty_info(self, token_id: int) -> ContractRoyaltySchema:
         """
         Get the royalty information for a specific token.
 
+        ```python
+        token_id = 0
+
+        royalty_info = contract.royalties.get_token_royalty_info(token_id)
+        print(royalty_info)
+        ```
+
+        :extensions: Royalty
         :param token_id: the id of the token.
         :returns: the royalty information for the token.
         """
@@ -43,7 +57,7 @@ class ContractRoyalty(Generic[TRoyaltyABI]):
         ) = self._contract_wrapper._contract_abi.get_royalty_info_for_token.call(
             token_id
         )
-        return ContractRoyaltySchema(royalty_recipient, royalty_bps)
+        return ContractRoyaltySchema(royalty_bps, royalty_recipient)
 
     def set_default_royalty_info(
         self, royalty_data: ContractRoyaltySchema
@@ -51,6 +65,18 @@ class ContractRoyalty(Generic[TRoyaltyABI]):
         """
         Set the default royalty information for this contract.
 
+        ```python
+        from thirdweb.types import ContractRoyaltySchema
+
+        royalty_data = ContractRoyaltySchema(
+            seller_fee_basis_points=100,
+            fee_recipient="{{wallet_address}}"
+        )
+
+        receipt = contract.royalties.set_default_royalty_info()
+        ```
+
+        :extension: Royalty
         :param royalty_data: the default royalty information.
         :returns: the transaction receipt of setting the royalty.
         """
@@ -79,6 +105,19 @@ class ContractRoyalty(Generic[TRoyaltyABI]):
         """
         Set the royalty information for a specific token.
 
+        ```python
+        from thirdweb.types import ContractRoyaltySchema
+
+        token_id = 0
+        royalty_data = ContractRoyaltySchema(
+            seller_fee_basis_points=100,
+            fee_recipient="{{wallet_address}}"
+        )
+
+        receipt = contract.royalties.set_token_royalty_info(token_id, royalty_data)
+        ```
+
+        :extension: Royalty
         :param token_id: the id of the token.
         :param royalty_data: the royalty information for the token.
         :returns: the transaction receipt of setting the royalty.

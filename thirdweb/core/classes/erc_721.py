@@ -72,10 +72,11 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         Get metadata for a token
 
         ```python
-        nft = contract.get(0)
+        nft = contract.erc721.get(0)
         print(nft)
         ```
 
+        :extension: ERC721
         :param token_id: token ID of the token to get the metadata for
         :return: the metadata for the token and its owner
         """
@@ -95,10 +96,11 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         Get the metadata of all tokens in the contract
 
         ```python
-        nfts = contract.get_all()
+        nfts = contract.erc721.get_all()
         print(nfts)
         ```
 
+        :extension: ERC721Supply | ERC721Enumerable
         :param query_params: optionally define a QueryAllParams instance to narrow the metadata query to specific tokens
         :return: the metadata of all tokens in the contract
         """
@@ -122,7 +124,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         Get all claimed NFTs.
 
         ```python
-        claimed_nfts = contract.get_all_claimed()
+        claimed_nfts = contract.erc721.get_all_claimed()
         first_owner = claimed_nfts[0].owner
         ```
 
@@ -144,7 +146,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         Get all unclaimed NFTs.
 
         ```python
-        unclaimed_nfts = contract.get_all_unclaimed()
+        unclaimed_nfts = contract.erc721.get_all_unclaimed()
         first_nft_name = unclaimed_nfts[0].name
         ```
 
@@ -168,9 +170,11 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         Get the total number of NFTs claimed from this contract
 
         ```python
-        total_claimed = contract.total_claimed_supply()
+        total_claimed = contract.erc721.total_claimed_supply()
+        print(total_claimed)
         ```
 
+        :extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
         :return: Total number of NFTs claimed from this contract
         """
         return self._drop._contract_abi.next_token_id_to_claim.call()
@@ -180,9 +184,11 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         Get the total number of unclaimed NFTs in this contract
 
         ```python
-        total_unclaimed = contract.total_unclaimed_supply()
+        total_unclaimed = contract.erc721.total_unclaimed_supply()
+        print(total_unclaimed)
         ```
 
+        :extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
         :return: Total number of unclaimed NFTs in this contract
         """
         return (
@@ -194,6 +200,12 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         Get the total number of NFTs minted by this contract
 
+        ```python
+        total_count = contract.erc721.get_total_count()
+        print(total_count)
+        ```
+
+        :extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
         :return: the total number of NFTs minted by this contract
         """
 
@@ -203,6 +215,14 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         Get the owner of a token
 
+        ```python
+        token_id = 0
+
+        owner = contract.erc721.owner_of(token_id)
+        print(owner)
+        ```
+
+        :extension: ERC721
         :param token_id: the token ID of the token to get the owner of
         :return: the owner of the token
         """
@@ -214,6 +234,12 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         Get the total number of tokens in the contract
 
+        ```python
+        total_supply = contract.erc721.total_supply()
+        print(total_supply)
+        ```
+
+        :extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
         :return: the total number of tokens in the contract
         """
         return self._contract_wrapper._contract_abi.next_token_id_to_mint.call()
@@ -224,6 +250,12 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         Get the token balance of the connected wallet
 
+        ```python
+        balance = contract.erc721.balance()
+        print(balance)
+        ```
+
+        :extension: ERC721
         :return: the token balance of the connected wallet
         """
 
@@ -234,10 +266,11 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         Get the token balance of a specific address
 
         ```python
-        balance = contract.balance_of("{{wallet_address}}")
+        balance = contract.erc721.balance_of("{{wallet_address}}")
         print(balance)
         ```
 
+        :extension: ERC721
         :param address: the address to get the token balance of
         """
 
@@ -248,6 +281,11 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
     ) -> bool:
         """
         Check if the contract is restricted to transfers only by admins
+
+        ```python
+        is_restricted = contract.erc721.is_transfer_restricted()
+        print(is_restricted)
+        ```
 
         :return: True if the contract is restricted to transfers only by admins, False otherwise
         """
@@ -262,6 +300,15 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         Check whether an operator address is approved for all operations of a specific addresses assets
 
+        ```python
+        address = "{{wallet_address}}"
+        operator = "0x..."
+
+        is_approved = contract.erc721.is_approved(address, operator)
+        print(is_approved)
+        ```
+
+        :extension: ERC721
         :param address: the address whose assets are to be checked
         :param operator: the address of the operator to check
         :return: True if the operator is approved for all operations of the assets, False otherwise
@@ -283,9 +330,10 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         to = "{{wallet_address}}"
         token_id = 0
 
-        receipt = contract.transfer(to, token_id)
+        receipt = contract.erc721.transfer(to, token_id)
         ```
 
+        :extension: ERC721
         :param to: wallet address to transfer the tokens to
         :param token_id: the specific token ID to transfer
         :returns: transaction receipt of the transfer
@@ -300,6 +348,13 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         Burn a specified token from the connected wallet.
 
+        ```python
+        token_id = 0 
+
+        receipt = contract.erc721.burn(token_id)
+        ```
+
+        :extension: ERC721Burnable
         :param token_id: token ID of the token to burn
         :returns: transaction receipt of the burn
         """
@@ -310,6 +365,14 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         Set the approval of an operator for all operations of a specific address's assets
 
+        ```python
+        operator = "{{wallet_address}}"
+        approved = "0x..."
+
+        receipt = contract.erc721.set_approval_for_all(operator, approved)
+        ```
+
+        :extension: ERC721
         :param operator: the address of the operator to set the approval for
         :param approved: the address whos assets the operator is approved to manage
         :returns: transaction receipt of the approval
@@ -324,6 +387,13 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         Approve an operator for the NFT owner, which allows the operator to call transferFrom
         or safeTransferFrom for the specified token.
 
+        ```python
+        operator = "{{wallet_address}}"
+        token_id = 0
+
+        receipt = contract.erc721.set_approval_for_token(operator, token_id)
+        ```
+
         :param operator: the address of the operator to set the approval for
         :param token_id: the specific token ID to set the approval for
         :returns: transaction receipt of the approval
@@ -336,6 +406,23 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         Mint a new NFT to the connected wallet
 
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput
+
+        # You can customize the metadata to your needs
+        metadata = NFTMetadataInput.from_json({
+            "name": "Cool NFT",
+            "description": "This is a cool NFT",
+            "image": open("path/to/file.jpg", "rb")
+        })
+
+        tx = contract.erc721.mint(metadata)
+        receipt = tx.receipt
+        token_id = tx.id
+        nft = tx.data()
+        ```
+
+        :extension: ERC721Mintable
         :param metadata: metadata of the NFT to mint
         :returns: receipt, id, and metadata for the mint
         """
@@ -359,12 +446,13 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         })
 
         # You can pass in any address here to mint the NFT to
-        tx = contract.mint_to("{{wallet_address}}", metadata)
+        tx = contract.erc721.mint_to("{{wallet_address}}", metadata)
         receipt = tx.receipt
         token_id = tx.id
         nft = tx.data()
         ```
 
+        :extension: ERC721Mintable
         :param to: wallet address to mint the NFT to
         :param metadata: metadata of the NFT to mint
         :returns: receipt, id, and metadata for the mint
@@ -387,6 +475,31 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         Mint a batch of new NFTs to the connected wallet
 
+        ```python
+        from thirdweb.types.nft import NFTMetadataInput
+
+        # You can customize this metadata however you like
+        metadatas = [
+            NFTMetadataInput.from_json({
+                "name": "Cool NFT",
+                "description": "This is a cool NFT",
+                "image": open("path/to/file.jpg", "rb"),
+            }),
+            NFTMetadataInput.from_json({
+                "name": "Cooler NFT",
+                "description": "This is a cooler NFT",
+                "image": open("path/to/file.jpg", "rb"),
+            }),
+        ]
+
+        # You can pass in any address here to mint the NFT to
+        txs = contract.erc721.mint_batch(metadatas)
+        receipt = txs[0].receipt
+        first_token_id = txs[0].id
+        first_nft = txs[0].data()
+        ```
+
+        :extension: ERC721BatchMintable
         :param metadatas: list of metadata of the NFTs to mint
         :returns: receipts, ids, and metadatas for each mint
         """
@@ -419,12 +532,13 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         ]
 
         # You can pass in any address here to mint the NFT to
-        txs = contract.mint_batch_to("{{wallet_address}}", metadatas)
+        txs = contract.erc721.mint_batch_to("{{wallet_address}}", metadatas)
         receipt = txs[0].receipt
         first_token_id = txs[0].id
         first_nft = txs[0].data()
         ```
 
+        :extension: ERC721BatchMintable
         :param to: wallet address to mint the NFTs to
         :param metadatas: list of metadata of the NFTs to mint
         :returns: receipts, ids, and metadatas for each mint
@@ -473,12 +587,12 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
             }),
         ]
 
-        txs = contract.create_batch(metadatas)
+        txs = contract.erc721.create_batch(metadatas)
         first_token_id = txs[0].id
         first_nft = txs[0].data()
         ```
 
-
+        :extension: ERC721LazyMintable
         :param metadatas: List of NFT metadata inputs.
         :return: List of tx results with ids for created NFTs.
         """
@@ -531,12 +645,13 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         address = {{wallet_address}}
         quantity = 1
 
-        tx = contract.claim_to(address, quantity)
+        tx = contract.erc721.claim_to(address, quantity)
         receipt = tx.receipt
         claimed_token_id = tx.id
         claimed_nft = tx.data()
         ```
 
+        :extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
         :param destination_address: Destination address to claim to.
         :param quantity: Number of NFTs to claim.
         :param proofs: List of merkle proofs.
@@ -590,6 +705,16 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         """
         Claim NFTs.
 
+        ```python
+        quantity = 1
+
+        tx = contract.erc721.claim(quantity)
+        receipt = tx.receipt
+        claimed_token_id = tx.id
+        claimed_nft = tx.data()
+        ```
+
+        :extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
         :param quantity: Number of NFTs to claim.
         :param proofs: List of merkle proofs.
         :return: List of tx results with ids for claimed NFTs.

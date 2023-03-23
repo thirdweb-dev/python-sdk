@@ -9,7 +9,7 @@ Interface for interacting with an edition contract
 ## Edition Objects
 
 ```python
-class Edition(ERC1155[TokenERC1155])
+class Edition(ERC1155Standard[TokenERC1155])
 ```
 
 Create a collection of NFTs that lets you mint multiple copies of each NFT.

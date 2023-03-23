@@ -20,6 +20,11 @@ def get_recipient() -> str
 
 Get the primary sale recipient of this contract.
 
+```python
+primary_sale_recipient = contract.sales.get_recipient()
+print(primary_sale_recipient)
+```
+
 **Returns**:
 
 the address of the primary sale recipient.
@@ -33,6 +38,12 @@ def set_recipient(recipient: str) -> TxReceipt
 ```
 
 Set the primary sale recipient of this contract
+
+```python
+primary_sale_recipient = "{{wallet_address}}"
+
+receipt = contract.sales.set_recipient(primary_sale_recipient)
+```
 
 **Arguments**:
 

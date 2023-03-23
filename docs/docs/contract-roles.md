@@ -20,6 +20,11 @@ def get_all() -> Dict[Role, List[str]]
 
 Get all role members on this contract.
 
+```python
+all_role_members = contract.roles.get_all()
+print(all_role_members)
+```
+
 **Returns**:
 
 a dictionary of role members for each role
@@ -33,6 +38,16 @@ def get(role: Role) -> List[str]
 ```
 
 Get all members of a role on this contract.
+
+```python
+from thirdweb.constants.role import Role
+
+# Select any role to filter by
+role = Role.ADMIN
+
+role_members = contract.roles.get(role)
+print(role_members)
+```
 
 **Arguments**:
 
@@ -52,6 +67,15 @@ def grant(role: Role, address: str) -> TxReceipt
 
 Grant a role to an address.
 
+```python
+from thirdweb.constants.role import Role
+
+address = "{{wallet_address}}" # Address to grant a role
+role = Role.ADMIN # Select a role to grant
+
+receipt = contract.roles.grant(role, address)
+```
+
 **Arguments**:
 
 - `role`: role to grant
@@ -70,6 +94,15 @@ def revoke(role: Role, address: str) -> TxReceipt
 ```
 
 Revoke a role from an address.
+
+```python
+from thirdweb.constants.role import Role
+
+address = "{{wallet_address}}" # Address to revoke a role from
+role = Role.MINTER # The role to revoke
+
+receipt = contract.roles.revoke(role, address)
+```
 
 **Arguments**:
 
