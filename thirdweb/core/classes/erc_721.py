@@ -76,6 +76,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         print(nft)
         ```
 
+        :extension: ERC721
         :param token_id: token ID of the token to get the metadata for
         :return: the metadata for the token and its owner
         """
@@ -99,6 +100,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         print(nfts)
         ```
 
+        :extension: ERC721Supply | ERC721Enumerable
         :param query_params: optionally define a QueryAllParams instance to narrow the metadata query to specific tokens
         :return: the metadata of all tokens in the contract
         """
@@ -172,6 +174,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         print(total_claimed)
         ```
 
+        :extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
         :return: Total number of NFTs claimed from this contract
         """
         return self._drop._contract_abi.next_token_id_to_claim.call()
@@ -185,6 +188,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         print(total_unclaimed)
         ```
 
+        :extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
         :return: Total number of unclaimed NFTs in this contract
         """
         return (
@@ -201,6 +205,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         print(total_count)
         ```
 
+        :extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
         :return: the total number of NFTs minted by this contract
         """
 
@@ -217,6 +222,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         print(owner)
         ```
 
+        :extension: ERC721
         :param token_id: the token ID of the token to get the owner of
         :return: the owner of the token
         """
@@ -233,6 +239,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         print(total_supply)
         ```
 
+        :extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
         :return: the total number of tokens in the contract
         """
         return self._contract_wrapper._contract_abi.next_token_id_to_mint.call()
@@ -248,6 +255,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         print(balance)
         ```
 
+        :extension: ERC721
         :return: the token balance of the connected wallet
         """
 
@@ -262,6 +270,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         print(balance)
         ```
 
+        :extension: ERC721
         :param address: the address to get the token balance of
         """
 
@@ -299,6 +308,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         print(is_approved)
         ```
 
+        :extension: ERC721
         :param address: the address whose assets are to be checked
         :param operator: the address of the operator to check
         :return: True if the operator is approved for all operations of the assets, False otherwise
@@ -323,6 +333,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         receipt = contract.erc721.transfer(to, token_id)
         ```
 
+        :extension: ERC721
         :param to: wallet address to transfer the tokens to
         :param token_id: the specific token ID to transfer
         :returns: transaction receipt of the transfer
@@ -343,6 +354,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         receipt = contract.erc721.burn(token_id)
         ```
 
+        :extension: ERC721Burnable
         :param token_id: token ID of the token to burn
         :returns: transaction receipt of the burn
         """
@@ -360,6 +372,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         receipt = contract.erc721.set_approval_for_all(operator, approved)
         ```
 
+        :extension: ERC721
         :param operator: the address of the operator to set the approval for
         :param approved: the address whos assets the operator is approved to manage
         :returns: transaction receipt of the approval
@@ -409,6 +422,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         nft = tx.data()
         ```
 
+        :extension: ERC721Mintable
         :param metadata: metadata of the NFT to mint
         :returns: receipt, id, and metadata for the mint
         """
@@ -438,6 +452,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         nft = tx.data()
         ```
 
+        :extension: ERC721Mintable
         :param to: wallet address to mint the NFT to
         :param metadata: metadata of the NFT to mint
         :returns: receipt, id, and metadata for the mint
@@ -484,6 +499,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         first_nft = txs[0].data()
         ```
 
+        :extension: ERC721BatchMintable
         :param metadatas: list of metadata of the NFTs to mint
         :returns: receipts, ids, and metadatas for each mint
         """
@@ -522,6 +538,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         first_nft = txs[0].data()
         ```
 
+        :extension: ERC721BatchMintable
         :param to: wallet address to mint the NFTs to
         :param metadatas: list of metadata of the NFTs to mint
         :returns: receipts, ids, and metadatas for each mint
@@ -575,7 +592,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         first_nft = txs[0].data()
         ```
 
-
+        :extension: ERC721LazyMintable
         :param metadatas: List of NFT metadata inputs.
         :return: List of tx results with ids for created NFTs.
         """
@@ -634,6 +651,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         claimed_nft = tx.data()
         ```
 
+        :extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
         :param destination_address: Destination address to claim to.
         :param quantity: Number of NFTs to claim.
         :param proofs: List of merkle proofs.
@@ -696,6 +714,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         claimed_nft = tx.data()
         ```
 
+        :extension: ERC721ClaimCustom | ERC721ClaimPhasesV2 | ERC721ClaimConditionsV2
         :param quantity: Number of NFTs to claim.
         :param proofs: List of merkle proofs.
         :return: List of tx results with ids for claimed NFTs.

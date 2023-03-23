@@ -164,6 +164,83 @@ print(is_restricted)
 
 True if transfer is restricted, False otherwise
 
+<a id="core.classes.erc_20.ERC20.mint"></a>
+
+#### mint
+
+```python
+def mint(amount: Price) -> TxReceipt
+```
+
+Mint tokens to the connected wallet.
+
+```python
+address = "{{wallet_address}}"
+amount = 100
+
+receipt = contract.erc20.mint(amount)
+```
+
+**Arguments**:
+
+- `amount`: amount of tokens to mint
+
+**Returns**:
+
+transaction receipt of the mint
+
+<a id="core.classes.erc_20.ERC20.mint_to"></a>
+
+#### mint\_to
+
+```python
+def mint_to(to: str, amount: Price) -> TxReceipt
+```
+
+Mint tokens to a specified wallet.
+
+```python
+address = "{{wallet_address}}"
+amount = 100
+
+receipt = contract.erc20.mint_to(address, amount)
+```
+
+**Arguments**:
+
+- `to`: wallet address to mint tokens to
+- `amount`: amount of tokens to mint
+
+**Returns**:
+
+transaction receipt of the mint
+
+<a id="core.classes.erc_20.ERC20.mint_batch_to"></a>
+
+#### mint\_batch\_to
+
+```python
+def mint_batch_to(args: List[TokenAmount]) -> TxReceipt
+```
+
+Mint tokens to a list of wallets.
+
+```python
+from thirdweb.types.currency import TokenAmount
+
+args = [
+    TokenAmount("{{wallet_address}}", 1),
+    TokenAmount("{{wallet_address}}", 2),
+]
+
+**Arguments**:
+
+- `args`: list of wallet addresses and amounts to mint
+
+**Returns**:
+
+transaction receipt of the mint
+
 <a id="core.classes.erc_20.ERC20.transfer"></a>
 
 #### transfer

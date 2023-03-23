@@ -131,7 +131,7 @@ class Token(ERC20Standard):
         :returns: transaction receipt of the mint
         """
 
-        return self.mint_to(self._contract_wrapper.get_signer_address(), amount)
+        return self._erc20.mint(amount)
 
     def mint_to(self, to: str, amount: Price) -> TxReceipt:
         """
@@ -146,10 +146,7 @@ class Token(ERC20Standard):
         :returns: transaction receipt of the mint
         """
 
-        amount_with_decimals = parse_units(amount, self.get().decimals)
-        return self._contract_wrapper.send_transaction(
-            "mint_to", [to, amount_with_decimals]
-        )
+        return self._erc20.mint_to(to, amount)
 
     def mint_batch_to(self, args: List[TokenAmount]) -> TxReceipt:
         """
@@ -170,16 +167,7 @@ class Token(ERC20Standard):
         :returns: transaction receipt of the mint
         """
 
-        encoded = []
-        interface = self._contract_wrapper.get_contract_interface()
-        for arg in args:
-            encoded.append(
-                interface.encodeABI(
-                    "mintTo",
-                    [arg.to_address, parse_units(arg.amount, self.get().decimals)],
-                )
-            )
-        return self._contract_wrapper.multi_call(encoded)
+        return self._erc20.mint_batch_to(args)
 
     def delegate_to(self, delegatee_address: str) -> TxReceipt:
         """

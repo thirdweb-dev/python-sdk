@@ -24,6 +24,12 @@ class ContractMetadata(Generic[TMetadataABI, TContractSchema]):
         """
         Get the metadata associated with this contract.
 
+        ```python
+        metadata = contract.metadata.get()
+        print(metadata)
+        ```
+
+        :extension: ContractMetadata
         :returns: metadata associated with this contract
         """
 
@@ -36,6 +42,19 @@ class ContractMetadata(Generic[TMetadataABI, TContractSchema]):
         """
         Set the metadata associated with this contract.
 
+        ```python
+        from thirdweb.types import ContractMetadataSchema
+
+        metadata = ContractMetadataSchema.from_json({
+            "name": "My Contract",
+            "description": "This is my contract!",
+            "image": open("path/to/file.jpg", "rb")
+        })
+
+        receipt = contract.metadata.set(metadata)
+        ```
+
+        :extension: ContractMetadata
         :param metadata: metadata to set
         :returns: transaction receipt of setting the metadata
         """

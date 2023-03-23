@@ -44,6 +44,7 @@ class ERC20(BaseContract[TokenERC20]):
         print(token)
         ```
 
+        :extension: ERC20
         :returns: token metadata
         """
 
@@ -60,6 +61,7 @@ class ERC20(BaseContract[TokenERC20]):
         print(balance)
         ```
 
+        :extension: ERC20
         :returns: balance of the connected wallet
         """
 
@@ -75,6 +77,7 @@ class ERC20(BaseContract[TokenERC20]):
         print(balance)
         ```
 
+        :extension: ERC20
         :param address: wallet address to check the balance of
         :returns: balance of the specified wallet
         """
@@ -92,6 +95,7 @@ class ERC20(BaseContract[TokenERC20]):
         print(supply)
         ```
 
+        :extension: ERC20
         :returns: total minted supply of the token
         """
 
@@ -107,6 +111,7 @@ class ERC20(BaseContract[TokenERC20]):
         print(allowance)
         ```
 
+        :extension: ERC20
         :param spender: wallet address to check the allowance of
         :returns: allowance of the connected wallet
         """
@@ -128,6 +133,7 @@ class ERC20(BaseContract[TokenERC20]):
         print(allowance)
         ```
 
+        :extension: ERC20
         :param owner: wallet address whose assets will be spent
         :param spender: wallet address to check the allowance of
         :returns: allowance of the specified spender for the specified owner
@@ -159,6 +165,77 @@ class ERC20(BaseContract[TokenERC20]):
     WRITE FUNCTIONS
     """
 
+    def mint(self, amount: Price) -> TxReceipt:
+        """
+        Mint tokens to the connected wallet.
+
+        ```python
+        address = "{{wallet_address}}"
+        amount = 100
+
+        receipt = contract.erc20.mint(amount)
+        ```
+
+        :extension: ERC20Mintable
+        :param amount: amount of tokens to mint
+        :returns: transaction receipt of the mint
+        """
+
+        return self.mint_to(self._contract_wrapper.get_signer_address(), amount)
+
+    def mint_to(self, to: str, amount: Price) -> TxReceipt:
+        """
+        Mint tokens to a specified wallet.
+
+        ```python
+        address = "{{wallet_address}}"
+        amount = 100
+
+        receipt = contract.erc20.mint_to(address, amount)
+        ```
+
+        :extension: ERC20Mintable
+        :param to: wallet address to mint tokens to
+        :param amount: amount of tokens to mint
+        :returns: transaction receipt of the mint
+        """
+
+        amount_with_decimals = parse_units(amount, self.get().decimals)
+        return self._contract_wrapper.send_transaction(
+            "mint_to", [to, amount_with_decimals]
+        )
+
+    def mint_batch_to(self, args: List[TokenAmount]) -> TxReceipt:
+        """
+        Mint tokens to a list of wallets.
+
+        ```python
+        from thirdweb.types.currency import TokenAmount
+
+        args = [
+            TokenAmount("{{wallet_address}}", 1),
+            TokenAmount("{{wallet_address}}", 2),
+        ]
+
+        :extension: ERC20BatchMintable
+        contract.erc20.mint_batch_to(args)
+        ```
+
+        :param args: list of wallet addresses and amounts to mint
+        :returns: transaction receipt of the mint
+        """
+
+        encoded = []
+        interface = self._contract_wrapper.get_contract_interface()
+        for arg in args:
+            encoded.append(
+                interface.encodeABI(
+                    "mintTo",
+                    [arg.to_address, parse_units(arg.amount, self.get().decimals)],
+                )
+            )
+        return self._contract_wrapper.multi_call(encoded)
+
     def transfer(self, to: str, amount: Price) -> TxReceipt:
         """
         Transfer a specified amount of tokens from the connected wallet to a specified address.
@@ -173,6 +250,7 @@ class ERC20(BaseContract[TokenERC20]):
         contract.erc20.transfer(to, amount)
         ```
 
+        :extension: ERC20
         :param to: wallet address to transfer the tokens to
         :param amount: amount of tokens to transfer
         :returns: transaction receipt of the transfer
@@ -200,6 +278,7 @@ class ERC20(BaseContract[TokenERC20]):
         contract.erc20.transfer_from(fr, to, amount)
         ```
 
+        :extension: ERC20
         :param fr: wallet address to transfer the tokens from
         :param to: wallet address to transfer the tokens to
         :param amount: amount of tokens to transfer
@@ -222,6 +301,7 @@ class ERC20(BaseContract[TokenERC20]):
         contract.erc20.set_allowance(spender, amount)
         ```
 
+        :extension: ERC20
         :param spender: wallet address to set the allowance of
         :param amount: amount to set the allowance to
         :returns: transaction receipt of the allowance set
@@ -271,6 +351,7 @@ class ERC20(BaseContract[TokenERC20]):
         contract.erc20.burn(amount)
         ```
 
+        :extension: ERC20Burnable
         :param amount: amount of tokens to burn
         :returns: transaction receipt of the burn
         """
@@ -288,6 +369,7 @@ class ERC20(BaseContract[TokenERC20]):
         contract.erc20.burn_from(holder, amount)
         ```
 
+        :extension: ERC20Burnable
         :param holder: wallet address to burn the tokens from
         :param amount: amount of tokens to burn
         :returns: transaction receipt of the burn

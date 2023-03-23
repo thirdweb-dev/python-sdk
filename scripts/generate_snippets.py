@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, List, cast
 import thirdweb.contracts
 import thirdweb.core.classes
 import inspect
@@ -68,6 +68,14 @@ def get_example(cls: object) -> str:
     example = matches.group(0).replace("```python", "").replace("```", "")
     return inspect.cleandoc(example)
 
+def get_extensions(cls: object) -> List[str]:
+    doc = getattr(cls, "__doc__", "")
+    if doc is None:
+        return []
+    matches = re.search(r"(?<=:extension: )(.*)(?=\n)", doc)
+    if matches is None:
+        return []
+    return matches.group(0).split(" | ")
 
 BASE_DOC_URL = "https://docs.thirdweb.com/python"
 
@@ -93,8 +101,8 @@ def describe(cls: object):
     for name, fn in fns:
         if inspect.isfunction(fn):
             docstring = get_description(fn)
-
             example = get_example(fn)
+            extensions = get_extensions(fn)
 
             reference = f"{doc_url}#{name}"
             for c in classes:
@@ -109,6 +117,7 @@ def describe(cls: object):
                     "summary": docstring,
                     "example": example,
                     "reference": reference,
+                    "extensions": extensions
                 }
             )
 
@@ -157,5 +166,45 @@ def generate():
         j = json.dumps(data, indent=4)
         f.write(j)
 
+def generate_features():
+    features: Dict[str, List[Dict[str, Any]]] = {}
+
+    with open('docs/docs/snippets.json') as snippets_file:
+        snippets: Dict[str, Dict[str, Any]] = json.load(snippets_file)
+
+    methods: List[Dict[str, Any]] = []
+    for cls in snippets.values():
+        for method in cls["methods"]:
+            if len(method["extensions"]) > 0:
+                methods.append({
+                    "name": method["name"],
+                    "summary": method["summary"],
+                    "examples": {
+                        "python": method["example"]
+                    },
+                    "reference": {
+                        "python": method["reference"]
+                    },
+                    "extensions": method["extensions"]
+                })
+    
+    for method in methods:
+        for extension in method["extensions"]:
+            cleaned_method = {
+                "name": method["name"],
+                "summary": method["summary"],
+                "examples": method["examples"],
+                "reference": method["reference"]
+            }
+
+            if extension in features:
+                features[extension].append(cleaned_method)
+            else:
+                features[extension] = [cleaned_method]
+
+    with open("docs/docs/feature_snippets.json", "w") as f:
+        j = json.dumps(features, indent=4)
+        f.write(j)   
 
 generate()
+generate_features()

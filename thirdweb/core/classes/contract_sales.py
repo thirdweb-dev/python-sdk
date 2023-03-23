@@ -14,6 +14,12 @@ class ContractPrimarySale(Generic[TPrimarySaleABI]):
         """
         Get the primary sale recipient of this contract.
 
+        ```python
+        primary_sale_recipient = contract.sales.get_recipient()
+        print(primary_sale_recipient)
+        ```
+
+        :extension: PrimarySale
         :returns: the address of the primary sale recipient.
         """
 
@@ -23,6 +29,13 @@ class ContractPrimarySale(Generic[TPrimarySaleABI]):
         """
         Set the primary sale recipient of this contract
 
+        ```python
+        primary_sale_recipient = "{{wallet_address}}"
+
+        receipt = contract.sales.set_recipient(primary_sale_recipient)
+        ```
+
+        :extension: PrimarySale
         :param recipient: the address of the primary sale recipient.
         :returns: the transaction receipt.
         """

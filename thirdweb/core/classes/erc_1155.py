@@ -89,6 +89,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         print(nft)
         ```
 
+        :extension: ERC1155
         :param token_id: token ID to check the metadata for
         :return: Metadata for the token
         """
@@ -112,6 +113,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         print(metadatas)
         ```
 
+        :extension: ERC1155Enumerable
         :param query_params: optional QueryAllParams to define which tokens to get metadata for
         :return: list of metadata for all tokens
         """
@@ -128,6 +130,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         print(total_count)
         ```
 
+        :extension: ERC1155Enumerable
         :return: total number of tokens on the contract
         """
 
@@ -143,6 +146,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         print(owned)
         ```
 
+        :extension: ERC1155Enumerable
         :param address: address to get the owned tokens for
         :return: list of metadata for all tokens owned by the address
         """
@@ -174,6 +178,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         print(total_supply)
         ```
 
+        :extension: ERC1155
         :return: total number of tokens on the contract
         """
 
@@ -190,6 +195,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         print(balance)
         ```
 
+        :extension: ERC1155
         :param token_id: token ID to check the balance for
         :return: balance of the token
         """
@@ -207,6 +213,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         balance = contract.erc1155.balance_of(address, token_id)
         ```
 
+        :extension: ERC1155
         :param address: address to check the balance for
         :param token_id: token ID to check the balance for
         :return: balance of the token
@@ -271,6 +278,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         receipt = contract.erc1155.transfer(to, token_id, amount)
         ```
 
+        :extension: ERC1155
         :param to: wallet address to transfer the tokens to
         :param token_id: the specific token ID to transfer
         :param amount: the amount of tokens to transfer
@@ -294,6 +302,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         receipt = contract.erc1155.burn(token_id, amount)
         ```
 
+        :extension: ERC1155Burnable
         :param amount: amount of tokens to burn
         :returns: transaction receipt of the burn
         """
@@ -314,6 +323,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         receipt = contract.erc1155.set_approval_for_all(operator, approved)
         ```
 
+        :extension: ERC1155
         :param operator: operator address to set the approval for
         :param approved: True if the operator is approved, False otherwise
         """
@@ -348,6 +358,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         nft = tx.data()
         ```
 
+        :extension: ERC1155Mintable
         :param metadata_with_supply: EditionMetadataInput for the NFT to mint
         :returns: receipt, id, and metadata of the mint
         """
@@ -382,6 +393,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         nft = tx.data()
         ```
 
+        :extension: ERC1155Mintable
         :param to: wallet address to mint the NFT to
         :param metadata_with_supply: EditionMetadataInput for the NFT to mint
         :returns: receipt, id, and metadata of the mint
@@ -416,6 +428,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         nft = tx.data()
         ```
 
+        :extension: ERC1155Mintable
         :param token_id: token ID to mint additional supply of
         :param additional_supply: additional supply to mint
         :returns: receipt, id, and metadata of the mint
@@ -442,6 +455,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         nft = tx.data()
         ```
 
+        :extension: ERC1155Mintable
         :param to: wallet address to mint additional supply to
         :param token_id: token ID to mint additional supply of
         :param additional_supply: additional supply to mint
@@ -490,6 +504,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         nft = txs[0].data()
         ```
 
+        :extension: ERC1155BatchMintable
         :param metadatas_with_supply: list of EditionMetadataInput for the NFTs to mint
         :returns: receipts, ids, and metadatas of the mint
         """
@@ -534,6 +549,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         nft = txs[0].data()
         ```
 
+        :extension: ERC1155BatchMintable
         :param to: wallet address to mint the NFTs to
         :param metadatas_with_supply: list of EditionMetadataInput for the NFTs to mint
         :returns: receipts, ids, and metadatas of the mint
@@ -599,6 +615,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         first_nft = txs[0].data()
         ```
 
+        :extension: ERC1155LazyMintableV2
         :param metadatas: List of NFT metadata inputs.
         :return: List of tx results with ids for created NFTs.
         """
@@ -659,6 +676,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         claimed_nft = tx.data()
         ```
 
+        :extension: ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimConditionsV2
         :param destination_address: Destination address to claim to.
         :param token_id: token ID of the token to claim.
         :param quantity: Number of NFTs to claim.
@@ -708,6 +726,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         claimed_nft = tx.data()
         ```
 
+        :extension: ERC1155ClaimCustom | ERC1155ClaimPhasesV2 | ERC1155ClaimConditionsV2
         :param quantity: Number of NFTs to claim.
         :param token_id: token ID of the token to claim.
         :param proofs: List of merkle proofs.

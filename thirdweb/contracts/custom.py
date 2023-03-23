@@ -27,6 +27,7 @@ from thirdweb.abi import (
     IRoyalty,
     IPrimarySale,
     IPlatformFee,
+    IContractMetadata,
 )
 
 from thirdweb.types.sdk import SDKOptions
@@ -90,6 +91,7 @@ class CustomContract(BaseContract[Any]):
 
         self._storage = storage
 
+        self.metadata = self._detect_metadata()
         self.roles = self._detect_roles()
         self.royalties = self._detect_royalties()
         self.sales = self._detect_primary_sales()
@@ -149,6 +151,14 @@ class CustomContract(BaseContract[Any]):
     """
     INTERNAL FUNCTIONS
     """
+
+    def _detect_metadata(self):
+        contract_wrapper = self._get_contract_wrapper(IContractMetadata)
+        return ContractMetadata(
+            contract_wrapper,
+            self._storage,
+            CustomContractMetadata,
+        )
 
     def _detect_roles(self):
         contract_wrapper = self._get_contract_wrapper(IPermissionsEnumerable)
