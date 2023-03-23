@@ -69,7 +69,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
     def get(self, token_id: int) -> NFTMetadataOwner:
         """
-        Get metadata for a token
+        Get a single NFT
 
         ```python
         nft = contract.erc721.get(0)
@@ -93,7 +93,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         self, query_params: QueryAllParams = QueryAllParams()
     ) -> List[NFTMetadataOwner]:
         """
-        Get the metadata of all tokens in the contract
+        Get all NFTs
 
         ```python
         nfts = contract.erc721.get_all()
@@ -121,7 +121,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         self, query_params: QueryAllParams = QueryAllParams()
     ) -> List[NFTMetadataOwner]:
         """
-        Get all claimed NFTs.
+        Get all claimed NFTs
 
         ```python
         claimed_nfts = contract.erc721.get_all_claimed()
@@ -143,7 +143,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         self, query_params: QueryAllParams = QueryAllParams()
     ) -> List[NFTMetadata]:
         """
-        Get all unclaimed NFTs.
+        Get all unclaimed NFTs
 
         ```python
         unclaimed_nfts = contract.erc721.get_all_unclaimed()
@@ -167,7 +167,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
     def total_claimed_supply(self) -> int:
         """
-        Get the total number of NFTs claimed from this contract
+        Get the number of claimed NFTs
 
         ```python
         total_claimed = contract.erc721.total_claimed_supply()
@@ -181,7 +181,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
     def total_unclaimed_supply(self) -> int:
         """
-        Get the total number of unclaimed NFTs in this contract
+        Get the number of unclaimed NFTs
 
         ```python
         total_unclaimed = contract.erc721.total_unclaimed_supply()
@@ -198,7 +198,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
     def get_total_count(self) -> int:
         """
-        Get the total number of NFTs minted by this contract
+        Get the total number of NFTs
 
         ```python
         total_count = contract.erc721.get_total_count()
@@ -213,7 +213,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
     def owner_of(self, token_id: int) -> str:
         """
-        Get the owner of a token
+        Get the owner of an NFT
 
         ```python
         token_id = 0
@@ -232,7 +232,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         self,
     ) -> int:
         """
-        Get the total number of tokens in the contract
+        Get the total number of NFTs
 
         ```python
         total_supply = contract.erc721.total_supply()
@@ -248,7 +248,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         self,
     ) -> int:
         """
-        Get the token balance of the connected wallet
+        Get NFT balance
 
         ```python
         balance = contract.erc721.balance()
@@ -263,7 +263,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
     def balance_of(self, address: str) -> int:
         """
-        Get the token balance of a specific address
+        Get NFT balance of a specific wallet
 
         ```python
         balance = contract.erc721.balance_of("{{wallet_address}}")
@@ -298,7 +298,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
     def is_approved(self, address: str, operator: str) -> bool:
         """
-        Check whether an operator address is approved for all operations of a specific addresses assets
+        Check approval of a specific wallet
 
         ```python
         address = "{{wallet_address}}"
@@ -324,7 +324,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
     def transfer(self, to: str, token_id: int) -> TxReceipt:
         """
-        Transfer a specified token from the connected wallet to a specified address.
+        Transfer an NFT
 
         ```python
         to = "{{wallet_address}}"
@@ -346,7 +346,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
     def burn(self, token_id: int) -> TxReceipt:
         """
-        Burn a specified token from the connected wallet.
+        Burn an NFT
 
         ```python
         token_id = 0 
@@ -363,7 +363,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
     def set_approval_for_all(self, operator: str, approved: bool) -> TxReceipt:
         """
-        Set the approval of an operator for all operations of a specific address's assets
+        Set approval for all NFTs
 
         ```python
         operator = "{{wallet_address}}"
@@ -384,8 +384,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
     def set_approval_for_token(self, operator: str, token_id: int) -> TxReceipt:
         """
-        Approve an operator for the NFT owner, which allows the operator to call transferFrom
-        or safeTransferFrom for the specified token.
+        Set approval for a specific NFT
 
         ```python
         operator = "{{wallet_address}}"
@@ -404,7 +403,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         self, metadata: Union[NFTMetadataInput, str]
     ) -> TxResultWithId[NFTMetadataOwner]:
         """
-        Mint a new NFT to the connected wallet
+        Mint an NFT
 
         ```python
         from thirdweb.types.nft import NFTMetadataInput
@@ -433,7 +432,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         self, to: str, metadata: Union[NFTMetadataInput, str]
     ) -> TxResultWithId[NFTMetadataOwner]:
         """
-        Mint a new NFT to the specified wallet
+        Mint an NFT to a specific wallet
 
         ```python
         from thirdweb.types.nft import NFTMetadataInput
@@ -473,7 +472,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         self, metadatas: List[Union[NFTMetadataInput, str]]
     ) -> List[TxResultWithId[NFTMetadataOwner]]:
         """
-        Mint a batch of new NFTs to the connected wallet
+        Mint many NFTs
 
         ```python
         from thirdweb.types.nft import NFTMetadataInput
@@ -512,7 +511,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         self, to: str, metadatas: List[Union[NFTMetadataInput, str]]
     ) -> List[TxResultWithId[NFTMetadataOwner]]:
         """
-        Mint a batch of new NFTs to the specified wallet
+        Mint many NFTs to a specific wallet
 
         ```python
         from thirdweb.types.nft import NFTMetadataInput
@@ -568,7 +567,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         self, metadatas: List[NFTMetadataInput]
     ) -> List[TxResultWithId[NFTMetadata]]:
         """
-        Create a batch of NFTs.
+        Lazy mint NFTs
 
         ```python
         from thirdweb.types.nft import NFTMetadataInput
@@ -639,7 +638,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         quantity: int,
     ) -> List[TxResultWithId[NFTMetadata]]:
         """
-        Claim NFTs to a destination address.
+        Claim NFTs to a specific wallet
 
         ```python
         address = {{wallet_address}}
@@ -703,7 +702,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
         quantity: int,
     ) -> List[TxResultWithId[NFTMetadata]]:
         """
-        Claim NFTs.
+        Claim NFTs
 
         ```python
         quantity = 1

@@ -2,7 +2,7 @@
     "ContractMetadata": [
         {
             "name": "get",
-            "summary": "Get the metadata associated with this contract.",
+            "summary": "Get the contract metadata",
             "examples": {
                 "python": "metadata = contract.metadata.get()\nprint(metadata)"
             },
@@ -12,7 +12,7 @@
         },
         {
             "name": "set",
-            "summary": "Set the metadata associated with this contract.",
+            "summary": "Set the contract metadata",
             "examples": {
                 "python": "from thirdweb.types import ContractMetadataSchema\n\nmetadata = ContractMetadataSchema.from_json({\n    \"name\": \"My Contract\",\n    \"description\": \"This is my contract!\",\n    \"image\": open(\"path/to/file.jpg\", \"rb\")\n})\n\nreceipt = contract.metadata.set(metadata)"
             },
@@ -24,7 +24,7 @@
     "PlatformFee": [
         {
             "name": "get",
-            "summary": "Get the platform fee of this contract.",
+            "summary": "Get the contract platform fees",
             "examples": {
                 "python": "platform_fees = contract.platform_fee.get()\nprint(platform_fees.platform_fee_basis_points)\nprint(platform_fees.platform_fee_recipient)"
             },
@@ -34,7 +34,7 @@
         },
         {
             "name": "set",
-            "summary": "Set the platform fee of this contract.",
+            "summary": "Set the contract platform fees",
             "examples": {
                 "python": "from thirdweb.types import ContractPlatformFeeSchema\n\nplatform_fee_info = ContractPlatformFeeSchema(\n    platform_fee_basis_points=100 # 1%\n    platform_fee_receipient=\"{{wallet_address}}\"\n)\n\nreceipt = contract.platform_fee.set(platform_fee_info)"
             },
@@ -56,7 +56,7 @@
         },
         {
             "name": "grant",
-            "summary": "Grant a role to an address.",
+            "summary": "Grant a role to a wallet",
             "examples": {
                 "python": "from thirdweb.constants.role import Role\n\naddress = \"{{wallet_address}}\" # Address to grant a role\nrole = Role.ADMIN # Select a role to grant\n\nreceipt = contract.roles.grant(role, address)"
             },
@@ -80,7 +80,7 @@
     "Royalty": [
         {
             "name": "get_default_royalty_info",
-            "summary": "Get the default royalty information for this contract.",
+            "summary": "Get the royalty recipient and fee        ```python        royalty_info = contract.royalties.get_default_royalty_info()        print(royalty_info)        ```",
             "examples": {
                 "python": "royalty_info = contract.royalties.get_default_royalty_info()\nprint(royalty_info)"
             },
@@ -90,7 +90,7 @@
         },
         {
             "name": "set_default_royalty_info",
-            "summary": "Set the default royalty information for this contract.",
+            "summary": "Set the royalty recipient and fee",
             "examples": {
                 "python": "from thirdweb.types import ContractRoyaltySchema\n\nroyalty_data = ContractRoyaltySchema(\n    seller_fee_basis_points=100,\n    fee_recipient=\"{{wallet_address}}\"\n)\n\nreceipt = contract.royalties.set_default_royalty_info()"
             },
@@ -100,7 +100,7 @@
         },
         {
             "name": "set_token_royalty_info",
-            "summary": "Set the royalty information for a specific token.",
+            "summary": "Set the royalty recipient and fee for a specific token",
             "examples": {
                 "python": "from thirdweb.types import ContractRoyaltySchema\n\ntoken_id = 0\nroyalty_data = ContractRoyaltySchema(\n    seller_fee_basis_points=100,\n    fee_recipient=\"{{wallet_address}}\"\n)\n\nreceipt = contract.royalties.set_token_royalty_info(token_id, royalty_data)"
             },
@@ -112,7 +112,7 @@
     "PrimarySale": [
         {
             "name": "get_recipient",
-            "summary": "Get the primary sale recipient of this contract.",
+            "summary": "Get the contract primary sale recipient",
             "examples": {
                 "python": "primary_sale_recipient = contract.sales.get_recipient()\nprint(primary_sale_recipient)"
             },
@@ -122,7 +122,7 @@
         },
         {
             "name": "set_recipient",
-            "summary": "Set the primary sale recipient of this contract",
+            "summary": "Set the contract primary sale recipient",
             "examples": {
                 "python": "primary_sale_recipient = \"{{wallet_address}}\"\n\nreceipt = contract.sales.set_recipient(primary_sale_recipient)"
             },
@@ -134,7 +134,7 @@
     "ERC20": [
         {
             "name": "allowance",
-            "summary": "Get a specific spenders allowance of this token for the connected wallet.",
+            "summary": "Get the allowance of a specific spender",
             "examples": {
                 "python": "spender = \"{{wallet_address}}\"\nallowance = contract.erc20.allowance(spender)\nprint(allowance)"
             },
@@ -144,7 +144,7 @@
         },
         {
             "name": "allowance_of",
-            "summary": "Get the allowance of the specified spender for a specified owner.",
+            "summary": "Get the allowance of a spender for a specific owner",
             "examples": {
                 "python": "# Address of the wallet who owns the funds\naddress = \"{{wallet_address}}\"\n\n# Address of the wallet to check the token allowance\nspender = \"0x...\"\n\nallowance = contract.erc20.allowance_of(address, spender)\nprint(allowance)"
             },
@@ -154,7 +154,7 @@
         },
         {
             "name": "balance",
-            "summary": "Get the token balance of the connected wallet.",
+            "summary": "Get token balance",
             "examples": {
                 "python": "balance = contract.erc20.balance()\nprint(balance)"
             },
@@ -164,7 +164,7 @@
         },
         {
             "name": "balance_of",
-            "summary": "Get the balance of the specified wallet",
+            "summary": "Get token balance of a specific wallet",
             "examples": {
                 "python": "address = \"{{wallet_address}}\"\nbalance = contract.erc20.balance_of(address)\nprint(balance)"
             },
@@ -174,7 +174,7 @@
         },
         {
             "name": "get",
-            "summary": "Get the token metadata including name, symbol, decimals, etc.",
+            "summary": "Get token metadata",
             "examples": {
                 "python": "token = contract.erc20.get()\nprint(token)"
             },
@@ -184,7 +184,7 @@
         },
         {
             "name": "set_allowance",
-            "summary": "Sets the allowance of the specified wallet over the connected wallets funds to        a specified amount.",
+            "summary": "Approve a specific wallet to spend tokens",
             "examples": {
                 "python": "spender = \"0x...\"\namount = 100\ncontract.erc20.set_allowance(spender, amount)"
             },
@@ -194,7 +194,7 @@
         },
         {
             "name": "total_supply",
-            "summary": "Get the total minted supply of the token.",
+            "summary": "Get the total minted supply",
             "examples": {
                 "python": "supply = contract.erc20.total_supply()\nprint(supply)"
             },
@@ -204,7 +204,7 @@
         },
         {
             "name": "transfer",
-            "summary": "Transfer a specified amount of tokens from the connected wallet to a specified address.",
+            "summary": "Transfer tokens",
             "examples": {
                 "python": "# Address to send tokens to\nto = \"0x...\n\n# Amount of tokens to transfer\namount = 0.1\n\ncontract.erc20.transfer(to, amount)"
             },
@@ -214,7 +214,7 @@
         },
         {
             "name": "transfer_from",
-            "summary": "Transfer a specified amount of tokens from one specified address to another.",
+            "summary": "Transfer tokens from a specific wallet",
             "examples": {
                 "python": "# Address to send tokens from\nfr = \"{{wallet_address}}\"\n\n# Address to send tokens to\nto = \"0x...\"\n\n# Amount of tokens to transfer\namount = 0.1\n\ncontract.erc20.transfer_from(fr, to, amount)"
             },
@@ -226,7 +226,7 @@
     "ERC20Burnable": [
         {
             "name": "burn",
-            "summary": "Burn a specified amount of tokens from the connected wallet.",
+            "summary": "Burn tokens",
             "examples": {
                 "python": "amount = 0.1\ncontract.erc20.burn(amount)"
             },
@@ -236,7 +236,7 @@
         },
         {
             "name": "burn_from",
-            "summary": "Burn a specified amount of tokens from a specified wallet.",
+            "summary": "Burn tokens from a specific wallet",
             "examples": {
                 "python": "holder = \"{{wallet_address}}\"\namount = 0.1\ncontract.erc20.burn_from(holder, amount)"
             },
@@ -248,7 +248,7 @@
     "ERC20Mintable": [
         {
             "name": "mint",
-            "summary": "Mint tokens to the connected wallet.",
+            "summary": "Mint tokens",
             "examples": {
                 "python": "address = \"{{wallet_address}}\"\namount = 100\n\nreceipt = contract.erc20.mint(amount)"
             },
@@ -258,7 +258,7 @@
         },
         {
             "name": "mint_to",
-            "summary": "Mint tokens to a specified wallet.",
+            "summary": "Mint tokens to a specific wallet",
             "examples": {
                 "python": "address = \"{{wallet_address}}\"\namount = 100\n\nreceipt = contract.erc20.mint_to(address, amount)"
             },
@@ -270,7 +270,7 @@
     "ERC20BatchMintable": [
         {
             "name": "mint_batch_to",
-            "summary": "Mint tokens to a list of wallets.",
+            "summary": "Mint tokens to many wallets",
             "examples": {
                 "python": "from thirdweb.types.currency import TokenAmount\n\nargs = [\n    TokenAmount(\"{{wallet_address}}\", 1),\n    TokenAmount(\"{{wallet_address}}\", 2),\n]\n\n:extension: ERC20BatchMintable\ncontract.erc20.mint_batch_to(args)"
             },
@@ -282,7 +282,7 @@
     "ERC721": [
         {
             "name": "balance",
-            "summary": "Get the token balance of the connected wallet",
+            "summary": "Get NFT balance",
             "examples": {
                 "python": "balance = contract.erc721.balance()\nprint(balance)"
             },
@@ -292,7 +292,7 @@
         },
         {
             "name": "balance_of",
-            "summary": "Get the token balance of a specific address",
+            "summary": "Get NFT balance of a specific wallet",
             "examples": {
                 "python": "balance = contract.erc721.balance_of(\"{{wallet_address}}\")\nprint(balance)"
             },
@@ -302,7 +302,7 @@
         },
         {
             "name": "get",
-            "summary": "Get metadata for a token",
+            "summary": "Get a single NFT",
             "examples": {
                 "python": "nft = contract.erc721.get(0)\nprint(nft)"
             },
@@ -312,7 +312,7 @@
         },
         {
             "name": "is_approved",
-            "summary": "Check whether an operator address is approved for all operations of a specific addresses assets",
+            "summary": "Check approval of a specific wallet",
             "examples": {
                 "python": "address = \"{{wallet_address}}\"\noperator = \"0x...\"\n\nis_approved = contract.erc721.is_approved(address, operator)\nprint(is_approved)"
             },
@@ -322,7 +322,7 @@
         },
         {
             "name": "owner_of",
-            "summary": "Get the owner of a token",
+            "summary": "Get the owner of an NFT",
             "examples": {
                 "python": "token_id = 0\n\nowner = contract.erc721.owner_of(token_id)\nprint(owner)"
             },
@@ -332,7 +332,7 @@
         },
         {
             "name": "set_approval_for_all",
-            "summary": "Set the approval of an operator for all operations of a specific address's assets",
+            "summary": "Set approval for all NFTs",
             "examples": {
                 "python": "operator = \"{{wallet_address}}\"\napproved = \"0x...\"\n\nreceipt = contract.erc721.set_approval_for_all(operator, approved)"
             },
@@ -342,7 +342,7 @@
         },
         {
             "name": "transfer",
-            "summary": "Transfer a specified token from the connected wallet to a specified address.",
+            "summary": "Transfer an NFT",
             "examples": {
                 "python": "to = \"{{wallet_address}}\"\ntoken_id = 0\n\nreceipt = contract.erc721.transfer(to, token_id)"
             },
@@ -354,7 +354,7 @@
     "ERC721Burnable": [
         {
             "name": "burn",
-            "summary": "Burn a specified token from the connected wallet.",
+            "summary": "Burn an NFT",
             "examples": {
                 "python": "token_id = 0 \n\nreceipt = contract.erc721.burn(token_id)"
             },
@@ -366,7 +366,7 @@
     "ERC721ClaimCustom": [
         {
             "name": "claim",
-            "summary": "Claim NFTs.",
+            "summary": "Claim NFTs",
             "examples": {
                 "python": "quantity = 1\n\ntx = contract.erc721.claim(quantity)\nreceipt = tx.receipt\nclaimed_token_id = tx.id\nclaimed_nft = tx.data()"
             },
@@ -376,7 +376,7 @@
         },
         {
             "name": "claim_to",
-            "summary": "Claim NFTs to a destination address.",
+            "summary": "Claim NFTs to a specific wallet",
             "examples": {
                 "python": "address = {{wallet_address}}\nquantity = 1\n\ntx = contract.erc721.claim_to(address, quantity)\nreceipt = tx.receipt\nclaimed_token_id = tx.id\nclaimed_nft = tx.data()"
             },
@@ -386,7 +386,7 @@
         },
         {
             "name": "get_total_count",
-            "summary": "Get the total number of NFTs minted by this contract",
+            "summary": "Get the total number of NFTs",
             "examples": {
                 "python": "total_count = contract.erc721.get_total_count()\nprint(total_count)"
             },
@@ -396,7 +396,7 @@
         },
         {
             "name": "total_claimed_supply",
-            "summary": "Get the total number of NFTs claimed from this contract",
+            "summary": "Get the number of claimed NFTs",
             "examples": {
                 "python": "total_claimed = contract.erc721.total_claimed_supply()\nprint(total_claimed)"
             },
@@ -406,7 +406,7 @@
         },
         {
             "name": "total_supply",
-            "summary": "Get the total number of tokens in the contract",
+            "summary": "Get the total number of NFTs",
             "examples": {
                 "python": "total_supply = contract.erc721.total_supply()\nprint(total_supply)"
             },
@@ -416,7 +416,7 @@
         },
         {
             "name": "total_unclaimed_supply",
-            "summary": "Get the total number of unclaimed NFTs in this contract",
+            "summary": "Get the number of unclaimed NFTs",
             "examples": {
                 "python": "total_unclaimed = contract.erc721.total_unclaimed_supply()\nprint(total_unclaimed)"
             },
@@ -428,7 +428,7 @@
     "ERC721ClaimPhasesV2": [
         {
             "name": "claim",
-            "summary": "Claim NFTs.",
+            "summary": "Claim NFTs",
             "examples": {
                 "python": "quantity = 1\n\ntx = contract.erc721.claim(quantity)\nreceipt = tx.receipt\nclaimed_token_id = tx.id\nclaimed_nft = tx.data()"
             },
@@ -438,7 +438,7 @@
         },
         {
             "name": "claim_to",
-            "summary": "Claim NFTs to a destination address.",
+            "summary": "Claim NFTs to a specific wallet",
             "examples": {
                 "python": "address = {{wallet_address}}\nquantity = 1\n\ntx = contract.erc721.claim_to(address, quantity)\nreceipt = tx.receipt\nclaimed_token_id = tx.id\nclaimed_nft = tx.data()"
             },
@@ -448,7 +448,7 @@
         },
         {
             "name": "get_total_count",
-            "summary": "Get the total number of NFTs minted by this contract",
+            "summary": "Get the total number of NFTs",
             "examples": {
                 "python": "total_count = contract.erc721.get_total_count()\nprint(total_count)"
             },
@@ -458,7 +458,7 @@
         },
         {
             "name": "total_claimed_supply",
-            "summary": "Get the total number of NFTs claimed from this contract",
+            "summary": "Get the number of claimed NFTs",
             "examples": {
                 "python": "total_claimed = contract.erc721.total_claimed_supply()\nprint(total_claimed)"
             },
@@ -468,7 +468,7 @@
         },
         {
             "name": "total_supply",
-            "summary": "Get the total number of tokens in the contract",
+            "summary": "Get the total number of NFTs",
             "examples": {
                 "python": "total_supply = contract.erc721.total_supply()\nprint(total_supply)"
             },
@@ -478,7 +478,7 @@
         },
         {
             "name": "total_unclaimed_supply",
-            "summary": "Get the total number of unclaimed NFTs in this contract",
+            "summary": "Get the number of unclaimed NFTs",
             "examples": {
                 "python": "total_unclaimed = contract.erc721.total_unclaimed_supply()\nprint(total_unclaimed)"
             },
@@ -490,7 +490,7 @@
     "ERC721ClaimConditionsV2": [
         {
             "name": "claim",
-            "summary": "Claim NFTs.",
+            "summary": "Claim NFTs",
             "examples": {
                 "python": "quantity = 1\n\ntx = contract.erc721.claim(quantity)\nreceipt = tx.receipt\nclaimed_token_id = tx.id\nclaimed_nft = tx.data()"
             },
@@ -500,7 +500,7 @@
         },
         {
             "name": "claim_to",
-            "summary": "Claim NFTs to a destination address.",
+            "summary": "Claim NFTs to a specific wallet",
             "examples": {
                 "python": "address = {{wallet_address}}\nquantity = 1\n\ntx = contract.erc721.claim_to(address, quantity)\nreceipt = tx.receipt\nclaimed_token_id = tx.id\nclaimed_nft = tx.data()"
             },
@@ -510,7 +510,7 @@
         },
         {
             "name": "get_total_count",
-            "summary": "Get the total number of NFTs minted by this contract",
+            "summary": "Get the total number of NFTs",
             "examples": {
                 "python": "total_count = contract.erc721.get_total_count()\nprint(total_count)"
             },
@@ -520,7 +520,7 @@
         },
         {
             "name": "total_claimed_supply",
-            "summary": "Get the total number of NFTs claimed from this contract",
+            "summary": "Get the number of claimed NFTs",
             "examples": {
                 "python": "total_claimed = contract.erc721.total_claimed_supply()\nprint(total_claimed)"
             },
@@ -530,7 +530,7 @@
         },
         {
             "name": "total_supply",
-            "summary": "Get the total number of tokens in the contract",
+            "summary": "Get the total number of NFTs",
             "examples": {
                 "python": "total_supply = contract.erc721.total_supply()\nprint(total_supply)"
             },
@@ -540,7 +540,7 @@
         },
         {
             "name": "total_unclaimed_supply",
-            "summary": "Get the total number of unclaimed NFTs in this contract",
+            "summary": "Get the number of unclaimed NFTs",
             "examples": {
                 "python": "total_unclaimed = contract.erc721.total_unclaimed_supply()\nprint(total_unclaimed)"
             },
@@ -552,7 +552,7 @@
     "ERC721LazyMintable": [
         {
             "name": "create_batch",
-            "summary": "Create a batch of NFTs.",
+            "summary": "Lazy mint NFTs",
             "examples": {
                 "python": "from thirdweb.types.nft import NFTMetadataInput\n\n# You can customize this metadata however you like\nmetadatas = [\n    NFTMetadataInput.from_json({\n        \"name\": \"Cool NFT\",\n        \"description\": \"This is a cool NFT\",\n        \"image\": open(\"path/to/file.jpg\", \"rb\"),\n    }),\n    NFTMetadataInput.from_json({\n        \"name\": \"Cooler NFT\",\n        \"description\": \"This is a cooler NFT\",\n        \"image\": open(\"path/to/file.jpg\", \"rb\"),\n    }),\n]\n\ntxs = contract.erc721.create_batch(metadatas)\nfirst_token_id = txs[0].id\nfirst_nft = txs[0].data()"
             },
@@ -564,7 +564,7 @@
     "ERC721Supply": [
         {
             "name": "get_all",
-            "summary": "Get the metadata of all tokens in the contract",
+            "summary": "Get all NFTs",
             "examples": {
                 "python": "nfts = contract.erc721.get_all()\nprint(nfts)"
             },
@@ -576,7 +576,7 @@
     "ERC721Enumerable": [
         {
             "name": "get_all",
-            "summary": "Get the metadata of all tokens in the contract",
+            "summary": "Get all NFTs",
             "examples": {
                 "python": "nfts = contract.erc721.get_all()\nprint(nfts)"
             },
@@ -588,7 +588,7 @@
     "ERC721Mintable": [
         {
             "name": "mint",
-            "summary": "Mint a new NFT to the connected wallet",
+            "summary": "Mint an NFT",
             "examples": {
                 "python": "from thirdweb.types.nft import NFTMetadataInput\n\n# You can customize the metadata to your needs\nmetadata = NFTMetadataInput.from_json({\n    \"name\": \"Cool NFT\",\n    \"description\": \"This is a cool NFT\",\n    \"image\": open(\"path/to/file.jpg\", \"rb\")\n})\n\ntx = contract.erc721.mint(metadata)\nreceipt = tx.receipt\ntoken_id = tx.id\nnft = tx.data()"
             },
@@ -598,7 +598,7 @@
         },
         {
             "name": "mint_to",
-            "summary": "Mint a new NFT to the specified wallet",
+            "summary": "Mint an NFT to a specific wallet",
             "examples": {
                 "python": "from thirdweb.types.nft import NFTMetadataInput\n\n# Note that you can customize this metadata however you like\nmetadata = NFTMetadataInput.from_json({\n    \"name\": \"Cool NFT\",\n    \"description\": \"This is a cool NFT\",\n    \"image\": open(\"path/to/file.jpg\", \"rb\"),\n})\n\n# You can pass in any address here to mint the NFT to\ntx = contract.erc721.mint_to(\"{{wallet_address}}\", metadata)\nreceipt = tx.receipt\ntoken_id = tx.id\nnft = tx.data()"
             },
@@ -610,7 +610,7 @@
     "ERC721BatchMintable": [
         {
             "name": "mint_batch",
-            "summary": "Mint a batch of new NFTs to the connected wallet",
+            "summary": "Mint many NFTs",
             "examples": {
                 "python": "from thirdweb.types.nft import NFTMetadataInput\n\n# You can customize this metadata however you like\nmetadatas = [\n    NFTMetadataInput.from_json({\n        \"name\": \"Cool NFT\",\n        \"description\": \"This is a cool NFT\",\n        \"image\": open(\"path/to/file.jpg\", \"rb\"),\n    }),\n    NFTMetadataInput.from_json({\n        \"name\": \"Cooler NFT\",\n        \"description\": \"This is a cooler NFT\",\n        \"image\": open(\"path/to/file.jpg\", \"rb\"),\n    }),\n]\n\n# You can pass in any address here to mint the NFT to\ntxs = contract.erc721.mint_batch(metadatas)\nreceipt = txs[0].receipt\nfirst_token_id = txs[0].id\nfirst_nft = txs[0].data()"
             },
@@ -620,7 +620,7 @@
         },
         {
             "name": "mint_batch_to",
-            "summary": "Mint a batch of new NFTs to the specified wallet",
+            "summary": "Mint many NFTs to a specific wallet",
             "examples": {
                 "python": "from thirdweb.types.nft import NFTMetadataInput\n\n# You can customize this metadata however you like\nmetadatas = [\n    NFTMetadataInput.from_json({\n        \"name\": \"Cool NFT\",\n        \"description\": \"This is a cool NFT\",\n        \"image\": open(\"path/to/file.jpg\", \"rb\"),\n    }),\n    NFTMetadataInput.from_json({\n        \"name\": \"Cooler NFT\",\n        \"description\": \"This is a cooler NFT\",\n        \"image\": open(\"path/to/file.jpg\", \"rb\"),\n    }),\n]\n\n# You can pass in any address here to mint the NFT to\ntxs = contract.erc721.mint_batch_to(\"{{wallet_address}}\", metadatas)\nreceipt = txs[0].receipt\nfirst_token_id = txs[0].id\nfirst_nft = txs[0].data()"
             },
@@ -632,7 +632,7 @@
     "ERC1155": [
         {
             "name": "balance",
-            "summary": "Get the connected wallets balance of a specific token",
+            "summary": "Get NFT balance",
             "examples": {
                 "python": "token_id = 0\n\nbalance = contract.erc1155.balance(token_id)\nprint(balance)"
             },
@@ -642,7 +642,7 @@
         },
         {
             "name": "balance_of",
-            "summary": "Get a specific wallets balance of a specific token",
+            "summary": "Get NFT balance of a specific wallet",
             "examples": {
                 "python": "address = \"{{wallet_address}}\"\ntoken_id = 0\n\nbalance = contract.erc1155.balance_of(address, token_id)"
             },
@@ -652,7 +652,7 @@
         },
         {
             "name": "get",
-            "summary": "Get metadata for a token",
+            "summary": "Get an NFT",
             "examples": {
                 "python": "nft = contract.erc1155.get(0)\nprint(nft)"
             },
@@ -662,7 +662,7 @@
         },
         {
             "name": "set_approval_for_all",
-            "summary": "Set the approval for an operator address to manage the connected wallets assets",
+            "summary": "Set approval for all NFTs",
             "examples": {
                 "python": "operator = \"{{wallet_address}}\"\napproved = \"0x...\"\n\nreceipt = contract.erc1155.set_approval_for_all(operator, approved)"
             },
@@ -672,7 +672,7 @@
         },
         {
             "name": "total_supply",
-            "summary": "Get the total number of tokens on the contract",
+            "summary": "Get the total number of NFTs",
             "examples": {
                 "python": "token_id = 0\n\ntotal_supply = contract.erc1155.total_supply(token_id)\nprint(total_supply)"
             },
@@ -682,7 +682,7 @@
         },
         {
             "name": "transfer",
-            "summary": "Transfer a specified token from the connected wallet to a specified address.",
+            "summary": "Transfer NFTs",
             "examples": {
                 "python": "to = \"{{wallet_address}}\"\ntoken_id = 0\namount = 1\n\nreceipt = contract.erc1155.transfer(to, token_id, amount)"
             },
@@ -694,7 +694,7 @@
     "ERC1155Burnable": [
         {
             "name": "burn",
-            "summary": "Burn a specified amount of tokens from the connected wallet.",
+            "summary": "Burn NFTs",
             "examples": {
                 "python": "token_id = 0\namount = 1\n\nreceipt = contract.erc1155.burn(token_id, amount)"
             },
@@ -706,7 +706,7 @@
     "ERC1155ClaimCustom": [
         {
             "name": "claim",
-            "summary": "Claim NFTs.",
+            "summary": "Claim NFTs",
             "examples": {
                 "python": "token_id = 0\nquantity = 1\n\ntx = contract.erc1155.claim(token_id, quantity)\nreceipt = tx.receipt\nclaimed_token_id = tx.id\nclaimed_nft = tx.data()"
             },
@@ -716,7 +716,7 @@
         },
         {
             "name": "claim_to",
-            "summary": "Claim NFTs to a destination address.",
+            "summary": "Claim NFTs to a specific wallet",
             "examples": {
                 "python": "address = {{wallet_address}}\ntoken_id = 0\nquantity = 1\n\ntx = contract.erc1155.claim_to(address, token_id, quantity)\nreceipt = tx.receipt\nclaimed_token_id = tx.id\nclaimed_nft = tx.data()"
             },
@@ -728,7 +728,7 @@
     "ERC1155ClaimPhasesV2": [
         {
             "name": "claim",
-            "summary": "Claim NFTs.",
+            "summary": "Claim NFTs",
             "examples": {
                 "python": "token_id = 0\nquantity = 1\n\ntx = contract.erc1155.claim(token_id, quantity)\nreceipt = tx.receipt\nclaimed_token_id = tx.id\nclaimed_nft = tx.data()"
             },
@@ -738,7 +738,7 @@
         },
         {
             "name": "claim_to",
-            "summary": "Claim NFTs to a destination address.",
+            "summary": "Claim NFTs to a specific wallet",
             "examples": {
                 "python": "address = {{wallet_address}}\ntoken_id = 0\nquantity = 1\n\ntx = contract.erc1155.claim_to(address, token_id, quantity)\nreceipt = tx.receipt\nclaimed_token_id = tx.id\nclaimed_nft = tx.data()"
             },
@@ -750,7 +750,7 @@
     "ERC1155ClaimConditionsV2": [
         {
             "name": "claim",
-            "summary": "Claim NFTs.",
+            "summary": "Claim NFTs",
             "examples": {
                 "python": "token_id = 0\nquantity = 1\n\ntx = contract.erc1155.claim(token_id, quantity)\nreceipt = tx.receipt\nclaimed_token_id = tx.id\nclaimed_nft = tx.data()"
             },
@@ -760,7 +760,7 @@
         },
         {
             "name": "claim_to",
-            "summary": "Claim NFTs to a destination address.",
+            "summary": "Claim NFTs to a specific wallet",
             "examples": {
                 "python": "address = {{wallet_address}}\ntoken_id = 0\nquantity = 1\n\ntx = contract.erc1155.claim_to(address, token_id, quantity)\nreceipt = tx.receipt\nclaimed_token_id = tx.id\nclaimed_nft = tx.data()"
             },
@@ -772,7 +772,7 @@
     "ERC1155LazyMintableV2": [
         {
             "name": "create_batch",
-            "summary": "Create a batch of NFTs.",
+            "summary": "Lazy mint NFTs",
             "examples": {
                 "python": "from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput\n\n# Note that you can customize this metadata however you like\nmetadatas_with_supply = [\n    EditionMetadataInput(\n        NFTMetadataInput.from_json({\n            \"name\": \"Cool NFT\",\n            \"description\": \"This is a cool NFT\",\n            \"image\": open(\"path/to/file.jpg\", \"rb\"),\n        }),\n        100\n    ),\n    EditionMetadataInput(\n        NFTMetadataInput.from_json({\n            \"name\": \"Cooler NFT\",\n            \"description\": \"This is a cooler NFT\",\n            \"image\": open(\"path/to/file.jpg\", \"rb\"),\n        }),\n        100\n    )\n]\n\ntxs = contract.erc1155.create_batch(metadata_with_supply)\nfirst_token_id = txs[0].id\nfirst_nft = txs[0].data()"
             },
@@ -784,7 +784,7 @@
     "ERC1155Enumerable": [
         {
             "name": "get_all",
-            "summary": "Get the metadata for all tokens on the contract",
+            "summary": "Get all NFTs",
             "examples": {
                 "python": "metadatas = contract.erc1155.get_all()\nprint(metadatas)"
             },
@@ -794,7 +794,7 @@
         },
         {
             "name": "get_owned",
-            "summary": "Get the metadata for all the tokens owned by an address",
+            "summary": "Get NFTs owned by a specific wallet",
             "examples": {
                 "python": "address = \"{{wallet_address}}\"\nowned = contract.erc1155.get_owned(address)\nprint(owned)"
             },
@@ -804,7 +804,7 @@
         },
         {
             "name": "get_total_count",
-            "summary": "Get the total number of NFTs on the contract",
+            "summary": "Get the total number of NFTs",
             "examples": {
                 "python": "total_count = contract.erc1155.get_total_count()\nprint(total_count)"
             },
@@ -816,7 +816,7 @@
     "ERC1155Mintable": [
         {
             "name": "mint",
-            "summary": "Mint a new NFT to the connected wallet",
+            "summary": "Mint a new NFT",
             "examples": {
                 "python": "from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput\n\n# Note that you can customize this metadata however you like\nmetadata_with_supply = EditionMetadataInput(\n    NFTMetadataInput.from_json({\n        \"name\": \"Cool NFT\",\n        \"description\": \"This is a cool NFT\",\n        \"image\": open(\"path/to/file.jpg\", \"rb\"),\n    }),\n    100\n)\n\n# You can pass in any address here to mint the NFT to\ntx = contract.erc1155.mint(metadata_with_supply)\nreceipt = tx.receipt\ntoken_id = tx.id\nnft = tx.data()"
             },
@@ -826,7 +826,7 @@
         },
         {
             "name": "mint_additional_supply",
-            "summary": "Mint additional supply of a token to the connected wallet",
+            "summary": "Mint additional supply of an NFT",
             "examples": {
                 "python": "token_id = 0\nadditional_supply = 1\n\ntx = contract.erc1155.mint_additional_supply(token_id, additional_supply)\nreceipt = tx.receipt\ntoken_id = tx.id\nnft = tx.data()"
             },
@@ -836,7 +836,7 @@
         },
         {
             "name": "mint_additional_supply_to",
-            "summary": "Mint additional supply of a token to the specified wallet",
+            "summary": "Mint additional supply of an NFT to a specific wallet",
             "examples": {
                 "python": "to = \"{{wallet_address}}\"\ntoken_id = 0\nadditional_supply = 1\n\ntx = contract.erc1155.mint_additional_supply_to(to, token_id, additional_supply)\nreceipt = tx.receipt\ntoken_id = tx.id\nnft = tx.data()"
             },
@@ -846,7 +846,7 @@
         },
         {
             "name": "mint_to",
-            "summary": "Mint a new NFT to the specified wallet",
+            "summary": "Mint a new NFT to a specific wallet",
             "examples": {
                 "python": "from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput\n\n# Note that you can customize this metadata however you like\nmetadata_with_supply = EditionMetadataInput(\n    NFTMetadataInput.from_json({\n        \"name\": \"Cool NFT\",\n        \"description\": \"This is a cool NFT\",\n        \"image\": open(\"path/to/file.jpg\", \"rb\"),\n    }),\n    100\n)\n\n# You can pass in any address here to mint the NFT to\ntx = contract.erc1155.mint_to(\"{{wallet_address}}\", metadata_with_supply)\nreceipt = tx.receipt\ntoken_id = tx.id\nnft = tx.data()"
             },
@@ -858,7 +858,7 @@
     "ERC1155BatchMintable": [
         {
             "name": "mint_batch",
-            "summary": "Mint a batch of NFTs to the connected wallet",
+            "summary": "Mint many NFTs",
             "examples": {
                 "python": "from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput\n\n# Note that you can customize this metadata however you like\nmetadatas_with_supply = [\n    EditionMetadataInput(\n        NFTMetadataInput.from_json({\n            \"name\": \"Cool NFT\",\n            \"description\": \"This is a cool NFT\",\n            \"image\": open(\"path/to/file.jpg\", \"rb\"),\n        }),\n        100\n    ),\n    EditionMetadataInput(\n        NFTMetadataInput.from_json({\n            \"name\": \"Cooler NFT\",\n            \"description\": \"This is a cooler NFT\",\n            \"image\": open(\"path/to/file.jpg\", \"rb\"),\n        }),\n        100\n    )\n]\n\n# You can pass in any address here to mint the NFT to\ntxs = contract.erc1155.mint_batch(metadatas_with_supply)\nreceipt = txs[0].receipt\ntoken_id = txs[0].id\nnft = txs[0].data()"
             },
@@ -868,7 +868,7 @@
         },
         {
             "name": "mint_batch_to",
-            "summary": "Mint a batch of NFTs to the specified wallet",
+            "summary": "Mint many NFTs to a specific wallet",
             "examples": {
                 "python": "from thirdweb.types.nft import NFTMetadataInput, EditionMetadataInput\n\n# Note that you can customize this metadata however you like\nmetadatas_with_supply = [\n    EditionMetadataInput(\n        NFTMetadataInput.from_json({\n            \"name\": \"Cool NFT\",\n            \"description\": \"This is a cool NFT\",\n            \"image\": open(\"path/to/file.jpg\", \"rb\"),\n        }),\n        100\n    ),\n    EditionMetadataInput(\n        NFTMetadataInput.from_json({\n            \"name\": \"Cooler NFT\",\n            \"description\": \"This is a cooler NFT\",\n            \"image\": open(\"path/to/file.jpg\", \"rb\"),\n        }),\n        100\n    )\n]\n\n# You can pass in any address here to mint the NFT to\ntxs = contract.erc1155.mint_batch_to(\"{{wallet_address}}\", metadatas_with_supply)\nreceipt = txs[0].receipt\ntoken_id = txs[0].id\nnft = txs[0].data()"
             },

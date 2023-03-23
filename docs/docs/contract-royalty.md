@@ -18,7 +18,7 @@ class ContractRoyalty(Generic[TRoyaltyABI])
 def get_default_royalty_info() -> ContractRoyaltySchema
 ```
 
-Get the default royalty information for this contract.
+Get the royalty recipient and fee
 
 ```python
 royalty_info = contract.royalties.get_default_royalty_info()
@@ -37,7 +37,7 @@ the default royalty information.
 def get_token_royalty_info(token_id: int) -> ContractRoyaltySchema
 ```
 
-Get the royalty information for a specific token.
+Get the royalty recipient and fee for a specific token
 
 ```python
 token_id = 0
@@ -62,7 +62,7 @@ the royalty information for the token.
 def set_default_royalty_info(royalty_data: ContractRoyaltySchema) -> TxReceipt
 ```
 
-Set the default royalty information for this contract.
+Set the royalty recipient and fee
 
 ```python
 from thirdweb.types import ContractRoyaltySchema
@@ -92,7 +92,7 @@ def set_token_royalty_info(token_id: int,
                            royalty_data: ContractRoyaltySchema) -> TxReceipt
 ```
 
-Set the royalty information for a specific token.
+Set the royalty recipient and fee for a specific token
 
 ```python
 from thirdweb.types import ContractRoyaltySchema
