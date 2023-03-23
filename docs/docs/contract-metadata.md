@@ -18,7 +18,7 @@ class ContractMetadata(Generic[TMetadataABI, TContractSchema])
 def get() -> TContractSchema
 ```
 
-Get the metadata associated with this contract.
+Get the contract metadata
 
 ```python
 metadata = contract.metadata.get()
@@ -37,7 +37,7 @@ metadata associated with this contract
 def set(metadata: TContractSchema) -> TxReceipt
 ```
 
-Set the metadata associated with this contract.
+Set the contract metadata
 
 ```python
 from thirdweb.types import ContractMetadataSchema

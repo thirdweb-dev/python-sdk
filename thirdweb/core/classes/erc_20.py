@@ -37,7 +37,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def get(self) -> Currency:
         """
-        Get the token metadata including name, symbol, decimals, etc.
+        Get token metadata
 
         ```python
         token = contract.erc20.get()
@@ -54,7 +54,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def balance(self) -> CurrencyValue:
         """
-        Get the token balance of the connected wallet.
+        Get token balance
 
         ```python
         balance = contract.erc20.balance()
@@ -69,7 +69,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def balance_of(self, address: str) -> CurrencyValue:
         """
-        Get the balance of the specified wallet
+        Get token balance of a specific wallet
 
         ```python
         address = "{{wallet_address}}"
@@ -88,7 +88,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def total_supply(self) -> CurrencyValue:
         """
-        Get the total minted supply of the token.
+        Get the total minted supply
 
         ```python
         supply = contract.erc20.total_supply()
@@ -103,7 +103,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def allowance(self, spender: str) -> CurrencyValue:
         """
-        Get a specific spenders allowance of this token for the connected wallet.
+        Get the allowance of a specific spender
 
         ```python
         spender = "{{wallet_address}}"
@@ -120,7 +120,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def allowance_of(self, owner: str, spender: str) -> CurrencyValue:
         """
-        Get the allowance of the specified spender for a specified owner.
+        Get the allowance of a spender for a specific owner
 
         ```python
         # Address of the wallet who owns the funds
@@ -145,7 +145,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def is_transfer_restricted(self) -> bool:
         """
-        Check whether transfer is restricted for tokens in this module.
+        Check whether transfer is restricted for tokens in this module
 
         ```python
         is_restricted = contract.erc20.is_transfer_restricted()
@@ -167,7 +167,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def mint(self, amount: Price) -> TxReceipt:
         """
-        Mint tokens to the connected wallet.
+        Mint tokens
 
         ```python
         address = "{{wallet_address}}"
@@ -185,7 +185,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def mint_to(self, to: str, amount: Price) -> TxReceipt:
         """
-        Mint tokens to a specified wallet.
+        Mint tokens to a specific wallet
 
         ```python
         address = "{{wallet_address}}"
@@ -207,7 +207,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def mint_batch_to(self, args: List[TokenAmount]) -> TxReceipt:
         """
-        Mint tokens to a list of wallets.
+        Mint tokens to many wallets
 
         ```python
         from thirdweb.types.currency import TokenAmount
@@ -238,7 +238,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def transfer(self, to: str, amount: Price) -> TxReceipt:
         """
-        Transfer a specified amount of tokens from the connected wallet to a specified address.
+        Transfer tokens
 
         ```python
         # Address to send tokens to
@@ -263,7 +263,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def transfer_from(self, fr: str, to: str, amount: Price) -> TxReceipt:
         """
-        Transfer a specified amount of tokens from one specified address to another.
+        Transfer tokens from a specific wallet
 
         ```python
         # Address to send tokens from
@@ -292,8 +292,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def set_allowance(self, spender: str, amount: Price) -> TxReceipt:
         """
-        Sets the allowance of the specified wallet over the connected wallets funds to
-        a specified amount.
+        Approve a specific wallet to spend tokens
 
         ```python
         spender = "0x..."
@@ -314,7 +313,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def transfer_batch(self, args: List[TokenAmount]):
         """
-        Transfer tokens from the connected wallet to many wallets.
+        Transfer tokens to many wallets
 
         ```python
         from thirdweb.types.currency import TokenAmount
@@ -344,7 +343,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def burn(self, amount: Price) -> TxReceipt:
         """
-        Burn a specified amount of tokens from the connected wallet.
+        Burn tokens
 
         ```python
         amount = 0.1
@@ -361,7 +360,7 @@ class ERC20(BaseContract[TokenERC20]):
 
     def burn_from(self, holder: str, amount: Price) -> TxReceipt:
         """
-        Burn a specified amount of tokens from a specified wallet.
+        Burn tokens from a specific wallet
 
         ```python
         holder = "{{wallet_address}}"

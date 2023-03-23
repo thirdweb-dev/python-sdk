@@ -83,7 +83,7 @@ class ContractRoles:
 
     def grant(self, role: Role, address: str) -> TxReceipt:
         """
-        Grant a role to an address.
+        Grant a role to a wallet
 
         ```python
         from thirdweb.constants.role import Role
@@ -110,7 +110,7 @@ class ContractRoles:
 
     def revoke(self, role: Role, address: str) -> TxReceipt:
         """
-        Revoke a role from an address.
+        Revoke a role from a wallet
 
         ```python
         from thirdweb.constants.role import Role

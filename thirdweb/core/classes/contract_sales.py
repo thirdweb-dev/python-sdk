@@ -12,7 +12,7 @@ class ContractPrimarySale(Generic[TPrimarySaleABI]):
 
     def get_recipient(self) -> str:
         """
-        Get the primary sale recipient of this contract.
+        Get the contract primary sale recipient
 
         ```python
         primary_sale_recipient = contract.sales.get_recipient()
@@ -27,7 +27,7 @@ class ContractPrimarySale(Generic[TPrimarySaleABI]):
 
     def set_recipient(self, recipient: str) -> TxReceipt:
         """
-        Set the primary sale recipient of this contract
+        Set the contract primary sale recipient
 
         ```python
         primary_sale_recipient = "{{wallet_address}}"

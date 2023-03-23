@@ -18,7 +18,7 @@ class ContractPlatformFee(Generic[TPlatformFeeABI])
 def get() -> ContractPlatformFeeSchema
 ```
 
-Get the platform fee of this contract.
+Get the contract platform fees
 
 ```python
 platform_fees = contract.platform_fee.get()
@@ -38,7 +38,7 @@ the platform fee.
 def set(platform_fee_info: ContractPlatformFeeSchema) -> TxReceipt
 ```
 
-Set the platform fee of this contract.
+Set the contract platform fees
 
 ```python
 from thirdweb.types import ContractPlatformFeeSchema

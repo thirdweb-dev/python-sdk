@@ -65,7 +65,7 @@ list of members of the role
 def grant(role: Role, address: str) -> TxReceipt
 ```
 
-Grant a role to an address.
+Grant a role to a wallet
 
 ```python
 from thirdweb.constants.role import Role
@@ -93,7 +93,7 @@ transaction receipt of granting the role
 def revoke(role: Role, address: str) -> TxReceipt
 ```
 
-Revoke a role from an address.
+Revoke a role from a wallet
 
 ```python
 from thirdweb.constants.role import Role

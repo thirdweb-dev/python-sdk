@@ -18,7 +18,7 @@ class ERC20(BaseContract[TokenERC20])
 def get() -> Currency
 ```
 
-Get the token metadata including name, symbol, decimals, etc.
+Get token metadata
 
 ```python
 token = contract.erc20.get()
@@ -37,7 +37,7 @@ token metadata
 def balance() -> CurrencyValue
 ```
 
-Get the token balance of the connected wallet.
+Get token balance
 
 ```python
 balance = contract.erc20.balance()
@@ -56,7 +56,7 @@ balance of the connected wallet
 def balance_of(address: str) -> CurrencyValue
 ```
 
-Get the balance of the specified wallet
+Get token balance of a specific wallet
 
 ```python
 address = "{{wallet_address}}"
@@ -80,7 +80,7 @@ balance of the specified wallet
 def total_supply() -> CurrencyValue
 ```
 
-Get the total minted supply of the token.
+Get the total minted supply
 
 ```python
 supply = contract.erc20.total_supply()
@@ -99,7 +99,7 @@ total minted supply of the token
 def allowance(spender: str) -> CurrencyValue
 ```
 
-Get a specific spenders allowance of this token for the connected wallet.
+Get the allowance of a specific spender
 
 ```python
 spender = "{{wallet_address}}"
@@ -123,7 +123,7 @@ allowance of the connected wallet
 def allowance_of(owner: str, spender: str) -> CurrencyValue
 ```
 
-Get the allowance of the specified spender for a specified owner.
+Get the allowance of a spender for a specific owner
 
 ```python
 # Address of the wallet who owns the funds
@@ -153,7 +153,7 @@ allowance of the specified spender for the specified owner
 def is_transfer_restricted() -> bool
 ```
 
-Check whether transfer is restricted for tokens in this module.
+Check whether transfer is restricted for tokens in this module
 
 ```python
 is_restricted = contract.erc20.is_transfer_restricted()
@@ -172,7 +172,7 @@ True if transfer is restricted, False otherwise
 def mint(amount: Price) -> TxReceipt
 ```
 
-Mint tokens to the connected wallet.
+Mint tokens
 
 ```python
 address = "{{wallet_address}}"
@@ -197,7 +197,7 @@ transaction receipt of the mint
 def mint_to(to: str, amount: Price) -> TxReceipt
 ```
 
-Mint tokens to a specified wallet.
+Mint tokens to a specific wallet
 
 ```python
 address = "{{wallet_address}}"
@@ -223,7 +223,7 @@ transaction receipt of the mint
 def mint_batch_to(args: List[TokenAmount]) -> TxReceipt
 ```
 
-Mint tokens to a list of wallets.
+Mint tokens to many wallets
 
 ```python
 from thirdweb.types.currency import TokenAmount
@@ -249,7 +249,7 @@ transaction receipt of the mint
 def transfer(to: str, amount: Price) -> TxReceipt
 ```
 
-Transfer a specified amount of tokens from the connected wallet to a specified address.
+Transfer tokens
 
 ```python
 # Address to send tokens to
@@ -278,7 +278,7 @@ transaction receipt of the transfer
 def transfer_from(fr: str, to: str, amount: Price) -> TxReceipt
 ```
 
-Transfer a specified amount of tokens from one specified address to another.
+Transfer tokens from a specific wallet
 
 ```python
 # Address to send tokens from
@@ -311,9 +311,7 @@ transaction receipt of the transfer
 def set_allowance(spender: str, amount: Price) -> TxReceipt
 ```
 
-Sets the allowance of the specified wallet over the connected wallets funds to
-
-a specified amount.
+Approve a specific wallet to spend tokens
 
 ```python
 spender = "0x..."
@@ -338,7 +336,7 @@ transaction receipt of the allowance set
 def transfer_batch(args: List[TokenAmount])
 ```
 
-Transfer tokens from the connected wallet to many wallets.
+Transfer tokens to many wallets
 
 ```python
 from thirdweb.types.currency import TokenAmount
@@ -367,7 +365,7 @@ transaction receipt of the transfers
 def burn(amount: Price) -> TxReceipt
 ```
 
-Burn a specified amount of tokens from the connected wallet.
+Burn tokens
 
 ```python
 amount = 0.1
@@ -390,7 +388,7 @@ transaction receipt of the burn
 def burn_from(holder: str, amount: Price) -> TxReceipt
 ```
 
-Burn a specified amount of tokens from a specified wallet.
+Burn tokens from a specific wallet
 
 ```python
 holder = "{{wallet_address}}"
