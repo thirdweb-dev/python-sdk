@@ -251,6 +251,7 @@ class ERC1155(Generic[TERC1155], BaseContract[TERC1155]):
         print(is_approved)
         ```
 
+        :extension: ERC1155
         :param address: address whose assets to check the approval of
         :param operator: operator address to check the approval for
         :return: True if the operator is approved, False otherwise
