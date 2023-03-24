@@ -367,7 +367,7 @@ class ERC721(Generic[TERC721], BaseContract[TERC721]):
 
         ```python
         operator = "{{wallet_address}}"
-        approved = "0x..."
+        approved = true
 
         receipt = contract.erc721.set_approval_for_all(operator, approved)
         ```
