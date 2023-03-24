@@ -80,7 +80,7 @@
     "Royalty": [
         {
             "name": "get_default_royalty_info",
-            "summary": "Get the royalty recipient and fee        ```python        royalty_info = contract.royalties.get_default_royalty_info()        print(royalty_info)        ```",
+            "summary": "Get the royalty recipient and fee                ```python        royalty_info = contract.royalties.get_default_royalty_info()        print(royalty_info)        ```",
             "examples": {
                 "python": "royalty_info = contract.royalties.get_default_royalty_info()\nprint(royalty_info)"
             },
@@ -334,7 +334,7 @@
             "name": "set_approval_for_all",
             "summary": "Set approval for all NFTs",
             "examples": {
-                "python": "operator = \"{{wallet_address}}\"\napproved = \"0x...\"\n\nreceipt = contract.erc721.set_approval_for_all(operator, approved)"
+                "python": "operator = \"{{wallet_address}}\"\napproved = true\n\nreceipt = contract.erc721.set_approval_for_all(operator, approved)"
             },
             "reference": {
                 "python": "https://docs.thirdweb.com/python/erc721#set_approval_for_all"
@@ -661,10 +661,20 @@
             }
         },
         {
+            "name": "is_approved",
+            "summary": "Check approval of a specific wallet",
+            "examples": {
+                "python": "address = \"{{wallet_address}}\"\noperator = \"0x...\"\n\nis_approved = contract.erc1155.is_approved(address, operator)\nprint(is_approved)"
+            },
+            "reference": {
+                "python": "https://docs.thirdweb.com/python/erc1155#is_approved"
+            }
+        },
+        {
             "name": "set_approval_for_all",
             "summary": "Set approval for all NFTs",
             "examples": {
-                "python": "operator = \"{{wallet_address}}\"\napproved = \"0x...\"\n\nreceipt = contract.erc1155.set_approval_for_all(operator, approved)"
+                "python": "operator = \"{{wallet_address}}\"\napproved = true\n\nreceipt = contract.erc1155.set_approval_for_all(operator, approved)"
             },
             "reference": {
                 "python": "https://docs.thirdweb.com/python/erc1155#set_approval_for_all"
