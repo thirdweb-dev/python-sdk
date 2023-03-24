@@ -1246,7 +1246,7 @@
         "methods": [
             {
                 "name": "get_default_royalty_info",
-                "summary": "Get the royalty recipient and fee        ```python        royalty_info = contract.royalties.get_default_royalty_info()        print(royalty_info)        ```",
+                "summary": "Get the royalty recipient and fee                ```python        royalty_info = contract.royalties.get_default_royalty_info()        print(royalty_info)        ```",
                 "example": "royalty_info = contract.royalties.get_default_royalty_info()\nprint(royalty_info)",
                 "reference": "https://docs.thirdweb.com/python/contract-royalty#get_default_royalty_info",
                 "extensions": [
@@ -1678,7 +1678,7 @@
             {
                 "name": "set_approval_for_all",
                 "summary": "Set approval for all NFTs",
-                "example": "operator = \"{{wallet_address}}\"\napproved = \"0x...\"\n\nreceipt = contract.erc721.set_approval_for_all(operator, approved)",
+                "example": "operator = \"{{wallet_address}}\"\napproved = true\n\nreceipt = contract.erc721.set_approval_for_all(operator, approved)",
                 "reference": "https://docs.thirdweb.com/python/erc721#set_approval_for_all",
                 "extensions": [
                     "ERC721"
@@ -1848,7 +1848,9 @@
                 "summary": "Check approval of a specific wallet",
                 "example": "address = \"{{wallet_address}}\"\noperator = \"0x...\"\n\nis_approved = contract.erc1155.is_approved(address, operator)\nprint(is_approved)",
                 "reference": "https://docs.thirdweb.com/python/erc1155#is_approved",
-                "extensions": []
+                "extensions": [
+                    "ERC1155"
+                ]
             },
             {
                 "name": "is_transfer_restricted",
@@ -1928,7 +1930,7 @@
             {
                 "name": "set_approval_for_all",
                 "summary": "Set approval for all NFTs",
-                "example": "operator = \"{{wallet_address}}\"\napproved = \"0x...\"\n\nreceipt = contract.erc1155.set_approval_for_all(operator, approved)",
+                "example": "operator = \"{{wallet_address}}\"\napproved = true\n\nreceipt = contract.erc1155.set_approval_for_all(operator, approved)",
                 "reference": "https://docs.thirdweb.com/python/erc1155#set_approval_for_all",
                 "extensions": [
                     "ERC1155"
