@@ -80,7 +80,7 @@
     "Royalty": [
         {
             "name": "get_default_royalty_info",
-            "summary": "Get the royalty recipient and fee                ```python        royalty_info = contract.royalties.get_default_royalty_info()        print(royalty_info)        ```",
+            "summary": "Get the royalty recipient and fee",
             "examples": {
                 "python": "royalty_info = contract.royalties.get_default_royalty_info()\nprint(royalty_info)"
             },
