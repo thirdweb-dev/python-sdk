@@ -19,6 +19,7 @@ class ContractRoyalty(Generic[TRoyaltyABI]):
     def get_default_royalty_info(self) -> ContractRoyaltySchema:
         """
         Get the royalty recipient and fee
+        
         ```python
         royalty_info = contract.royalties.get_default_royalty_info()
         print(royalty_info)
