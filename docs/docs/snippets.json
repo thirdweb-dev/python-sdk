@@ -1246,7 +1246,7 @@
         "methods": [
             {
                 "name": "get_default_royalty_info",
-                "summary": "Get the royalty recipient and fee                ```python        royalty_info = contract.royalties.get_default_royalty_info()        print(royalty_info)        ```",
+                "summary": "Get the royalty recipient and fee",
                 "example": "royalty_info = contract.royalties.get_default_royalty_info()\nprint(royalty_info)",
                 "reference": "https://docs.thirdweb.com/python/contract-royalty#get_default_royalty_info",
                 "extensions": [
