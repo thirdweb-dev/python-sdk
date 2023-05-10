@@ -1,4 +1,4 @@
-from typing import Final, List, Optional
+from typing import Any, Final, List, Optional
 
 from web3 import Web3
 from thirdweb.abi import DropERC1155
@@ -164,3 +164,6 @@ class EditionDrop(ERC1155Standard[DropERC1155]):
         :return: tx receipt of the claim
         """
         return self._erc1155.claim(token_id, quantity)
+
+    def call(self, fn: str, *args) -> Any:
+        return self._contract_wrapper.call(fn, *args)

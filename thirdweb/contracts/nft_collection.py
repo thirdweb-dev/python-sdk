@@ -8,7 +8,6 @@ from thirdweb.core.classes.contract_roles import ContractRoles
 from thirdweb.core.classes.contract_royalty import ContractRoyalty
 from thirdweb.core.classes.contract_sales import ContractPrimarySale
 from thirdweb.core.classes.contract_wrapper import ContractWrapper
-from thirdweb.common.nft import upload_or_extract_uri, upload_or_extract_uris
 from thirdweb.core.classes.erc_721_standard import ERC721Standard
 from thirdweb.core.classes.erc_721_signature_minting import ERC721SignatureMinting
 from thirdweb.abi import TokenERC721
@@ -20,7 +19,7 @@ from eth_account.account import LocalAccount
 from web3 import Web3
 
 from thirdweb.types.sdk import SDKOptions
-from typing import Final, Optional, List, Union
+from typing import Any, Final, Optional, List, Union
 
 from thirdweb.types.settings.metadata import NFTCollectionContractMetadata
 from thirdweb.types.tx import TxResultWithId
@@ -212,3 +211,6 @@ class NFTCollection(ERC721Standard[TokenERC721]):
         """
 
         return self._erc721.mint_batch_to(to, metadatas)
+
+    def call(self, fn: str, *args) -> Any:
+        return self._contract_wrapper.call(fn, *args)

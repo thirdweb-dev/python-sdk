@@ -1,4 +1,4 @@
-from typing import Final, List, Optional, Union
+from typing import Any, Final, List, Optional, Union
 
 from web3 import Web3
 from web3.eth import TxReceipt
@@ -233,6 +233,9 @@ class Multiwrap(ERC721Standard[MultiwrapABI]):
         return self._contract_wrapper.send_transaction(
             "unwrap", [wrapped_token_id, recipient_address]
         )
+
+    def call(self, fn: str, *args) -> Any:
+        return self._contract_wrapper.call(fn, *args)
 
     """
     INTERNAL FUNCTIONS

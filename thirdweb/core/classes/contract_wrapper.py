@@ -3,7 +3,7 @@ from eth_typing import Address
 
 from web3 import Web3
 from web3.datastructures import AttributeDict
-from web3.contract import Contract
+from web3.contract import Contract, ContractFunction
 from thirdweb.common.error import NoSignerException
 from web3._utils.events import EventLogErrorFlags
 from thirdweb.common.sign import EIP712Domain, sign_typed_data_internal
@@ -94,6 +94,53 @@ class ContractWrapper(Generic[TContractABI], ProviderHandler):
             .events[event]()
             .processReceipt(receipt, errors=EventLogErrorFlags.Discard)
         )
+
+    def call(self, fn: str, *args) -> Any:
+        func = cast(ContractFunction, getattr(self.get_contract_interface().functions, fn, None))
+        if func is None:
+            raise Exception(
+                f"Function {fn} not found on contract {self._contract_abi.contract_address}. "
+                + "Check your dashboard for the list of available functions."
+            )
+
+        # We need this to set params properly on func + throws good errors
+        func.args = args
+        func.kwargs = {}
+        func._set_function_info()
+
+        if len(func.abi["inputs"]) != len(args):
+            signature = (
+                "("
+                + ", ".join(
+                    [(i["name"] + ": " + i["type"]) for i in func.abi["inputs"]]
+                )
+                + ")"
+            )
+            raise Exception(
+                f"Function {fn} expects {len(func.arguments)} arguments, "
+                f"but {len(args)} were provided.\nExpected function signature: {signature}"
+            )
+
+        if func.abi["stateMutability"] == "view" or func.abi["stateMutability"] == "pure":
+            return func(*args).call()
+        else:
+            provider = self.get_provider()
+            signer = self.get_signer()
+
+            if signer is None:
+                raise NoSignerException
+
+            nonce = provider.eth.get_transaction_count(signer.address)  # type: ignore
+
+            tx = func(*args).buildTransaction(
+                TxParams(gas_price=provider.eth.gas_price).as_dict()
+            )
+            tx["nonce"] = nonce
+
+            signed_tx = signer.sign_transaction(tx)  # type: ignore
+            tx_hash = provider.eth.send_raw_transaction(signed_tx.rawTransaction)
+
+            return provider.eth.wait_for_transaction_receipt(tx_hash)
 
     def send_transaction(self, fn: str, args: List[Any], overrides: TxParams = None) -> TxReceipt:
         """

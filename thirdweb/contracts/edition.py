@@ -21,7 +21,7 @@ from thirdweb.types.contract import ContractType
 
 from thirdweb.types.nft import EditionMetadata, EditionMetadataInput
 from thirdweb.types.sdk import SDKOptions
-from typing import Final, Optional, List
+from typing import Any, Final, Optional, List
 
 from thirdweb.types.settings.metadata import EditionContractMetadata
 from thirdweb.types.tx import TxResultWithId
@@ -210,3 +210,6 @@ class Edition(ERC1155Standard[TokenERC1155]):
         """
 
         return self._erc1155.mint_batch_to(to, metadatas_with_supply)
+
+    def call(self, fn: str, *args) -> Any:
+        return self._contract_wrapper.call(fn, *args)
