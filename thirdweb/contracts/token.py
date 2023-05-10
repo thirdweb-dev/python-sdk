@@ -1,6 +1,6 @@
 """Interface for interacting with a token contract"""
 
-from typing import Final, List, Optional
+from typing import Any, Final, List, Optional
 from thirdweb.abi import TokenERC20
 from web3 import Web3
 from web3.eth import TxReceipt
@@ -178,3 +178,6 @@ class Token(ERC20Standard):
         """
 
         return self._contract_wrapper.send_transaction("delegate", [delegatee_address])
+
+    def call(self, fn: str, *args) -> Any:
+        return self._contract_wrapper.call(fn, *args)

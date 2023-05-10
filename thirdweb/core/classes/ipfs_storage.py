@@ -54,9 +54,14 @@ class IpfsStorage(ABC):
         """
 
         res = self._get(hash)
-        data = res.json()
+        try:
+            data = res.json()
 
-        return replace_hash_with_gateway_url(data, "ipfs://", self._gateway_url)
+            if isinstance(data, dict) or isinstance(data, list) or isinstance(data, str):
+                return replace_hash_with_gateway_url(data, "ipfs://", self._gateway_url)
+            return data
+        except:
+            return res.text
 
     def get_upload_token(self, contract_address: str) -> str:
         """

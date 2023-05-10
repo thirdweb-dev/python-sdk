@@ -342,6 +342,9 @@ class Marketplace(BaseContract[MarketplaceABI]):
 
         return self._contract_wrapper.multi_call(encoded)
 
+    def call(self, fn: str, *args) -> Any:
+        return self._contract_wrapper.call(fn, *args)
+
     """
     INTERNAL FUNCTIONS
     """

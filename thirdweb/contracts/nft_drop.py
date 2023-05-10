@@ -1,4 +1,4 @@
-from typing import Final, List, Optional
+from typing import Any, Final, List, Optional
 from thirdweb.abi import DropERC721
 from thirdweb.abi.drop_erc721 import IDropAllowlistProof
 from thirdweb.constants.role import Role
@@ -13,7 +13,6 @@ from thirdweb.core.classes.drop_claim_conditions import DropClaimConditions
 from thirdweb.core.classes.erc_721_standard import ERC721Standard
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
-from zero_ex.contract_wrappers.tx_params import TxParams
 from thirdweb.types.nft import (
     NFTMetadata,
     NFTMetadataInput,
@@ -250,3 +249,6 @@ class NFTDrop(ERC721Standard[DropERC721]):
         :return: List of tx results with ids for claimed NFTs.
         """
         return self._erc721.claim(quantity)
+
+    def call(self, fn: str, *args) -> Any:
+        return self._contract_wrapper.call(fn, *args)
