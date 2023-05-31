@@ -1,6 +1,5 @@
 from typing import Any, Final, List, Optional
 from thirdweb.abi import DropERC20
-from thirdweb.abi.drop_erc20 import IDropAllowlistProof
 from thirdweb.constants.role import Role
 from thirdweb.core.classes.contract_events import ContractEvents
 from thirdweb.core.classes.contract_metadata import ContractMetadata
@@ -12,15 +11,10 @@ from thirdweb.core.classes.drop_claim_conditions import DropClaimConditions
 from thirdweb.core.classes.erc_20_standard import ERC20Standard
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.types.contract import ContractType
-from thirdweb.types.currency import CurrencyValue, Price, TokenAmount
 from thirdweb.types.sdk import SDKOptions
 from thirdweb.types.settings.metadata import TokenDropContractMetadata
 from eth_account.account import LocalAccount
 from web3 import Web3
-
-from thirdweb.types.tx import TxResultWithId
-
-
 class TokenDrop(ERC20Standard[DropERC20]):
     """
     Setup Tokens that are minted as users claim them.
