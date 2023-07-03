@@ -27,13 +27,13 @@ def get_provider_for_network(network: str) -> Web3:
     elif network == "mumbai":
         rpc_url = get_rpc_url("mumbai")
     elif network == "optimism":
-      rpc_url = getRpcUrl("optimism");
+      rpc_url = get_rpc_url("optimism");
     elif network == "optimism-goerli":
-      rpc_url = getRpcUrl("optimism-goerli");
+      rpc_url = get_rpc_url("optimism-goerli");
     elif network == "arbitrum":
-      rpc_url = getRpcUrl("arbitrum");
+      rpc_url = get_rpc_url("arbitrum");
     elif network == "arbitrum-goerli":
-      rpc_url = getRpcUrl("arbitrum-goerli");
+      rpc_url = get_rpc_url("arbitrum-goerli");
     elif network == "fantom":
         rpc_url = get_rpc_url("fantom")
     elif network == "avalanche":
