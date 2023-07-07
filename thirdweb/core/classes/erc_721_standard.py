@@ -169,7 +169,7 @@ class ERC721Standard(Generic[TERC721], BaseContract[TERC721]):
         Set the approval of an operator for all operations of a specific address's assets
 
         :param operator: the address of the operator to set the approval for
-        :param approved: the address whos assets the operator is approved to manage
+        :param approved: the address whose assets the operator is approved to manage
         :returns: transaction receipt of the approval
         """
 

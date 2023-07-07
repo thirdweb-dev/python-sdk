@@ -79,7 +79,7 @@ class ERC20SignatureMinting:
 
             if price > 0:
                 raise Exception(
-                    "Can only batch free mints. For mints with price, use regulare mint()"
+                    "Can only batch free mints. For mints with price, use regular mint()"
                 )
 
             contract_payloads.append((message, signature))

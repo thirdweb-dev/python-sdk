@@ -86,10 +86,10 @@ class MarketplaceDirect(BaseContract[Marketplace]):
         if not is_address(address):
             raise Exception("Address must be a valid address")
 
-        raw_ofers = self._contract_wrapper._contract_abi.offers.call(
+        raw_offers = self._contract_wrapper._contract_abi.offers.call(
             listing_id, address
         )
-        offers = ContractOffer(*raw_ofers)
+        offers = ContractOffer(*raw_offers)
 
         if offers.offeror == ZERO_ADDRESS:
             return None
