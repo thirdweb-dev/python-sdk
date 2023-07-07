@@ -224,7 +224,7 @@ class Multiwrap(ERC721Standard[MultiwrapABI]):
         :returns: The transaction receipt of the token unwrapping
 
         ```python
-        tx = contract.unwrap(wrapped_token_id, receipientAddress)
+        tx = contract.unwrap(wrapped_token_id, recipientAddress)
         ```
         """
         if recipient_address is None:

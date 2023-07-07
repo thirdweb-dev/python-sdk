@@ -1062,7 +1062,7 @@
             {
                 "name": "unwrap",
                 "summary": "Unwrap a wrapped token bundle",
-                "example": "tx = contract.unwrap(wrapped_token_id, receipientAddress)",
+                "example": "tx = contract.unwrap(wrapped_token_id, recipientAddress)",
                 "reference": "https://docs.thirdweb.com/python/multiwrap#unwrap",
                 "extensions": []
             },
@@ -1172,7 +1172,7 @@
             {
                 "name": "set",
                 "summary": "Set the contract platform fees",
-                "example": "from thirdweb.types import ContractPlatformFeeSchema\n\nplatform_fee_info = ContractPlatformFeeSchema(\n    platform_fee_basis_points=100 # 1%\n    platform_fee_receipient=\"{{wallet_address}}\"\n)\n\nreceipt = contract.platform_fee.set(platform_fee_info)",
+                "example": "from thirdweb.types import ContractPlatformFeeSchema\n\nplatform_fee_info = ContractPlatformFeeSchema(\n    platform_fee_basis_points=100 # 1%\n    platform_fee_recipient=\"{{wallet_address}}\"\n)\n\nreceipt = contract.platform_fee.set(platform_fee_info)",
                 "reference": "https://docs.thirdweb.com/python/contract-platform-fee#set",
                 "extensions": [
                     "PlatformFee"

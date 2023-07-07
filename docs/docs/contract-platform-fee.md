@@ -45,7 +45,7 @@ from thirdweb.types import ContractPlatformFeeSchema
 
 platform_fee_info = ContractPlatformFeeSchema(
     platform_fee_basis_points=100 # 1%
-    platform_fee_receipient="{{wallet_address}}"
+    platform_fee_recipient="{{wallet_address}}"
 )
 
 receipt = contract.platform_fee.set(platform_fee_info)

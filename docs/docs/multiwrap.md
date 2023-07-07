@@ -129,6 +129,6 @@ Unwrap a wrapped token bundle
 
 The transaction receipt of the token unwrapping
 ```python
-tx = contract.unwrap(wrapped_token_id, receipientAddress)
+tx = contract.unwrap(wrapped_token_id, recipientAddress)
 ```
 
