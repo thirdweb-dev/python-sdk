@@ -88,8 +88,6 @@ class IpfsStorage(ABC):
     def upload(
         self,
         data: Union[TextIO, BinaryIO, str],
-        contract_address: str = "",
-        signer_address: str = "",
     ) -> str:
         """
         Uploads data to IPFS and returns the hash of the data.
@@ -100,15 +98,13 @@ class IpfsStorage(ABC):
         :returns: hash of the data.
         """
 
-        cid = self.upload_batch([data], 0, contract_address, signer_address)
+        cid = self.upload_batch([data], 0)
         return f"{cid}0"
 
     def upload_batch(
         self,
         files: Sequence[Union[TextIO, BinaryIO, str, Dict[str, Any]]],
         file_start_number: int = 0,
-        contract_address: str = "",
-        signer_address: str = "",
     ) -> str:
         """
         Uploads a list of files to IPFS and returns the hash.
@@ -123,8 +119,6 @@ class IpfsStorage(ABC):
         cid_with_filename = self._upload_batch_with_cid(
             files,
             file_start_number,
-            contract_address,
-            signer_address,
         )
 
         return f"ipfs://{cid_with_filename.cid}"
@@ -132,8 +126,6 @@ class IpfsStorage(ABC):
     def upload_metadata(
         self,
         metadata: Dict[str, Any],
-        contract_address: str = "",
-        signer_address: str = "",
     ) -> str:
         """
         Uploads metadata to IPFS and returns the hash of the metadata.
@@ -145,7 +137,7 @@ class IpfsStorage(ABC):
         """
 
         uri_with_metadata = self.upload_metadata_batch(
-            [metadata], 0, contract_address, signer_address
+            [metadata], 0
         )
 
         return uri_with_metadata.metadata_uris[0]
@@ -154,8 +146,6 @@ class IpfsStorage(ABC):
         self,
         metadatas: Sequence[Dict[str, Any]],
         file_start_number: int = 0,
-        contract_address: str = "",
-        signer_address: str = "",
     ) -> UriWithMetadata:
         """
         Uploads a list of metadata to IPFS and returns the hash.
@@ -169,7 +159,7 @@ class IpfsStorage(ABC):
 
         metadata_to_upload = self._batch_upload_properties(metadatas)
         cid_with_filename = self._upload_batch_with_cid(
-            metadata_to_upload, file_start_number, contract_address, signer_address
+            metadata_to_upload, file_start_number
         )
 
         base_uri = f"ipfs://{cid_with_filename.cid}/"
