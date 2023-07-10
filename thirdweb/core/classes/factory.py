@@ -44,9 +44,9 @@ class ContractFactory(ContractWrapper[TWFactory]):
         self,
         factory_address: str,
         provider: Web3,
-        signer: Optional[LocalAccount] = None,
-        options: SDKOptions = SDKOptions(),
-        storage: IpfsStorage = IpfsStorage(),
+        signer: Optional[LocalAccount],
+        options: SDKOptions,
+        storage: IpfsStorage,
     ):
         abi = TWFactory(provider, factory_address)
         super().__init__(abi, provider, signer, options)

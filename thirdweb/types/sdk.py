@@ -46,5 +46,6 @@ class SDKOptions(object):
     :param gas_settings: gas settings
     """
 
+    api_key: str = ""
     read_only_settings: Optional[ReadOnlySettings] = None
     gas_settings: GasSettings = GasSettings()

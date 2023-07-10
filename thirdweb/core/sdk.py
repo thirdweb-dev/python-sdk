@@ -56,8 +56,8 @@ class ThirdwebSDK(ProviderHandler):
         self,
         network: str,
         signer: Optional[LocalAccount] = None,
-        options: SDKOptions = SDKOptions(),
-        storage: IpfsStorage = IpfsStorage(),
+        options: SDKOptions = None,
+        storage: IpfsStorage = None,
     ):
         """
         Initialize the thirdweb SDK.
@@ -67,6 +67,12 @@ class ThirdwebSDK(ProviderHandler):
         :param options: optional SDK configuration options
         :param storage: optional IPFS storage instance to use for storing data
         """
+
+        if options is None:
+            options = SDKOptions()
+
+        if storage is None:
+            storage = IpfsStorage(options.api_key)
 
         provider = get_provider_for_network(network)
         super().__init__(provider, signer, options)

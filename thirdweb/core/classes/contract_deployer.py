@@ -30,9 +30,9 @@ class ContractDeployer(ProviderHandler):
     def __init__(
         self,
         provider: Web3,
-        signer: Optional[LocalAccount] = None,
-        options: SDKOptions = SDKOptions(),
-        storage: IpfsStorage = IpfsStorage(),
+        signer: Optional[LocalAccount],
+        options: SDKOptions,
+        storage: IpfsStorage,
     ):
         super().__init__(provider, signer, options)
         self._storage = storage

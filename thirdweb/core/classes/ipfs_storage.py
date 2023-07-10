@@ -41,8 +41,10 @@ class IpfsStorage(ABC):
     """
 
     _gateway_url: str
+    _api_key: str
 
-    def __init__(self, gateway_url=DEFAULT_IPFS_GATEWAY):
+    def __init__(self, api_key: str, gateway_url=DEFAULT_IPFS_GATEWAY):
+        self._api_key = api_key
         self._gateway_url = re.sub(r"\/$", "", gateway_url) + "/"
 
     def get(self, hash: str) -> Any:
@@ -63,7 +65,7 @@ class IpfsStorage(ABC):
         except:
             return res.text
 
-    def get_upload_token(self, contract_address: str) -> str:
+    def get_upload_token(self) -> str:
         """
         Gets an upload token for a given contract address.
 
@@ -74,7 +76,7 @@ class IpfsStorage(ABC):
         res = get(
             f"{TW_IPFS_SERVER_URL}/grant",
             headers={
-                "X-App-Name": f"CONSOLE-PYTHON-SDK-{contract_address}",
+                "Authorization": f"Bearer {self._api_key}",
             },
         )
 
@@ -234,21 +236,10 @@ class IpfsStorage(ABC):
     def _upload_batch_with_cid(
         self,
         files: Sequence[Union[TextIO, BinaryIO, str, Dict[str, Any]]],
-        file_start_number: int = 0,
-        contract_address: str = "",
-        signer_address: str = "",
+        file_start_number: int = 0
     ) -> CidWithFileName:
 
-        token = self.get_upload_token(contract_address)
-
-        metadata = {
-            "name": f"CONSOLE-PYTHON-SDK-{contract_address}",
-            "keyvalues": {
-                "sdk": "python",
-                "contractAddress": contract_address,
-                "signerAddress": signer_address,
-            },
-        }
+        token = self.get_upload_token()
 
         form: List[Any] = []
         file_names: List[str] = []
