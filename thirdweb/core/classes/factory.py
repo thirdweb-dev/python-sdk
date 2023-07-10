@@ -57,9 +57,7 @@ class ContractFactory(ContractWrapper[TWFactory]):
     ) -> str:
         # First, we upload the contract metadata to IPFS
         contract_uri = self._storage.upload_metadata(
-            contract_metadata,
-            self._contract_abi.contract_address,
-            self.get_signer_address(),
+            contract_metadata
         )
 
         # Then, we get setup the contract interface for the contract we want to deploy
