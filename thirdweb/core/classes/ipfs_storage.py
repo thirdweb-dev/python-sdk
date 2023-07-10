@@ -77,6 +77,7 @@ class IpfsStorage(ABC):
             f"{TW_IPFS_SERVER_URL}/grant",
             headers={
                 "Authorization": f"Bearer {self._api_key}",
+                "X-App-Name": "Python SDK"
             },
         )
 
