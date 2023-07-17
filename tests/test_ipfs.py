@@ -117,7 +117,7 @@ def test_replace_gateway_urls(storage: IpfsStorage):
         }
     )
 
-    other_storage = IpfsStorage(api_key="", gateway_url="https://ipfs.io/ipfs/")
+    other_storage = IpfsStorage(secret_key=None, gateway_url="https://ipfs.io/ipfs/")
     downloaded = other_storage.get(upload)
 
     assert downloaded["svg"].startswith("https://ipfs.io/ipfs/")
