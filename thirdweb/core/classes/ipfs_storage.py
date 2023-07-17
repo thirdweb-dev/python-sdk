@@ -3,16 +3,16 @@ from io import IOBase
 import re
 import json
 from requests import get, Response, post
-from typing import Any, Dict, List, Sequence, TextIO, BinaryIO, Union, cast
+from typing import Any, Dict, List, Optional, Sequence, TextIO, BinaryIO, Union, cast
 from thirdweb.common.error import (
     DuplicateFileNameException,
     FetchException,
     UploadException,
 )
+from thirdweb.common.keys import derive_client_id_from_secret_key
 from thirdweb.constants.urls import (
     DEFAULT_IPFS_GATEWAY,
-    PINATA_IPFS_URL,
-    TW_IPFS_SERVER_URL,
+    TW_STORAGE_SERVER_URL,
 )
 from thirdweb.core.helpers.storage import (
     replace_file_properties_with_hashes,
@@ -41,11 +41,18 @@ class IpfsStorage(ABC):
     """
 
     _gateway_url: str
-    _api_key: str
+    _secret_key: Optional[str]
 
-    def __init__(self, api_key: str, gateway_url=DEFAULT_IPFS_GATEWAY):
-        self._api_key = api_key
-        self._gateway_url = re.sub(r"\/$", "", gateway_url) + "/"
+    def __init__(self, secret_key: Optional[str], gateway_url: Optional[str] = None):
+        self._secret_key = secret_key
+
+        if gateway_url is not None:
+            self._gateway_url = re.sub(r"\/$", "", gateway_url) + "/"
+        elif secret_key is not None:
+            client_id = derive_client_id_from_secret_key(self._secret_key)
+            self._gateway_url = f"https://{client_id}.thirdwebstorage-staging.com/ipfs/"
+        else:
+            self._gateway_url = DEFAULT_IPFS_GATEWAY
 
     def get(self, hash: str) -> Any:
         """
@@ -64,27 +71,6 @@ class IpfsStorage(ABC):
             return data
         except:
             return res.text
-
-    def get_upload_token(self) -> str:
-        """
-        Gets an upload token for a given contract address.
-
-        :param contract_address: address of the contract to get the token for.
-        :returns: upload token.
-        """
-
-        res = get(
-            f"{TW_IPFS_SERVER_URL}/grant",
-            headers={
-                "Authorization": f"Bearer {self._api_key}",
-                "X-App-Name": "Python SDK"
-            },
-        )
-
-        if not res.ok:
-            raise FetchException("Failed to upload token")
-
-        return res.text
 
     def upload(
         self,
@@ -176,7 +162,8 @@ class IpfsStorage(ABC):
 
     def _get(self, hash: str) -> Response:
         hash = resolve_gateway_url(hash, "ipfs://", self._gateway_url)
-        res = get(hash)
+        headers = { "x-secret-key": self._secret_key } if ".thirdwebstorage-staging.com" in self._gateway_url else {}
+        res = get(hash, headers=headers)
 
         if not res.ok:
             raise FetchException(f"Could not get {hash}")
@@ -229,9 +216,6 @@ class IpfsStorage(ABC):
         files: Sequence[Union[TextIO, BinaryIO, str, Dict[str, Any]]],
         file_start_number: int = 0
     ) -> CidWithFileName:
-
-        token = self.get_upload_token()
-
         form: List[Any] = []
         file_names: List[str] = []
 
@@ -265,10 +249,10 @@ class IpfsStorage(ABC):
         # form.append(("pinataMetadata", metadata))
 
         res = post(
-            PINATA_IPFS_URL,
+            f"{TW_STORAGE_SERVER_URL}/ipfs/upload",
             files=form,
             headers={
-                "Authorization": f"Bearer {token}",
+                "x-secret-key": self._secret_key,
             },
         )
         body = res.json()
