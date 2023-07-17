@@ -50,7 +50,7 @@ class IpfsStorage(ABC):
             self._gateway_url = re.sub(r"\/$", "", gateway_url) + "/"
         elif secret_key is not None:
             client_id = derive_client_id_from_secret_key(self._secret_key)
-            self._gateway_url = f"https://{client_id}.thirdwebstorage-staging.com/ipfs/"
+            self._gateway_url = f"https://{client_id}.ipfscdn.io/ipfs/"
         else:
             self._gateway_url = DEFAULT_IPFS_GATEWAY
 
@@ -162,7 +162,7 @@ class IpfsStorage(ABC):
 
     def _get(self, hash: str) -> Response:
         hash = resolve_gateway_url(hash, "ipfs://", self._gateway_url)
-        headers = { "x-secret-key": self._secret_key } if ".thirdwebstorage-staging.com" in self._gateway_url else {}
+        headers = { "x-secret-key": self._secret_key } if ".ipfscdn.io" in self._gateway_url else {}
         res = get(hash, headers=headers)
 
         if not res.ok:

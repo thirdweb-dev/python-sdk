@@ -6,7 +6,7 @@ DEFAULT_IPFS_GATEWAY = "https://ipfs.io/ipfs/"
 
 TW_IPFS_SERVER_URL = "https://upload.nftlabs.co"
 
-TW_STORAGE_SERVER_URL = "https://storage.staging.thirdweb.com"
+TW_STORAGE_SERVER_URL = "https://storage.thirdweb.com"
 
 DEFAULT_API_KEY = "39a3c037d7a88e6692c6681bccfd1f1cf36370324c4051a83acd0edcffb20708"
 
