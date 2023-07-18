@@ -1,6 +1,7 @@
 from thirdweb.core.classes.ipfs_storage import IpfsStorage
 from thirdweb.core.classes.registry import ContractRegistry
 from thirdweb.core.classes.factory import ContractFactory
+from thirdweb.types.sdk import SDKOptions
 from web3.middleware import geth_poa_middleware
 from thirdweb.core.sdk import ThirdwebSDK
 from eth_account import Account
@@ -16,5 +17,11 @@ load_dotenv()
 @pytest.fixture(scope="session")
 def sdk(primary_account):
     signer = primary_account
-    sdk = ThirdwebSDK("http://localhost:8545", signer)
+    sdk = ThirdwebSDK(
+        "http://localhost:8545", 
+        signer, 
+        SDKOptions(
+            secret_key=os.getenv("THIRDWEB_SECRET_KEY")
+        )
+    )
     return sdk

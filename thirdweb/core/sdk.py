@@ -2,6 +2,7 @@ from eth_account import Account
 from thirdweb.common.feature_detection import (
     fetch_contract_metadata_from_address,
 )
+from thirdweb.common.keys import derive_client_id_from_secret_key
 from thirdweb.constants.urls import get_provider_for_network
 from thirdweb.contracts import Marketplace
 from thirdweb.contracts.custom import CustomContract
@@ -56,8 +57,8 @@ class ThirdwebSDK(ProviderHandler):
         self,
         network: str,
         signer: Optional[LocalAccount] = None,
-        options: SDKOptions = SDKOptions(),
-        storage: IpfsStorage = IpfsStorage(),
+        options: SDKOptions = None,
+        storage: IpfsStorage = None,
     ):
         """
         Initialize the thirdweb SDK.
@@ -68,7 +69,14 @@ class ThirdwebSDK(ProviderHandler):
         :param storage: optional IPFS storage instance to use for storing data
         """
 
-        provider = get_provider_for_network(network)
+        if options is None:
+            options = SDKOptions()
+
+        if storage is None:
+            storage = IpfsStorage(options.secret_key)
+
+        client_id = derive_client_id_from_secret_key(options.secret_key) if options.secret_key is not None else None
+        provider = get_provider_for_network(network, client_id)
         super().__init__(provider, signer, options)
 
         self.auth = WalletAuthenticator(provider, signer, options)

@@ -3,16 +3,16 @@ from io import IOBase
 import re
 import json
 from requests import get, Response, post
-from typing import Any, Dict, List, Sequence, TextIO, BinaryIO, Union, cast
+from typing import Any, Dict, List, Optional, Sequence, TextIO, BinaryIO, Union, cast
 from thirdweb.common.error import (
     DuplicateFileNameException,
     FetchException,
     UploadException,
 )
+from thirdweb.common.keys import derive_client_id_from_secret_key
 from thirdweb.constants.urls import (
     DEFAULT_IPFS_GATEWAY,
-    PINATA_IPFS_URL,
-    TW_IPFS_SERVER_URL,
+    TW_STORAGE_SERVER_URL,
 )
 from thirdweb.core.helpers.storage import (
     replace_file_properties_with_hashes,
@@ -41,9 +41,18 @@ class IpfsStorage(ABC):
     """
 
     _gateway_url: str
+    _secret_key: Optional[str]
 
-    def __init__(self, gateway_url=DEFAULT_IPFS_GATEWAY):
-        self._gateway_url = re.sub(r"\/$", "", gateway_url) + "/"
+    def __init__(self, secret_key: Optional[str], gateway_url: Optional[str] = None):
+        self._secret_key = secret_key
+
+        if gateway_url is not None:
+            self._gateway_url = re.sub(r"\/$", "", gateway_url) + "/"
+        elif secret_key is not None:
+            client_id = derive_client_id_from_secret_key(self._secret_key)
+            self._gateway_url = f"https://{client_id}.ipfscdn.io/ipfs/"
+        else:
+            self._gateway_url = DEFAULT_IPFS_GATEWAY
 
     def get(self, hash: str) -> Any:
         """
@@ -63,31 +72,9 @@ class IpfsStorage(ABC):
         except:
             return res.text
 
-    def get_upload_token(self, contract_address: str) -> str:
-        """
-        Gets an upload token for a given contract address.
-
-        :param contract_address: address of the contract to get the token for.
-        :returns: upload token.
-        """
-
-        res = get(
-            f"{TW_IPFS_SERVER_URL}/grant",
-            headers={
-                "X-App-Name": f"CONSOLE-PYTHON-SDK-{contract_address}",
-            },
-        )
-
-        if not res.ok:
-            raise FetchException("Failed to upload token")
-
-        return res.text
-
     def upload(
         self,
         data: Union[TextIO, BinaryIO, str],
-        contract_address: str = "",
-        signer_address: str = "",
     ) -> str:
         """
         Uploads data to IPFS and returns the hash of the data.
@@ -98,15 +85,13 @@ class IpfsStorage(ABC):
         :returns: hash of the data.
         """
 
-        cid = self.upload_batch([data], 0, contract_address, signer_address)
+        cid = self.upload_batch([data], 0)
         return f"{cid}0"
 
     def upload_batch(
         self,
         files: Sequence[Union[TextIO, BinaryIO, str, Dict[str, Any]]],
         file_start_number: int = 0,
-        contract_address: str = "",
-        signer_address: str = "",
     ) -> str:
         """
         Uploads a list of files to IPFS and returns the hash.
@@ -121,8 +106,6 @@ class IpfsStorage(ABC):
         cid_with_filename = self._upload_batch_with_cid(
             files,
             file_start_number,
-            contract_address,
-            signer_address,
         )
 
         return f"ipfs://{cid_with_filename.cid}"
@@ -130,8 +113,6 @@ class IpfsStorage(ABC):
     def upload_metadata(
         self,
         metadata: Dict[str, Any],
-        contract_address: str = "",
-        signer_address: str = "",
     ) -> str:
         """
         Uploads metadata to IPFS and returns the hash of the metadata.
@@ -143,7 +124,7 @@ class IpfsStorage(ABC):
         """
 
         uri_with_metadata = self.upload_metadata_batch(
-            [metadata], 0, contract_address, signer_address
+            [metadata], 0
         )
 
         return uri_with_metadata.metadata_uris[0]
@@ -152,8 +133,6 @@ class IpfsStorage(ABC):
         self,
         metadatas: Sequence[Dict[str, Any]],
         file_start_number: int = 0,
-        contract_address: str = "",
-        signer_address: str = "",
     ) -> UriWithMetadata:
         """
         Uploads a list of metadata to IPFS and returns the hash.
@@ -167,7 +146,7 @@ class IpfsStorage(ABC):
 
         metadata_to_upload = self._batch_upload_properties(metadatas)
         cid_with_filename = self._upload_batch_with_cid(
-            metadata_to_upload, file_start_number, contract_address, signer_address
+            metadata_to_upload, file_start_number
         )
 
         base_uri = f"ipfs://{cid_with_filename.cid}/"
@@ -183,7 +162,8 @@ class IpfsStorage(ABC):
 
     def _get(self, hash: str) -> Response:
         hash = resolve_gateway_url(hash, "ipfs://", self._gateway_url)
-        res = get(hash)
+        headers = { "x-secret-key": self._secret_key } if ".ipfscdn.io" in self._gateway_url else {}
+        res = get(hash, headers=headers)
 
         if not res.ok:
             raise FetchException(f"Could not get {hash}")
@@ -234,22 +214,8 @@ class IpfsStorage(ABC):
     def _upload_batch_with_cid(
         self,
         files: Sequence[Union[TextIO, BinaryIO, str, Dict[str, Any]]],
-        file_start_number: int = 0,
-        contract_address: str = "",
-        signer_address: str = "",
+        file_start_number: int = 0
     ) -> CidWithFileName:
-
-        token = self.get_upload_token(contract_address)
-
-        metadata = {
-            "name": f"CONSOLE-PYTHON-SDK-{contract_address}",
-            "keyvalues": {
-                "sdk": "python",
-                "contractAddress": contract_address,
-                "signerAddress": signer_address,
-            },
-        }
-
         form: List[Any] = []
         file_names: List[str] = []
 
@@ -283,10 +249,10 @@ class IpfsStorage(ABC):
         # form.append(("pinataMetadata", metadata))
 
         res = post(
-            PINATA_IPFS_URL,
+            f"{TW_STORAGE_SERVER_URL}/ipfs/upload",
             files=form,
             headers={
-                "Authorization": f"Bearer {token}",
+                "x-secret-key": self._secret_key,
             },
         )
         body = res.json()

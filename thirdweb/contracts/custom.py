@@ -42,15 +42,19 @@ class CustomContract(BaseContract[Any]):
 
     ```python
     from thirdweb import ThirdwebSDK
+    from thirdweb.types import SDKOptions
+
+    # Get your secret key from the thirdweb api keys dashboard
+    secret_key = "..."
 
     # You can customize this to a supported network or your own RPC URL
     network = "mumbai"
 
     # Now we can create a new instance of the SDK
-    sdk = ThirdwebSDK(network)
+    sdk = ThirdwebSDK(network, options=SDKOptions(secret_key=secret_key))
 
     # If you want to send transactions, you can instantiate the SDK with a private key instead:
-    #   sdk = ThirdwebSDK.from_private_key(PRIVATE_KEY, network)
+    #   sdk = ThirdwebSDK.from_private_key(PRIVATE_KEY, network, options=SDKOptions(secret_key=secret_key))
 
     contract = sdk.get_contract("{{contract_address}}")
 
