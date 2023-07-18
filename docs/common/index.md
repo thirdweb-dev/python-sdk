@@ -21,16 +21,21 @@ pip install thirdweb-sdk
 
 ## Getting Started
 
-To start using this SDK, you just need to pass in a provider configuration.
+To start using this SDK, you just need to pass in a provider configuration. It's also strongly recommended that you use your thirdweb API keys with the SDK in order to get the best infrastructure performance (across RPCs, IPFS, etc.) - you can learn more about creating and using API keys [here](https://portal.thirdweb.com/api-keys).
+
 ### Instantiating the SDK
 
 Once you have all the necessary dependencies, you can follow the following setup steps to get started with the SDK read-only functions:
 
 ```python
 from thirdweb import ThirdwebSDK
+from thirdweb.types import SDKOptions
 
-# You can create a new instance of the SDK to use by just passing in a network name
-sdk = ThirdwebSDK("mumbai")
+# Get your secret key from the thirdweb api keys dashboard
+SECRET_KEY = "..."
+
+# You can create a new instance of the SDK to use by passing in a network name and your api key
+sdk = ThirdwebSDK("mumbai", options=SDKOptions(secret_key=SECRET_KEY))
 ```
 
 The SDK supports the `mainnet`, `rinkeby`, `goerli`, `polygon`, `mumbai`, `fantom`, and `avalanche` networks.
@@ -74,12 +79,14 @@ from thirdweb import ThirdwebSDK
 from thirdweb.types.nft import NFTMetadataInput
 import os
 
+# Get your secret key from the thirdweb api keys dashboard
+SECRET_KEY = "..."
 
 # This PRIVATE KEY is coming from your environment variables. Make sure to never put it in a tracked file or share it with anyone.
 PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
 
 # Now you can create a new instance of the SDK with your private key
-sdk = ThirdwebSDK.from_private_key(PRIVATE_KEY, "mumbai")
+sdk = ThirdwebSDK.from_private_key(PRIVATE_KEY, "mumbai", options=SDKOptions(secret_key=SECRET_KEY))
 
 # Instantiate a new NFT Collection contract as described above.
 NFT_COLLECTION_ADDRESS = "0x.."
