@@ -1,5 +1,6 @@
 from typing import Any, Final, Optional, cast
 from eth_typing import Address
+from thirdweb.core.classes.contract_events import ContractEvents
 
 from web3 import Web3
 from web3.contract import ContractFunctions, ContractFunction
@@ -74,6 +75,7 @@ class CustomContract(BaseContract[Any]):
     contract_type: Final[ContractType] = ContractType.CUSTOM
 
     functions: ContractFunctions
+    events: ContractEvents
 
     def __init__(
         self,
@@ -104,6 +106,8 @@ class CustomContract(BaseContract[Any]):
         self.erc20 = self._detect_erc_20()
         self.erc721 = self._detect_erc_721()
         self.erc1155 = self._detect_erc_1155()
+
+        self.events = ContractEvents(contract_wrapper)
 
     def call(self, fn: str, *args) -> Any:
         func = cast(ContractFunction, getattr(self.functions, fn, None))
