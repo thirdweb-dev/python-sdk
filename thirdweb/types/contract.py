@@ -12,6 +12,7 @@ from thirdweb.abi import (
     IERC1155,
     DropERC721,
     DropERC1155,
+    DropERC20,
     Multiwrap,
 )
 from thirdweb.abi.i_mintable_erc20 import IMintableERC20
@@ -31,6 +32,7 @@ TContractABI = TypeVar(
         TWFactory,
         DropERC721,
         DropERC1155,
+        DropERC20,
         Multiwrap,
         IMintableERC20
     ],
@@ -41,13 +43,13 @@ TERC1155 = TypeVar("TERC1155", bound=Union[TokenERC1155, DropERC1155])
 
 TPrimarySaleABI = TypeVar(
     "TPrimarySaleABI",
-    bound=Union[TokenERC721, TokenERC1155, TokenERC20, DropERC721, DropERC1155],
+    bound=Union[TokenERC721, TokenERC1155, TokenERC20, DropERC721, DropERC1155, DropERC20],
 )
 
 TPlatformFeeABI = TypeVar(
     "TPlatformFeeABI",
     bound=Union[
-        TokenERC721, TokenERC1155, TokenERC20, Marketplace, DropERC721, DropERC1155
+        TokenERC721, TokenERC1155, TokenERC20, Marketplace, DropERC721, DropERC1155, DropERC20
     ],
 )
 
@@ -65,6 +67,7 @@ TMetadataABI = TypeVar(
         Marketplace,
         DropERC721,
         DropERC1155,
+        DropERC20,
         Multiwrap,
     ],
 )
@@ -75,6 +78,7 @@ class ContractType(Enum):
     NFT_COLLECTION = "nft-collection"
     EDITION = "edition"
     TOKEN = "token"
+    TOKEN_DROP = "token-drop"
     MARKETPLACE = "marketplace"
     NFT_DROP = "nft-drop"
     EDITION_DROP = "edition-drop"

@@ -18,6 +18,7 @@ from thirdweb.types.settings.metadata import (
     MarketplaceContractMetadata,
     NFTCollectionContractMetadata,
     TokenContractMetadata,
+    TokenDropContractMetadata,
 )
 
 
@@ -78,6 +79,13 @@ class ContractDeployer(ProviderHandler):
         """
 
         return self._deploy_contract(ContractType.EDITION_DROP, metadata.to_json())
+    
+    def deploy_token_drop(self, metadata: TokenDropContractMetadata) -> str:
+        """
+        Deploy a Token Drop contract
+        """
+
+        return self._deploy_contract(ContractType.TOKEN_DROP, metadata.to_json())
 
     def deploy_multiwrap(self, metadata: MultiwrapContractMetadata) -> str:
         """
