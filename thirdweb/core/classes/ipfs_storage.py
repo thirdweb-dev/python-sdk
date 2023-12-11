@@ -86,7 +86,7 @@ class IpfsStorage(ABC):
         """
 
         cid = self.upload_batch([data], 0)
-        return f"{cid}0"
+        return f"{cid}/0"
 
     def upload_batch(
         self,
