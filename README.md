@@ -1,3 +1,5 @@
+> This SDK is no longer being actively maintained and has been officially deprecated as of May 3, 2024. We strongly encourage all users to migrate to [Engine](https://github.com/thirdweb-dev/engine) to continue developing. For further assistance, feel free to [visit our support site](https://thirdweb.com/support). Thank you for your continued support and understanding.
+
 <p align="center">
 <br />
 <a href="https://thirdweb.com"><img src="https://github.com/thirdweb-dev/typescript-sdk/blob/main/logo.svg?raw=true" width="200" alt=""/></a>
