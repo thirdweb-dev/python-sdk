@@ -11,6 +11,7 @@ from thirdweb.contracts import (
     Marketplace,
     NFTDrop,
     EditionDrop,
+    TokenDrop,
     Multiwrap,
 )
 
@@ -22,6 +23,7 @@ CONTRACTS_MAP: Dict[ContractType, Union[NFTCollection, Edition, Token]] = {
     Marketplace.contract_type: Marketplace,  # type: ignore
     NFTDrop.contract_type: NFTDrop,  # type: ignore
     EditionDrop.contract_type: EditionDrop,  # type: ignore
+    TokenDrop.contract_type: TokenDrop,  # type: ignore
     Multiwrap.contract_type: Multiwrap,  # type: ignore
 }
 
@@ -32,6 +34,7 @@ REMOTE_CONTRACT_NAME: Dict[ContractType, str] = {
     Marketplace.contract_type: "Marketplace",
     NFTDrop.contract_type: "DropERC721",
     EditionDrop.contract_type: "DropERC1155",
+    TokenDrop.contract_type: "DropERC20",
     Multiwrap.contract_type: "Multiwrap",
 }
 
@@ -42,5 +45,6 @@ REMOTE_CONTRACT_NAME_TO_CONTRACT_TYPE: Dict[str, ContractType] = {
     "Marketplace": Marketplace.contract_type,
     "DropERC721": NFTDrop.contract_type,
     "DropERC1155": EditionDrop.contract_type,
+    "DropERC20": TokenDrop.contract_type,
     "Multiwrap": Multiwrap.contract_type,
 }

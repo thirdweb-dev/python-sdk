@@ -4,5 +4,6 @@ from .token import Token
 from .marketplace import Marketplace
 from .nft_drop import NFTDrop
 from .edition_drop import EditionDrop
+from .token_drop import TokenDrop
 from .multiwrap import Multiwrap
 from .maps import *
